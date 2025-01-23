@@ -5,6 +5,22 @@
         <title>
             FEIRA_DA_LADRA.pt - A sua feira mais próxima de si
         </title>
+        <style>
+            .container {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .main-content {
+                flex: 3;
+                padding: 10px;
+            }
+            aside {
+                flex: 1;
+                padding: 10px;
+                background-color: #f0f0f0;
+            }
+        </style>
     </head>
     <body>
         <header>
@@ -12,27 +28,36 @@
             <p>A sua loja online para todas as compras e vendas de produtos usados</p>
         </header>
         <hr>
-        <main>
-            <p><strong>Feira da Ladra ou outro nome que apareça</strong></p>
-            <p>A <em>Feira da Ladra</em> é uma ideia ultra inovadora que vai revolucionar os mercados digitais de roupa usada e roupa com outras coisas</p>
-        </main>
-        <aside>
-            <hr>
-            <a><strong>Autenticação</strong></a>
-            <form>
-                <label for="username"><strong>Nome de utilizador:</strong></label><br>
-                <input type="text" id="username" name="username"><br>
-                <label for="password"><strong>Password:</strong></label><br>
-                <input type="text" id="password" name="password"><br>
-                <input type="submit" id="authentication" value="Submeter">
-            </form>
-        </aside>
+        <div class="container">
+            <main class="main-content">
+                <hr>
+                <a><strong>Autenticação</strong></a>
+                <form>
+                    <label for="username"><strong>Nome de utilizador:</strong></label><br>
+                    <input type="text" id="username" name="username"><br>
+                    <label for="password"><strong>Password:</strong></label><br>
+                    <input type="text" id="password" name="password"><br>
+                    <input type="submit" id="authentication" value="Submeter">
+                </form>
+              
+            </main>
+
+            <aside>
+                  
+                <p><strong>Feira da Ladra ou outro nome que apareça</strong></p>
+                <p><em>Na Feira da Ladra</em> acreditamos que a sustentabilidade começa com pequenas ações 
+                    que fazem uma grande diferença. Oferecemos um ambiente virtual onde você pode vender itens que já não utiliza e 
+                    encontrar produtos usados de qualidade a preços acessíveis. 
+                    Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.</p>
+                
+            </aside>
+        </div>
         <hr>
+        <footer>
+            <small><strong>About</strong></small><br>
+            <small>Esta secção é o footer e explica o copyright e etc e outras informações como datas e outras coisas</small>
+            <small>authorship information, copyright information, contact information, sitemap, back to top links, related documents</small>
+            <time></time>
+        </footer>
     </body>
-   <footer>
-        <small> <strong>About</strong></small><br>
-        <small>Esta secção é o footer e explica o copyright e etc e outras informações como datas e outras coisas</small>
-        <small>authorship information,  copyright information, contact information, sitemap, back to top links, related documents</small>
-        <time></time>
-   </footer> 
-</html>
+    </html>
