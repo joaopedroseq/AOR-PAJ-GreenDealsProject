@@ -1,15 +1,15 @@
 
-            .container {
-                display: flex;
-                flex-direction: row;
-                justify-content: space-between;
-            }
-            .main-content {
-                flex: 3;
-                padding: 10px;
-            }
-            aside {
-                flex: 1;
-                padding: 10px;
-                background-color: #f0f0f0;
-            }
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.main-content {
+    flex: 4;
+    padding: 10px;
+}
+aside {
+    flex: 1;
+    padding: 10px;
+    background-color: #f0f0f0;
+}
