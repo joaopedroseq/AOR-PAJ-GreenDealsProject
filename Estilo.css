@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.main-content {
+    flex: 4;
+    padding: 10px;
+}
+aside {
+    flex: 1;
+    padding: 10px;
+    background-color: #f5f5dc; /* Cor bege */
+    border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
+    border-radius: 5px; /* Cantos arredondados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    position: sticky;
+    top: 10px; /* Ajuste conforme necessário */
+}
+header {
+    background-color: #083b6e; /* Cor azul */
+    color: white; /* Cor do texto */
+    border-bottom: 1px solid #d3d3d3; /* Borda inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    text-align: center; /* Centraliza o texto */
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+}
+body {
+    margin-top: 180px; /* Espaço entre o header fixo e o body */
+}
