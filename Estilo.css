@@ -15,6 +15,10 @@ aside {
     border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
     border-radius: 5px; /* Cantos arredondados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    
+}
+
+aside h3, aside ul{
     position: sticky;
     top: 10px; /* Ajuste conforme necessário */
 }
