@@ -16,3 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
         welcomeMessage.textContent = `Olá, ${username}!`;
     });
 });
+
+function showPassword() {
+    console.log("passou por aqui")
+    var password = login.getElementById("password");
+    if (password.type === "password") {
+        password.type = "text";
+      } else {
+        password.type = "password";
+      }
+    }
