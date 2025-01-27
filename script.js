@@ -27,3 +27,14 @@ function showPassword() {
     password.type = "password";
   }
 }
+
+function categoryBarClick() {
+  console.log("start");
+  var categoryBar = document.getElementById("category-bar");
+  if(categoryBar.className === "category-bar"){
+    categoryBar.className = "category-bar open";
+  }
+  else{
+    categoryBar.className = "category-bar";
+  }
+}
