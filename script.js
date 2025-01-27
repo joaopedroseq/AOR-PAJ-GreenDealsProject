@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function showPassword() {
     console.log("passou por aqui")
-    var password = login.getElementById("password");
+    var password = document.getElementById("password");
     if (password.type === "password") {
         password.type = "text";
       } else {
