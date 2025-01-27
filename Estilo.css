@@ -47,14 +47,14 @@ header h1 {
 header h2 {
     margin: 0;
     font-size: 1em; /* Ajuste o tamanho conforme necessário */
-    text-align: center;
+    text-align: right;
     flex: 1;
 }
 
 header p {
     margin: 0;
     font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
-    text-align: left;
+    text-align: center;
     flex: 1;
     width: 100%;
 }
@@ -63,3 +63,42 @@ body {
     margin-top: 60px; /* Ajuste o espaço entre o header fixo e o body */
 }
 
+/* Estilo para a grade de imagens */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    gap: 20px; /* Espaçamento entre os itens */
+}
+
+.grid-item {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.grid-item .text-overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.grid-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
+.grid-item:hover .text-overlay {
+    opacity: 1; /* Exibe o texto */
+}
