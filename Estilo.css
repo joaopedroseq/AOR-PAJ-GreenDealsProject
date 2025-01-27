@@ -15,27 +15,51 @@ aside {
     border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
     border-radius: 5px; /* Cantos arredondados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-    
 }
 
-aside h3, aside ul{
+aside h3, aside ul {
     position: sticky;
     top: 10px; /* Ajuste conforme necessário */
 }
+
 header {
-    background-color: #0e8c4d; /* Cor azul */
+    background-color: #0e8c4d; /* Cor verde */
     color: white; /* Cor do texto */
     border-bottom: 1px solid #d3d3d3; /* Borda inferior */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-    padding: 10px;
+    padding: 5px 10px; /* Reduz a altura do cabeçalho */
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    text-align: center; /* Centraliza o texto */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     font-family: 'Verdana'; /* Fonte arredondada e elegante */
 }
-body {
-    margin-top: 180px; /* Espaço entre o header fixo e o body */
+
+header h1 {
+    margin: 0;
+    font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
 }
+
+header h2 {
+    margin: 0;
+    font-size: 1em; /* Ajuste o tamanho conforme necessário */
+    text-align: center;
+    flex: 1;
+}
+
+header p {
+    margin: 0;
+    font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
+    text-align: left;
+    flex: 1;
+    width: 100%;
+}
+
+body {
+    margin-top: 60px; /* Ajuste o espaço entre o header fixo e o body */
+}
+
