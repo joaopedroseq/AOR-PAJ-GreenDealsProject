@@ -47,8 +47,8 @@ header h1 {
 header h2 {
     margin: 0;
     font-size: 1em; /* Ajuste o tamanho conforme necessário */
-    text-align: right;
-    flex: 2;
+    text-align: center;
+    flex: 1;
 }
 
 header p {
