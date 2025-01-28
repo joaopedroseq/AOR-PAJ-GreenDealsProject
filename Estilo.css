@@ -9,7 +9,11 @@
 }
 .main-content {
     flex: 4;
-    padding: 10px;
+    padding: 100px;
+    font-size: 25px; /* Tamanho maior */
+    line-height: 2; /* Espaçamento entre linhas */
+    margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+    text-align: center; /* Centraliza o texto */
 }
 
 aside {
