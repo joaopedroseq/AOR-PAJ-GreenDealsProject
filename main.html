@@ -20,8 +20,8 @@
         </aside>
         <main class="main-content">
             <div class="grid-container">
-                <div class="grid-item">
-                    <img src='https://rmilet.vteximg.com.br/arquivos/ids/8420880-593-593/Tenis-Casual-Preto-e-Branco-Cadarco-Duo-%7C-Via-Marte-Tamanho--33---Cor--PRETO-0.jpg?v=638566729532400000' alt="tenis"/>
+                <div class="grid-item" onclick="window.location.href='detail.html'">
+                    <img src='images/produtos/tenis.webp' alt="tenis"/>
                     <div class="text-overlay">
                         <h2>Sapatilhas XPTO</h2>
                         <p>Sapatilhas usadas apenas uma única vez. Tamanho 38.</p>
@@ -30,8 +30,8 @@
                     </div>
                 </div>
 
-                <div class="grid-item">
-                    <img src='https://paco-martinez-assets.s3.eu-west-1.amazonaws.com/products/1490003456680/14900034_56_PT03.jpg' alt="mochila Paco Martinez"/>
+                <div class="grid-item" onclick="window.location.href='detail.html'">
+                    <img src='images/produtos/mochila.jpg' alt="mochila Paco Martinez"/>
                     <div class="text-overlay">
                         <h2>Mochila de viagem Paco Martinez</h2>
                         <p>Mochila quase nova, pouco uso. Está em perfeito estado.</p>
@@ -40,8 +40,8 @@
                     </div>
                 </div>
 
-                <div class="grid-item">
-                    <img src='https://ireland.apollo.olxcdn.com/v1/files/xj5drxp6t01h3-PT/image;s=2256x4000' alt="casaco Zara"/>
+                <div class="grid-item" onclick="window.location.href='detail.html'">
+                    <img src='images/produtos/casaco.webp' alt="casaco Zara"/>
                     <div class="text-overlay">
                         <h2>Casaco feminino Zara inverno</h2>
                         <p>Casaco preto com capuz. Comprado na Zara. Tamanho S. Pêlo do capuz removível. Muito bom estado. Não apresenta defeitos.</p>
@@ -50,8 +50,8 @@
                     </div>
                 </div>
 
-                <div class="grid-item">
-                    <img src='https://ireland.apollo.olxcdn.com/v1/files/ro2aqt7dvhow-PT/image;s=1000x700' alt="dinossauros"/>
+                <div class="grid-item" onclick="window.location.href='detail.html'">
+                    <img src='images/produtos/dinossauros.webp' alt="dinossauros"/>
                     <div class="text-overlay">
                         <h2>Brinquedos dinossauros</h2>
                         <p>Vários dinossauros, bom estado, boa qualidade</p>
@@ -64,7 +64,7 @@
             <p><strong>Adicionar um novo Produto</strong></p>
             <form>
                 <label for="nome"><strong>Nome do Produto:</strong></label><br>
-                <input type="txt" id="nome" name="nome"><br>
+                <input type="text" id="nome" name="nome"><br>
                 <label for="tipo"><strong>Tipo de Produto:</strong></label><br>
                 <input type="text" id="tipo" name="tipo"><br>
                 <label for="preco"><strong>Preço do Produto:</strong></label><br>
@@ -75,14 +75,9 @@
             </form>
         </main>
     </div>
-    <footer>
-        <small><strong>About</strong></small><br>
-        <small>Esta secção é o footer e explica o copyright e etc e outras informações como datas e outras coisas</small>
-        <small>authorship information, copyright information, contact information, sitemap, back to top links, related documents</small>
-        <time></time>
-    </footer>
+    <div w3-include-html="footer.html"></div>
     <script>
         w3.includeHTML();
-    </script> 
+    </script>
 </body>
 </html>

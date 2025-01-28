@@ -27,7 +27,7 @@ aside h3, aside ul {
 }
 
 header {
-    background-color: #0e8c4d; /* Cor verde */
+    background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     border-bottom: 1px solid #d3d3d3; /* Borda inferior */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
@@ -43,115 +43,109 @@ header {
     font-family: 'Verdana'; /* Fonte arredondada e elegante */
 }
 
-    header h1 {
-        margin: 0;
-        font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
-    }
+header h1 {
+    margin: 0;
+    font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
+}
 
-    header h2 {
-        margin: 0;
-        font-size: 1em; /* Ajuste o tamanho conforme necessário */
-        text-align: center;
-        flex: 1;
-    }
+header h2 {
+    margin: 0;
+    font-size: 1em; /* Ajuste o tamanho conforme necessário */
+    text-align: center;
+    flex: 1;
+}
 
-    header p {
-        margin: 0;
-        font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
-        text-align: left;
-        flex: 1;
-        width: 100%;
-    }
+header p {
+    margin: 0;
+    font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
+    text-align: left;
+    flex: 1;
+    width: 100%;
+}
 
-    .category-bar{
-        position: relative;
-        display: inline-block;
-        padding: 1%;
-        transform: rotate(0deg);
-        transition: transform 0.5s linear;
-    }
+.category-bar{
+    position: relative;
+    display: inline-block;
+    padding: 1%;
+    transform: rotate(0deg);
+    transition: transform 0.5s linear;
+}
 
-    .category-bar.open{
-        position: relative;
-        display: inline-block;
-        padding: 1%;
-        transform: rotate(90deg);
-        transition: transform 0.5s linear;
-    }
+.category-bar.open{
+    position: relative;
+    display: inline-block;
+    padding: 1%;
+    transform: rotate(90deg);
+    transition: transform 0.5s linear;
+}
 
+.logo{
+    position: relative;
+    display: inline-block;
+    padding: 1%;
+    top: 0;
+    left: 0;
+    margin-left: 3%;
+}
 
-    .logo{
-        position: relative;
-        display: inline-block;
-        padding: 1%;
-        top: 0;
-        left: 0;
-        margin-left: 3%;
-    }
+.login{
+    position: relative;
+    float: right;
+    padding: 1%;
+    margin-right: 3%;
+}
 
-    
+.dropdownlogin{
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--green);
+    color: white; /* Cor do texto */
+    border-bottom: 1px solid #d3d3d3; /* Borda inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    padding: 5px 10px; /* Reduz a altura do cabeçalho */
+    min-width: 230px;
+    min-height: 165px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 8px 30px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+}
 
-    .login{
-        position: relative;
-        float: right;
-        padding: 1%;
-        margin-right: 3%;
-    }
+.login-form{
+    float: right;
+}
 
-    .dropdownlogin{
-        display: none;
-        position: absolute;
-        right: 0;
-        background-color: var(--green);
-        color: white; /* Cor do texto */
-        border-bottom: 1px solid #d3d3d3; /* Borda inferior */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-        padding: 5px 10px; /* Reduz a altura do cabeçalho */
-        min-width: 230px;
-        min-height: 165px;
-        width: 100%;
-        height: 100%;
-        box-shadow: 0px 8px 30px 0px rgba(0,0,0,0.2);
-        padding: 12px 16px;
-    }
+.textbox{
+    border-radius: 2px;
+    margin: 5px;
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+}
 
-    .login-form{
-        float: right;
-        
-    }
+.button{
+    float: right;
+    margin-top: 3%;
+    display: block;
+    border-radius: 2px;
+    text-align: center;
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    padding: 2px 2px;
+    background-color: #ffffff;
+    border: none;
+}
 
-    .textbox{
-        border-radius: 2px;
-        margin: 5px;
-        font-family: Verdana, 'Times New Roman', Times, serif;
-        font-size: 16px;
-    }
+.dropdownlogin label{
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    color: white;
+}
 
-    .button{
-        float: right;
-        margin-top: 3%;
-        display: block;
-        border-radius: 2px;
-        text-align: center;
-        font-family: Verdana, 'Times New Roman', Times, serif;
-        font-size: 16px;
-        color: rgb(0, 0, 0);
-        padding: 2px 2px;
-        background-color: #ffffff;
-        border: none;
-
-    }
-
-    .dropdownlogin label{
-        font-family: Verdana, 'Times New Roman', Times, serif;
-        font-size: 16px;
-        color: white;
-    }
-
-
-    .login:hover .dropdownlogin{
-        display: block;
-    }
+.login:hover .dropdownlogin{
+    display: block;
+}
 
 body {
     margin-top: 60px; /* Ajuste o espaço entre o header fixo e o body */
@@ -169,6 +163,7 @@ body {
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
     transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+    cursor: pointer; /* Indica que o item é clicável */
 }
 
 .grid-item img {
@@ -197,4 +192,71 @@ body {
     opacity: 1; /* Exibe o texto */
 }
 
+/* Estilo para o rodapé */
+footer {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 20px;
+    text-align: center;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    border-top: 1px solid #d3d3d3; /* Borda superior */
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+}
 
+.footer-container {
+    display: flex;
+    justify-content: space-around; /* Distribui as seções igualmente */
+    flex-wrap: wrap; /* Permite que as seções se ajustem em telas menores */
+}
+
+.footer-section {
+    flex: 1;
+    margin: 0 10px;
+    min-width: 200px; /* Largura mínima para cada seção */
+}
+
+.footer-section h4 {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.footer-section p, .footer-section a {
+    margin: 5px 0;
+    color: white;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    text-decoration: underline;
+}
+
+.footer-section form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer-section input[type="email"] {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.footer-section button {
+    padding: 10px 20px;
+    background-color: white;
+    color: var(--green);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.footer-section button:hover {
+    background-color: #d3d3d3;
+}
+
+.footer-copyright {
+    text-align: left;
+    margin-top: 20px;
+}
