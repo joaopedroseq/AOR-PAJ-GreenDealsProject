@@ -5,12 +5,10 @@
     <title>GreenDeals - A sua feira mais próxima de si</title>
     <link rel="stylesheet" href="Estilo.css">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
+ 
 </head>
 <body>
-    <header>
-        <h1><strong>GreenDeals</strong></h1>
-    </header>
-
+    <div w3-include-html="header.html"></div>
     <div class="container">
         <aside>
             <h3>Categorias</h3>
@@ -25,12 +23,7 @@
             <div class="grid-container">
                 <div class="grid-item">
                     <img src='https://rmilet.vteximg.com.br/arquivos/ids/8420880-593-593/Tenis-Casual-Preto-e-Branco-Cadarco-Duo-%7C-Via-Marte-Tamanho--33---Cor--PRETO-0.jpg?v=638566729532400000' alt="tenis"/>
-            <table>
-                <tr>
-                    <td>
-                        <img src='https://rmilet.vteximg.com.br/arquivos/ids/8420880-593-593/Tenis-Casual-Preto-e-Branco-Cadarco-Duo-%7C-Via-Marte-Tamanho--33---Cor--PRETO-0.jpg?v=638566729532400000' alt="tenis" width="200" height="200"/>
-                    </td>
-                    <td>
+                    <div class="text-overlay">
                         <h2>Sapatilhas XPTO</h2>
                         <p>Sapatilhas usadas apenas uma única vez. Tamanho 38.</p>
                         <p>Categoria: Calçado</p>
@@ -83,6 +76,12 @@
             </form>
         </main>
     </div>
+    <footer>
+        <small><strong>About</strong></small><br>
+        <small>Esta secção é o footer e explica o copyright e etc e outras informações como datas e outras coisas</small>
+        <small>authorship information, copyright information, contact information, sitemap, back to top links, related documents</small>
+        <time></time>
+    </footer>
    <!-- Incluir o rodapé -->
    <div w3-include-html="footer.html"></div>
    <script>
