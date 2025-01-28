@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+  console.log("start")
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');
 

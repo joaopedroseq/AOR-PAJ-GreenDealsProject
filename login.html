@@ -5,25 +5,12 @@
     <title>GreenDeals</title>
     <link rel="icon" href="https://storage.googleapis.com/clean-finder-353810/$KLAskV8KWPhLJh8JlvnDZeZUw9ThxsdKrZg0YJHhYlWdt2ebvJBOSj.jpeg" type="image/x-icon">
     <link rel="stylesheet" href="Estilo.css">
-    <script src="script.js" defer></script>
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    
     <script src="https://www.w3schools.com/lib/w3.js"></script>
 </head>
 <body>
     <div w3-include-html="header.html"></div>
     <div class="container">
-        <aside>
-            <a><strong>Autenticação</strong></a>
-            <form id="login-form">
-                <label for="username"><strong>Nome de utilizador:</strong></label><br>
-                <input type="text" id="username" name="username" maxlength="20"><br>
-                <label for="password"><strong>Password:</strong></label><br>
-                <input type="password" id="password" name="password" maxlength="20"><br>
-                <input type="checkbox" id="showPasswordcheckbox" onclick="showPassword()">
-                <label for="showPassword"><small>Mostrar password</small></label><br>
-                <input type="submit" id="submit" value="Submeter">
-            </form>
-        </aside>
         <main class="main-content">
             <p><strong>GreenDeals</strong></p>
             <p><em>Na GreenDeals</em> acreditamos que a sustentabilidade começa com pequenas ações 
@@ -33,11 +20,13 @@
                 Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.</p>
         </main>
     </div>
-
-  <!-- Incluir o rodapé -->
-  <div w3-include-html="footer.html"></div>
-  <script>
-      w3.includeHTML();
-  </script>
+    <footer>
+        <small><strong>About</strong></small><br>
+        <small>Esta secção é o footer e explica o copyright e etc e outras informações como datas e outras coisas</small>
+        <small>authorship information, copyright information, contact information, sitemap, back to top links, related documents</small>
+    </footer>
 </body>
+    <script>
+        w3.includeHTML();
+    </script> 
 </html>
