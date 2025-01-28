@@ -2,10 +2,18 @@
     --green: #0e8c4d;
 }
 
+*, html{
+    margin: 0;
+    padding: 0;
+}
+
 /* Estilo para o rodapé */
 footer{
     display: block;
     background-color: var(--green); /* Cor verde */
+    width: 100vw;
+    margin-left: 0;
+    padding: 0;
 }
 
     .footerContainer {
