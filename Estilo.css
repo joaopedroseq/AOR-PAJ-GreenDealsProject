@@ -2,6 +2,11 @@
     --green: #0e8c4d;
 }
 
+*, html{
+    margin: 0;
+    padding: 0;
+}
+
 .loginMessage{
         color: black;
     }
@@ -11,13 +16,20 @@
         flex-direction: row;
         justify-content: space-between;
     }
+
 .main-content {
-        flex: 4;
         padding: 100px;
+        width: 100vw;
+        margin-left: 0;
         font-size: 25px; /* Tamanho maior */
         line-height: 2; /* Espaçamento entre linhas */
         margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
         text-align: center; /* Centraliza o texto */
+    }
+    .welcomeBar{
+        background-color: rgb(215, 133, 31);
+        width: 100vw;
+        text-align: left;
     }
 
     aside {
@@ -45,7 +57,6 @@
         top: 0;
         left: 0;
         z-index: 1000;
-        display: flex;
         align-items: center;
         justify-content: space-between;
         font-family: 'Verdana'; /* Fonte arredondada e elegante */
@@ -79,24 +90,24 @@ header p {
         transition: transform 0.5s linear;
     }
 
-    .category-bar.open{
-        position: relative;
-        display: inline-block;
-        padding: 1%;
-        transform: rotate(90deg);
-        transition: transform 0.5s linear;
-    }
+        .category-bar.open{
+            position: relative;
+            display: inline-block;
+            padding: 1%;
+            transform: rotate(90deg);
+            transition: transform 0.5s linear;
+        }
 
     .logo{
-        position: relative;
         display: inline-block;
+        text-decoration: none;
         padding: 1%;
         top: 0;
         left: 0;
-        margin-left: 3%;
     }
 
     .login{
+        display: none;
         position: relative;
         float: right;
         padding: 1%;
@@ -155,9 +166,9 @@ header p {
         display: block;
     }
 
-body {
-    margin-top: 60px; /* Ajustar o espaço entre o header fixo e o body */
-}
+
+
+
 
 /* Estilo para a grade de imagens */
 .grid-container {
@@ -258,71 +269,3 @@ body {
 }
 
 
-/* Estilo para o rodapé */
-footer {
-    background-color: var(--green); /* Cor verde */
-    color: white; /* Cor do texto */
-    padding: 20px;
-    text-align: center;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    border-top: 1px solid #d3d3d3; /* Borda superior */
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-around; /* Distribui as seções igualmente */
-    flex-wrap: wrap; /* Permite que as seções se ajustem em telas menores */
-}
-
-.footer-section {
-    flex: 1;
-    margin: 0 10px;
-    min-width: 200px; /* Largura mínima para cada seção */
-}
-
-.footer-section h4 {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-}
-
-.footer-section p, .footer-section a {
-    margin: 5px 0;
-    color: white;
-    text-decoration: none;
-}
-
-.footer-section a:hover {
-    text-decoration: underline;
-}
-
-.footer-section form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.footer-section input[type="email"] {
-    padding: 10px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-.footer-section button {
-    padding: 10px 20px;
-    background-color: white;
-    color: var(--green);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.footer-section button:hover {
-    background-color: #d3d3d3;
-}
-
-.footer-copyright {
-    text-align: left;
-    margin-top: 20px;
-}

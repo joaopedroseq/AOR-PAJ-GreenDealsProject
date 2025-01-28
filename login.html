@@ -9,42 +9,47 @@
 <body>
     <header>
         <div class="category-bar" id="category-bar">
-            <img src="images/hamburger.png" id="hamburger" height="30px" onclick="categoryBarClick()">
+            <img src="images/hamburger.png" id="hamburger" height="20px" onclick="categoryBarClick()">
         </div>
     <div class="logo">
         <h1><strong>GreenDeals</strong></h1>
     </div>
-
-    <div class="login">
+    
+    <div class="login" id="loginButton">
         <img src="images\login.png" height="50px">
             <div class="dropdownlogin">
-            <form id="login-form" class="login-form">
-                <label for="login-form">Log In</label><br>
-                <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
-                <input type="password" class="textbox" value="password" id="password"><br>
-                <input type="checkbox" onclick="showPassword()">
-                <label for="checkbox">mostrar password</label><br>
-                <input type="submit" class="button" id="submit" value="submit" size="12px">
-            </form>
+                <form id="login-form" class="login-form">
+                    <label for="login-form">Log In</label><br>
+                    <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
+                    <input type="password" class="textbox" value="password" id="password"><br>
+                    <input type="checkbox" onclick="showPassword()">
+                    <label for="checkbox">mostrar password</label><br>
+                    <input type="submit" class="button" id="submit" value="submit" size="12px">
+                </form>
             </div>
     </div>
     </header>
+
     <div class="container">
-        <div class="welcomeBar">
-            <h2 class="loginMessage" id="mensagem_boasVindas" style="color: black;"></h2>
-        </div>
+        
         
         <main class="main-content">
+            
             <p><strong>GreenDeals</strong></p>
+            <div class="welcomeBar">
+                <p class="loginMessage" id="mensagem_boasVindas" style="color: black;"></p>
+            </div>
             <p><em>Na GreenDeals</em> acreditamos que a sustentabilidade começa com pequenas ações 
                 que fazem uma grande diferença. <br>
                 Oferecemos um ambiente virtual onde você pode vender itens que já não utiliza e 
                 encontrar produtos usados de qualidade a preços acessíveis. <br>
                 Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.</p>
 
-                <a href="main.html">
-                    <img src='images/Barra Inicial.png' alt="barra de produtos sustentaveis" width="105%"/>
-                </a>
+                <span>
+                    <a href="main.html">
+                        <img src='images/Barra Inicial.png' alt="barra de produtos sustentaveis" width="105%"/>
+                    </a>
+                </span>
 
         </main>
     </div>
