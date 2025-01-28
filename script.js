@@ -1,4 +1,4 @@
-if(sessionStorage.getItem('logged') === true){
+if(!(sessionStorage.getItem('logged') === true)){
   const login = document.getElementById('loginButton');
   login.style.display='block';
 }
