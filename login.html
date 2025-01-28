@@ -13,24 +13,27 @@
         </div>
     <div class="logo">
         <h1><strong>GreenDeals</strong></h1>
-        <h2 id="mensagem_boasVindas"></h2>
     </div>
 
     <div class="login">
-    <img src="images\login.png" height="50px">
-        <div class="dropdownlogin">
-        <form id="login-form" class="login-form">
-            <label for="login-form">Log In</label><br>
-            <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
-            <input type="password" class="textbox" value="password" id="password"><br>
-            <input type="checkbox" onclick="showPassword()">
-            <label for="checkbox">mostrar password</label><br>
-            <input type="submit" class="button" id="submit" value="submit" size="12px">
-        </form>
+        <img src="images\login.png" height="50px">
+            <div class="dropdownlogin">
+            <form id="login-form" class="login-form">
+                <label for="login-form">Log In</label><br>
+                <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
+                <input type="password" class="textbox" value="password" id="password"><br>
+                <input type="checkbox" onclick="showPassword()">
+                <label for="checkbox">mostrar password</label><br>
+                <input type="submit" class="button" id="submit" value="submit" size="12px">
+            </form>
+            </div>
     </div>
-    </div>
-</header>
+    </header>
     <div class="container">
+        <div class="welcomeBar">
+            <h2 class="loginMessage" id="mensagem_boasVindas" style="color: black;"></h2>
+        </div>
+        
         <main class="main-content">
             <p><strong>GreenDeals</strong></p>
             <p><em>Na GreenDeals</em> acreditamos que a sustentabilidade começa com pequenas ações 
@@ -51,8 +54,9 @@
     </script>
 </body>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="scriptMain.js" defer></script>
-    <script>
-        w3.includeHTML();
-    </script> 
+<script src="script.js" defer></script>
+<script src="scriptMain.js" defer></script>
+<script>
+    w3.includeHTML();
+</script> 
 </html>
