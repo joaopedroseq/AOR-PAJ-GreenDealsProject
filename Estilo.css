@@ -158,8 +158,9 @@ body {
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
     gap: 20px; /* Espaçamento entre os itens */
+    padding: 20px; /* Espaçamento interno */
 }
 
 .grid-item {
@@ -186,6 +187,7 @@ body {
     padding: 10px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
+    font-size: 14px; /* Tamanho menor do texto */
 }
 
 .grid-item:hover {
@@ -195,6 +197,7 @@ body {
 .grid-item:hover .text-overlay {
     opacity: 1; /* Exibe o texto */
 }
+
 
 
 /* Botão elegante para Adicionar Produto */
