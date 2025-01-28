@@ -30,8 +30,8 @@
     }
 
     aside h3, aside ul {
-        position: sticky;
-        top: 10px; /* Ajuste conforme necessário */
+        position: relative;
+        top: 50px; /* Ajuste conforme necessário */
     }
 
 
@@ -203,6 +203,14 @@ body {
 .grid-item:hover .text-overlay {
     opacity: 1; /* Exibe o texto */
 }
+
+/* Estilo para a categoria ativa no main */
+.categoria-ativa {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
+    background-color: #f0f0f0; /* Cor de fundo para destaque */
+    transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
+}
+
 
 
 
