@@ -1,0 +1,54 @@
+:root{
+    --green: #0e8c4d;
+}
+
+/* Estilo para o rodapé */
+footer{
+    display: block;
+    background-color: var(--green); /* Cor verde */
+}
+
+    .footerContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        background-color: var(--green); /* Cor verde */
+        color: white; /* Cor do texto */
+        padding: 20px;
+        font-family: 'Verdana'; /* Fonte arredondada e elegante */
+        border-top: 1px solid #d3d3d3; /* Borda superior */
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    }
+
+    .footerContainer h3:hover, li p:hover, li a:hover{
+        text-decoration: underline;
+    }
+
+    .footerContainer h3{
+        text-align: center;
+    }
+
+    .footerContainer a{
+        color: white; /* Cor do texto */
+        text-decoration: none;
+    }
+
+    .footerContainer ul{
+        list-style-type: none;
+        text-align: center;
+    }
+
+    .listaSocial{
+        display: flex;
+        justify-content: space-evenly;
+        gap: 10px;
+    }
+
+
+    .copyright {
+        font-family: 'Verdana'; /* Fonte arredondada e elegante */
+        color: white; /* Cor do texto */
+        text-align: right;
+        margin-top: 20px;
+        padding: 20px;
+    }
