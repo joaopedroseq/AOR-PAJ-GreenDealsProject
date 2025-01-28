@@ -1,12 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("start")
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');
+    
+    const loginIcon = document.getElementById('login');
 
     // Verificar se há um nome de utilizador armazenado no Session Storage
     const storedUsername = sessionStorage.getItem('username');
     if (storedUsername) {
-        welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+      welcomeMessage.textContent = `Olá, ${storedUsername}!`;
     }
 
     // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
@@ -15,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('username').value;
         sessionStorage.setItem('username', username);
         welcomeMessage.textContent = `Olá, ${username}!`;
+        console.log('teste');
+        document.getElementById("login").style.display = 'none';
+
     });
 });
 
