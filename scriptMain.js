@@ -1,4 +1,8 @@
-
+if(sessionStorage.getItem('logged')){
+    const login = document.getElementById('loginButton');
+    login.style.display='none';
+  }
+  
 /* Carregar o formulário quando se carrega no botão "Adicionar Produto" */
 
 function toggleForm() {

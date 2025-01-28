@@ -1,8 +1,11 @@
+if(!(sessionStorage.getItem('logged') === true)){
+  const login = document.getElementById('loginButton');
+  login.style.display='block';
+}
+  
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');
-    
-    const loginIcon = document.getElementById('login');
 
     // Verificar se há um nome de utilizador armazenado no Session Storage
     const storedUsername = sessionStorage.getItem('username');
@@ -14,10 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
+        const login = document.getElementById('loginButton');
+        login.style.display='none';
         sessionStorage.setItem('username', username);
+        sessionStorage.setItem('logged', true);
         welcomeMessage.textContent = `Olá, ${username}!`;
-        console.log('teste');
-        document.getElementById("login").style.display = 'none';
 
     });
 });

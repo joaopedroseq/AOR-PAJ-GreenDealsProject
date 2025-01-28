@@ -2,35 +2,33 @@
 <html lang="pt">
 <head>
     <meta charset="utf-8">
-    <title>GreenDeals</title>
-    <link rel="stylesheet" href="Estilo.css">
+    <title>GreenDeals - A sua feira mais próxima de si</title>
+    <link rel="stylesheet" href="mainStyle.css">
 </head>
 <body>
     <header>
         <div class="category-bar" id="category-bar">
-            <img src="images/hamburger.png" id="hamburger" height="30px" onclick="categoryBarClick()">
+            <img src="images/hamburger.png" id="hamburger" height="20px" onclick="categoryBarClick()">
         </div>
     <div class="logo">
-        <h1><strong>GreenDeals</strong></h1>
-        <h2 id="mensagem_boasVindas"></h2>
+        <a href="login.html"><strong>GreenDeals</strong></strong></a>
     </div>
-    <div class="login" id="login">
-    <img src="images\login.png" height="50px">
-        <div class="dropdownlogin">
-        <form id="login-form" class="login-form">
-            <label for="login-form">Log In</label><br>
-            <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
-            <input type="password" class="textbox" value="password" id="password"><br>
-            <input type="checkbox" onclick="showPassword()">
-            <label for="checkbox">mostrar password</label><br>
-            <input type="submit" class="button" id="submit" value="submit" size="12px">
-        </form>
+    <div class="login" id="loginButton">
+        <img src="images\login.png" height="50px">
+            <div class="dropdownlogin">
+                <form id="login-form" class="login-form">
+                    <label for="login-form">Log In</label><br>
+                    <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
+                    <input type="password" class="textbox" value="password" id="password"><br>
+                    <input type="checkbox" onclick="showPassword()">
+                    <label for="checkbox">mostrar password</label><br>
+                    <input type="submit" class="button" id="submit" value="submit" size="12px">
+                </form>
+            </div>
     </div>
-    </div>
-</header>
-    <div>
-        <h2 id="mensagem_boasVindas"></h2>
-    </div>
+    </header>
+    
+
     <div class="container">
         <aside>
             <h3>Categorias</h3>

@@ -1,0 +1,285 @@
+:root{
+    --green: #0e8c4d;
+}
+
+*, html{
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.main-content {
+    padding: 100px;
+    width: 100vw;
+    margin-left: 0;
+    font-size: 25px; /* Tamanho maior */
+    line-height: 2; /* Espaçamento entre linhas */
+    margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+    text-align: center; /* Centraliza o texto */
+}
+
+aside {
+    flex: 1;
+    padding: 10px;
+    background-color: #f5f5dc; /* Cor bege */
+    border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
+    border-radius: 5px; /* Cantos arredondados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+}
+
+aside h3, aside ul {
+    position: relative;
+    top: 50px; /* Ajuste conforme necessário */
+}
+
+header {
+    display: flex;
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    border-bottom: 1px solid #d3d3d3; /* Borda inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    padding: 5px 10px; /* Reduz a altura do cabeçalho */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+}
+
+header h1 {
+margin: 0;
+font-size: 1.5em; /* Ajustar o tamanho conforme necessário */
+}
+
+header h2 {
+margin: 0;
+font-size: 1em; /* Ajustar o tamanho conforme necessário */
+text-align: center;
+flex: 1;
+}
+
+.loginMessage{
+    padding-right: 5%;
+    font-size: 20px;
+    color: white;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+}
+
+.category-bar{
+    position: relative;
+    display: inline-block;
+    padding: 1%;
+    transform: rotate(0deg);
+    transition: transform 0.5s linear;
+}
+
+    .category-bar.open{
+        position: relative;
+        display: inline-block;
+        padding: 1%;
+        transform: rotate(90deg);
+        transition: transform 0.5s linear;
+    }
+
+.logo{
+    display: inline-block;
+    text-decoration: none;
+    padding: 1%;
+    top: 0;
+    left: 0;
+}
+
+.login{
+    display: none;
+    position: relative;
+    float: right;
+    padding: 1%;
+    margin-right: 3%;
+}
+
+.dropdownlogin{
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--green);
+    color: white; /* Cor do texto */
+    border-bottom: 1px solid #d3d3d3; /* Borda inferior */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    padding: 5px 10px; /* Reduz a altura do cabeçalho */
+    min-width: 230px;
+    min-height: 165px;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0px 8px 30px 0px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+}
+
+.login-form{
+    float: right;
+}
+
+.textbox{
+    border-radius: 2px;
+    margin: 5px;
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+}
+
+.button{
+    float: right;
+    margin-top: 3%;
+    display: block;
+    border-radius: 2px;
+    text-align: center;
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    padding: 2px 2px;
+    background-color: #ffffff;
+    border: none;
+}
+
+.dropdownlogin label{
+    font-family: Verdana, 'Times New Roman', Times, serif;
+    font-size: 16px;
+    color: white;
+}
+
+.login:hover .dropdownlogin{
+    display: block;
+}
+
+/* Estilo para a grade de imagens */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
+    gap: 20px; /* Espaçamento entre os itens */
+    padding: 20px; /* Espaçamento interno */
+}
+
+.grid-item {
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+    cursor: pointer; /* Indica que o item é clicável */
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.grid-item .text-overlay {
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Fundo semi-transparente */
+    color: white;
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    font-size: 14px; /* Tamanho menor do texto */
+}
+
+.grid-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
+.grid-item:hover .text-overlay {
+    opacity: 1; /* Exibe o texto */
+}
+
+/* Estilo para a categoria ativa no main */
+.categoria-ativa {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
+    background-color: #f0f0f0; /* Cor de fundo para destaque */
+    transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
+}
+
+/* Botão elegante para Adicionar Produto */
+/* Botão elegante */
+#add-product-btn, #add-product-form-detail {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-btn, #add-product-form-detail:hover {
+    background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+/* Formulário oculto por padrão */
+#add-product-form {
+    display: none;
+    margin-top: 20px;
+}
+
+#add-product-form label {
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    color: #333;
+}
+
+#add-product-form input[type="text"],
+#add-product-form input[type="submit"] {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+}
+
+#add-product-form input[type="submit"] {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-form input[type="submit"]:hover {
+    background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+/* Estilo para a imagem dentro da tabela da página detail */
+
+.table-img {
+    width: 400px; /* Tamanho*/
+    height: auto; /* Mantém a proporção da imagem */
+    float: left; /* Alinha a imagem à esquerda */
+    margin-right: 2px; /* Espaço entre a imagem e o texto */
+    margin-bottom: 40px; /* Espaço entre a imagem e a descrição */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+}
+
+.table-img:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
+.table-content {
+    overflow: hidden; /* Garante que o conteúdo não flutue ao redor da imagem */
+    margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+
