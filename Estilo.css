@@ -51,25 +51,25 @@
         font-family: 'Verdana'; /* Fonte arredondada e elegante */
     }
 
-    header h1 {
-        margin: 0;
-        font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
-    }
+header h1 {
+    margin: 0;
+    font-size: 1.5em; /* Ajuste o tamanho conforme necessário */
+}
 
-    header h2 {
-        margin: 0;
-        font-size: 1em; /* Ajuste o tamanho conforme necessário */
-        text-align: center;
-        flex: 1;
-    }
+header h2 {
+    margin: 0;
+    font-size: 1em; /* Ajuste o tamanho conforme necessário */
+    text-align: center;
+    flex: 1;
+}
 
-    header p {
-        margin: 0;
-        font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
-        text-align: left;
-        flex: 1;
-        width: 100%;
-    }
+header p {
+    margin: 0;
+    font-size: 0.9em; /* Ajuste o tamanho conforme necessário */
+    text-align: left;
+    flex: 1;
+    width: 100%;
+}
 
     .category-bar{
         position: relative;
@@ -156,14 +156,15 @@
     }
 
 body {
-    margin-top: 60px; /* Ajuste o espaço entre o header fixo e o body */
+    margin-top: 60px; /* Ajustar o espaço entre o header fixo e o body */
 }
 
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
     gap: 20px; /* Espaçamento entre os itens */
+    padding: 20px; /* Espaçamento interno */
 }
 
 .grid-item {
@@ -190,6 +191,7 @@ body {
     padding: 10px;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
+    font-size: 14px; /* Tamanho menor do texto */
 }
 
 .grid-item:hover {
@@ -201,9 +203,10 @@ body {
 }
 
 
+
 /* Botão elegante para Adicionar Produto */
 /* Botão elegante */
-#add-product-btn {
+#add-product-btn, #add-product-form-detail {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     padding: 10px 20px;
@@ -216,7 +219,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-#add-product-btn:hover {
+#add-product-btn, #add-product-form-detail:hover {
     background-color: #0c7a3e; /* Cor verde mais escura */
 }
 
