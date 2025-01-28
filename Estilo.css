@@ -192,6 +192,61 @@ body {
     opacity: 1; /* Exibe o texto */
 }
 
+
+/* Botão elegante para Adicionar Produto */
+/* Botão elegante */
+#add-product-btn {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-btn:hover {
+    background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+/* Formulário oculto por padrão */
+#add-product-form {
+    display: none;
+    margin-top: 20px;
+}
+
+#add-product-form label {
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    color: #333;
+}
+
+#add-product-form input[type="text"],
+#add-product-form input[type="submit"] {
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+}
+
+#add-product-form input[type="submit"] {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-product-form input[type="submit"]:hover {
+    background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+
 /* Estilo para o rodapé */
 footer {
     background-color: var(--green); /* Cor verde */

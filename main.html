@@ -5,6 +5,7 @@
     <title>GreenDeals - A sua feira mais próxima de si</title>
     <link rel="stylesheet" href="Estilo.css">
     <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <script src="scriptMain.js" defer></script>
 </head>
 <body>
     <div w3-include-html="header.html"></div>
@@ -61,8 +62,8 @@
                 </div>
             </div>
             
-            <p><strong>Adicionar um novo Produto</strong></p>
-            <form>
+            <button id="add-product-btn" onclick="toggleForm()">Adicionar um novo Produto</button>
+            <form id="add-product-form">
                 <label for="nome"><strong>Nome do Produto:</strong></label><br>
                 <input type="text" id="nome" name="nome"><br>
                 <label for="tipo"><strong>Tipo de Produto:</strong></label><br>
@@ -81,3 +82,4 @@
     </script>
 </body>
 </html>
+
