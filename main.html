@@ -181,8 +181,12 @@
     <div w3-include-html="footer.html"></div>
 </body>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="scriptMain.js" defer></script>
-    <script>
-        w3.includeHTML();
-    </script>
+<script>
+    w3.includeHTML(() =>  {
+      console.log("here")
+      const login = document.getElementById('loginButton');
+      console.log(login);
+    })
+</script>
+<script src="scriptMain.js" defer></script>
 </html>

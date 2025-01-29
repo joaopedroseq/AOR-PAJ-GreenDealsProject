@@ -16,6 +16,7 @@ header {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
         position: fixed;
         width: 100%;
+        min-height: 8%;
         height: 8%;
         top: 0;
         
@@ -29,19 +30,21 @@ header {
 
     .logo{
         flex: 1;
+        align-self: center;
         text-decoration: none;
         top: 0;
         left: 0;
     }
 
     .loginMessageDiv{
-        display: block;
+        position: right;
+        align-self: center;
         color: white; /* Cor do texto */
         font-family: 'Verdana'; /* Fonte arredondada e elegante */
     }
 
     .login{
-        display:none;
+        visibility: hidden;
         position: relative;
         float: right;
         margin-right: 3%;
@@ -50,6 +53,7 @@ header {
 
     .category-bar{
         flex: 1;
+        align-self: center;
         position: relative;
         display: block;
         transform: rotate(0deg);

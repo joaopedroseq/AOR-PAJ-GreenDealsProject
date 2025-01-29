@@ -1,36 +1,37 @@
-if((sessionStorage.getItem('logged') === null)){
-  console.log('not a user logged');
-  const login = document.getElementById('loginButton');
-  login.style.display='block';
+
+w3.includeHTML(() =>  {
+  if((sessionStorage.getItem('logged') === null)){
+console.log('not a user logged');
+const login = document.getElementById('loginButton');
+console.log(login);
+login.style.visibility='visible';
 }
 else{
-  
+
 }
-  
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.getElementById('login-form');
-    const welcomeMessage = document.getElementById('mensagem_boasVindas');
+const loginForm = document.getElementById('login-form');
+const welcomeMessage = document.getElementById('mensagem_boasVindas');
 
-    // Verificar se há um nome de utilizador armazenado no Session Storage
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-    }
+// Verificar se há um nome de utilizador armazenado no Session Storage
+const storedUsername = sessionStorage.getItem('username');
+if (storedUsername) {
+welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+}
 
-    // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        sessionStorage.setItem('username', username);
-        sessionStorage.setItem('logged', true);
-        welcomeMessage.textContent = `Olá, ${username}!`;
-        const loginMessage = document.getElementById("loginMessage");
-        loginMessage.style.display='block';
-        const login = document.getElementById('loginButton');
-        login.style.display='none';
-        console.log('user ' + storedUsername + ' logged');
-    });
+// Guardar o nome de utilizador no Session Storage quando o formulário for submetido
+loginForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const username = document.getElementById('username').value;
+  sessionStorage.setItem('username', username);
+  sessionStorage.setItem('logged', true);
+  welcomeMessage.textContent = `Olá, ${username}!`;
+  const loginMessage = document.getElementById("loginMessage");
+  loginMessage.style.display='block';
+  const login = document.getElementById('loginButton');
+  login.style.display='none';
+  console.log('user ' + storedUsername + ' logged');
 });
+})
 
 
 function showPassword() {
