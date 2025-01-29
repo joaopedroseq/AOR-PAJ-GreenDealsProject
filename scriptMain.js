@@ -94,7 +94,7 @@ if((sessionStorage.getItem('logged') === null)){
     // Carrega os produtos ao carregar a página
     loadProducts();
 
-    
+
     // Função para fazer a ligação das categorias no aside com os artigos
     const categories = document.querySelectorAll('aside ul li');
     const articles = document.querySelectorAll('.grid-item');
@@ -123,4 +123,16 @@ if((sessionStorage.getItem('logged') === null)){
             });
         });
     });
+
+      // Função para alternar a exibição do aside
+    function toggleAside() {
+        if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
+            asideMenu.style.display = 'block';
+        } else {
+            asideMenu.style.display = 'none';
+        }
+    }
+
+    // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
+    hamburger.addEventListener('click', toggleAside);
 });
