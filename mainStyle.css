@@ -24,7 +24,8 @@
 }
 
 aside {
-    flex: 1;
+    display: none;
+    float: left;
     padding: 10px;
     background-color: #a2f98d; /* Cor bege */
     border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */

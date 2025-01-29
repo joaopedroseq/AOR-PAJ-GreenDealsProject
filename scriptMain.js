@@ -1,4 +1,3 @@
-
 w3.includeHTML(() =>  {
     if((sessionStorage.getItem('logged') === null)){
       console.log('not a user logged');
@@ -30,7 +29,6 @@ w3.includeHTML(() =>  {
       login.style.display='none';
       console.log('user ' + storedUsername + ' logged');
   });
-  })
   
   
   function showPassword() {
@@ -42,11 +40,9 @@ w3.includeHTML(() =>  {
       password.type = "password";
     }
   }
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('add-product-form');
+  const form = document.getElementById('add-product-form');
     const addButton = document.getElementById('add-product-btn');
     const gridContainer = document.querySelector('.grid-container');
-    const asideMenu = document.getElementById('aside-menu');
 
     // Função para alternar a exibição do formulário
     function toggleForm() {
@@ -165,15 +161,15 @@ w3.includeHTML(() =>  {
 
       // Função para alternar a exibição do aside
     function toggleAside() {
+        const asideMenu = document.getElementById("aside-menu");
+        console.log(asideMenu);
         if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-            console.log(open aside);
             asideMenu.style.display = 'block';
         } else {
-            console.log(close aside);
             asideMenu.style.display = 'none';
         }
     }
 
     // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-    hamburger.addEventListener('click', toggleAside);
+    hamburger.addEventListener('click', toggleAside);   
 });
