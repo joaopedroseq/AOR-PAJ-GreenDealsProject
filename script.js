@@ -1,6 +1,10 @@
-if(!(sessionStorage.getItem('logged') === true)){
+if((sessionStorage.getItem('logged') === null)){
+  console.log('not a user logged');
   const login = document.getElementById('loginButton');
   login.style.display='block';
+}
+else{
+  
 }
   
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,12 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const username = document.getElementById('username').value;
-        const login = document.getElementById('loginButton');
-        login.style.display='none';
         sessionStorage.setItem('username', username);
         sessionStorage.setItem('logged', true);
         welcomeMessage.textContent = `Olá, ${username}!`;
-
+        const loginMessage = document.getElementById("loginMessage");
+        loginMessage.style.display='block';
+        const login = document.getElementById('loginButton');
+        login.style.display='none';
+        console.log('user ' + storedUsername + ' logged');
     });
 });
 

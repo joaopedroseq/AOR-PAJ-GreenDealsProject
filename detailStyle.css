@@ -26,17 +26,15 @@
 aside {
     flex: 1;
     padding: 10px;
-    background-color: #a2f98d; /* Cor bege */
+    background-color: #f5f5dc; /* Cor bege */
     border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
     border-radius: 5px; /* Cantos arredondados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    line-height: 2; /* Ajuste o valor conforme necessário */
 }
 
 aside h3, aside ul {
     position: relative;
-    top: 70px; /* Ajuste conforme necessário */
+    top: 50px; /* Ajuste conforme necessário */
 }
 
 header {
@@ -228,13 +226,6 @@ flex: 1;
     background-color: #0c7a3e; /* Cor verde mais escura */
 }
 
-#add-product-btn {
-    display: block; /* Garante que o botão ocupe toda a largura disponível */
-    margin-left: auto; /* Adiciona margem automática à esquerda */
-    margin-right: 0; /* Remove qualquer margem à direita */
-    text-align: right; /* Alinha o texto à direita */
-}
-
 /* Formulário oculto por padrão */
 #add-product-form {
     display: none;
@@ -267,4 +258,26 @@ flex: 1;
 
 #add-product-form input[type="submit"]:hover {
     background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+/* Estilo para a imagem dentro da tabela da página detail */
+
+.table-img {
+    width: 400px; /* Tamanho*/
+    height: auto; /* Mantém a proporção da imagem */
+    float: left; /* Alinha a imagem à esquerda */
+    margin-right: 2px; /* Espaço entre a imagem e o texto */
+    margin-bottom: 40px; /* Espaço entre a imagem e a descrição */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+}
+
+.table-img:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
+.table-content {
+    overflow: hidden; /* Garante que o conteúdo não flutue ao redor da imagem */
+    margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
+    text-align: left; /* Alinha o texto à esquerda */
 }

@@ -2,13 +2,36 @@
 <html>  
     <head>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="Estilo.css">
+        <link rel="stylesheet" href="detailStyle.css">
         <script src="https://www.w3schools.com/lib/w3.js"></script>
         <title>GreenDeals</title>
     </head>
     <body>
         <header>
+            <div class="category-bar" id="category-bar">
+                <img src="images/hamburger.png" id="hamburger" height="20px" onclick="categoryBarClick()">
+            </div>
+        <div class="logo">
             <h1><strong>GreenDeals</strong></h1>
+        </div>
+    
+        <div class="loginMessage">
+            <h2 class="loginMessage" id="mensagem_boasVindas"></h2>
+        </div>    
+    
+        <div class="login" id="loginButton">
+            <img src="images\login.png" height="50px">
+                <div class="dropdownlogin">
+                    <form id="login-form" class="login-form">
+                        <label for="login-form">Log In</label><br>
+                        <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
+                        <input type="password" class="textbox" value="password" id="password"><br>
+                        <input type="checkbox" onclick="showPassword()">
+                        <label for="checkbox">mostrar password</label><br>
+                        <input type="submit" class="button" id="submit" value="submit" size="12px">
+                    </form>
+                </div>
+        </div>
         </header>
 
         <div class="container">
