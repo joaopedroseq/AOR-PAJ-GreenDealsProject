@@ -2,17 +2,21 @@
 
 <header>
     <div class="category-bar" id="category-bar">
-        <img src="images/hamburger.png" class='hamburger' id="hamburger" onclick="toggleAside()">
+        <img src="images/hamburger.png" class='hamburger' id="hamburger">
     </div>
-    <div class="logo">
-        <h1><strong>GreenDeals</strong></h1>
+    <div class="logo" href="main.html">
+        <a href="index.html"><strong>GreenDeals</strong></a>
     </div>
     <div class="loginMessageDiv" id="loginMessage">
         <h2 class="loginMessage" id="mensagem_boasVindas"></h2>
+        <input type="submit" class="button" id="logoutButton" value="logout" size="12px">
     </div>
+    <form id="logout-form" class="logout-form">
+        
+    </form>
     <div class="login" id="loginButton">
         <img src="images\login.png" class='loginIcon' height="50px">
-            <div class="dropdownlogin">
+            <div class="dropdownLogin">
                 <form id="login-form" class="login-form">
                     <label for="login-form">Log In</label><br>
                     <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
