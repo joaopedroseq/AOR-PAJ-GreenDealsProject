@@ -1,0 +1,21 @@
+:root{
+    --green: #0e8c4d;
+}
+
+*, html{
+    margin: 0;
+    padding: 0;
+}
+
+.main-content {
+        margin-left: 0;
+        font-size: 25px; /* Tamanho maior */
+        line-height: 2; /* Espaçamento entre linhas */
+        margin-top: 25vh; /*Espaçamento entre o header*/
+        margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+        text-align: center; /* Centraliza o texto */
+}
+
+.sustentabilityBanner{
+    width: 100%;
+}

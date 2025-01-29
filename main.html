@@ -6,32 +6,7 @@
     <link rel="stylesheet" href="mainStyle.css">
 </head>
 <body>
-    <header>
-        <div class="category-bar" id="category-bar">
-            <img src="images/hamburger.png" id="hamburger" height="20px">
-        </div>
-        <div class="logo">
-            <h1><strong>GreenDeals</strong></h1>
-        </div>
-
-        <div class="loginMessage">
-            <h2 class="loginMessage" id="mensagem_boasVindas"></h2>
-        </div>    
-
-        <div class="login" id="loginButton">
-            <img src="images/login.png" height="50px">
-            <div class="dropdownlogin">
-                <form id="login-form" class="login-form">
-                    <label for="login-form">Log In</label><br>
-                    <input type="text" class="textbox" id="username" name="username" maxlength="20" value="username"><br>
-                    <input type="password" class="textbox" value="password" id="password"><br>
-                    <input type="checkbox" onclick="showPassword()">
-                    <label for="checkbox">mostrar password</label><br>
-                    <input type="submit" class="button" id="submit" value="submit" size="12px">
-                </form>
-            </div>
-        </div>
-    </header>
+    <div w3-include-html="header.html"></div>
 
     <div class="container">
         <aside id="aside-menu" style="display: none;">
@@ -156,7 +131,7 @@
                             </div>
                             </div>
                         </div>
-                    </div>
+    </div>
                     
                     <button id="add-product-btn" onclick="toggleForm()">Adicionar um novo Produto</button>
                     <form id="add-product-form">
@@ -182,8 +157,5 @@
     <div w3-include-html="footer.html"></div>
 </body>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="scriptMain.js" defer></script>
-    <script>
-        w3.includeHTML();
-    </script>
+<script src="scriptMain.js"></script>
 </html>
