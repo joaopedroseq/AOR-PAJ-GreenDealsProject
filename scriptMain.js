@@ -46,6 +46,7 @@ w3.includeHTML(() =>  {
     const form = document.getElementById('add-product-form');
     const addButton = document.getElementById('add-product-btn');
     const gridContainer = document.querySelector('.grid-container');
+    const asideMenu = document.getElementById('aside-menu');
 
     // Função para alternar a exibição do formulário
     function toggleForm() {
