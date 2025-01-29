@@ -26,15 +26,17 @@
 aside {
     flex: 1;
     padding: 10px;
-    background-color: #f5f5dc; /* Cor bege */
+    background-color: #a2f98d; /* Cor bege */
     border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
     border-radius: 5px; /* Cantos arredondados */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    line-height: 2; /* Ajuste o valor conforme necessário */
 }
 
 aside h3, aside ul {
     position: relative;
-    top: 50px; /* Ajuste conforme necessário */
+    top: 70px; /* Ajuste conforme necessário */
 }
 
 header {
@@ -224,6 +226,13 @@ flex: 1;
 
 #add-product-btn, #add-product-form-detail:hover {
     background-color: #0c7a3e; /* Cor verde mais escura */
+}
+
+#add-product-btn {
+    display: block; /* Garante que o botão ocupe toda a largura disponível */
+    margin-left: auto; /* Adiciona margem automática à esquerda */
+    margin-right: 0; /* Remove qualquer margem à direita */
+    text-align: right; /* Alinha o texto à direita */
 }
 
 /* Formulário oculto por padrão */
