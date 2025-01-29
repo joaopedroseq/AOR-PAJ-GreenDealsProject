@@ -165,8 +165,10 @@ w3.includeHTML(() =>  {
       // Função para alternar a exibição do aside
     function toggleAside() {
         if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
+            console.log(open aside);
             asideMenu.style.display = 'block';
         } else {
+            console.log(close aside);
             asideMenu.style.display = 'none';
         }
     }
