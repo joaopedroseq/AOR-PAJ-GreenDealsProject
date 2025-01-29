@@ -61,16 +61,6 @@ aside h3, aside ul {
     border: none;
 }
 
-.dropdownlogin label{
-    font-family: Verdana, 'Times New Roman', Times, serif;
-    font-size: 16px;
-    color: white;
-}
-
-.login:hover .dropdownlogin{
-    display: block;
-}
-
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
