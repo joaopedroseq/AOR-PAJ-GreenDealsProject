@@ -7,91 +7,59 @@
     padding: 0;
 }
 
-.container {
+header {
         display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-    }
-
-.main-content {
-        padding: 100px;
-        width: 100vw;
-        margin-left: 0;
-        font-size: 25px; /* Tamanho maior */
-        line-height: 2; /* Espaçamento entre linhas */
-        margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
-        text-align: center; /* Centraliza o texto */
-    }
-
-    header {
-        display: flex;
+        padding-top: 1%;
+        padding-bottom: 1%;
         background-color: var(--green); /* Cor verde */
-        color: white; /* Cor do texto */
         border-bottom: 1px solid #d3d3d3; /* Borda inferior */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-        padding: 5px 10px; /* Reduz a altura do cabeçalho */
         position: fixed;
         width: 100%;
+        height: 8%;
+        top: 0;
+        
+}
+
+    header h1 {
+        color: white; /* Cor do texto */
+        font-family: 'Verdana'; /* Fonte arredondada e elegante */
+        font-size: 1.5em; /* Ajustar o tamanho conforme necessário */
+    }
+
+    .logo{
+        flex: 1;
+        text-decoration: none;
         top: 0;
         left: 0;
-        z-index: 1000;
-        align-items: center;
-        justify-content: space-between;
+    }
+
+    .loginMessageDiv{
+        display: block;
+        color: white; /* Cor do texto */
         font-family: 'Verdana'; /* Fonte arredondada e elegante */
     }
 
-header h1 {
-    margin: 0;
-    font-size: 1.5em; /* Ajustar o tamanho conforme necessário */
-}
+    .login{
+        display:none;
+        position: relative;
+        float: right;
+        margin-right: 3%;
+    }
 
-header h2 {
-    margin: 0;
-    font-size: 1em; /* Ajustar o tamanho conforme necessário */
-    text-align: center;
-    flex: 1;
-}
-
-
-
-.loginMessage{
-    padding-right: 5%;
-    font-size: 20px;
-    color: white;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-}
 
     .category-bar{
+        flex: 1;
         position: relative;
-        display: inline-block;
-        padding: 1%;
+        display: block;
         transform: rotate(0deg);
         transition: transform 0.5s linear;
     }
 
-        .category-bar.open{
-            position: relative;
-            display: inline-block;
-            padding: 1%;
-            transform: rotate(90deg);
-            transition: transform 0.5s linear;
+        .hamburger{
+            height: 30px;;
         }
-
-    .logo{
-        display: inline-block;
-        text-decoration: none;
-        padding: 1%;
-        top: 0;
-        left: 0;
-    }
-
-    .login{
-        display: none;
-        position: relative;
-        float: right;
-        padding: 1%;
-        margin-right: 3%;
-    }
+    
 
     .dropdownlogin{
         display: none;
@@ -144,3 +112,13 @@ header h2 {
     .login:hover .dropdownlogin{
         display: block;
     }
+
+.main-content {
+        width: 100vw;
+        margin-left: 0;
+        font-size: 25px; /* Tamanho maior */
+        line-height: 2; /* Espaçamento entre linhas */
+        margin-top: 25vh; /*Espaçamento entre o header*/
+        margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+        text-align: center; /* Centraliza o texto */
+}

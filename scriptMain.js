@@ -1,6 +1,8 @@
-if(sessionStorage.getItem('logged')){
+if((sessionStorage.getItem('logged') === null)){
     const login = document.getElementById('loginButton');
-    login.style.display='none';
+    login.style.display='block';
+  }
+  else{
   }
   
 /* Carregar o formulário quando se carrega no botão "Adicionar Produto" */
