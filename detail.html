@@ -2,14 +2,14 @@
 <html lang="pt">
 <head>
     <meta charset="utf-8">
-    <title>GreenDeals - A sua feira mais próxima de si</title>
+    <title>GreenDeals</title>
     <link rel="stylesheet" href="detailStyle.css">
 </head>
-<html>  
+<html>
+    <body>
     <div w3-include-html="header.html"></div>
-
-        <div class="container">
-        <aside>
+    <div class="container">
+        <aside id="aside-menu">
             <form>
                 <input type="submit" id="add-product-form-detail" value="Editar informações"><br>
                 <input type="submit" id="add-product-form-detail" value="Eliminar produto"><br>
@@ -27,7 +27,7 @@
                         </th>
                     </tr>
                 </thead>
-                <body>
+
                     <tr class="table-content">
                         <td colspan="2"><strong>Descrição:</strong> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid asperiores excepturi perferendis mollitia et. Architecto mollitia doloribus minus? Dolore magni exercitationem quidem blanditiis quam sequi eaque cum animi recusandae nihil.</td>
                     </tr>
@@ -40,13 +40,12 @@
                     <tr class="table-content">
                         <td><strong>Localização: </strong>Rua A, n.º X, Cidade, XXXX-XXX Cidade</td>
                     </tr>
-                </body>
               </table>
         </main>
     </div>
       <!-- Incluir o rodapé -->
-    <div w3-include-html="footer.html"></div>
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="script.js"></script>     
+    <div w3-include-html="footer.html"></div>   
     </body>
+    <script src="https://www.w3schools.com/lib/w3.js"></script>
+    <script src="scriptDetail.js"></script>   
 </html>
