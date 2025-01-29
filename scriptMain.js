@@ -13,6 +13,7 @@ w3.includeHTML(() =>  {
     }  
       const loginForm = document.getElementById('login-form');
       const welcomeMessage = document.getElementById('mensagem_boasVindas');
+      
       // Verificar se há um nome de utilizador armazenado no Session Storage
       const storedUsername = sessionStorage.getItem('username');
       if (storedUsername) {

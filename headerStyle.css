@@ -28,6 +28,10 @@ header {
         font-size: 1.5em; /* Ajustar o tamanho conforme necessário */
     }
 
+    aside {
+        margin-top: 80px; /* Ajustar o valor conforme necessário */
+    }
+
     .logo{
         flex: 1;
         align-self: center;
@@ -40,7 +44,7 @@ header {
         position: right;
         align-self: center;
         color: white; /* Cor do texto */
-        font-family: 'Verdana'; /* Fonte arredondada e elegante */
+        font-family: 'Verdana'; 
     }
 
     .login{
@@ -106,7 +110,7 @@ header {
     .textbox{
         border-radius: 2px;
         margin: 5px;
-        font-family: Verdana, 'Times New Roman', Times, serif;
+        font-family: Verdana;;
         font-size: 16px;
     }
 
@@ -114,7 +118,7 @@ header {
         display: block;
         border-radius: 2px;
         text-align: center;
-        font-family: Verdana, 'Times New Roman', Times, serif;
+        font-family: Verdana;
         font-size: 16px;
         color: rgb(0, 0, 0);
         padding: 2px 2px;
@@ -123,7 +127,7 @@ header {
     }
 
     .dropdownlogin label{
-        font-family: Verdana, 'Times New Roman', Times, serif;
+        font-family: Verdana;
         font-size: 16px;
         color: white;
     }
@@ -131,3 +135,56 @@ header {
     .login:hover .dropdownLogin{
         display: block;
     }
+
+    /* Para estilizar o botão de contatar o anunciante */
+
+    #contact-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #0c7a3e;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-family: Verdana;
+        border-radius: 5px; /* Borda arredondada */
+        transition: background-color 0.3s ease; /* Transição suave */
+    }
+    
+    #contact-btn:hover {
+        background-color: #0e8c4d; /* Cor de fundo ao passar o rato */
+    }
+    
+    #contact-form {
+        text-align: center;
+        margin: 20px auto;
+        width: 80%;
+    }
+    
+    #message {
+        width: 100%;
+        height: 100px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: Verdana;
+    }
+    
+    #send-btn {
+        padding: 10px 20px;
+        background-color:  #0c7a3e;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-family: Verdana;
+        border-radius: 5px; /* Borda arredondada */
+        transition: background-color 0.3s ease; /* Transição suave */
+    }
+    #send-btn:hover {
+        background-color: #0e8c4d; /* Cor de fundo ao passar o rato */
+    }
+
+    

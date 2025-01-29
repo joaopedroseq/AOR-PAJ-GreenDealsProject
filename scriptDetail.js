@@ -74,4 +74,25 @@ function showPassword() {
 hamburger.addEventListener('click', toggleAside);
 
 logoutButton.addEventListener('click', logout);
+
+
+function toggleContactForm() {
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm.style.display === 'none' || contactForm.style.display === '') {
+      contactForm.style.display = 'block';
+  } else {
+      contactForm.style.display = 'none';
+  }
+}
+
+function sendMessage() {
+  const message = document.getElementById('message').value;
+  if (message.trim() === '') {
+      alert('Por favor, escreva uma mensagem antes de enviar.');
+  } else {
+      alert('Mensagem enviada: ' + message);
+      document.getElementById('message').value = ''; // Limpa o campo de mensagem
+      document.getElementById('contact-form').style.display = 'none'; // Oculta o formulário de contato
+  }
+};
 });

@@ -63,6 +63,7 @@ aside h3, aside ul {
 }
 
 /* Estilo para a grade de imagens */
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
@@ -114,7 +115,7 @@ aside h3, aside ul {
 
 /* Botão elegante para Adicionar Produto */
 /* Botão elegante */
-#add-product-btn, #add-product-form-detail {
+#add-product-btn {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     padding: 10px 20px;
@@ -127,7 +128,7 @@ aside h3, aside ul {
     transition: background-color 0.3s ease;
 }
 
-#add-product-btn, #add-product-form-detail:hover {
+#add-product-btn {
     background-color: #0c7a3e; /* Cor verde mais escura */
 }
 

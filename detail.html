@@ -38,9 +38,24 @@
                         <td><strong>Categoria: </strong>a, b, c</td>
                     </tr>
                     <tr class="table-content">
+                        <td><strong>Nome do Anunciante: </strong> Nome Xx Yy</td>
+                    </tr>
+                    <tr class="table-content">
                         <td><strong>Localização: </strong>Rua A, n.º X, Cidade, XXXX-XXX Cidade</td>
                     </tr>
+                   
+                    <tr class="table-content">
+                        <td><strong>Data de Publicação: </strong> dd/mm/aaaa</td>
+                    </tr>
+
               </table>
+
+              <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
+              <div id="contact-form" style="display: none;">
+                  <textarea id="message" placeholder="Escreva aqui a sua mensagem..."></textarea><br>
+                  <button id="send-btn" onclick="sendMessage()">Enviar</button>
+              </div>
+
         </main>
     </div>
       <!-- Incluir o rodapé -->
