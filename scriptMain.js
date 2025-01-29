@@ -2,22 +2,98 @@ if(sessionStorage.getItem('logged')){
     const login = document.getElementById('loginButton');
     login.style.display='none';
   }
-  
-/* Carregar o formulário quando se carrega no botão "Adicionar Produto" */
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('add-product-form');
+    const addButton = document.getElementById('add-product-btn');
+    const gridContainer = document.querySelector('.grid-container');
 
-function toggleForm() {
-    var form = document.getElementById('add-product-form');
-    if (form.style.display === 'none' || form.style.display === '') {
-        form.style.display = 'block';
-    } else {
-        form.style.display = 'none';
+    // Função para alternar a exibição do formulário
+    function toggleForm() {
+        var form = document.getElementById('add-product-form');
+        if (form.style.display === 'none' || form.style.display === '') {
+            form.style.display = 'block';
+        } else {
+            form.style.display = 'none';
+        }
     }
-}
+    
+    // Adiciona o evento de clique ao botão para alternar o formulário
+    addButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        toggleForm();
+    });
 
+    // Função para guardar o produto no local storage
+    function saveProduct(event) {
+        event.preventDefault();
 
-/* Para fazer a hiperligação entre as categorias e os artigos, fazendo desaparecer os artigos de outras categorias */
+        const nome = document.getElementById('nome').value;
+        const imagem = document.getElementById('imagem').value;
+        const tipo = document.getElementById('tipo').value;
+        const categoria = document.getElementById('categoria').value;
+        const preco = document.getElementById('preco').value;
 
-document.addEventListener('DOMContentLoaded', function() {
+        const product = {
+            nome,
+            imagem,
+            tipo,
+            categoria,
+            preco
+        };
+
+        let products = localStorage.getItem('products');
+        if (products) {
+            products = JSON.parse(products);
+        } else {
+            products = [];
+        }
+
+        products.push(product);
+        localStorage.setItem('products', JSON.stringify(products));
+
+        alert('Produto adicionado com sucesso!');
+        form.reset();
+        form.style.display = 'none';
+
+        // Exibe o produto na página
+        displayProduct(product);
+    }
+
+    // Adiciona o evento de submit ao formulário para guardar o produto
+    form.addEventListener('submit', saveProduct);
+
+    // Função para exibir os produtos na página
+    function displayProduct(product) {
+        const productHTML = `
+            <div class="grid-item" onclick="window.location.href='detail.html'">
+                <img src='${product.imagem}' alt="${product.nome}"/>
+                <div class="text-overlay">
+                    <h2>${product.nome}</h2>
+                    <p>${product.tipo}</p>
+                    <p>Categoria: ${product.categoria}</p>
+                    <p>Preço: €${product.preco}</p>
+                </div>
+            </div>
+        `;
+        gridContainer.insertAdjacentHTML('beforeend', productHTML);
+    }
+
+    // Função para carregar os produtos do local storage e exibi-los na página
+    function loadProducts() {
+        let products = localStorage.getItem('products');
+        if (products) {
+            products = JSON.parse(products);
+            products.forEach(product => {
+                displayProduct(product);
+            });
+        }
+    }
+
+    // Carrega os produtos ao carregar a página
+    loadProducts();
+
+    
+    // Função para fazer a ligação das categorias no aside com os artigos
     const categories = document.querySelectorAll('aside ul li');
     const articles = document.querySelectorAll('.grid-item');
 
@@ -46,6 +122,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
-
