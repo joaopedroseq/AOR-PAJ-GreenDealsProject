@@ -19,7 +19,7 @@ var line2 = document.getElementById("phrase2");
 //Função - "Sobre Nós"
 aboutBtn.onclick = function() {
   aboutHeader.textContent="Desenvolvimento Web & Design Gráfico";
-  line1.textContent="Criado e desenvolvido por João Sequeira e Vanessa Pereira";
+  line1.textContent="Criado e desenvolvido por João Sequeira e Vanessa Figueiredo";
   line2.textContent="Programação Avançada em Java - Acertar o Rumo 2024/25";
   modal.style.display = "block";
 }
