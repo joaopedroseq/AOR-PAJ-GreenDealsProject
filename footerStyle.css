@@ -65,6 +65,7 @@ footer{
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
+    height: auto;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     padding-top: 100px; /* Location of the box */
@@ -126,7 +127,6 @@ footer{
   
   .modal-body {
     padding: 2px 16px;
-    height: auto;
 }
 
     .modal-body p{

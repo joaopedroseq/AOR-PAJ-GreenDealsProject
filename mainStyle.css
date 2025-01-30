@@ -152,7 +152,8 @@ aside h3, aside ul {
 }
 
 #add-product-form input[type="text"],
-#add-product-form input[type="submit"] {
+#add-product-form input[type="submit"],
+#add-product-form select {
     padding: 10px;
     margin: 5px 0;
     border: 1px solid #ccc;
