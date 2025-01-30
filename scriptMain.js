@@ -125,6 +125,8 @@ function showPassword() {
         products.push(product);
         localStorage.setItem('products', JSON.stringify(products));
 
+    
+
         alert('Produto adicionado com sucesso!');
         form.reset();
         form.style.display = 'none';
@@ -137,9 +139,9 @@ function showPassword() {
     form.addEventListener('submit', saveProduct);
 
     // Função para exibir os produtos na página
-    function displayProduct(product) {
+    function displayProduct(product, index) {
         const productHTML = `
-            <div class="grid-item" onclick="window.location.href='detail.html?index=${product.index}'">
+            <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'">
                 <img src='${product.imagem}' alt="${product.nome}"/>
                 <div class="text-overlay">
                     <h2>${product.nome}</h2>
@@ -155,11 +157,13 @@ function showPassword() {
         let products = localStorage.getItem('products');
         if (products) {
             products = JSON.parse(products);
-            products.forEach(product => {
-                displayProduct(product);
-            });
-        }
-    }
+            for(var i=0; i < products.length; i++) {
+                displayProduct(products.indexOf(i), i);
+            }
+            /*products.forEach(product => {
+                displayProduct(product);*/
+            }
+        };
 
     // Carrega os produtos ao carregar a página
     loadProducts();

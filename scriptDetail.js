@@ -4,9 +4,7 @@ w3.includeHTML(() =>  {
   
   let products = localStorage.getItem('products');
 
-  if(products){
-    products = JSON.parse(products);
-    const product = products[productIndex];
+  const product = products[productIndex];
       if(product){
         document.getElementById('product-image').src=product.imagem;
         console.log(product.imagem);
@@ -19,12 +17,9 @@ w3.includeHTML(() =>  {
         document.getElementById('product-location').textContent=product.localidade;
         document.getElementById('product-date').textContent=product.data;
         }
-}
 
   if((sessionStorage.getItem('logged') === null)){
-    console.log('not a user logged');
     const login = document.getElementById('loginButton');
-    console.log(login);
     login.style.visibility='visible';
     const loginMessage = document.getElementById("loginMessage");
     loginMessage.style.visibility='hidden';
@@ -41,7 +36,6 @@ w3.includeHTML(() =>  {
 
   // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
 loginForm.addEventListener('submit', (event) => {
-    console.log("logged")
     const username = document.getElementById('username').value;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('logged', true);
@@ -55,7 +49,6 @@ loginForm.addEventListener('submit', (event) => {
   
 
 function logout(){
-  console.log("correu");
   const username = document.getElementById('username').value;
   console.log('user ' + username + ' logged out');
   sessionStorage.removeItem('username');
@@ -63,14 +56,12 @@ function logout(){
   const loginMessage = document.getElementById("loginMessage");
   loginMessage.style.visibility='hidden';
   const login = document.getElementById('loginButton');
-  console.log(login);
   login.style.visibility='visible';
 }
 
 
 
 function showPassword() {
-  console.log("start");
   var password = document.getElementById("password");
   if (password.type === "password") {
     password.type = "text";
@@ -82,7 +73,6 @@ function showPassword() {
   // Função para alternar a exibição do aside
   function toggleAside() {
     const asideMenu = document.getElementById("aside-menu");
-    console.log(asideMenu);
     if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
         asideMenu.style.display = 'block';
     } else {
@@ -94,10 +84,32 @@ function showPassword() {
 hamburger.addEventListener('click', toggleAside);
 
 logoutButton.addEventListener('click', logout);
+
+document.getElementById('delete-product').addEventListener('click', deleteProduct);
+
+function deleteProduct(){
+  console.log("correr apagar");
+  let productIndex = new URLSearchParams(window.location.search).get('index');
+  productIndex = parseInt(productIndex);
+  console.log(productIndex);
+  let products = localStorage.getItem('products');
+  products = JSON.parse(products);
+  console.log(products);
+
+  products.splice(productIndex, 1);
+  localStorage.setItem('products', JSON.stringify(products));
+  
+
+
+  //alert("Produto removido com sucesso");
+  window.location.href = 'main.html';
+}
+
 });
 
+
+
 function toggleContactForm() {
-  console.log('correu');
   const contactForm = document.getElementById('contact-form');
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
       contactForm.style.display = 'block';
@@ -116,3 +128,5 @@ function sendMessage() {
       document.getElementById('contact-form').style.display = 'none'; // Oculta o formulário de contato
   }
 };
+
+
