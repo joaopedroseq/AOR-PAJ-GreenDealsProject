@@ -1,4 +1,26 @@
 w3.includeHTML(() =>  {
+
+  const productIndex = new URLSearchParams(window.location.search).get('index');
+  
+  let products = localStorage.getItem('products');
+
+  if(products){
+    products = JSON.parse(products);
+    const product = products[productIndex];
+      if(product){
+        document.getElementById('product-image').src=product.imagem;
+        console.log(product.imagem);
+        document.getElementById('product-name').textContent=product.nome;
+        console.log(product.nome);
+        document.getElementById('product-description').textContent=product.descricao;
+        document.getElementById('product-price').textContent=product.preco;
+        document.getElementById('product-category').textContent=product.categoria;
+        document.getElementById('product-seller').textContent=product.anunciante;
+        document.getElementById('product-location').textContent=product.localidade;
+        document.getElementById('product-date').textContent=product.data;
+        }
+}
+
   if((sessionStorage.getItem('logged') === null)){
     console.log('not a user logged');
     const login = document.getElementById('loginButton');

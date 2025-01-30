@@ -16,39 +16,36 @@
                 <input type="submit" id="add-product-form-detail" value="Guardar"><br>
             </form>
         </aside>
-
         <main class="main-content">
             <table>
                 <thead>
                     <tr>
                         <th>
-                            <img class="table-img" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
-                            <span><strong>Item de Venda</strong></span>
+                            <img class="table-img" id="product-image"src='images/produtos/cabide.jpg' alt="Isto é um item"/>
+                            <td colspan="2" id="product-name"></td>
                         </th>
                     </tr>
                 </thead>
-
                     <tr class="table-content">
-                        <td colspan="2"><strong>Descrição:</strong> Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquid asperiores excepturi perferendis mollitia et. Architecto mollitia doloribus minus? Dolore magni exercitationem quidem blanditiis quam sequi eaque cum animi recusandae nihil.</td>
+                        <td colspan="2" id="product-description"><strong>Descrição:</strong></td>
                     </tr>
                     <tr class="table-content">
-                        <td><strong>Preço: </strong>XX.xx€</td>
+                        <td id="product-price"><strong>Preço: </strong>XX.xx€</td>
                     </tr>
                     <tr class="table-content">
-                        <td><strong>Categoria: </strong>a, b, c</td>
+                        <td id="product-category"><strong>Categoria: </strong>a, b, c</td>
                     </tr>
                     <tr class="table-content">
-                        <td><strong>Nome do Anunciante: </strong> Nome Xx Yy</td>
+                        <td id="product-seller"><strong>Nome do Anunciante: </strong> Nome Xx Yy</td>
                     </tr>
                     <tr class="table-content">
-                        <td><strong>Localização: </strong>Rua A, n.º X, Cidade, XXXX-XXX Cidade</td>
+                        <td id="product-location"><strong>Localização: </strong>Rua A, n.º X, Cidade, XXXX-XXX Cidade</td>
                     </tr>
-                   
                     <tr class="table-content">
-                        <td><strong>Data de Publicação: </strong> dd/mm/aaaa</td>
+                        <td id="product-date"><strong>Data de Publicação: </strong> dd/mm/aaaa</td>
                     </tr>
 
-              </table>
+            </table>
 
               <button id="contact-btn" onclick=toggleContactForm()>Contatar o Anunciante</button>
               <div id="contact-form" style="display: none;">

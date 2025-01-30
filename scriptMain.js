@@ -1,4 +1,17 @@
 w3.includeHTML(() =>  {
+    
+    let nextIndex = localStorage.getItem('nextIndex');
+    console.log(nextIndex);
+
+    if(nextIndex){
+        var indexNumber = nextIndex['0'];
+        console.log(indexNumber);
+        localStorage.setItem('nextIndex', indexNumber);
+    }
+    else {
+        localStorage.setItem('nextIndex', '0');
+    }
+    
 
     if((sessionStorage.getItem('logged') === null)){
       console.log('not a user logged');
@@ -22,7 +35,7 @@ w3.includeHTML(() =>  {
       console.log("logged")
       const username = document.getElementById('username').value;
       sessionStorage.setItem('username', username);
-      sessionStorage.setItem('logged', true);
+      sessionStorage.setItem('logged', 'true');
       welcomeMessage.textContent = `Olá, ${username}!`;
       const loginMessage = document.getElementById("loginMessage");
       loginMessage.style.display='block';
@@ -79,18 +92,27 @@ function showPassword() {
     function saveProduct(event) {
         event.preventDefault();
 
+        const index = nextIndex++;
+        localStorage.setItem('nextIndex', nextIndex);
         const nome = document.getElementById('nome').value;
-        const imagem = document.getElementById('imagem').value;
-        const tipo = document.getElementById('tipo').value;
-        const categoria = document.getElementById('categoria').value;
+        const descricao = document.getElementById('descricao').value;  
         const preco = document.getElementById('preco').value;
+        const categoria = document.getElementById('categoria').value;
+        const anunciante = document.getElementById('anunciante').value;
+        const localidade = document.getElementById('localidade').value;
+        const imagem = document.getElementById('imagem').value;
+        const data = new Date();
 
         const product = {
+            index,
             nome,
-            imagem,
-            tipo,
+            descricao,
+            preco,
             categoria,
-            preco
+            anunciante,
+            localidade,
+            imagem,
+            data
         };
 
         let products = localStorage.getItem('products');
@@ -117,12 +139,10 @@ function showPassword() {
     // Função para exibir os produtos na página
     function displayProduct(product) {
         const productHTML = `
-            <div class="grid-item" onclick="window.location.href='detail.html'">
+            <div class="grid-item" onclick="window.location.href='detail.html?index=${product.index}'">
                 <img src='${product.imagem}' alt="${product.nome}"/>
                 <div class="text-overlay">
                     <h2>${product.nome}</h2>
-                    <p>${product.tipo}</p>
-                    <p>Categoria: ${product.categoria}</p>
                     <p>Preço: €${product.preco}</p>
                 </div>
             </div>
@@ -143,7 +163,6 @@ function showPassword() {
 
     // Carrega os produtos ao carregar a página
     loadProducts();
-
 
     // Função para fazer a ligação das categorias no aside com os artigos
     const categories = document.querySelectorAll('aside ul li');
