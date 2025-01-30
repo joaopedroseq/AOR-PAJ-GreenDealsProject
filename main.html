@@ -21,124 +21,20 @@
         </aside>
                 <main class="main-content">
                     <div class="grid-container">
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/tenis.webp' alt="tenis"/>
-                            <div class="text-overlay">
-                                <h2>Sapatilhas</h2>
-                                <p>Sapatilhas usadas apenas uma única vez. </p>
-                                <p>Tamanho 38.</p>
-                                <p>Categoria: Calçado</p>
-                                <p>Preço: €10</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/mochila.jpg' alt="mochila Paco Martinez"/>
-                            <div class="text-overlay">
-                                <h2>Mochila de Viagem</h2>
-                                <p>Mochila quase nova, pouco uso. </p>
-                                <p>Está em perfeito estado.</p>
-                                <p>Categoria: Viagens</p>
-                                <p>Preço: €30</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/livro.webp' alt="Livro"/>
-                            <div class="text-overlay">
-                                <h2>Livro - Passion </h2>
-                                <p>Utilizado apenas uma vez, pouco uso. </p>
-                                <p>Está em perfeito estado.</p>
-                                <p>Categoria: Papelaria</p>
-                                <p>Preço: €7</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/livro2.jpeg' alt="Livro"/>
-                            <div class="text-overlay">
-                                <h2>Livro Where are You? </h2>
-                                <p>Utilizado apenas uma vez, pouco uso. </p>
-                                <p>Está em perfeito estado.</p>
-                                <p>Categoria: Papelaria</p>
-                                <p>Preço: €5</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/conjuntoMalas.jpeg' alt="Conjunto de malas"/>
-                            <div class="text-overlay">
-                                <h2>Conjunto de Malas de viagem</h2>
-                                <p>Mochilas e malas quase novas, pouco uso. </p>
-                                <p>Está em perfeito estado.</p>
-                                <p>Categoria: Viagens</p>
-                                <p>Preço: €50</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/bota.jpg' alt="botas montanha"/>
-                            <div class="text-overlay">
-                                <h2>Botas Montanha</h2>
-                                <p>Botas de Montanha Masculino.Tamanho 42. Muito bom estado. Não apresenta defeitos.</p>
-                                <p>Categoria: Calçado</p>
-                                <p>Preço: €20</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/casaco.jpg' alt="casaco"/>
-                            <div class="text-overlay">
-                                <h2>Casaco feminino inverno</h2>
-                                <p>Casaco vermelho.Tamanho S. </p>
-                                <p>Muito bom estado. Não apresenta defeitos.</p>
-                                <p>Categoria: Vestuário</p>
-                                <p>Preço: €15</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/camisa.jpg' alt="camisa branca"/>
-                            <div class="text-overlay">
-                                <h2>Camisa Branca Masculina</h2>
-                                <p>Camisa branca. Tamanho M.</p>
-                                <p>Muito bom estado. Não apresenta defeitos.</p>
-                                <p>Categoria: Vestuário</p>
-                                <p>Preço: €16</p>
-                            </div>
-                        </div>
-        
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/dinossauros.webp' alt="dinossauros"/>
-                            <div class="text-overlay">
-                                <h2>Brinquedos dinossauros</h2>
-                                <p>Vários dinossauros </p>
-                                <p>bom estado, boa qualidade</p>
-                                <p>Categoria: Brinquedos</p>
-                                <p>Preço: €5</p>
-                            </div>
-                        </div>
-                        <div class="grid-item" onclick="window.location.href='detail.html'">
-                            <img src='images/produtos/pato.jpg' alt="pato borracha"/>
-                            <div class="text-overlay">
-                                <h2>Patos Borracha</h2>
-                                <p>Patos de borracha para o banho</p>
-                                <p>bom estado, boa qualidade</p>
-                                <p>Categoria: Brinquedos</p>
-                                <p>Preço: €5</p>
-                            </div>
-                            </div>
-                        </div>
-    </div>
+                    </div>
+        </div>
                     
                     <button id="add-product-btn" onclick="toggleForm()">Adicionar um novo Produto</button>
                     <form id="add-product-form">
                         <label for="nome"><strong>Nome do Produto:</strong></label><br>
                         <input type="text" id="nome" name="nome"><br>
-                        <label for="imagem"><strong>Endereço de imagem do Produto:</strong></label><br>
-                        <input type="text" id="imagem" name="imagem"><br>
-                        <label for="tipo"><strong>Tipo de Produto:</strong></label><br>
-                        <input type="text" id="tipo" name="tipo"><br>
+
+                        <label for="descricao"><strong>Descrição:</strong></label><br>
+                        <input type="text" id="descricao" name="descricao"><br>
+
+                        <label for="preco"><strong>Preço do Produto:</strong></label><br>
+                        <input type="text" id="preco" name="preco"><br>
+                        
                         <label for="categoria"><strong>Categoria do Produto:</strong></label><br>
                         <select id="categoria" name="categoria"><br>
                             <option value="vestuario">Vestuário</option>
@@ -147,8 +43,16 @@
                             <option value="viagens">Viagens</option>
                             <option value="papelaria">Papelaria</option>
                         </select><br>
-                        <label for="preco"><strong>Preço do Produto:</strong></label><br>
-                        <input type="text" id="preco" name="preco"><br>
+
+                        <label for="anunciante"><strong>Nome do Anunciante:</strong></label><br>
+                        <input type="text" id="anunciante" name="anunciante"><br>
+
+                        <label for="localidade"><strong>Localização:</strong></label><br>
+                        <input type="text" id="localidade" name="localidade"><br>
+
+                        <label for="imagem"><strong>Endereço de imagem do Produto:</strong></label><br>
+                        <input type="text" id="imagem" name="imagem"><br>
+                                               
                         <input type="submit" id="adicionar" value="Adicionar">
                     </form>
                     
