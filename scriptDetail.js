@@ -72,9 +72,10 @@ function showPassword() {
 hamburger.addEventListener('click', toggleAside);
 
 logoutButton.addEventListener('click', logout);
-
+});
 
 function toggleContactForm() {
+  console.log('correu');
   const contactForm = document.getElementById('contact-form');
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
       contactForm.style.display = 'block';
@@ -93,4 +94,3 @@ function sendMessage() {
       document.getElementById('contact-form').style.display = 'none'; // Oculta o formulário de contato
   }
 };
-});
