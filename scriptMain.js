@@ -92,8 +92,6 @@ function showPassword() {
     function saveProduct(event) {
         event.preventDefault();
 
-        const index = nextIndex++;
-        localStorage.setItem('nextIndex', nextIndex);
         const nome = document.getElementById('nome').value;
         const descricao = document.getElementById('descricao').value;  
         const preco = document.getElementById('preco').value;
@@ -104,7 +102,6 @@ function showPassword() {
         const data = new Date();
 
         const product = {
-            index,
             nome,
             descricao,
             preco,
@@ -125,14 +122,12 @@ function showPassword() {
         products.push(product);
         localStorage.setItem('products', JSON.stringify(products));
 
-    
-
         alert('Produto adicionado com sucesso!');
         form.reset();
         form.style.display = 'none';
 
         // Exibe o produto na página
-        displayProduct(product);
+        displayProduct(product, products.length - 1);
     }
 
     // Adiciona o evento de submit ao formulário para guardar o produto
@@ -157,13 +152,11 @@ function showPassword() {
         let products = localStorage.getItem('products');
         if (products) {
             products = JSON.parse(products);
-            for(var i=0; i < products.length; i++) {
-                displayProduct(products.indexOf(i), i);
-            }
-            /*products.forEach(product => {
-                displayProduct(product);*/
-            }
-        };
+            products.forEach((product, index) => {
+                displayProduct(product, index);
+            });
+        }
+    }
 
     // Carrega os produtos ao carregar a página
     loadProducts();
@@ -209,7 +202,9 @@ function showPassword() {
     }
 
     // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
+    const hamburger = document.getElementById('hamburger');
     hamburger.addEventListener('click', toggleAside);   
     
+    const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', logout);
 });
