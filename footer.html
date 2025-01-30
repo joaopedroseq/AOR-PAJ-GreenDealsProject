@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="footerStyle.css">
 
+
 <footer>
     <div class="footerContainer">
         <div class="contactos">
@@ -17,20 +18,21 @@
         <div class="apoioCliente">
             <h3>Apoio ao cliente</h3>
                 <ul class="listaApoioCliente">
-                    <li><a href="#">Politica de devolução</a></li>
                     <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Desenvolvimento Web</a></li>
-                    <li><a href="#">Design Gráfico</a></li>
+                    <li><button id="privacyButton">Politica de Privacidade</button></li>
+                    <li><a href="#">Termos de serviço</a></li>
+                    
                 </ul>
         </div>
         <div class="empresa">
             <h3>Sobre nós</h3>
             <ul class="listaEmpresa">
-                <li><a href="#">Quem somos</a></li>
+                <li><button id="aboutButton">Sobre nós</button></li>
+                <li><a href="#">Desenvolvimento Web</a></li>
+                <li><a href="#">Design Gráfico</a></li>
                 <li><a href="#">Missão e valores da empresa</a></li>
                 <li><a href="#">Oportunidades de emprego</a></li>
-                <li><a href="#">Politica de Privacidade</a></li>
-                <li><a href="#">Termos de serviço</a></li>
+                
             </ul>
         </div>
         <div class="social">
@@ -49,4 +51,29 @@
     <div class="copyright">
         <h4>&copy; 2025 GreenDeals. Todos os direitos reservados.</h4>
     </div>
+
+
+        <!-- The Modal -->
+        <div id="modal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+              <div class="modal-header">
+                <span class="close">&times;</span>
+                <h2 id="modal-header">Modal Header</h2>
+              </div>
+              <div class="modal-body">
+                <h4 id="title1"></h4>
+                <p id="phrase1">frase 1</p>
+                <h4 id="title2"></h4>
+                <p id="phrase2"></p>
+              </div>
+              <div class="modal-footer">
+                <h3>Trabalho Prático I</h3>
+              </div>
+            </div>
+          
+          </div>
+
+    <script src="scriptFooter.js"></script>
 </footer>
