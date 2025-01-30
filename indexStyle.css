@@ -19,3 +19,33 @@
 .sustentabilityBanner{
     width: 100%;
 }
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+aside {
+    display: none;
+    float: left;
+    padding: 10px;
+    background-color: #a2f98d; /* Cor fundo */
+    border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
+    border-radius: 5px; /* Cantos arredondados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    line-height: 2; /* Ajuste o valor conforme necessário */
+}
+
+aside a {
+    text-decoration: none;
+    color: #0e8c4d;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+aside a:hover {
+    color: #0c7a3e;
+}
+
+
