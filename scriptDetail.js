@@ -87,8 +87,24 @@ w3.includeHTML(() =>  {
 
     window.location.href = 'main.html';
   }
+
+  // Exibir o formulário de edição ao clicar no botão "Editar informações"
+  document.getElementById('edit-product').addEventListener('click', function() {
+    document.getElementById('edit-product-form').style.display = 'block';
+    document.getElementById('save-product').style.display = 'block';
+
+    // Preencher o formulário de edição com os dados atuais do produto
+    document.getElementById('edit-nome').value = product.nome;
+    document.getElementById('edit-descricao').value = product.descricao;
+    document.getElementById('edit-preco').value = product.preco;
+    document.getElementById('edit-categoria').value = product.categoria;
+    document.getElementById('edit-anunciante').value = product.anunciante;
+    document.getElementById('edit-localidade').value = product.localidade;
+    document.getElementById('edit-imagem').value = product.imagem;
+  });
 });
 
+// Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
   const contactForm = document.getElementById('contact-form');
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
@@ -98,6 +114,7 @@ function toggleContactForm() {
   }
 }
 
+// Função para enviar mensagem
 function sendMessage() {
   const message = document.getElementById('message').value;
   if (message.trim() === '') {
@@ -109,3 +126,42 @@ function sendMessage() {
   }
 }
 
+// Salvar as alterações e atualizar o localStorage
+document.getElementById('edit-product-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const productIndex = new URLSearchParams(window.location.search).get('index');
+  let products = localStorage.getItem('products');
+  products = JSON.parse(products);
+
+  const product = products[productIndex];
+
+  // Atualizar os dados do produto com os valores do formulário de edição
+  product.nome = document.getElementById('edit-nome').value;
+  product.descricao = document.getElementById('edit-descricao').value;
+  product.preco = document.getElementById('edit-preco').value;
+  product.categoria = document.getElementById('edit-categoria').value;
+  product.anunciante = document.getElementById('edit-anunciante').value;
+  product.localidade = document.getElementById('edit-localidade').value;
+  product.imagem = document.getElementById('edit-imagem').value;
+
+  // Atualizar o localStorage com os dados modificados
+  products[productIndex] = product;
+  localStorage.setItem('products', JSON.stringify(products));
+
+  alert('Produto atualizado com sucesso!');
+
+  // Atualizar a exibição dos dados do produto na página
+  document.getElementById('product-image').src = product.imagem;
+  document.getElementById('product-name').textContent = product.nome;
+  document.getElementById('product-description').textContent = product.descricao;
+  document.getElementById('product-price').textContent = `Preço: €${product.preco}`;
+  document.getElementById('product-category').textContent = `Categoria: ${product.categoria}`;
+  document.getElementById('product-seller').textContent = `Nome do Anunciante: ${product.anunciante}`;
+  document.getElementById('product-location').textContent = `Localização: ${product.localidade}`;
+  document.getElementById('product-date').textContent = `Data de Publicação: ${product.data}`;
+
+  // Ocultar o formulário de edição
+  document.getElementById('edit-product-form').style.display = 'none';
+  document.getElementById('save-product').style.display = 'none';
+});
