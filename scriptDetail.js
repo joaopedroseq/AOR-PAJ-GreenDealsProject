@@ -161,7 +161,8 @@ document.getElementById('edit-product-form').addEventListener('submit', function
   document.getElementById('product-location').textContent = `Localização: ${product.localidade}`;
   document.getElementById('product-date').textContent = `Data de Publicação: ${product.data}`;
 
-  // Ocultar o formulário de edição
+  // Ocultar o formulário de edição e limpar os campos
   document.getElementById('edit-product-form').style.display = 'none';
   document.getElementById('save-product').style.display = 'none';
+  document.getElementById('edit-product-form').reset();
 });
