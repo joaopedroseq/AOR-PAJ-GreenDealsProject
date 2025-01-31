@@ -20,11 +20,16 @@ strong {
 
 .product-details p {
   margin: 10px 0;
+  text-align: left;
+  font-family: Verdana;
+  font-size: 25px;
+  line-height: 2;
 }
 
 .product-details strong {
   font-weight: bold;
 }
+
 
 .main-content {
     padding: 100px;
@@ -36,17 +41,21 @@ strong {
     text-align: center; /* Centraliza o texto */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
-
 aside {
-    display: none;
-    float: left;
-    padding: 10px;
-    background-color: #a2f98d; /* Cor bege */
-    border: 1px solid #d3d3d3; /* Borda para um visual mais elegante */
-    border-radius: 5px; /* Cantos arredondados */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    line-height: 2; /* Ajuste o valor conforme necessário */
+  display: none;
+  position: fixed; /* Para o aside flutuar sobre o conteúdo */
+  left: 0;
+  top: 0;
+  padding: 10px;
+  background-color: rgba(0, 128, 0, 0.3); /* Cor verde com transparência */
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Verdana';
+  line-height: 2;
+  height: 100vh; /* O aside ocupará toda a altura da tela */
+  width: 250px; /* Largura do aside */
+  z-index: 1000; /* Certifique-se de que o aside fique acima do conteúdo */
 }
 
 aside h3, aside ul {
@@ -67,6 +76,7 @@ aside h3, aside ul {
     font-size: 16px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
+    text-align: center; /* Alinha o botão ao centro do contêiner */
 }
 
 #add-product-form-detail:hover {
@@ -194,7 +204,7 @@ aside h3, aside ul {
   }
 
 /* Estilo para os botões de Eliminar e Editar Produto */
-#edit-product, #delete-product, #save-product {
+#edit-product, #delete-product {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     padding: 10px 20px;
@@ -207,6 +217,6 @@ aside h3, aside ul {
     transition: background-color 0.3s ease;
 }
 
-#edit-product:hover, #delete-product:hover, #save-product:hover {
+#edit-product:hover, #delete-product:hover {
     background-color: #0c7a3e; /* Cor verde mais escura */
 }
