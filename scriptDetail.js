@@ -5,17 +5,38 @@ w3.includeHTML(() =>  {
   let products = localStorage.getItem('products');
   products = JSON.parse(products);
 
-  const product = products[productIndex];
-  if(product){
-    document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
-    document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
-    document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
-    document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
-    document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
-    document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
-    document.getElementById('product-image').setAttribute('src', product.imagem);
-    document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${product.data}`;
-  }    
+// Verificar se o produto foi encontrado
+const product = products[productIndex];
+
+if(product){
+  // Pega a data original do produto
+  const dataCompleta = new Date(product.data);
+
+  // Formatar a data no formato 'dd/mm/aaaa'
+  /*padStart utilizado para preencher uma string até que ela tenha um comprimento
+   especificado, O comprimento final da string depois que os caracteres forem adicionados*/
+
+  const dia = dataCompleta.getDate().toString().padStart(2, '0'); // Adiciona o zero à esquerda se necessário
+  const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, '0'); // Meses começam do 0, então soma-se 1
+  const ano = dataCompleta.getFullYear();
+
+  // Formatar a hora no formato 'hh:mm'
+  const horas = dataCompleta.getHours().toString().padStart(2, '0');
+  const minutos = dataCompleta.getMinutes().toString().padStart(2, '0');
+
+  // Combinar data e hora
+  const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+
+  // Atualizar os dados do produto na página
+  document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
+  document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
+  document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
+  document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
+  document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
+  document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
+  document.getElementById('product-image').setAttribute('src', product.imagem);
+  document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
+}
 
   if((sessionStorage.getItem('logged') === null)){
     const login = document.getElementById('loginButton');
