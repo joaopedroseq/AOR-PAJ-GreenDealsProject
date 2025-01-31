@@ -1,10 +1,14 @@
 w3.includeHTML(() =>  {
 
-  const productIndex = new URLSearchParams(window.location.search).get('index');
+  const productHash = new URLSearchParams(window.location.search).get('hash');
+  console.log(productHash);
   
   let products = localStorage.getItem('products');
 
-  const product = products[productIndex];
+  if(products){
+    products = JSON.parse(products);
+    const product = findProduct(productHash);
+    console.log(product);
       if(product){
         document.getElementById('product-image').src=product.imagem;
         console.log(product.imagem);
@@ -17,6 +21,7 @@ w3.includeHTML(() =>  {
         document.getElementById('product-location').textContent=product.localidade;
         document.getElementById('product-date').textContent=product.data;
         }
+}
 
   if((sessionStorage.getItem('logged') === null)){
     const login = document.getElementById('loginButton');
@@ -59,17 +64,6 @@ function logout(){
   login.style.visibility='visible';
 }
 
-
-
-function showPassword() {
-  var password = document.getElementById("password");
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
-  }
-}
-
   // Função para alternar a exibição do aside
   function toggleAside() {
     const asideMenu = document.getElementById("aside-menu");
@@ -87,23 +81,56 @@ logoutButton.addEventListener('click', logout);
 
 document.getElementById('delete-product').addEventListener('click', deleteProduct);
 
+function findProduct(givenHash) {
+  let products = localStorage.getItem('products'); // Obtém os produtos do localStorage
+  if (!products) {
+    return null; // Se não houver produtos, retorna null imediatamente
+  }
+  products = JSON.parse(products); // Converte para array
+  givenHash = parseInt(givenHash); // Garante que a comparação seja entre números
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].hash === givenHash) {
+      console.log(products[i]);
+      return products[i];
+    }
+  }
+  return null; // Se não encontrar, retorna null
+}
+
+function findIndex(givenHash) {
+  let products = localStorage.getItem('products'); // Obtém os produtos do localStorage
+  if (!products) {
+    return null; // Se não houver produtos, retorna null imediatamente
+  }
+  products = JSON.parse(products); // Converte para array
+  givenHash = parseInt(givenHash); // Garante que a comparação seja entre números
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].hash === givenHash) {
+      console.log(products[i]);
+      return i;
+    }
+  }
+  return null; // Se não encontrar, retorna null
+}
+
+
+
 function deleteProduct(){
-  console.log("correr apagar");
-  let productIndex = new URLSearchParams(window.location.search).get('index');
-  productIndex = parseInt(productIndex);
-  console.log(productIndex);
+  let productHash = new URLSearchParams(window.location.search).get('hash');
+  productHash = parseInt(productHash);
+  console.log(productHash);
   let products = localStorage.getItem('products');
+  let indexPosition = findIndex(productHash);
   products = JSON.parse(products);
   console.log(products);
 
-  products.splice(productIndex, 1);
+  products.splice(indexPosition, 1);
   localStorage.setItem('products', JSON.stringify(products));
-  
+  alert("Produto removido com sucesso");
+  window.location.href = "main.html";
+};
 
 
-  //alert("Produto removido com sucesso");
-  window.location.href = 'main.html';
-}
 
 });
 
@@ -128,5 +155,14 @@ function sendMessage() {
       document.getElementById('contact-form').style.display = 'none'; // Oculta o formulário de contato
   }
 };
+
+function showPassword() {
+  var password = document.getElementById("password");
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+}
 
 
