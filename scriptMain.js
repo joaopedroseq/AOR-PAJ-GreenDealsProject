@@ -1,17 +1,4 @@
 w3.includeHTML(() =>  {
-    
-    let nextIndex = localStorage.getItem('nextIndex');
-    console.log(nextIndex);
-
-    if(nextIndex){
-        var indexNumber = nextIndex['0'];
-        console.log(indexNumber);
-        localStorage.setItem('nextIndex', indexNumber);
-    }
-    else {
-        localStorage.setItem('nextIndex', '0');
-    }
-    
 
     if((sessionStorage.getItem('logged') === null)){
       console.log('not a user logged');
