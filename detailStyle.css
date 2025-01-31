@@ -80,3 +80,21 @@ aside h3, aside ul {
     margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
     text-align: left; /* Alinha o texto à esquerda */
 }
+
+/* Estilo para os botões de Eliminar e Editar Produto */
+#edit-product, #delete-product, #save-product {
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#edit-product:hover, #delete-product:hover, #save-product:hover {
+    background-color: #0c7a3e; /* Cor verde mais escura */
+}
