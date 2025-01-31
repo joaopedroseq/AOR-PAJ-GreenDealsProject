@@ -1,168 +1,171 @@
 w3.includeHTML(() =>  {
-
-  const productHash = new URLSearchParams(window.location.search).get('hash');
-  console.log(productHash);
-  
+  const productIndex = new URLSearchParams(window.location.search).get('index');
   let products = localStorage.getItem('products');
+  products = JSON.parse(products);
 
-  if(products){
-    products = JSON.parse(products);
-    const product = findProduct(productHash);
-    console.log(product);
-      if(product){
-        document.getElementById('product-image').src=product.imagem;
-        console.log(product.imagem);
-        document.getElementById('product-name').textContent=product.nome;
-        console.log(product.nome);
-        document.getElementById('product-description').textContent=product.descricao;
-        document.getElementById('product-price').textContent=product.preco;
-        document.getElementById('product-category').textContent=product.categoria;
-        document.getElementById('product-seller').textContent=product.anunciante;
-        document.getElementById('product-location').textContent=product.localidade;
-        document.getElementById('product-date').textContent=product.data;
-        }
-}
+  const product = products[productIndex];
+  if(product){
+    document.getElementById('product-image').src = product.imagem;
+    document.getElementById('product-name').textContent = product.nome;
+    document.getElementById('product-description').textContent = product.descricao;
+    document.getElementById('product-price').textContent = `Preço: €${product.preco}`;
+    document.getElementById('product-category').textContent = `Categoria: ${product.categoria}`;
+    document.getElementById('product-seller').textContent = `Nome do Anunciante: ${product.anunciante}`;
+    document.getElementById('product-location').textContent = `Localização: ${product.localidade}`;
+    document.getElementById('product-date').textContent = `Data de Publicação: ${product.data}`;
+  }
 
   if((sessionStorage.getItem('logged') === null)){
     const login = document.getElementById('loginButton');
-    login.style.visibility='visible';
+    login.style.visibility = 'visible';
     const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility='hidden';
+    loginMessage.style.visibility = 'hidden';
   }
-  else{
-  }  
-    const loginForm = document.getElementById('login-form');
-    const welcomeMessage = document.getElementById('mensagem_boasVindas');
-    // Verificar se há um nome de utilizador armazenado no Session Storage
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-    }  
 
-  // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-loginForm.addEventListener('submit', (event) => {
+  const loginForm = document.getElementById('login-form');
+  const welcomeMessage = document.getElementById('mensagem_boasVindas');
+  const storedUsername = sessionStorage.getItem('username');
+  if (storedUsername) {
+    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+  }
+
+  loginForm.addEventListener('submit', (event) => {
     const username = document.getElementById('username').value;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('logged', true);
     welcomeMessage.textContent = `Olá, ${username}!`;
     const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.display='block';
+    loginMessage.style.display = 'block';
     const login = document.getElementById('loginButton');
-    login.style.visibility='hidden';
-    console.log('user ' + storedUsername + ' logged');
-});
-  
+    login.style.visibility = 'hidden';
+  });
 
-function logout(){
-  const username = document.getElementById('username').value;
-  console.log('user ' + username + ' logged out');
-  sessionStorage.removeItem('username');
-  sessionStorage.removeItem('logged');
-  const loginMessage = document.getElementById("loginMessage");
-  loginMessage.style.visibility='hidden';
-  const login = document.getElementById('loginButton');
-  login.style.visibility='visible';
-}
+  function logout(){
+    const username = document.getElementById('username').value;
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('logged');
+    const loginMessage = document.getElementById("loginMessage");
+    loginMessage.style.visibility = 'hidden';
+    const login = document.getElementById('loginButton');
+    login.style.visibility = 'visible';
+  }
 
-  // Função para alternar a exibição do aside
+  function showPassword() {
+    var password = document.getElementById("password");
+    if (password.type === "password") {
+      password.type = "text";
+    } else {
+      password.type = "password";
+    }
+  }
+
   function toggleAside() {
     const asideMenu = document.getElementById("aside-menu");
     if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-        asideMenu.style.display = 'block';
+      asideMenu.style.display = 'block';
     } else {
-        asideMenu.style.display = 'none';
-    }
-}
-
-// Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-hamburger.addEventListener('click', toggleAside);
-
-logoutButton.addEventListener('click', logout);
-
-document.getElementById('delete-product').addEventListener('click', deleteProduct);
-
-function findProduct(givenHash) {
-  let products = localStorage.getItem('products'); // Obtém os produtos do localStorage
-  if (!products) {
-    return null; // Se não houver produtos, retorna null imediatamente
-  }
-  products = JSON.parse(products); // Converte para array
-  givenHash = parseInt(givenHash); // Garante que a comparação seja entre números
-  for (let i = 0; i < products.length; i++) {
-    if (products[i].hash === givenHash) {
-      console.log(products[i]);
-      return products[i];
+      asideMenu.style.display = 'none';
     }
   }
-  return null; // Se não encontrar, retorna null
-}
 
-function findIndex(givenHash) {
-  let products = localStorage.getItem('products'); // Obtém os produtos do localStorage
-  if (!products) {
-    return null; // Se não houver produtos, retorna null imediatamente
-  }
-  products = JSON.parse(products); // Converte para array
-  givenHash = parseInt(givenHash); // Garante que a comparação seja entre números
-  for (let i = 0; i < products.length; i++) {
-    if (products[i].hash === givenHash) {
-      console.log(products[i]);
-      return i;
-    }
-  }
-  return null; // Se não encontrar, retorna null
-}
+  const hamburger = document.getElementById('hamburger');
+  hamburger.addEventListener('click', toggleAside);
 
+  const logoutButton = document.getElementById('logoutButton');
+  logoutButton.addEventListener('click', logout);
 
+  document.getElementById('delete-product').addEventListener('click', deleteProduct);
 
-function deleteProduct(){
-  let productHash = new URLSearchParams(window.location.search).get('hash');
-  productHash = parseInt(productHash);
-  console.log(productHash);
-  let products = localStorage.getItem('products');
-  let indexPosition = findIndex(productHash);
-  products = JSON.parse(products);
-  console.log(products);
+  function deleteProduct(){
+    let productIndex = new URLSearchParams(window.location.search).get('index');
+    productIndex = parseInt(productIndex);
+    let products = localStorage.getItem('products');
+    products = JSON.parse(products);
 
-  products.splice(indexPosition, 1);
+  products.splice(productIndex, 1);
   localStorage.setItem('products', JSON.stringify(products));
-  alert("Produto removido com sucesso");
-  window.location.href = "main.html";
-};
+  
 
 
+  //alert("Produto removido com sucesso");
+  window.location.href = 'main.html';
+}
 
+  // Exibir o formulário de edição ao clicar no botão "Editar informações"
+  document.getElementById('edit-product').addEventListener('click', function() {
+    document.getElementById('edit-product-form').style.display = 'block';
+    document.getElementById('save-product').style.display = 'block';
+
+    // Preencher o formulário de edição com os dados atuais do produto
+    document.getElementById('edit-nome').value = product.nome;
+    document.getElementById('edit-descricao').value = product.descricao;
+    document.getElementById('edit-preco').value = product.preco;
+    document.getElementById('edit-categoria').value = product.categoria;
+    document.getElementById('edit-anunciante').value = product.anunciante;
+    document.getElementById('edit-localidade').value = product.localidade;
+    document.getElementById('edit-imagem').value = product.imagem;
+  });
 });
 
-
-
+// Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
   const contactForm = document.getElementById('contact-form');
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
-      contactForm.style.display = 'block';
+    contactForm.style.display = 'block';
   } else {
-      contactForm.style.display = 'none';
+    contactForm.style.display = 'none';
   }
 }
 
+// Função para enviar mensagem
 function sendMessage() {
   const message = document.getElementById('message').value;
   if (message.trim() === '') {
-      alert('Por favor, escreva uma mensagem antes de enviar.');
+    alert('Por favor, escreva uma mensagem antes de enviar.');
   } else {
-      alert('Mensagem enviada: ' + message);
-      document.getElementById('message').value = ''; // Limpa o campo de mensagem
-      document.getElementById('contact-form').style.display = 'none'; // Oculta o formulário de contato
-  }
-};
-
-function showPassword() {
-  var password = document.getElementById("password");
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
+    alert('Mensagem enviada: ' + message);
+    document.getElementById('message').value = '';
+    document.getElementById('contact-form').style.display = 'none';
   }
 }
 
+// Salvar as alterações e atualizar o localStorage
+document.getElementById('edit-product-form').addEventListener('submit', function(event) {
+  event.preventDefault();
 
+  const productIndex = new URLSearchParams(window.location.search).get('index');
+  let products = localStorage.getItem('products');
+  products = JSON.parse(products);
+
+  const product = products[productIndex];
+
+  // Atualizar os dados do produto com os valores do formulário de edição
+  product.nome = document.getElementById('edit-nome').value;
+  product.descricao = document.getElementById('edit-descricao').value;
+  product.preco = document.getElementById('edit-preco').value;
+  product.categoria = document.getElementById('edit-categoria').value;
+  product.anunciante = document.getElementById('edit-anunciante').value;
+  product.localidade = document.getElementById('edit-localidade').value;
+  product.imagem = document.getElementById('edit-imagem').value;
+
+  // Atualizar o localStorage com os dados modificados
+  products[productIndex] = product;
+  localStorage.setItem('products', JSON.stringify(products));
+
+  alert('Produto atualizado com sucesso!');
+
+  // Atualizar a exibição dos dados do produto na página
+  document.getElementById('product-image').src = product.imagem;
+  document.getElementById('product-name').textContent = product.nome;
+  document.getElementById('product-description').textContent = product.descricao;
+  document.getElementById('product-price').textContent = `Preço: €${product.preco}`;
+  document.getElementById('product-category').textContent = `Categoria: ${product.categoria}`;
+  document.getElementById('product-seller').textContent = `Nome do Anunciante: ${product.anunciante}`;
+  document.getElementById('product-location').textContent = `Localização: ${product.localidade}`;
+  document.getElementById('product-date').textContent = `Data de Publicação: ${product.data}`;
+
+  // Ocultar o formulário de edição e limpar os campos
+  document.getElementById('edit-product-form').style.display = 'none';
+  document.getElementById('save-product').style.display = 'none';
+  document.getElementById('edit-product-form').reset();
+});

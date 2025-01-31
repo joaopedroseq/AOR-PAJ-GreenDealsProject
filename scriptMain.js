@@ -77,10 +77,6 @@ function logout(){
     // Função para guardar o produto no local storage
     function saveProduct(event) {
         event.preventDefault();
-
-        //const index = nextIndex++;
-        //localStorage.setItem('nextIndex', nextIndex);
-        const hash = 0;
         const nome = document.getElementById('nome').value;
         const descricao = document.getElementById('descricao').value;  
         const preco = document.getElementById('preco').value;
@@ -115,7 +111,6 @@ function logout(){
         }
         else {
             const product = {
-                hash,
                 nome,
                 descricao,
                 preco,
@@ -126,9 +121,6 @@ function logout(){
                 data
             }
 
-            console.log(hashCode(JSON.stringify(product)));
-            product.hash = hashCode(JSON.stringify(product));
-            console.log(product);
             
             var confirm = window.confirm('Tem a certeza que pretende adicionar o produto' + nome + '?');
             if(confirm == true){
@@ -154,7 +146,7 @@ function logout(){
         }
 
         // Exibe o produto na página
-        displayProduct(product);
+        displayProduct(product, products.length - 1);
     }
 
     //função para verificar se um dado string é um número
@@ -162,40 +154,15 @@ function logout(){
         return !isNaN(string) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
                !isNaN(parseFloat(string)) // ...and ensure strings of whitespace fail
       };
-
-    function hashCode(string){
-    var hash = 0;
-    for (var i = 0; i < string.length; i++) {
-        var code = string.charCodeAt(i);
-        hash = ((hash<<5)-hash)+code;
-        hash = hash & hash; // Convert to 32bit integer
-    }
-    return hash;
-    };
-
       
-
-    // creates an array of alternating property name, property value
-    // with properties in sorted order
-    // then stringify's that array
-    function stringifyPropsInOrder(obj) {
-        var keys = Object.keys(obj).sort();
-        var output = [], prop;
-        for (var i = 0; i < keys.length; i++) {
-            prop = keys[i];
-            output.push(prop);
-            output.push(obj[prop]);
-        }
-        return JSON.stringify(output);
-    }
 
     // Adiciona o evento de submit ao formulário para guardar o produto
     form.addEventListener('submit', saveProduct);
 
     // Função para exibir os produtos na página
-    function displayProduct(product) {
+    function displayProduct(product, index) {
         const productHTML = `
-            <div class="grid-item" onclick="window.location.href='detail.html?hash=${product.hash}'">
+            <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'">
                 <img src='${product.imagem}' alt="${product.nome}"/>
                 <div class="text-overlay">
                     <h2>${product.nome}</h2>
@@ -206,25 +173,17 @@ function logout(){
         gridContainer.insertAdjacentHTML('beforeend', productHTML);
     }
 
-    function getIndexOfProduct(product) {
-        const products = localStorage.getItem('produtos');
-        products = JSON.parse(products);
-
-    };
 
     // Função para carregar os produtos do local storage e exibi-los na página
     function loadProducts() {
         let products = localStorage.getItem('products');
         if (products) {
             products = JSON.parse(products);
-            /*for(var i=0; i < products.length; i++) {
-                displayProduct(products.getItem(stringify(i)));
-            }*/
-            products.forEach(product => {
-                displayProduct(product)
-            })
+            products.forEach((product, index) => {
+                displayProduct(product, index);
+            });
         }
-    };
+    }
 
     // Carrega os produtos ao carregar a página
     loadProducts();
@@ -269,8 +228,10 @@ function logout(){
     }
 
     // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
+    const hamburger = document.getElementById('hamburger');
     hamburger.addEventListener('click', toggleAside);   
     
+    const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', logout);
 });
 
