@@ -1,5 +1,4 @@
 w3.includeHTML(() =>  {
-console.log("footer a correr");
 // Get the modal
 var modal = document.getElementById("modal");
 

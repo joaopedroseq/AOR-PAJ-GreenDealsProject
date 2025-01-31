@@ -49,15 +49,7 @@ function logout(){
 
 
 
-function showPassword() {
-  console.log("start");
-  var password = document.getElementById("password");
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
-  }
-}
+
 
   // Função para alternar a exibição do aside
   function toggleAside() {
@@ -76,3 +68,13 @@ hamburger.addEventListener('click', toggleAside);
 logoutButton.addEventListener('click', logout);
 
 });
+
+function showPassword() {
+  console.log("start");
+  var password = document.getElementById("password");
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+}

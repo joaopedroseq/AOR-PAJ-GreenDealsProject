@@ -82,11 +82,14 @@ w3.includeHTML(() =>  {
     let products = localStorage.getItem('products');
     products = JSON.parse(products);
 
-    products.splice(productIndex, 1);
-    localStorage.setItem('products', JSON.stringify(products));
+  products.splice(productIndex, 1);
+  localStorage.setItem('products', JSON.stringify(products));
+  
 
-    window.location.href = 'main.html';
-  }
+
+  //alert("Produto removido com sucesso");
+  window.location.href = 'main.html';
+}
 
   // Exibir o formulário de edição ao clicar no botão "Editar informações"
   document.getElementById('edit-product').addEventListener('click', function() {

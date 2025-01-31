@@ -1,9 +1,7 @@
 w3.includeHTML(() =>  {
 
     if((sessionStorage.getItem('logged') === null)){
-      console.log('not a user logged');
       const login = document.getElementById('loginButton');
-      console.log(login);
       login.style.visibility='visible';
       const loginMessage = document.getElementById("loginMessage");
       loginMessage.style.visibility='hidden';
@@ -19,7 +17,6 @@ w3.includeHTML(() =>  {
   
     // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
   loginForm.addEventListener('submit', (event) => {
-      console.log("logged")
       const username = document.getElementById('username').value;
       sessionStorage.setItem('username', username);
       sessionStorage.setItem('logged', 'true');
@@ -33,7 +30,6 @@ w3.includeHTML(() =>  {
   
 
 function logout(){
-    console.log("correu");
     const username = document.getElementById('username').value;
     console.log('user ' + username + ' logged out');
     sessionStorage.removeItem('username');
@@ -41,19 +37,9 @@ function logout(){
     const loginMessage = document.getElementById("loginMessage");
     loginMessage.style.visibility='hidden';
     const login = document.getElementById('loginButton');
-    console.log(login);
     login.style.visibility='visible';
   }
   
-function showPassword() {
-    console.log("start");
-    var password = document.getElementById("password");
-    if (password.type === "password") {
-      password.type = "text";
-    } else {
-      password.type = "password";
-    }
-  }
 
     const form = document.getElementById('add-product-form');
     const addButton = document.getElementById('add-product-btn');
@@ -78,7 +64,6 @@ function showPassword() {
     // Função para guardar o produto no local storage
     function saveProduct(event) {
         event.preventDefault();
-
         const nome = document.getElementById('nome').value;
         const descricao = document.getElementById('descricao').value;  
         const preco = document.getElementById('preco').value;
@@ -88,34 +73,75 @@ function showPassword() {
         const imagem = document.getElementById('imagem').value;
         const data = new Date();
 
-        const product = {
-            nome,
-            descricao,
-            preco,
-            categoria,
-            anunciante,
-            localidade,
-            imagem,
-            data
-        };
+        console.log(checkIfNumeric(preco));
 
-        let products = localStorage.getItem('products');
-        if (products) {
-            products = JSON.parse(products);
-        } else {
-            products = [];
+        if(nome.trim() === ""){
+            alert("Terá de escrever o nome do produto");
         }
+        else if(descricao.trim() === ""){
+            alert("Terá de escrever uma descrição do produto");
+        }
+        else if(preco.trim() === ""){
+            alert("Terá de escrever o preço do produto");
+        }
+        else if(!checkIfNumeric(preco)){
+            alert("Preço inválido");
+        }
+        else if(anunciante.trim() === ""){
+            alert("Terá de escrever o seu nome");
+        }
+        else if(localidade.trim() === ""){
+            alert("Terá de escrever a sua morada");
+        }
+        else if(imagem.trim() === ""){
+            alert("Terá de inserir um endereço válido para a imagem do produto");
+        }
+        else {
+            const product = {
+                nome,
+                descricao,
+                preco,
+                categoria,
+                anunciante,
+                localidade,
+                imagem,
+                data
+            }
 
-        products.push(product);
-        localStorage.setItem('products', JSON.stringify(products));
+            
+            var confirm = window.confirm('Tem a certeza que pretende adicionar o produto' + nome + '?');
+            if(confirm == true){
+                let products = localStorage.getItem('products');
+                if (products) {
+                    products = JSON.parse(products);
+                } else {
+                    products = [];
+                }
+                products.push(product);
+                localStorage.setItem('products', JSON.stringify(products));
 
-        alert('Produto adicionado com sucesso!');
-        form.reset();
-        form.style.display = 'none';
+            
+                form.reset();
+                form.style.display = 'none';
+                window.location.reload();
+            }
+            else {
+                form.reset();
+                form.style.display = 'none';
+                window.location.reload();
+            }           
+        }
 
         // Exibe o produto na página
         displayProduct(product, products.length - 1);
     }
+
+    //função para verificar se um dado string é um número
+    function checkIfNumeric(string) {
+        return !isNaN(string) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+               !isNaN(parseFloat(string)) // ...and ensure strings of whitespace fail
+      };
+      
 
     // Adiciona o evento de submit ao formulário para guardar o produto
     form.addEventListener('submit', saveProduct);
@@ -133,6 +159,7 @@ function showPassword() {
         `;
         gridContainer.insertAdjacentHTML('beforeend', productHTML);
     }
+
 
     // Função para carregar os produtos do local storage e exibi-los na página
     function loadProducts() {
@@ -180,7 +207,6 @@ function showPassword() {
       // Função para alternar a exibição do aside
     function toggleAside() {
         const asideMenu = document.getElementById("aside-menu");
-        console.log(asideMenu);
         if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
             asideMenu.style.display = 'block';
         } else {
@@ -195,3 +221,12 @@ function showPassword() {
     const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', logout);
 });
+
+function showPassword() {
+    var password = document.getElementById("password");
+    if (password.type === "password") {
+      password.type = "text";
+    } else {
+      password.type = "password";
+    }
+  }
