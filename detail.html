@@ -28,38 +28,7 @@
                     <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
                 </div>
 
-            <!--
-            <form id="edit-product-form" style="display: none;">
-                <label for="edit-nome"><strong>Nome do Produto:</strong></label><br>
-                <input type="text" id="edit-nome" name="edit-nome"><br>
-
-                <label for="edit-descricao"><strong>Descrição:</strong></label><br>
-                <input type="text" id="edit-descricao" name="edit-descricao"><br>
-
-                <label for="edit-preco"><strong>Preço do Produto:</strong></label><br>
-                <input type="text" id="edit-preco" name="edit-preco"><br>
-                
-                <label for="edit-categoria"><strong>Categoria do Produto:</strong></label><br>
-                <select id="edit-categoria" name="edit-categoria"><br>
-                    <option value="vestuario">Vestuário</option>
-                    <option value="calcado">Calçado</option>
-                    <option value="brinquedos">brinquedos</option>
-                    <option value="viagens">Viagens</option>
-                    <option value="papelaria">Papelaria</option>
-                </select><br>
-
-                <label for="edit-anunciante"><strong>Nome do Anunciante:</strong></label><br>
-                <input type="text" id="edit-anunciante" name="edit-anunciante"><br>
-
-                <label for="edit-localidade"><strong>Localização:</strong></label><br>
-                <input type="text" id="edit-localidade" name="edit-localidade"><br>
-
-                <label for="edit-imagem"><strong>Endereço de imagem do Produto:</strong></label><br>
-                <input type="text" id="edit-imagem" name="edit-imagem"><br>
-                                       
-                <input type="submit" value="Guardar Alterações">
-            </form>
-            -->
+           
 
               <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
               <div id="contact-form" style="display: none;">
@@ -82,9 +51,10 @@
                                 <label for="edit-nome"><strong>Nome do Produto:</strong></label>
                                 <input type="text" id="edit-nome" name="edit-nome">
                             </div>
-
-                            <label for="edit-descricao"><strong>Descrição:</strong></label>
-                            <input type="text" id="edit-descricao" name="edit-descricao"><br>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-descricao"><strong>Descrição:</strong></label>
+                                <input type="text" id="edit-descricao" name="edit-descricao">
+                            </div>
 
                             <label for="edit-preco"><strong>Preço do Produto:</strong></label>
                             <input type="text" id="edit-preco" name="edit-preco"><br>

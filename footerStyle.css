@@ -64,6 +64,7 @@ footer{
 
 /*---------------The Modal (background)-----------------------*/
 .modal {
+    max-height:calc(100vh - 125px);
     display: none; /* Hidden by default */
     height: auto;
     position: fixed; /* Stay in place */

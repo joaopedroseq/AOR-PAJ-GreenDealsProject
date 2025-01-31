@@ -8,8 +8,6 @@ w3.includeHTML(() =>  {
     loginMessage.style.visibility='hidden';
   }
   else{
-
-  
   }  
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');

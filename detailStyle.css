@@ -164,8 +164,12 @@ aside h3, aside ul {
         display: inline-block;
     }
 
+    .edit-product-form-field{
+      display: block;
+    }
+
     .edit-product-form label{
-        font-size: 12px;
+        font-size: 20px;
 
     }
 
