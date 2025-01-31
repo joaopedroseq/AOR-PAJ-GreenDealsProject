@@ -1,18 +1,4 @@
 w3.includeHTML(() =>  {
-    
-    let nextIndex = localStorage.getItem('nextIndex');
-    console.log(nextIndex);
-
-    if(nextIndex){
-        var indexNumber = nextIndex['0'];
-        console.log(indexNumber);
-        localStorage.setItem('nextIndex', indexNumber);
-    }
-    else {
-        localStorage.setItem('nextIndex', '0');
-    }
-    
-
     if((sessionStorage.getItem('logged') === null)){
       const login = document.getElementById('loginButton');
       login.style.visibility='visible';
@@ -167,6 +153,7 @@ function logout(){
                 <div class="text-overlay">
                     <h2>${product.nome}</h2>
                     <p>Preço: €${product.preco}</p>
+                    <p>Categoria: ${product.categoria}</p>
                 </div>
             </div>
         `;
@@ -195,22 +182,30 @@ function logout(){
     // Adiciona um event listener a cada categoria
     categories.forEach(category => {
         category.addEventListener('click', function() {
+            
 
             // Remove a classe 'categoria-ativa' de todos os itens
             categories.forEach(cat => cat.classList.remove('categoria-ativa'));
+            
 
             // Adiciona a classe 'categoria-ativa' ao item clicado
             this.classList.add('categoria-ativa');
+            
 
             // Obtém a categoria selecionada
             const selectedCategory = this.id;
+            
 
             // Exibe ou oculta os artigos de acordo com a categoria selecionada
-            articles.forEach(article => {
-                const articleCategory = article.querySelector('.text-overlay p:nth-child(4)').textContent.split(': ')[1].toLowerCase();
+            articles.forEach(article => {                
+                const articleCategory = article.querySelector('.text-overlay p:nth-child(3)').textContent.split(': ')[1].toLowerCase();
+                console.log(articleCategory);
+                console.log(selectedCategory);
                 if (articleCategory === selectedCategory) {
+                    console.log(true);
                     article.style.display = 'block'; // Exibe os artigos da categoria selecionada
                 } else {
+                    console.log(false);
                     article.style.display = 'none'; // Oculta os artigos de outras categorias
                 }
             });
@@ -225,6 +220,7 @@ function logout(){
         } else {
             asideMenu.style.display = 'none';
         }
+        
     }
 
     // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside

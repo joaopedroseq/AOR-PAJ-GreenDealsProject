@@ -1,4 +1,6 @@
 w3.includeHTML(() =>  {
+
+  //LOAD PAGE
   const productIndex = new URLSearchParams(window.location.search).get('index');
   let products = localStorage.getItem('products');
   products = JSON.parse(products);
@@ -50,14 +52,7 @@ w3.includeHTML(() =>  {
     login.style.visibility = 'visible';
   }
 
-  function showPassword() {
-    var password = document.getElementById("password");
-    if (password.type === "password") {
-      password.type = "text";
-    } else {
-      password.type = "password";
-    }
-  }
+  
 
   function toggleAside() {
     const asideMenu = document.getElementById("aside-menu");
@@ -82,17 +77,20 @@ w3.includeHTML(() =>  {
     let products = localStorage.getItem('products');
     products = JSON.parse(products);
 
-  products.splice(productIndex, 1);
-  localStorage.setItem('products', JSON.stringify(products));
+    var confirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
+    if(confirm == true){
+        products.splice(productIndex, 1);
+        localStorage.setItem('products', JSON.stringify(products));
+        window.location.href = 'main.html';
+    }
+    else {
+      window.location.reload();
+    }
+  }
+
   
-
-
-  //alert("Produto removido com sucesso");
-  window.location.href = 'main.html';
-}
-
-  // Exibir o formulário de edição ao clicar no botão "Editar informações"
-  document.getElementById('edit-product').addEventListener('click', function() {
+    // Exibir o formulário de edição ao clicar no botão "Editar informações"
+    document.getElementById('edit-product').addEventListener('click', function() {
     document.getElementById('edit-product-form').style.display = 'block';
     document.getElementById('save-product').style.display = 'block';
 
@@ -107,11 +105,13 @@ w3.includeHTML(() =>  {
   });
 });
 
+///FIM DE LOAD PAGE
+
 // Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
   const contactForm = document.getElementById('contact-form');
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
-    contactForm.style.display = 'block';
+    contactForm.style.display = 'inline-block';
   } else {
     contactForm.style.display = 'none';
   }
@@ -169,3 +169,52 @@ document.getElementById('edit-product-form').addEventListener('submit', function
   document.getElementById('save-product').style.display = 'none';
   document.getElementById('edit-product-form').reset();
 });
+
+function showPassword() {
+  var password = document.getElementById("password");
+  if (password.type === "password") {
+    password.type = "text";
+  } else {
+    password.type = "password";
+  }
+}
+
+
+//FUNÇõES PARA EDIÇÃO DO PRODUTO
+  // Get the modal
+  var modal = document.getElementById("modal");
+
+  //Botão - "Sobre Nós"
+  var editBtn = document.getElementById("edit-product");
+
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  var aboutHeader = document.getElementById("modal-header");
+
+  //Função - "Editar produto"
+  editBtn.onclick = function() {
+    aboutHeader.textContent="Alterar informações de produto";
+    modal.style.display = "block";
+
+    // Preencher o formulário de edição com os dados atuais do produto
+    document.getElementById('edit-nome').value = product.nome;
+    document.getElementById('edit-descricao').value = product.descricao;
+    document.getElementById('edit-preco').value = product.preco;
+    document.getElementById('edit-categoria').value = product.categoria;
+    document.getElementById('edit-anunciante').value = product.anunciante;
+    document.getElementById('edit-localidade').value = product.localidade;
+    document.getElementById('edit-imagem').value = product.imagem;
+  }
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }

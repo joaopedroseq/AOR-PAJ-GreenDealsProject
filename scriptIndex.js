@@ -51,7 +51,7 @@ function logout(){
 
 
 
-  // Função para alternar a exibição do aside
+// Função para alternar a exibição do aside
   function toggleAside() {
     const asideMenu = document.getElementById("aside-menu");
     console.log(asideMenu);
