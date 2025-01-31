@@ -13,9 +13,17 @@
     justify-content: space-between;
 }
 
-/* Estilo para o texto em negrito */
 strong {
-    font-weight: bold;
+  font-family: Verdana;
+  font-weight: bold;
+}
+
+.product-details p {
+  margin: 10px 0;
+}
+
+.product-details strong {
+  font-weight: bold;
 }
 
 .main-content {
@@ -26,6 +34,7 @@ strong {
     line-height: 2; /* Espaçamento entre linhas */
     margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
     text-align: center; /* Centraliza o texto */
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 aside {

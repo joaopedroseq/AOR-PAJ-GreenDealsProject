@@ -7,15 +7,15 @@ w3.includeHTML(() =>  {
 
   const product = products[productIndex];
   if(product){
-    document.getElementById('product-image').src = product.imagem;
-    document.getElementById('product-name').textContent = product.nome;
-    document.getElementById('product-description').textContent = product.descricao;
-    document.getElementById('product-price').textContent = `Preço: €${product.preco}`;
-    document.getElementById('product-category').textContent = `Categoria: ${product.categoria}`;
-    document.getElementById('product-seller').textContent = `Nome do Anunciante: ${product.anunciante}`;
-    document.getElementById('product-location').textContent = `Localização: ${product.localidade}`;
-    document.getElementById('product-date').textContent = `Data de Publicação: ${product.data}`;
-  }
+    document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
+    document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
+    document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
+    document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
+    document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
+    document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
+    document.getElementById('product-image').setAttribute('src', product.imagem);
+    document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${product.data}`;
+  }    
 
   if((sessionStorage.getItem('logged') === null)){
     const login = document.getElementById('loginButton');
