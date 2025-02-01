@@ -39,7 +39,12 @@ header {
         text-decoration: none;
         top: 0;
         left: 0;
+        height: 50px;
     }
+        .logo-img{
+            height: 50px;
+            
+        }
 
     .loginMessageDiv{
         position: right;

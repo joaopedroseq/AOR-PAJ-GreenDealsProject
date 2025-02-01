@@ -13,7 +13,7 @@
             <form>
                 <input type="button" id="edit-product" value="Editar informações"><br>
                 <input type="button" id="delete-product" value="Eliminar produto"><br>
-                <input type="submit" id="save-product" value="Guardar" style="display: none;"><br>
+                <!--<input type="submit" id="save-product" value="Guardar" style="display: none;"><br> !-->
             </form>
         </aside>
         <main class="main-content">
@@ -38,14 +38,14 @@
 
 
             <!-- The Modal -->
-            <div id="modal" class="modal">
+            <div id="modal-detail" class="modal-detail">
                 <!-- Modal content -->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="close">&times;</span>
-                        <h2 id="modal-header">Modal Header</h2>
+                <div class="modal-content-detail">
+                    <div class="modal-header-detail" id="modal-header-detail">
+                        <p class="modal-header-detail-title">Alterar informações de produto</p>
+                        <p class="close-detail" id="close-detail">&times;</p>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body-detail">
                         <div class="edit-product-form" id="edit-product-form">
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-nome"><strong>Nome do Produto:</strong></label>
@@ -55,34 +55,37 @@
                                 <label for="edit-descricao"><strong>Descrição:</strong></label>
                                 <input type="text" id="edit-descricao" name="edit-descricao">
                             </div>
-
-                            <label for="edit-preco"><strong>Preço do Produto:</strong></label>
-                            <input type="text" id="edit-preco" name="edit-preco"><br>
-                            
-                            <label for="edit-categoria"><strong>Categoria do Produto:</strong></label>
-                            <select id="edit-categoria" name="edit-categoria"><br>
-                                <option value="vestuario">Vestuário</option>
-                                <option value="calcado">Calçado</option>
-                                <option value="brinquedos">brinquedos</option>
-                                <option value="viagens">Viagens</option>
-                                <option value="papelaria">Papelaria</option>
-                            </select><br>
-
-                            <label for="edit-anunciante"><strong>Nome do Anunciante:</strong></label>
-                            <input type="text" id="edit-anunciante" name="edit-anunciante"><br>
-
-                            <label for="edit-localidade"><strong>Localização:</strong></label>
-                            <input type="text" id="edit-localidade" name="edit-localidade"><br>
-
-                            <label for="edit-imagem"><strong>Endereço de imagem do Produto:</strong></label>
-                            <input type="text" id="edit-imagem" name="edit-imagem"><br>
-                                                
-                            <input type="submit" value="Guardar Alterações">
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-preco"><strong>Preço do Produto:</strong></label>
+                                <input type="text" id="edit-preco" name="edit-preco">
+                            </div>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-categoria"><strong>Categoria do Produto:</strong></label>
+                                <select id="edit-categoria" name="edit-categoria">
+                                    <option value="vestuario">Vestuário</option>
+                                    <option value="calcado">Calçado</option>
+                                    <option value="brinquedos">Brinquedos</option>
+                                    <option value="viagens">Viagens</option>
+                                    <option value="papelaria">Papelaria</option>
+                                </select>
+                            </div>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-anunciante"><strong>Nome do Anunciante:</strong></label>
+                                <input type="text" id="edit-anunciante" name="edit-anunciante">
+                            </div>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-localidade"><strong>Localização:</strong></label>
+                                <input type="text" id="edit-localidade" name="edit-localidade">
+                            </div>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-imagem"><strong>url de imagem:</strong></label>
+                                <input type="text" id="edit-imagem" name="edit-imagem">
+                             </div>                     
                         </div>
                     </div>
-              
-                    <div class="modal-footer">
-                        <h3></h3>
+
+                    <div class="modal-footer-detail">
+                        <input type="submit" id="save-product" value="Guardar Alterações" onclick="saveProduct(event)">
                     </div>
                 </div>
             </div>

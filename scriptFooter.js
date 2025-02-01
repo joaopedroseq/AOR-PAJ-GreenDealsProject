@@ -10,6 +10,7 @@ var privacyBtn = document.getElementById("privacyButton");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
+console.log(span);
 
 var aboutHeader = document.getElementById("modal-header");
 var line1 = document.getElementById("phrase1");
@@ -89,6 +90,7 @@ privacyBtn.onclick = function() {
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
+  console.log('correu footer');
   modal.style.display = "none";
 }
 
@@ -98,5 +100,4 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-
 })
