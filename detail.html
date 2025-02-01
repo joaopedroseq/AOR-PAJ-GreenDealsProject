@@ -1,33 +1,28 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="utf-8">
-    <title>GreenDeals</title>
-    <link rel="stylesheet" href="detailStyle.css">
+<meta charset="utf-8">
+<title>GreenDeals</title>
+<link rel="stylesheet" href="detailStyle.css">
 </head>
 <html>
-    <body>
-    <div w3-include-html="header.html"></div>
-    <div class="container">
-        <aside id="aside-menu">
-            <form>
-                <input type="button" id="edit-product" value="Editar informações"><br>
-                <input type="button" id="delete-product" value="Eliminar produto"><br>
-                <!--<input type="submit" id="save-product" value="Guardar" style="display: none;"><br> !-->
-            </form>
-        </aside>
-        <main class="main-content">
-                <div class="product-details">
-                    <img class="table-img" id="product-image" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
-                    <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
-                    <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
-                    <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
-                    <p id="product-category"><strong>Categoria:</strong> a, b, c</p>
-                    <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
-                    <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
-                    <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
-                </div>
-
+<body>
+<div w3-include-html="header.html"></div>
+<div class="container">
+    <aside id="aside-menu">
+        <form>
+            <input type="button" id="edit-product" value="Editar informações"><br>
+            <input type="button" id="delete-product" value="Eliminar produto"><br>
+        </form>
+    </aside>
+    <main class="main-content">
+        <div class="product-details">
+            <img class="table-img" id="product-image" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
+            <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
+            <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
+            <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
+            <p id="product-category"><strong>Categoria:</strong> a, b, c</p>
+            <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
+            <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
+            <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
+        </div>
            
 
               <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
