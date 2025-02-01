@@ -5,8 +5,9 @@ w3.includeHTML(() =>  {
   let products = localStorage.getItem('products');
   products = JSON.parse(products);
 
-// Verificar se o produto foi encontrado
-const product = products[productIndex];
+  // Verificar se o produto foi encontrado
+  const product = products[productIndex];
+  console.log(product);
 
 if(product){
   // Pega a data original do produto
@@ -237,6 +238,7 @@ function showPassword() {
   //Função - "Editar produto"
   editBtn.onclick = function() {
       modalDetail.style.display = "flex";
+      console.log(product);
 
       // Preencher o formulário de edição com os dados atuais do produto
       document.getElementById('edit-nome').value = product.nome;
