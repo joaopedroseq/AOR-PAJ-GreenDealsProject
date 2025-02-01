@@ -11,13 +11,25 @@
         margin-left: 0;
         font-size: 25px; /* Tamanho maior */
         line-height: 2; /* Espaçamento entre linhas */
-        margin-top: 25vh; /*Espaçamento entre o header*/
+        margin-top: 15vh; /*Espaçamento entre o header*/
         margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
         text-align: center; /* Centraliza o texto */
 }
 
+#titulo {
+    font-size: 36px; /* Tamanho maior */
+    font-weight: bold; /* Negrito */
+    color: #0e8c4d; /* Cor verde */
+    text-align: center; /* Centraliza o texto */
+    font-family: 'Verdana', sans-serif; /* Fonte arredondada e elegante */
+    margin-top: 10px; /* Espaço acima do título */
+    margin-bottom: 40px; /* Espaço abaixo do título */
+}
+
+
 .sustentabilityBanner{
     width: 100vw;
+    margin-top: 20px; /* Espaço acima do título */
 }
 
 .container {
