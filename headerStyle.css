@@ -1,13 +1,17 @@
 :root{
-    --green: #0e8c4d;
+    --green: #B0B9A2;
+    --beige: #f1f3eb;
+    --darkGreen: #132a0e;
 }
 
-*, html{
+header{
+    background-color: #B0B9A2;
     margin: 0;
     padding: 0;
 }
 
 header {
+        background-color: var(--green);
         display: flex;
         padding-top: 1%;
         padding-bottom: 1%;
@@ -18,19 +22,16 @@ header {
         width: 100%;
         height: 50px;
         top: 0;
-        z-index: 995;   /*Index Z é 998 e deverá ser 999 para janelas abertas*/
+        z-index: 998;   /*Index Z é 998 e deverá ser 999 para janelas abertas*/
         
 }
 
     header a {
+        background-color: transparent;
         text-decoration: none;
         color: white; /* Cor do texto */
         font-family: 'Verdana'; /* Fonte arredondada e elegante */
         font-size: 1.5em; /* Ajustar o tamanho conforme necessário */
-    }
-
-    aside {
-        margin-top: 80px; /* Ajustar o valor conforme necessário */
     }
 
     .logo{
@@ -40,18 +41,24 @@ header {
         top: 0;
         left: 0;
         height: 50px;
+        background-color: transparent;
     }
         .logo-img{
             height: 50px;
-            
+            background-color: transparent;
         }
 
     .loginMessageDiv{
         position: right;
         align-self: center;
         color: white; /* Cor do texto */
-        font-family: 'Verdana'; 
+        font-family: 'Verdana';
     }
+
+    .loginIcon{
+        background-color: var(--green);
+    }
+    
 
     .login{
         visibility: hidden;
@@ -68,10 +75,12 @@ header {
         display: block;
         transform: rotate(0deg);
         transition: transform 0.5s linear;
+        background-color: transparent;
     }
 
         .hamburger{
-            height: 30px;;
+            height: 30px;
+            background-color: transparent;
         }
     
 

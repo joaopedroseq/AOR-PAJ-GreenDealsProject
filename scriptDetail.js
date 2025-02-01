@@ -6,8 +6,7 @@ w3.includeHTML(() =>  {
   products = JSON.parse(products);
 
   // Verificar se o produto foi encontrado
-  const product = products[productIndex];
-  console.log(product);
+  var product = products[productIndex];
 
 if(product){
   // Pega a data original do produto
@@ -80,15 +79,7 @@ if(product){
   logoutButton.addEventListener('click', logout);
 
   
-  //ASIDE
-  function toggleAside() {
-    const asideMenu = document.getElementById("aside-menu");
-    if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-      asideMenu.style.display = 'block';
-    } else {
-      asideMenu.style.display = 'none';
-    }
-  }
+  
 
   const hamburger = document.getElementById('hamburger');
   hamburger.addEventListener('click', toggleAside);
@@ -117,6 +108,7 @@ if(product){
       products = localStorage.getItem('products');
       products = JSON.parse(products);
       product = products[productIndex];
+      console.log(product);
       document.getElementById('edit-product-form').style.display = 'block';
       console.log(document.getElementById('save-product'));
       fillEditForm();
@@ -143,7 +135,6 @@ if(product){
 ///FIM DE LOAD PAGE
   // Salvar as alterações e atualizar o localStorage
   function saveProduct(event) {
-    console.log("correu")
     event.preventDefault();
   
     const productIndex = new URLSearchParams(window.location.search).get('index');
@@ -166,6 +157,7 @@ if(product){
     localStorage.setItem('products', JSON.stringify(products));
   
     alert('Produto atualizado com sucesso!');
+    toggleAside();
   
     // Atualizar a exibição dos dados do produto na página
     document.getElementById('product-image').src = product.imagem;
@@ -181,12 +173,6 @@ if(product){
     modalDetail.style.display = "none";
 
     console.log('terminou');
-    // Ocultar o formulário de edição e limpar os campos
-    //document.getElementById('edit-product-form').style.display = 'none';
-    //document.getElementById('save-product').style.display = 'none';
-    //document.getElementById('edit-product-form').reset();
-
-    
   };
 
 // Função para alternar a exibição do formulário de contato
@@ -238,7 +224,6 @@ function showPassword() {
   //Função - "Editar produto"
   editBtn.onclick = function() {
       modalDetail.style.display = "flex";
-      console.log(product);
 
       // Preencher o formulário de edição com os dados atuais do produto
       document.getElementById('edit-nome').value = product.nome;
@@ -254,4 +239,14 @@ function showPassword() {
     closeDetail.onclick = function() {
       console.log("correu este");
       modalDetail.style.display = "none";
-    };    
+    };  
+    
+    //ASIDE
+  function toggleAside() {
+    const asideMenu = document.getElementById("aside-menu");
+    if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
+      asideMenu.style.display = 'block';
+    } else {
+      asideMenu.style.display = 'none';
+    }
+  }

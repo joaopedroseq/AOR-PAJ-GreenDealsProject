@@ -1,61 +1,101 @@
 :root{
-    --green: #0e8c4d;
+  --green: #B0B9A2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
 }
 
-*, html{
+ html {
+  background-color: var(--green);
+}
+
+footer{
     margin: 0;
     padding: 0;
+    background-color: var(--green); /* Cor verde */
 }
+
 
 /* Estilo para o rodapé */
 footer{
     display: block;
+    position: absolute;
     background-color: var(--green); /* Cor verde */
     width: 100%;
     margin-left: 0;
     padding: 0;
+    z-index: 998;
 }
 
     .footerContainer {
+        padding-top: 40px;
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
         background-color: var(--green); /* Cor verde */
-        color: white; /* Cor do texto */
-        padding: 20px;
-        font-family: 'Verdana'; /* Fonte arredondada e elegante */
+        font-family: 'Montserrat'; /* Fonte arredondada e elegante */
         border-top: 1px solid #d3d3d3; /* Borda superior */
         box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
     }
 
-    .footerContainer h3:hover, li p:hover, li a:hover{
-        text-decoration: underline;
-    }
-
     .footerContainer h3{
-        text-align: center;
+      background-color: transparent;
+      font-family: "Playfarer";
+      color: var(--darkGreen);
+      font-size: 30px;
+      text-align: center;
+      margin-bottom: 15px;
     }
 
-    .footerContainer a{
-        color: white; /* Cor do texto */
-        text-decoration: none;
+    .footerContainer ul li{
+      list-style-type: none;
+      text-align: center;
+      
     }
 
-    .footerContainer ul{
-        list-style-type: none;
-        text-align: center;
+    .footerContainer img{
+      background-color: var(--green);
+    }
+
+    .footerInfo, .footerInfo ul li, .footerInfo p, .footerInfo a, .footerInfo ul li img{
+      font-family: 'Montserrat'; /* Fonte arredondada e elegante */
+      font-size: ;
+      background-color: var(--green);
+      color: var(--darkGreen);
+    }
+
+    .contact{
+      background-color: var(--green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+  
+    .social{
+      background-color: var(--green);
     }
 
     .listaSocial{
-        display: flex;
-        justify-content: space-evenly;
-        gap: 10px;
+      background-color: var(--green);
+      display: flex;
+      justify-content: space-evenly;
+      gap: 10px;
+    }
+
+    .social h3{
+      background-color: var(--green);
+    }
+
+    .social a, .social img{
+      background-color: var(--green);
     }
 
 
     .copyright {
-        font-family: 'Verdana'; /* Fonte arredondada e elegante */
-        color: white; /* Cor do texto */
+        font-family: "Playfarer";
+        font-size: 18px;
+        background-color: transparent;
         text-align: right;
         margin-top: 20px;
         padding: 20px;
@@ -128,7 +168,7 @@ footer{
   
   .modal-body {
     padding: 2px 16px;
-}
+  }
 
     .modal-body p{
         white-space: pre-wrap;

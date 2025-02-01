@@ -1,5 +1,7 @@
 :root{
-    --green: #0e8c4d;
+  --green: #B0B9A2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
 }
 
 *, html{
@@ -41,6 +43,8 @@ strong {
     text-align: center; /* Centraliza o texto */
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
+
+
 aside {
   display: none;
   position: fixed; /* Para o aside flutuar sobre o conteúdo */
@@ -55,7 +59,8 @@ aside {
   line-height: 2;
   height: 100vh; /* O aside ocupará toda a altura da tela */
   width: 250px; /* Largura do aside */
-  z-index: 1000; /* Certifique-se de que o aside fique acima do conteúdo */
+  z-index: 0; /* Certifique-se de que o aside fique acima do conteúdo */
+  /*mas não acima do Modal*/
 }
 
 aside h3, aside ul {
@@ -159,6 +164,9 @@ aside h3, aside ul {
   }
 
   .modal-header-detail-title{
+    font-size: 20px;
+    height: auto;
+    font-weight: bold;
 
   }
   
@@ -167,7 +175,7 @@ aside h3, aside ul {
     display:flex;
     color: white;
     float: right;
-    font-size: 34px;
+    font-size: 20px;
     font-weight: bold;
   }
   
@@ -195,9 +203,16 @@ aside h3, aside ul {
       display: block;
     }
 
-    .edit-product-form label{
-        font-size: 20px;
+    .edit-product-form-field label{
+        font-size: 18px;
+    }
 
+    .edit-product-form-field label:hover{
+      text-decoration: underline;
+    }
+
+    .edit-product-form-field input{
+      font-size: 14px;
     }
 
 
@@ -209,6 +224,26 @@ aside h3, aside ul {
     padding: 2px 16px;
     background-color: #5cb85c;
     color: white;
+  }
+
+  .modal-footer-detail input{
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  .modal-footer-detail input:hover,
+  .modal-footer-detail input:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
   }
 
 /* Estilo para os botões de Eliminar e Editar Produto */

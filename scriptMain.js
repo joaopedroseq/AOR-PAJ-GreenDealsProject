@@ -143,7 +143,7 @@ function logout(){
       
 
     // Adiciona o evento de submit ao formulário para guardar o produto
-    form.addEventListener('submit', saveProduct);
+    //form.addEventListener('submit', saveProduct);
 
     // Função para exibir os produtos na página
     function displayProduct(product, index) {
@@ -151,9 +151,9 @@ function logout(){
             <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'">
                 <img src='${product.imagem}' alt="${product.nome}"/>
                 <div class="text-overlay">
-                    <h2>${product.nome}</h2>
-                    <p>Preço: €${product.preco}</p>
-                    <p>Categoria: ${product.categoria}</p>
+                    <h2 style="background-color: transparent;">${product.nome}</h2>
+                    <p style="background-color: transparent;">Preço: €${product.preco}</p>
+                    <p style="background-color: transparent;">Categoria: ${product.categoria}</p>
                 </div>
             </div>
         `;
