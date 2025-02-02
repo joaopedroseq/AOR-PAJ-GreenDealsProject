@@ -15,44 +15,52 @@ w3.includeHTML(() =>  {
       }  
   
     // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-  loginForm.addEventListener('submit', (event) => {
-      const username = document.getElementById('username').value;
-      sessionStorage.setItem('username', username);
-      sessionStorage.setItem('logged', 'true');
-      welcomeMessage.textContent = `Olá, ${username}!`;
-      const loginMessage = document.getElementById("loginMessage");
-      loginMessage.style.display='block';
-      const login = document.getElementById('loginButton');
-      login.style.visibility='hidden';
-      console.log('user ' + storedUsername + ' logged');
-  });
+    loginForm.addEventListener('submit', (event) => {
+        const username = document.getElementById('username').value;
+        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('logged', 'true');
+        welcomeMessage.textContent = `Olá, ${username}!`;
+        const loginMessage = document.getElementById("loginMessage");
+        loginMessage.style.display='block';
+        const login = document.getElementById('loginButton');
+        login.style.visibility='hidden';
+        console.log('user ' + storedUsername + ' logged');
+    });
   
 
-function logout(){
-    const username = document.getElementById('username').value;
-    console.log('user ' + username + ' logged out');
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('logged');
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility='hidden';
-    const login = document.getElementById('loginButton');
-    login.style.visibility='visible';
-  }
+    function logout(){
+        const username = document.getElementById('username').value;
+        console.log('user ' + username + ' logged out');
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('logged');
+        const loginMessage = document.getElementById("loginMessage");
+        loginMessage.style.visibility='hidden';
+        const login = document.getElementById('loginButton');
+        login.style.visibility='visible';
+    }
   
-
-    const form = document.getElementById('add-product-form');
+    
     const addButton = document.getElementById('add-product-btn');
-    const gridContainer = document.querySelector('.grid-container');
+    // Get the <span> element that closes the modal
+    var closeDetail = document.getElementsByClassName("close-detail")[0];
+    // Adiciona o evento de submit ao formulário para guardar o produto
+    var saveProductBtn = document.getElementById("save-product");
 
+    //FUNÇõES PARA ADICIONAR PRODUTO
+    var modalDetail = document.getElementById("modal-detail");
+
+    var form = document.getElementById("edit-product-form")
+
+    console.log(modalDetail);
     // Função para alternar a exibição do formulário
     function toggleForm() {
-        var form = document.getElementById('add-product-form');
-        if (form.style.display === 'none' || form.style.display === '') {
-            form.style.display = 'block';
-        } else {
-            form.style.display = 'none';
-        }
+        modalDetail.style.display = "flex";
     }
+
+    // When the user clicks on <span> (x), close the modal
+    closeDetail.onclick = function() {
+        modalDetail.style.display = "none";
+      };  
     
     // Adiciona o evento de clique ao botão para alternar o formulário
     addButton.addEventListener('click', function(event) {
@@ -61,18 +69,17 @@ function logout(){
     });
 
     // Função para guardar o produto no local storage
-    function saveProduct(event) {
+    saveProductBtn.addEventListener('click', function(event) {
         event.preventDefault();
-        const nome = document.getElementById('nome').value;
-        const descricao = document.getElementById('descricao').value;  
-        const preco = document.getElementById('preco').value;
-        const categoria = document.getElementById('categoria').value;
-        const anunciante = document.getElementById('anunciante').value;
-        const localidade = document.getElementById('localidade').value;
-        const imagem = document.getElementById('imagem').value;
+        console.log("salvar");
+        const nome = document.getElementById('edit-nome').value;
+        const descricao = document.getElementById('edit-descricao').value;  
+        const preco = document.getElementById('edit-preco').value;
+        const categoria = document.getElementById('edit-categoria').value;
+        const anunciante = document.getElementById('edit-anunciante').value;
+        const localidade = document.getElementById('edit-localidade').value;
+        const imagem = document.getElementById('edit-imagem').value;
         const data = new Date();
-
-        console.log(checkIfNumeric(preco));
 
         if(nome.trim() === ""){
             alert("Terá de escrever o nome do produto");
@@ -106,8 +113,6 @@ function logout(){
                 imagem,
                 data
             }
-
-            
             var confirm = window.confirm('Tem a certeza que pretende adicionar o produto' + nome + '?');
             if(confirm == true){
                 let products = localStorage.getItem('products');
@@ -121,19 +126,21 @@ function logout(){
 
             
                 form.reset();
-                form.style.display = 'none';
+                modalDetail.style.display = "none";
                 window.location.reload();
             }
             else {
                 form.reset();
-                form.style.display = 'none';
+                modalDetail.style.display = "none";
                 window.location.reload();
-            }           
-        }
+            }
+             
+        
 
         // Exibe o produto na página
         displayProduct(product, products.length - 1);
     }
+});
 
     //função para verificar se um dado string é um número
     function checkIfNumeric(string) {
@@ -142,8 +149,9 @@ function logout(){
       };
       
 
-    // Adiciona o evento de submit ao formulário para guardar o produto
-    //form.addEventListener('submit', saveProduct);
+   
+
+    const gridContainer = document.querySelector('.grid-container');
 
     // Função para exibir os produtos na página
     function displayProduct(product, index) {
@@ -199,13 +207,9 @@ function logout(){
             // Exibe ou oculta os artigos de acordo com a categoria selecionada
             articles.forEach(article => {                
                 const articleCategory = article.querySelector('.text-overlay p:nth-child(3)').textContent.split(': ')[1].toLowerCase();
-                console.log(articleCategory);
-                console.log(selectedCategory);
                 if (articleCategory === selectedCategory) {
-                    console.log(true);
                     article.style.display = 'block'; // Exibe os artigos da categoria selecionada
                 } else {
-                    console.log(false);
                     article.style.display = 'none'; // Oculta os artigos de outras categorias
                 }
             });
@@ -229,6 +233,7 @@ function logout(){
     
     const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', logout);
+
 });
 
 function showPassword() {

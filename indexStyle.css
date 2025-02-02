@@ -72,7 +72,7 @@ aside {
         left: 0;
         top: 0;
         padding: 10px;
-        padding-top: 50px; /* Ajuste para mover o conteúdo mais para baixo */
+        padding-top: 100px; /* Ajuste para mover o conteúdo mais para baixo */
         background-color: #f1f3ebaa; /* Cor verde com transparência */
         border: 1px solid #d3d3d3;
         border-radius: 5px;
@@ -86,13 +86,13 @@ aside {
       }
 
 aside a{
-    background-color: #f1f3ebaa;
+    background-color: transparent;
     text-decoration: none;
-    color: #333;
+    color: var(--darkGreen);
     font-size: 22px;
     font-weight: bold;
 }
 
 aside a:hover {
-    color: var(--dark);
+    color: var(--darkGreen);
 }

@@ -10,6 +10,7 @@
 }
 
 .container {
+    background-color: var(--beige);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
