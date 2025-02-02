@@ -4,19 +4,11 @@
   --darkGreen: #132a0e;
 }
 
- html {
-  background-color: var(--green);
-}
-
-footer{
-    margin: 0;
-    padding: 0;
-    background-color: var(--green); /* Cor verde */
-}
-
 
 /* Estilo para o rodapé */
 footer{
+    margin: 0;
+    padding: 0;
     display: block;
     position: absolute;
     background-color: var(--green); /* Cor verde */
@@ -31,14 +23,12 @@ footer{
         display: flex;
         flex-direction: row;
         justify-content: space-evenly;
-        background-color: var(--green); /* Cor verde */
         font-family: 'Montserrat'; /* Fonte arredondada e elegante */
         border-top: 1px solid #d3d3d3; /* Borda superior */
         box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
     }
 
     .footerContainer h3{
-      background-color: transparent;
       font-family: "Playfarer";
       color: var(--darkGreen);
       font-size: 30px;
@@ -52,43 +42,23 @@ footer{
 
     }
 
-    .footerContainer img{
-      background-color: var(--green);
-    }
 
     .footerInfo, .footerInfo ul li, .footerInfo p, .footerInfo a, .footerInfo ul li img{
       font-family: 'Montserrat'; /* Fonte arredondada e elegante */
       font-size: 20px;
-      background-color: var(--green);
       color: var(--darkGreen);
     }
 
     .contact{
-      background-color: var(--green);
       display: flex;
       align-items: center;
       justify-content: center;
-
-    }
-
-  
-    .social{
-      background-color: var(--green);
     }
 
     .listaSocial{
-      background-color: var(--green);
       display: flex;
       justify-content: space-evenly;
       gap: 10px;
-    }
-
-    .social h3{
-      background-color: var(--green);
-    }
-
-    .social a, .social img{
-      background-color: var(--green);
     }
 
 
@@ -104,7 +74,7 @@ footer{
 
 /*---------------The Modal (background)-----------------------*/
 .modal {
-    max-height:calc(100vh - 125px);
+    max-height:calc(100vh - 100px);
     display: none; /* Hidden by default */
     height: auto;
     position: fixed; /* Stay in place */
@@ -117,12 +87,13 @@ footer{
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    z-index: 999;
   }
   
   /* Modal Content */
   .modal-content {
     position: relative;
-    background-color: #fefefe;
+    background-color: var(--beige);
     margin: auto;
     padding: 0;
     border: 1px solid #888;
@@ -162,8 +133,8 @@ footer{
   
   .modal-header {
     padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
+    background-color: var(--green);
+    color: var(--darkGreen);
   }
   
   .modal-body {
@@ -176,6 +147,6 @@ footer{
   
   .modal-footer {
     padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
+    background-color: var(--green);
+    color: var(--darkGreen);
   }

@@ -51,9 +51,9 @@ aside {
   display: none;
   position: fixed; /* Para o aside flutuar sobre o conteúdo */
   left: 0;
-  top: 0;
+  top: 80px;
   padding: 10px;
-  background-color: rgba(0, 128, 0, 0.3); /* Cor verde com transparência */
+  background-color: #f1f3ebaa; /* Cor verde com transparência */
   border: 1px solid #d3d3d3;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -115,7 +115,7 @@ aside h3, aside ul {
 
 /*---------------The Modal (background)-----------------------*/
 .modal-detail {
-    max-height:calc(100vh - 125px);
+    max-height:calc(100vh - 100px);
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1000; /* Sit on top */

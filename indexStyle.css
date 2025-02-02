@@ -7,6 +7,9 @@
 *, html{
     margin: 0;
     padding: 0;
+}
+
+body{
     background-color: var(--beige);
 }
 
@@ -31,7 +34,7 @@
 .main-content p{
     font-family: "Montserrat";
     font-size: 20px;
-    color: #132a0e;
+    color: var(--darkGreen);
     text-align: left;
     margin-left: 5%;
 }
@@ -77,7 +80,7 @@ aside {
         border: 1px solid #d3d3d3;
         border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        font-family: 'Verdana';
+        font-family: "Montserrat";
         text-align: right; /* Alinha o conteúdo à direita */
         line-height: 2;
         height: 100vh; /* O aside ocupará toda a altura da tela */
@@ -95,4 +98,5 @@ aside a{
 
 aside a:hover {
     color: var(--darkGreen);
+    text-decoration: underline;
 }
