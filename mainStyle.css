@@ -46,16 +46,10 @@ aside {
   }
 
   aside h3{
-    background-color: transparent;
-  }
+    font-family: 'Monteserrat';
+    }
 
-  aside ul{
-    background-color: transparent;
-  }
 
-  aside ul li{
-    background-color: transparent;
-  }
 
 
 
@@ -133,24 +127,16 @@ aside {
 /* Botão elegante para Adicionar Produto */
 /* Botão elegante */
 #add-product-btn {
-    background-color: #0c7a3e; /* Cor verde mais escura */
-    color: white; /* Cor do texto */
-    padding: 10px 20px;
-    border: none;
+    color: var(--darkGreen);
     border-radius: 5px;
     cursor: pointer;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    font-size: 16px;
+    font-family: 'Monteserrat'; /* Fonte arredondada e elegante */
+    font-size: 20px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
-}
-
-
-#add-product-btn {
-    display: block; /* Garante que o botão ocupe toda a largura disponível */
     margin-left: auto; /* Adiciona margem automática à esquerda */
     margin-right: 0; /* Remove qualquer margem à direita */
-    text-align: right; /* Alinha o texto à direita */
+    text-align: left; /* Alinha o texto à direita */
 }
 
 /* Formulário oculto por padrão */

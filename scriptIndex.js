@@ -1,54 +1,62 @@
 w3.includeHTML(() =>  {
-
-  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-  hamburger.addEventListener('click', toggleAside);
+  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o asid
   newAccountBtn.addEventListener('click', openRegistry)
   logoutButton.addEventListener('click', logout);
   registerBtn.addEventListener('click', register);
   var form = document.getElementById("edit-id-form");
-  var modalRegister = document.getElementById("modal-register");
+  const modalRegister = document.getElementById("modal-register");
 
+  var closeRegister = document.getElementsByClassName("close-id")[0];
+  var logged = sessionStorage.getItem('logged');
 
-
-  if((sessionStorage.getItem('logged') === null)){
+  if(logged === null){
+    sessionStorage.setItem('logged', 'false');
+  }
+  
+  if((sessionStorage.getItem('logged') === 'false')){
     console.log('not a user logged');
     const login = document.getElementById('loginButton');
-    console.log(login);
     login.style.visibility='visible';
     const loginMessage = document.getElementById("loginMessage");
     loginMessage.style.visibility='hidden';
   }
   else{
   }  
+  
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');
     // Verificar se há um nome de utilizador armazenado no Session Storage
     const storedUsername = sessionStorage.getItem('username');
+
+    const hamburger = document.getElementById('hamburger');
+    console.log("É AQUI!:" + hamburger);
+    hamburger.addEventListener('click', toggleAside);
     if (storedUsername) {
       welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-    }  
+    } 
+
+    
 
   // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
 loginForm.addEventListener('submit', (event) => {
-    console.log("logged")
     const username = document.getElementById('username').value;
     sessionStorage.setItem('username', username);
-    sessionStorage.setItem('logged', true);
+    sessionStorage.setItem('logged', 'true');
+    event.preventDefault();
     welcomeMessage.textContent = `Olá, ${username}!`;
     const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.display='block';
+    loginMessage.style.visibility= 'visible';
     const login = document.getElementById('loginButton');
     login.style.visibility='hidden';
-    console.log('user ' + storedUsername + ' logged');
+    console.log('user ' + username + ' logged');
 });
 
 
 function logout(){
-  console.log("correu");
   const username = document.getElementById('username').value;
   console.log('user ' + username + ' logged out');
   sessionStorage.removeItem('username');
-  sessionStorage.removeItem('logged');
+  sessionStorage.setItem('logged', 'false');
   const loginMessage = document.getElementById("loginMessage");
   loginMessage.style.visibility='hidden';
   const login = document.getElementById('loginButton');
@@ -104,9 +112,6 @@ function register(){
       modalRegister.style.display = "none";
     }
   }
-
-
-
 }
 
 function comparePasswords(passwordA, passwordB){
@@ -118,20 +123,9 @@ function comparePasswords(passwordA, passwordB){
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 // Função para alternar a exibição do aside
   function toggleAside() {
+    console.log("hamburger a correr");
     const asideMenu = document.getElementById("aside-menu");
     console.log(asideMenu);
     if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
@@ -142,6 +136,12 @@ function comparePasswords(passwordA, passwordB){
 }
 
 
+
+// When the user clicks on <span> (x), close the modal
+closeRegister.onclick = function() {
+  form.reset();
+  modalRegister.style.display = "none";
+}; 
 
 });
 
@@ -154,3 +154,6 @@ function showPassword() {
     password.type = "password";
   }
 }
+
+
+

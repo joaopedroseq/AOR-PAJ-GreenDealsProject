@@ -235,32 +235,7 @@ aside h3, aside ul {
     .modal-body p{
         white-space: pre-wrap;
     }
-  
-  .modal-footer-detail {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-  }
 
-  .modal-footer-detail input{
-    background-color: var(--green); /* Cor verde */
-    color: white; /* Cor do texto */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    font-size: 16px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-  }
-
-  .modal-footer-detail input:hover,
-  .modal-footer-detail input:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
 
 /* Estilo para os botões de Eliminar e Editar Produto */
 #edit-product, #delete-product {
@@ -270,12 +245,63 @@ aside h3, aside ul {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
+    font-family: 'Monteserrat'; /* Fonte arredondada e elegante */
     font-size: 16px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
 }
 
 #edit-product:hover, #delete-product:hover {
-    background-color: #0c7a3e; /* Cor verde mais escura */
+    background-color: var(--beige); /* Cor verde mais escura */
+    color: var(--darkGreen);
+}
+
+/* Para estilizar o botão de contatar o anunciante */
+#contact-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: var(--green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Verdana;
+  border-radius: 5px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+
+#contact-btn:hover {
+    color: var(--darkGreen);
+}
+
+#contact-form {
+  text-align: center;
+  margin: 20px auto;
+  width: 80%;
+}
+
+#message {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: Verdana;
+}
+
+#send-btn {
+  padding: 10px 20px;
+  background-color: var(--green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Verdana;
+  border-radius: 5px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+#send-btn:hover {
+  color: var(--darkGreen);
 }

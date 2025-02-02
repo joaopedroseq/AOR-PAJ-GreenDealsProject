@@ -119,11 +119,12 @@ aside a:hover {
   }
   
   /* Modal Content */
-  .modal-content-detail {
+  .modal-content-id {
     position: relative;
     background-color: #fefefe;
     margin: auto;
     padding: 0;
+    padding-bottom: 10px;;
     border: 1px solid #888;
     width: auto;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
@@ -145,7 +146,7 @@ aside a:hover {
   }
   
   /*Header do Modal*/
-  .modal-header-detail {
+  .modal-header-id {
     display: flex;
     align-items: center;
     padding: 2px 16px;
@@ -153,17 +154,18 @@ aside a:hover {
     color: var(--beige);
     justify-content: space-between;
   }
-  
-  .modal-header-detail-title{
+
+  .modal-header-id p{
     font-family: "Playfair Display";
+    color: var(--beige);
     font-size: 25px;
     height: auto;
     font-weight: bold;
-  
   }
   
+  
   /* The Close Button */
-  .close-detail {
+  .close-id {
     display:flex;
     color: white;
     float: right;
@@ -171,39 +173,39 @@ aside a:hover {
     font-weight: bold;
   }
   
-  .close-detail:hover,
-  .close-detail:focus {
+  .close-id:hover,
+  .close-id:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
   }
     
-  .modal-body-detail {
+  .modal-body-id {
     padding: 16px 16px;
   }
   
   
-    .edit-product-form{
+    .edit-id-form{
         text-align: left;
     }
   
-    .edit-product-form-field{
+    .edit-id-form-field{
       display: block;
     }
   
-    .edit-product-form-field label{
+    .edit-id-form-field label{
         font-size: 18px;
     }
   
-    .edit-product-form-field label:hover{
+    .edit-id-form-field label:hover{
       text-decoration: underline;
     }
   
-    .edit-product-form-field input{
+    .edit-id-form-field input{
       font-size: 14px;
     }
   
-    .save-product{
+    .registerBtn{
       float: inline-end;
       background-color: var(--green); /* Cor verde */
       color: white; /* Cor do texto */
@@ -215,35 +217,11 @@ aside a:hover {
       font-size: 16px;
       margin-top: 20px;
       transition: background-color 0.3s ease;
+
     }
   
   
     .modal-body p{
         white-space: pre-wrap;
     }
-  
-  .modal-footer-detail {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-  }
-  
-  .modal-footer-detail input{
-    background-color: var(--green); /* Cor verde */
-    color: white; /* Cor do texto */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    font-size: 16px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modal-footer-detail input:hover,
-  .modal-footer-detail input:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
+      

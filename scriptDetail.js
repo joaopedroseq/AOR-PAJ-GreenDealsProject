@@ -40,7 +40,7 @@ if(product){
 
 
   //Login
-  if((sessionStorage.getItem('logged') === null)){
+  if((sessionStorage.getItem('logged') === null) || (sessionStorage.getItem('logged') == 'false')){
     const login = document.getElementById('loginButton');
     login.style.visibility = 'visible';
     const loginMessage = document.getElementById("loginMessage");
@@ -55,12 +55,13 @@ if(product){
   }
 
   loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
     const username = document.getElementById('username').value;
     sessionStorage.setItem('username', username);
     sessionStorage.setItem('logged', true);
     welcomeMessage.textContent = `Olá, ${username}!`;
     const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.display = 'block';
+    loginMessage.style.visibility = 'visible';
     const login = document.getElementById('loginButton');
     login.style.visibility = 'hidden';
   });

@@ -90,7 +90,7 @@ privacyBtn.onclick = function() {
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = function() {
-  console.log('correu footer');
+
   modal.style.display = "none";
 }
 

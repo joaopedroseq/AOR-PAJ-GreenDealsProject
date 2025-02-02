@@ -1,5 +1,10 @@
 w3.includeHTML(() =>  {
-    if((sessionStorage.getItem('logged') === null)){
+
+    // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', toggleAside);   
+
+    if((sessionStorage.getItem('logged') === null)  || (sessionStorage.getItem('logged') === 'false')){
       const login = document.getElementById('loginButton');
       login.style.visibility='visible';
       const loginMessage = document.getElementById("loginMessage");
@@ -13,6 +18,8 @@ w3.includeHTML(() =>  {
       if (storedUsername) {
         welcomeMessage.textContent = `Olá, ${storedUsername}!`;
       }  
+
+      
   
     // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
     loginForm.addEventListener('submit', (event) => {
@@ -64,7 +71,6 @@ w3.includeHTML(() =>  {
 
     // When the user clicks on <span> (x), close the modal
     closeDetail.onclick = function() {
-        form.reset();
         modalDetail.style.display = "none";
       };  
     
@@ -214,7 +220,6 @@ w3.includeHTML(() =>  {
             });
         });
     });
-
       // Função para alternar a exibição do aside
     function toggleAside() {
         const asideMenu = document.getElementById("aside-menu");
@@ -226,9 +231,7 @@ w3.includeHTML(() =>  {
         
     }
 
-    // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-    const hamburger = document.getElementById('hamburger');
-    hamburger.addEventListener('click', toggleAside);   
+    
     
     const logoutButton = document.getElementById('logoutButton');
     logoutButton.addEventListener('click', logout);
