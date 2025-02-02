@@ -43,35 +43,35 @@ w3.includeHTML(() =>  {
     const addButton = document.getElementById('add-product-btn');
     // Get the <span> element that closes the modal
     var closeDetail = document.getElementsByClassName("close-detail")[0];
+    
+    
     // Adiciona o evento de submit ao formulário para guardar o produto
     var saveProductBtn = document.getElementById("save-product");
 
     //FUNÇõES PARA ADICIONAR PRODUTO
     var modalDetail = document.getElementById("modal-detail");
 
-    var form = document.getElementById("edit-product-form")
+    var form = document.getElementById("edit-product-form");
+    
 
-    console.log(modalDetail);
-    // Função para alternar a exibição do formulário
-    function toggleForm() {
+    // Adiciona o evento de clique ao botão para alternar o formulário
+    addButton.addEventListener('click', function(event) {
+        console.log("correu");
+        event.preventDefault();
         modalDetail.style.display = "flex";
-    }
+    });
+
 
     // When the user clicks on <span> (x), close the modal
     closeDetail.onclick = function() {
         modalDetail.style.display = "none";
       };  
     
-    // Adiciona o evento de clique ao botão para alternar o formulário
-    addButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        toggleForm();
-    });
+    
 
     // Função para guardar o produto no local storage
     saveProductBtn.addEventListener('click', function(event) {
         event.preventDefault();
-        console.log("salvar");
         const nome = document.getElementById('edit-nome').value;
         const descricao = document.getElementById('edit-descricao').value;  
         const preco = document.getElementById('edit-preco').value;
@@ -115,6 +115,7 @@ w3.includeHTML(() =>  {
             }
             var confirm = window.confirm('Tem a certeza que pretende adicionar o produto' + nome + '?');
             if(confirm == true){
+                console.log("salvar");
                 let products = localStorage.getItem('products');
                 if (products) {
                     products = JSON.parse(products);
@@ -123,8 +124,6 @@ w3.includeHTML(() =>  {
                 }
                 products.push(product);
                 localStorage.setItem('products', JSON.stringify(products));
-
-            
                 form.reset();
                 modalDetail.style.display = "none";
                 window.location.reload();
@@ -132,7 +131,6 @@ w3.includeHTML(() =>  {
             else {
                 form.reset();
                 modalDetail.style.display = "none";
-                window.location.reload();
             }
              
         

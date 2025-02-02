@@ -133,7 +133,7 @@ aside {
 /* Botão elegante para Adicionar Produto */
 /* Botão elegante */
 #add-product-btn {
-    background-color: var(--green); /* Cor verde */
+    background-color: #0c7a3e; /* Cor verde mais escura */
     color: white; /* Cor do texto */
     padding: 10px 20px;
     border: none;
@@ -145,9 +145,6 @@ aside {
     transition: background-color 0.3s ease;
 }
 
-#add-product-btn {
-    background-color: #0c7a3e; /* Cor verde mais escura */
-}
 
 #add-product-btn {
     display: block; /* Garante que o botão ocupe toda a largura disponível */
@@ -240,13 +237,14 @@ aside {
   display: flex;
   align-items: center;
   padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
+  background-color: var(--green);
+  color: var(--beige);
   justify-content: space-between;
 }
 
 .modal-header-detail-title{
-  font-size: 20px;
+  font-family: "Playfair Display";
+  font-size: 25px;
   height: auto;
   font-weight: bold;
 
@@ -267,17 +265,13 @@ aside {
   text-decoration: none;
   cursor: pointer;
 }
-
-
-
+  
 .modal-body-detail {
-  padding: 2px 16px;
-  display: flex;
+  padding: 16px 16px;
 }
 
 
   .edit-product-form{
-      display: flex;
       text-align: left;
   }
 
@@ -295,6 +289,20 @@ aside {
 
   .edit-product-form-field input{
     font-size: 14px;
+  }
+
+  .save-product{
+    float: inline-end;
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: "Playfair Display";
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
   }
 
 
