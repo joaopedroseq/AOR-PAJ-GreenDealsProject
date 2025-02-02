@@ -1,4 +1,15 @@
 w3.includeHTML(() =>  {
+
+  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
+  hamburger.addEventListener('click', toggleAside);
+  newAccountBtn.addEventListener('click', openRegistry)
+  logoutButton.addEventListener('click', logout);
+  registerBtn.addEventListener('click', register);
+  var form = document.getElementById("edit-id-form");
+  var modalRegister = document.getElementById("modal-register");
+
+
+
   if((sessionStorage.getItem('logged') === null)){
     console.log('not a user logged');
     const login = document.getElementById('loginButton');
@@ -45,6 +56,76 @@ function logout(){
   login.style.visibility='visible';
 }
 
+function openRegistry(){
+  modalRegister.style.display = "flex";
+}
+
+function register(){
+  event.preventDefault();
+  const nome = document.getElementById('new-name').value;
+  const username = document.getElementById('new-username').value;
+  const password = document.getElementById('new-password').value;
+  const passwordConfirm = document.getElementById('new-passwordConfirm').value;
+  const email = document.getElementById('new-email').value;
+
+  if(nome.trim() === ""){
+    alert("O nome é um campo de preenchimento obrigatório");
+  }
+  else if(username.trim() === ""){
+    alert("O username é de preenchimento obrigatório");
+  }
+  else if(password.trim() === ""){
+      alert("A password é de preenchimento obrigatório");
+  }
+  else if(passwordConfirm.trim() === ""){
+      alert("A confirmação da sua password é obrigatória");
+  }
+  else if(!comparePasswords(password, passwordConfirm)){
+    console.log("deu falso");
+    alert("As passwords que escolheu não correspondem");
+  }
+  else if(email.trim() === ""){
+    console.log("deu verdadeiro");
+      alert("O email é de preenchimento obrigatório");
+  }
+  else{
+    var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
+    if(confirm == true){
+      console.log("salvar");
+      let users = localStorage.getItem('users');
+      if (users) {
+        users = JSON.parse(users);
+      } else {
+        users = [];
+      }
+      users.push(username);
+      localStorage.setItem('users', JSON.stringify(users));
+      form.reset();
+      modalRegister.style.display = "none";
+    }
+  }
+
+
+
+}
+
+function comparePasswords(passwordA, passwordB){
+  if((passwordA.localeCompare(passwordB)) == 0){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -60,10 +141,7 @@ function logout(){
     }
 }
 
-// Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-hamburger.addEventListener('click', toggleAside);
 
-logoutButton.addEventListener('click', logout);
 
 });
 

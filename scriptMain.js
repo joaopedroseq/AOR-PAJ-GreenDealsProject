@@ -64,6 +64,7 @@ w3.includeHTML(() =>  {
 
     // When the user clicks on <span> (x), close the modal
     closeDetail.onclick = function() {
+        form.reset();
         modalDetail.style.display = "none";
       };  
     
@@ -82,25 +83,25 @@ w3.includeHTML(() =>  {
         const data = new Date();
 
         if(nome.trim() === ""){
-            alert("Terá de escrever o nome do produto");
+            alert("O nome do produto é de preenchimento obrigatório");
         }
         else if(descricao.trim() === ""){
-            alert("Terá de escrever uma descrição do produto");
+            alert("A descrição do produto é de preenchimento obrigatório");
         }
         else if(preco.trim() === ""){
-            alert("Terá de escrever o preço do produto");
+            alert("O preço do produto é de preenchimento obrigatório");
         }
         else if(!checkIfNumeric(preco)){
-            alert("Preço inválido");
+            alert("Preço inserido inválido. Apena poderá escrever digitos e sem quaisquer símbolos");
         }
         else if(anunciante.trim() === ""){
-            alert("Terá de escrever o seu nome");
+            alert("O nome do anunciante é de preenchimento obrigatório");
         }
         else if(localidade.trim() === ""){
-            alert("Terá de escrever a sua morada");
+            alert("A sua morada é preenchimento obrigatório");
         }
         else if(imagem.trim() === ""){
-            alert("Terá de inserir um endereço válido para a imagem do produto");
+            alert("Terá de colocar um url válido da imagem do produto que pretenede anunciar");
         }
         else {
             const product = {

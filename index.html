@@ -11,6 +11,7 @@
     <div class="container">      
         <aside id="aside-menu">
             <a href="main.html">Começar a comprar</a>
+            <a id="newAccountBtn">Registe-se</a>
         </aside> 
         <main class="main-content">
             <div class="main-title">
@@ -35,7 +36,43 @@
                     </a>
                 </span>
 
+                <!-- The Modal -->
+        <div id="modal-register" class="modal-register">
+            <!-- Modal content -->
+            <div class="modal-content-detail">
+                <div class="modal-header-detail" id="modal-header-detail">
+                    <p class="modal-header-detail-title">Criar novo registo</p>
+                    <p class="close-detail" id="close-detail">&times;</p>
+                </div>
+                <div class="modal-body-detail">
+                    <form class="edit-id-form" id="edit-id-form">
+                        <div class="edit-id-form-field" id="edit-id-form-field">
+                            <label for="edit-nome"><strong>Nome:</strong></label>
+                            <input type="text" id="new-name" name="new-name">
+                        </div>
+                        <div class="edit-id-form-field" id="edit-id-form-field">
+                            <label for="edit-username"><strong>Nome de utilizador:</strong></label>
+                            <input type="text" id="new-username" name="new-username">
+                        </div>
+                        <div class="edit-id-form-field" id="edit-id-form-field">
+                            <label for="edit-password"><strong>Password:</strong></label>
+                            <input type="text" id="new-password" name="new-password">
+                        </div>
+                        <div class="edit-id-form-field" id="edit-product-form-field">
+                            <label for="edit-passwordConfirm"><strong>Password confirmação:</strong></label>
+                            <input type="text" id="new-passwordConfirm" name="new-passwordConfirm">
+                        </div>
+                        <div class="edit-id-form-field" id="edit-id-form-field">
+                            <label for="edit-email"><strong>Email:</strong></label>
+                            <input type="text" id="new-email" name="new-email">
+                        </div>
+                         <input type="submit" id="registerBtn" value="Register">                     
+                    </form>
+                </div>
+            </div>
+        </div>  
         </main>
+
     </div>
     <div w3-include-html="footer.html"></div>
 
