@@ -167,7 +167,7 @@ if(product){
     document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
     document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
     document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
-    document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
+    //document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
   
 
     modal.style.display = "none";

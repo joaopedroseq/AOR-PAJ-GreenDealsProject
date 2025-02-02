@@ -25,7 +25,7 @@ body{
 }
 
 .main-title h4{
-    font-family: "Playfarer";
+    font-family: "Playfair Display";
     text-align: left;
     font-size: 30px;
     color: var(--darkGreen);
@@ -80,7 +80,7 @@ aside {
         border: 1px solid #d3d3d3;
         border-radius: 5px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        font-family: "Montserrat";
+        font-family: 'Montserrat';
         text-align: right; /* Alinha o conteúdo à direita */
         line-height: 2;
         height: 100vh; /* O aside ocupará toda a altura da tela */

@@ -134,15 +134,20 @@ footer{
   .modal-header {
     padding: 2px 16px;
     background-color: var(--green);
-    color: var(--darkGreen);
+    color: var(--beige);
+    font-family: "Playfair Display";
   }
   
   .modal-body {
     padding: 2px 16px;
   }
 
+
     .modal-body p{
         white-space: pre-wrap;
+        color: var(--darkGreen);
+        font-family: "Montserrat";
+
     }
   
   .modal-footer {
