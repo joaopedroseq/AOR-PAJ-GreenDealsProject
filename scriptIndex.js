@@ -5,79 +5,50 @@ w3.includeHTML(() =>  {
     localStorage.setItem('users', JSON.stringify([]));
   }
 
-  //Verifica se existe utilizador l
+  //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
   if(logged === null){
     sessionStorage.setItem('logged', 'false');
   }
   
+  //Obtem elemento do login-form
   const loginForm = document.getElementById('login-form');
+
+  // Vai buscar o valor de username submetido no formulário, e chama a funcão login desse username, e faz reset ao formulário
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    login(username);
+    loginForm.reset();
+  });
+
+ 
+
   const welcomeMessage = document.getElementById('mensagem_boasVindas');
 
-  // Verificar se há um nome de utilizador armazenado no Session Storage
-  const storedUsername = sessionStorage.getItem('username');
-  if (storedUsername) {
-    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-  } 
 
-  //caso não exista um utilizador logged, apresenta o botão de login
-  if((sessionStorage.getItem('logged') === 'false')){
-    console.log('not a user logged');
-    const login = document.getElementById('loginButton');
-    login.style.visibility='visible';
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility='hidden';
+  //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
+  //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
+  function login(username){
+    if(checkUsernameExists(username)){
+      sessionStorage.setItem('logged', 'true');
+      sessionStorage.setItem('username', username);
+      welcomeMessage.textContent = `Olá, ${username}!`;
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility= 'visible';
+      const login = document.getElementById('loginButton');
+      login.style.visibility='hidden';
+      console.log('user ' + username + ' logged');
+    }
+    else {
+      alert(username + " não encontrado. Por favor registe-se");  //caso contrário, avisa o utilizador que não existe o seu registo,
+      //e não faz login
+    }
   }
 
-
-
-
-  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-  newAccountBtn.addEventListener('click', openRegistry)
+  //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
-  registerBtn.addEventListener('click', register);
-  var form = document.getElementById("edit-id-form");
-  const modalRegister = document.getElementById("modal-register");
-  var closeRegister = document.getElementsByClassName("close-id")[0];
-  var logged = sessionStorage.getItem('logged');
 
-  
-  
-  
-  
-    
-    
-    const hamburger = document.getElementById('hamburger');
-
-    hamburger.addEventListener('click', toggleAside);
-    
-
-    
-
-      // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-    loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const username = document.getElementById('username').value;
-        login(username);
-        loginForm.reset();
-    });
-
-    function login(username){
-      if(checkUsernameExists(username)){
-        sessionStorage.setItem('logged', 'true');
-        sessionStorage.setItem('username', username);
-        welcomeMessage.textContent = `Olá, ${username}!`;
-        const loginMessage = document.getElementById("loginMessage");
-        loginMessage.style.visibility= 'visible';
-        const login = document.getElementById('loginButton');
-        login.style.visibility='hidden';
-        console.log('user ' + username + ' logged');
-      }
-      else {
-        alert(username + " não encontrado. Por favor registe-se");
-      }
-    }
-
-
+  //Função para fazer logout, em que são retirados os valores respetivos ao utilizador da sessioStorage, e altera a visiviliade dos elementos
   function logout(){
     const username = document.getElementById('username').value;
     console.log('user ' + username + ' logged out');
@@ -90,11 +61,53 @@ w3.includeHTML(() =>  {
     login.style.visibility='visible';
   }
 
+  // Verificar se há um nome de utilizador armazenado no Session Storage
+  const storedUsername = sessionStorage.getItem('username');
+  if (storedUsername) {
+    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+  } 
 
+  //Caso não exista um utilizador logged, apresenta o botão de login
+  if((sessionStorage.getItem('logged') === 'false')){
+    const login = document.getElementById('loginButton');
+    login.style.visibility='visible';
+    const loginMessage = document.getElementById("loginMessage");
+    loginMessage.style.visibility='hidden';
+  }
+
+
+  //Funções para o aside
+  //vai  buscar o elemento "hamburger"
+  const hamburger = document.getElementById('hamburger');
+  // Adiciona o evento de clique ao ícone de hambúrguer para alternar a apresentação do aside
+  hamburger.addEventListener('click', toggleAside);
+
+
+  //Registo de utilizadores
+  //Procura de elementos 
+  newAccountBtn.addEventListener('click', openRegistry)
+  registerBtn.addEventListener('click', register);
+  var form = document.getElementById("edit-id-form");
+  const modalRegister = document.getElementById("modal-register");
+  var closeRegister = document.getElementsByClassName("close-id")[0];
+  var logged = sessionStorage.getItem('logged');
+
+
+  //Abrir a janela modal de registo de novo utilizador
   function openRegistry(){
     modalRegister.style.display = "flex";
   }
 
+  //Função para fechar o modal window
+  closeRegister.onclick = function() {
+    form.reset();
+    modalRegister.style.display = "none";
+  }; 
+
+
+  //Função para registo de novo utilizador
+  //Verifica se os campos do formulário estão preenchidos, se as condições estáo corretas e
+  //se sim, adiciona o nome de utilizador a 'users' do localStorage
   function register(event){
     event.preventDefault();
     const nome = document.getElementById('new-name').value;
@@ -145,7 +158,9 @@ w3.includeHTML(() =>  {
       }
     }
   }
-
+  
+  //Verifica se duas strings são iguais - serve para assim comparar se
+  //a password e a password de confirmação correspondem
   function comparePasswords(passwordA, passwordB){
     if((passwordA.localeCompare(passwordB)) == 0){
       return true;
@@ -155,6 +170,9 @@ w3.includeHTML(() =>  {
     }
   }
 
+  //Procura se um username existe na localStorage - no registo de novos utilizadores
+  //para verificar se o nome de utilizador não pode ser escolhido por já existir, e para
+  //funções de login, serve para verificar se o utilizador existe
   function checkUsernameExists(username){
     console.log("a correr comparação de " + username);
     let users = localStorage.getItem('users');
@@ -167,7 +185,7 @@ w3.includeHTML(() =>  {
     }
   }
 
-  // Função para alternar a exibição do aside
+  // Função para alternar a apresentação do aside
     function toggleAside() {
       console.log("hamburger a correr");
       const asideMenu = document.getElementById("aside-menu");
@@ -177,21 +195,12 @@ w3.includeHTML(() =>  {
       } else {
           asideMenu.style.display = 'none';
       }
-  }
-
-
-
-  // When the user clicks on <span> (x), close the modal
-  closeRegister.onclick = function() {
-    form.reset();
-    modalRegister.style.display = "none";
-  }; 
-
-  
+  } 
 
 });
 
-  //vê se pode ir para main
+  //Verficia se o utilizador pode ou não aceder ao main.html - não se não tiver feito
+  //login
   function goToMain(){
     let logged = sessionStorage.getItem("logged");
     // Verifica se 'logged' existe no localStorage
@@ -207,6 +216,7 @@ w3.includeHTML(() =>  {
     }
   }
 
+  //Função para mostrar a password no form de login
   function showPassword() {
     console.log("start");
     var password = document.getElementById("password");
