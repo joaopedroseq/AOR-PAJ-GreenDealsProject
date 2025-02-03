@@ -4,21 +4,22 @@
     <meta charset="utf-8">
     <title>GreenDeals</title>
     <link rel="stylesheet" href="mainStyle.css">
+    <link rel="icon" href="images\logo.png" type="image/x-icon">
 </head>
 <body>
     <div w3-include-html="header.html"></div>
 
     <div class="container">
         <aside id="aside-menu">
-            <h3 id="add-product-btn">Adicionar Produto</h3>
-            <h3>Categorias</h3><br>
             <ul>
+                <h3>Categorias</h3>
                 <li id="vestuario">Vestuário</li>
                 <li id="calcado">Calçado</li>
                 <li id="brinquedos">Brinquedos</li>
                 <li id="viagens">Viagens</li>
                 <li id="papelaria">Papelaria</li>
             </ul>
+            <h3 id="add-product-btn">Adicionar novo produto</h3>
         </aside>
         <main class="main-content">
             <div class="grid-container"></div>        
@@ -29,25 +30,25 @@
             <!-- Modal content -->
             <div class="modal-content-detail">
                 <div class="modal-header-detail" id="modal-header-detail">
-                    <p class="modal-header-detail-title">Defina as informação do produto</p>
+                    <p class="modal-header-detail-title">Definir informação do produto</p>
                     <p class="close-detail" id="close-detail">&times;</p>
                 </div>
                 <div class="modal-body-detail">
                     <form class="edit-product-form" id="edit-product-form">
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-nome"><strong>Nome do Produto:</strong></label>
+                            <label for="edit-nome">Nome do Produto:</label>
                             <input type="text" id="edit-nome" name="edit-nome">
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-descricao"><strong>Descrição:</strong></label>
+                            <label for="edit-descricao">Descrição:</label>
                             <input type="text" id="edit-descricao" name="edit-descricao">
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-preco"><strong>Preço do Produto:</strong></label>
+                            <label for="edit-preco">Preço do Produto:</label>
                             <input type="text" id="edit-preco" name="edit-preco">
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-categoria"><strong>Categoria do Produto:</strong></label>
+                            <label for="edit-categoria">Categoria do Produto:</label>
                             <select id="edit-categoria" name="edit-categoria">
                                 <option value="vestuario">Vestuário</option>
                                 <option value="calcado">Calçado</option>
@@ -57,18 +58,18 @@
                             </select>
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-anunciante"><strong>Nome do Anunciante:</strong></label>
+                            <label for="edit-anunciante">Nome do Anunciante:</label>
                             <input type="text" id="edit-anunciante" name="edit-anunciante">
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-localidade"><strong>Localização:</strong></label>
+                            <label for="edit-localidade">Localização:</label>
                             <input type="text" id="edit-localidade" name="edit-localidade">
                         </div>
                         <div class="edit-product-form-field" id="edit-product-form-field">
-                            <label for="edit-imagem"><strong>url de imagem:</strong></label>
+                            <label for="edit-imagem">url de imagem:</label>
                             <input type="text" id="edit-imagem" name="edit-imagem">
                          </div>
-                         <input type="submit" id="save-product" value="Guardar Alterações">                     
+                         <input type="submit" class="save-product" id="save-product" value="Guardar Alterações">                     
                     </form>
                 </div>
             </div>

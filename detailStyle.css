@@ -16,21 +16,26 @@
     justify-content: space-between;
 }
 
-strong {
-  font-family: Verdana;
-  font-weight: bold;
-}
+  .main-content h2{
+    text-align: left;
+    font-family: 'Montserrat';
+    color: var(--darkGreen);
+  }
+
 
 .product-details p {
   margin: 10px 0;
   text-align: left;
-  font-family: Verdana;
+  font-family: 'Montserrat';
+  color: var(--darkGreen);
   font-size: 25px;
   line-height: 2;
 }
 
 
 .product-details strong {
+  font-family: 'Montserrat';
+  color: var(--darkGreen);
   font-weight: bold;
 }
 
@@ -43,7 +48,6 @@ strong {
     line-height: 2; /* Espaçamento entre linhas */
     margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
     text-align: center; /* Centraliza o texto */
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 
@@ -57,7 +61,6 @@ aside {
   border: 1px solid #d3d3d3;
   border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  font-family: 'Verdana';
   line-height: 2;
   height: 100vh; /* O aside ocupará toda a altura da tela */
   width: 250px; /* Largura do aside */
@@ -129,6 +132,15 @@ aside h3, aside ul {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 
   }
+
+  .modal-detail input[type="text"] {
+    font-size: 18px;
+    font-family: 'Montserrat';
+    border: none;
+    border-bottom: 1px solid #000;
+    width: 200px;
+    outline: none;
+  }
   
   /* Modal Content */
   .modal-content-detail {
@@ -179,7 +191,8 @@ aside h3, aside ul {
     display:flex;
     color: white;
     float: right;
-    font-size: 20px;
+    font-family: "Playfair Display";
+    font-size: 30px;
     font-weight: bold;
   }
   
@@ -207,6 +220,7 @@ aside h3, aside ul {
 
     .edit-product-form-field label{
         font-size: 18px;
+        font-family: "Montserrat";
     }
 
     .edit-product-form-field label:hover{
@@ -245,7 +259,7 @@ aside h3, aside ul {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-family: 'Monteserrat'; /* Fonte arredondada e elegante */
+    font-family: 'Montserrat'; /* Fonte arredondada e elegante */
     font-size: 16px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
@@ -305,3 +319,4 @@ aside h3, aside ul {
 #send-btn:hover {
   color: var(--darkGreen);
 }
+

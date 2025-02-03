@@ -18,7 +18,7 @@ if(product){
 
   const dia = dataCompleta.getDate().toString().padStart(2, '0'); // Adiciona o zero à esquerda se necessário
   const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, '0'); // Meses começam do 0, então soma-se 1
-  const ano = dataCompleta.getFullYear();
+  const ano = dataCompleta.getFullYear(); //p
 
   // Formatar a hora no formato 'hh:mm'
   const horas = dataCompleta.getHours().toString().padStart(2, '0');

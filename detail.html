@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>GreenDeals</title>
+    <link rel="icon" href="images\logo.png" type="image/x-icon">
 <link rel="stylesheet" href="detailStyle.css">
 </head>
 <body>
@@ -15,12 +16,12 @@
         </form>
     </aside>
     <main class="main-content">
+        <h2 id="product-category">Categoria: a, b, c</h2>
         <div class="product-details">
             <img class="table-img" id="product-image" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
             <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
             <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
             <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
-            <p id="product-category"><strong>Categoria:</strong> a, b, c</p>
             <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
             <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
             <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
@@ -45,19 +46,19 @@
                     <div class="modal-body-detail">
                         <div class="edit-product-form" id="edit-product-form">
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-nome"><strong>Nome do Produto:</strong></label>
+                                <label for="edit-nome">Nome do Produto:</label>
                                 <input type="text" id="edit-nome" name="edit-nome">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-descricao"><strong>Descrição:</strong></label>
+                                <label for="edit-descricao">Descrição:</label>
                                 <input type="text" id="edit-descricao" name="edit-descricao">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-preco"><strong>Preço do Produto:</strong></label>
+                                <label for="edit-preco">Preço do Produto:</label>
                                 <input type="text" id="edit-preco" name="edit-preco">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-categoria"><strong>Categoria do Produto:</strong></label>
+                                <label for="edit-categoria">Categoria do Produto:</label>
                                 <select id="edit-categoria" name="edit-categoria">
                                     <option value="vestuario">Vestuário</option>
                                     <option value="calcado">Calçado</option>
@@ -67,15 +68,15 @@
                                 </select>
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-anunciante"><strong>Nome do Anunciante:</strong></label>
+                                <label for="edit-anunciante">Nome do Anunciante:</label>
                                 <input type="text" id="edit-anunciante" name="edit-anunciante">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-localidade"><strong>Localização:</strong></label>
+                                <label for="edit-localidade">Localização:</label>
                                 <input type="text" id="edit-localidade" name="edit-localidade">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-imagem"><strong>url de imagem:</strong></label>
+                                <label for="edit-imagem">url de imagem:</label>
                                 <input type="text" id="edit-imagem" name="edit-imagem">
                              </div>
                              <input type="submit" class="save-product" id="save-product" value="Guardar Alterações" onclick="saveProduct(event)">                    

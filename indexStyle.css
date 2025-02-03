@@ -188,6 +188,15 @@ aside a:hover {
     .edit-id-form{
         text-align: left;
     }
+
+    .edit-id-form input[type="text"] {
+      font-size: 18px;
+      font-family: "Montserrat";
+      border: none;
+      border-bottom: 1px solid #000;
+      width: 200px;
+      outline: none;
+    }
   
     .edit-id-form-field{
       display: block;
@@ -195,6 +204,7 @@ aside a:hover {
   
     .edit-id-form-field label{
         font-size: 18px;
+        font-family: "Montserrat";
     }
   
     .edit-id-form-field label:hover{
@@ -224,4 +234,6 @@ aside a:hover {
     .modal-body p{
         white-space: pre-wrap;
     }
+
+    
       

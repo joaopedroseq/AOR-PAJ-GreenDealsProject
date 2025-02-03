@@ -1,5 +1,5 @@
 w3.includeHTML(() =>  {
-  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o asid
+  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
   newAccountBtn.addEventListener('click', openRegistry)
   logoutButton.addEventListener('click', logout);
   registerBtn.addEventListener('click', register);
@@ -13,6 +13,7 @@ w3.includeHTML(() =>  {
     sessionStorage.setItem('logged', 'false');
   }
   
+  //caso não exista um utilizador logged, apresenta o botão de login
   if((sessionStorage.getItem('logged') === 'false')){
     console.log('not a user logged');
     const login = document.getElementById('loginButton');
@@ -20,140 +21,158 @@ w3.includeHTML(() =>  {
     const loginMessage = document.getElementById("loginMessage");
     loginMessage.style.visibility='hidden';
   }
-  else{
-  }  
   
     const loginForm = document.getElementById('login-form');
     const welcomeMessage = document.getElementById('mensagem_boasVindas');
+
     // Verificar se há um nome de utilizador armazenado no Session Storage
     const storedUsername = sessionStorage.getItem('username');
-
-    const hamburger = document.getElementById('hamburger');
-    console.log("É AQUI!:" + hamburger);
-    hamburger.addEventListener('click', toggleAside);
     if (storedUsername) {
       welcomeMessage.textContent = `Olá, ${storedUsername}!`;
     } 
 
+    const hamburger = document.getElementById('hamburger');
+
+    hamburger.addEventListener('click', toggleAside);
     
 
-  // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-loginForm.addEventListener('submit', (event) => {
+    
+
+      // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = document.getElementById('username').value;
+        login(username);
+        loginForm.reset();
+    });
+
+    function login(username){
+      console.log('correu o login');
+      sessionStorage.setItem('logged', 'true');
+      sessionStorage.setItem('username', username);
+      welcomeMessage.textContent = `Olá, ${username}!`;
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility= 'visible';
+      const login = document.getElementById('loginButton');
+      login.style.visibility='hidden';
+      console.log('user ' + username + ' logged');
+    }
+
+
+  function logout(){
     const username = document.getElementById('username').value;
-    sessionStorage.setItem('username', username);
-    sessionStorage.setItem('logged', 'true');
-    event.preventDefault();
-    welcomeMessage.textContent = `Olá, ${username}!`;
+    console.log('user ' + username + ' logged out');
+    sessionStorage.removeItem('username');
+    sessionStorage.setItem('logged', 'false');
     const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility= 'visible';
+    loginMessage.style.visibility='hidden';
     const login = document.getElementById('loginButton');
-    login.style.visibility='hidden';
-    console.log('user ' + username + ' logged');
-});
+    console.log(login);
+    login.style.visibility='visible';
+  }
 
 
-function logout(){
-  const username = document.getElementById('username').value;
-  console.log('user ' + username + ' logged out');
-  sessionStorage.removeItem('username');
-  sessionStorage.setItem('logged', 'false');
-  const loginMessage = document.getElementById("loginMessage");
-  loginMessage.style.visibility='hidden';
-  const login = document.getElementById('loginButton');
-  console.log(login);
-  login.style.visibility='visible';
-}
+  function openRegistry(){
+    modalRegister.style.display = "flex";
+  }
 
-function openRegistry(){
-  modalRegister.style.display = "flex";
-}
+  function register(event){
+    event.preventDefault();
+    const nome = document.getElementById('new-name').value;
+    const username = document.getElementById('new-username').value;
+    const password = document.getElementById('new-password').value;
+    const passwordConfirm = document.getElementById('new-passwordConfirm').value;
+    const email = document.getElementById('new-email').value;
 
-function register(){
-  event.preventDefault();
-  const nome = document.getElementById('new-name').value;
-  const username = document.getElementById('new-username').value;
-  const password = document.getElementById('new-password').value;
-  const passwordConfirm = document.getElementById('new-passwordConfirm').value;
-  const email = document.getElementById('new-email').value;
-
-  if(nome.trim() === ""){
-    alert("O nome é um campo de preenchimento obrigatório");
-  }
-  else if(username.trim() === ""){
-    alert("O username é de preenchimento obrigatório");
-  }
-  else if(password.trim() === ""){
-      alert("A password é de preenchimento obrigatório");
-  }
-  else if(passwordConfirm.trim() === ""){
-      alert("A confirmação da sua password é obrigatória");
-  }
-  else if(!comparePasswords(password, passwordConfirm)){
-    console.log("deu falso");
-    alert("As passwords que escolheu não correspondem");
-  }
-  else if(email.trim() === ""){
-    console.log("deu verdadeiro");
-      alert("O email é de preenchimento obrigatório");
-  }
-  else{
-    var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
-    if(confirm == true){
-      console.log("salvar");
-      let users = localStorage.getItem('users');
-      if (users) {
-        users = JSON.parse(users);
-      } else {
-        users = [];
+    if(nome.trim() === ""){
+      alert("O nome é um campo de preenchimento obrigatório");
+    }
+    else if(username.trim() === ""){
+      alert("O username é de preenchimento obrigatório");
+    }
+    else if(checkUsernameTaken(username)){
+      alert("Esse username já existe");
+    }
+    else if(password.trim() === ""){
+        alert("A password é de preenchimento obrigatório");
+    }
+    else if(passwordConfirm.trim() === ""){
+        alert("A confirmação da sua password é obrigatória");
+    }
+    else if(!comparePasswords(password, passwordConfirm)){
+      console.log("deu falso");
+      alert("As passwords que escolheu não correspondem");
+    }
+    else if(email.trim() === ""){
+      console.log("deu verdadeiro");
+        alert("O email é de preenchimento obrigatório");
+    }
+    else{
+      var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
+      if(confirm == true){
+        console.log("salvar");
+        let users = localStorage.getItem('users');
+        if (users) {
+          users = JSON.parse(users);
+        } else {
+          users = [];
+        }
+        users.push(username);
+        localStorage.setItem('users', JSON.stringify(users));
+        form.reset();
+        modalRegister.style.display = "none";
       }
-      users.push(username);
-      localStorage.setItem('users', JSON.stringify(users));
-      form.reset();
-      modalRegister.style.display = "none";
     }
   }
-}
 
-function comparePasswords(passwordA, passwordB){
-  if((passwordA.localeCompare(passwordB)) == 0){
-    return true;
+  function comparePasswords(passwordA, passwordB){
+    if((passwordA.localeCompare(passwordB)) == 0){
+      return true;
+    }
+    else {
+      return false;
+    }
   }
-  else {
+
+  function checkUsernameTaken(username){
+    const users = localStorage.getItem('users');
+    user = JSON.stringify(users);
+    users.array.forEach(user => {
+      if(username.localeCompare(user)){
+        return true;
+      }
+    });
     return false;
+  };
+
+  // Função para alternar a exibição do aside
+    function toggleAside() {
+      console.log("hamburger a correr");
+      const asideMenu = document.getElementById("aside-menu");
+      console.log(asideMenu);
+      if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
+          asideMenu.style.display = 'block';
+      } else {
+          asideMenu.style.display = 'none';
+      }
   }
-}
-
-// Função para alternar a exibição do aside
-  function toggleAside() {
-    console.log("hamburger a correr");
-    const asideMenu = document.getElementById("aside-menu");
-    console.log(asideMenu);
-    if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-        asideMenu.style.display = 'block';
-    } else {
-        asideMenu.style.display = 'none';
-    }
-}
 
 
 
-// When the user clicks on <span> (x), close the modal
-closeRegister.onclick = function() {
-  form.reset();
-  modalRegister.style.display = "none";
-}; 
+  // When the user clicks on <span> (x), close the modal
+  closeRegister.onclick = function() {
+    form.reset();
+    modalRegister.style.display = "none";
+  }; 
 
 });
 
-function showPassword() {
-  console.log("start");
-  var password = document.getElementById("password");
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
+  function showPassword() {
+    console.log("start");
+    var password = document.getElementById("password");
+    if (password.type === "password") {
+      password.type = "text";
+    } else {
+      password.type = "password";
+    }
   }
-}
-
-
-
