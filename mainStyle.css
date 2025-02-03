@@ -1,14 +1,16 @@
+/* Estilo global */
 :root{
   --green: #B0B9A2;
   --beige: #f1f3eb;
   --darkGreen: #132a0e;
 }
 
+/* Estilo global do html */
 *, html{
     margin: 0;
     padding: 0;
 }
-
+/* Estilo global do body */
   body{
     background-color: var(--beige);
   }
@@ -19,6 +21,7 @@
     justify-content: space-between;
 }
 
+
 .main-content {
     padding: 100px;
     width: 100vw;
@@ -28,6 +31,8 @@
     margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
     text-align: center; /* Centraliza o texto */
 }
+
+/* Estilo para o aside */
 aside {
     display: none;
     position: fixed; /* Para o aside flutuar sobre o conteúdo */
@@ -46,11 +51,11 @@ aside {
   }
 
   aside h3{
-    font-family: 'Montserrat';
+    font-family: 'Verdana';
     }
 
     aside ul li{
-      font-family: 'Montserrat';
+      font-family: 'Verdana';
       list-style-type: none;
       text-align: center;
     }
@@ -59,6 +64,7 @@ aside {
       text-decoration: underline;
     }
 
+  /* Estilo para o botão de fechar o aside */
 .button{
     float: right;
     margin-top: 3%;
@@ -74,7 +80,6 @@ aside {
 }
 
 /* Estilo para a grade de imagens */
-
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
@@ -133,8 +138,7 @@ aside {
     transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
 }
 
-/* Botão elegante para Adicionar Produto */
-/* Botão elegante */
+/* Estilo para o botão de adicionar produto */
 #add-product-btn {
     color: var(--darkGreen);
     cursor: pointer;
@@ -146,6 +150,7 @@ aside {
     text-align: left; /* Alinha o texto à direita */
 }
 
+/* Efeito de hover para o botão de adicionar produto */
 #add-product-btn:hover {
   text-decoration: underline;
 }
@@ -162,6 +167,7 @@ aside {
     color: #333;
 }
 
+/* Estilo para os campos do formulário */
 #add-product-form input[type="text"],
 #add-product-form input[type="submit"],
 #add-product-form select {
@@ -173,6 +179,7 @@ aside {
     font-size: 16px;
 }
 
+/* Estilo para o botão de envio do formulário */
 #add-product-form input[type="submit"] {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
@@ -181,12 +188,14 @@ aside {
     transition: background-color 0.3s ease;
 }
 
+/* Efeito de hover para o botão de envio do formulário */
 #add-product-form input[type="submit"]:hover {
     background-color: #0c7a3e; /* Cor verde mais escura */
 }
 
 
 /*---------------The Modal (background)-----------------------*/
+/* Estilo para o modal de detalhes */
 .modal-detail {
   max-height:calc(100vh - 100px);
   display: none; /* Hidden by default */
@@ -227,7 +236,7 @@ aside {
   animation-duration: 0.4s
 }
 
-/* Add Animation */
+/* Animação de entrada do modal */
 @-webkit-keyframes animatetop {
   from {top:-300px; opacity:0} 
   to {top:0; opacity:1}
@@ -238,7 +247,7 @@ aside {
   to {top:0; opacity:1}
 }
 
-/*Header do Modal*/
+/* Modal Header */
 .modal-header-detail {
   display: flex;
   align-items: center;
@@ -256,8 +265,7 @@ aside {
   font-weight: bold;
 
 }
-
-/* The Close Button */
+/* Estilo para o botão de fechar o modal */
 .close-detail {
   display:flex;
   color: white;
@@ -267,6 +275,7 @@ aside {
   font-weight: bold;
 }
 
+/* Efeito de hover para o botão de fechar o modal */
 .close-detail:hover,
 .close-detail:focus {
   color: #000;
@@ -274,11 +283,12 @@ aside {
   cursor: pointer;
 }
   
+
 .modal-body-detail {
   padding: 16px 16px;
 }
 
-
+/* Estilo para o botão de editar produto */
   .edit-product-form{
       text-align: left;
   }
@@ -301,6 +311,7 @@ aside {
     font-size: 14px;
   }
 
+  /* Estilo para o botão de guardar o produto */
   .save-product{
     float: inline-end;
     background-color: var(--green); /* Cor verde */
@@ -315,7 +326,7 @@ aside {
     transition: background-color 0.3s ease;
   }
 
-
+/* Efeito de hover para o botão de guardar o produto */
   .modal-body p{
       white-space: pre-wrap;
   }
