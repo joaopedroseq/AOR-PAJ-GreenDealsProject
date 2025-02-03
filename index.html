@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="indexStyle.css">
 </head>
 <body>
+    <!--Header externo-->
     <div w3-include-html="header.html"></div>
+    <!--Conteudo total-->
     <div class="container">      
+        <!--Menu aside para registo e aceder ao registo-->
         <aside id="aside-menu">
             <a onclick="goToMain()">Começar a comprar</a>
             <a id="newAccountBtn">Registe-se</a>
@@ -25,6 +28,7 @@
                     encontrar produtos usados de qualidade a preços acessíveis. <br>
                     Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.</p>
             </div>
+            <!--Banners do site-->
                 <span>
                     <a onclick="goToMain()">
                         <img class="sustentabilityBanner" id="sustentabilityBanner" src='images\banner.png' alt="barra de produtos sustentaveis">
@@ -41,14 +45,15 @@
                     </a>
                 </span>
 
-                <!-- The Modal -->
+        <!-- Janela modal de registo -->
         <div id="modal-register" class="modal-register">
-            <!-- Modal content -->
             <div class="modal-content-id">
+                <!-- Header do modal -->
                 <div class="modal-header-id" id="modal-header-id">
                     <p class="modal-header-id-title">Criar novo registo</p>
                     <p class="close-id" id="close-id">&times;</p>
                 </div>
+                <!-- Body do modal -->
                 <div class="modal-body-id">
                     <form class="edit-id-form" id="edit-id-form">
                         <div class="edit-id-form-field" id="edit-id-form-field">
@@ -77,10 +82,9 @@
             </div>
         </div>  
         </main>
-
     </div>
+    <!--Footer externo-->
     <div w3-include-html="footer.html"></div>
-
 </body>
     <script src="https://www.w3schools.com/lib/w3.js"></script>
     <script src="scriptIndex.js"></script>
