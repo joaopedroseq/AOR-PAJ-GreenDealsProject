@@ -39,32 +39,15 @@ if(product){
 }
 
 
-  //Login
-  if((sessionStorage.getItem('logged') === null) || (sessionStorage.getItem('logged') == 'false')){
-    const login = document.getElementById('loginButton');
-    login.style.visibility = 'visible';
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility = 'hidden';
-  }
-
-  const loginForm = document.getElementById('login-form');
+  //LOGOUT E MENSAGEM
   const welcomeMessage = document.getElementById('mensagem_boasVindas');
   const storedUsername = sessionStorage.getItem('username');
   if (storedUsername) {
     welcomeMessage.textContent = `Olá, ${storedUsername}!`;
   }
 
-  loginForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    sessionStorage.setItem('username', username);
-    sessionStorage.setItem('logged', true);
-    welcomeMessage.textContent = `Olá, ${username}!`;
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility = 'visible';
-    const login = document.getElementById('loginButton');
-    login.style.visibility = 'hidden';
-  });
+  const logoutButton = document.getElementById('logoutButton');
+  logoutButton.addEventListener('click', logout);
 
   function logout(){
     const username = document.getElementById('username').value;
@@ -74,12 +57,10 @@ if(product){
     loginMessage.style.visibility = 'hidden';
     const login = document.getElementById('loginButton');
     login.style.visibility = 'visible';
+    window.location.href = "index.html";
   }
 
-  const logoutButton = document.getElementById('logoutButton');
-  logoutButton.addEventListener('click', logout);
-
-  
+   
   
 
   const hamburger = document.getElementById('hamburger');
@@ -196,17 +177,6 @@ function sendMessage() {
     alert('Mensagem enviada: ' + message);
     document.getElementById('message').value = '';
     document.getElementById('contact-form').style.display = 'none';
-  }
-}
-
-
-
-function showPassword() {
-  var password = document.getElementById("password");
-  if (password.type === "password") {
-    password.type = "text";
-  } else {
-    password.type = "password";
   }
 }
 

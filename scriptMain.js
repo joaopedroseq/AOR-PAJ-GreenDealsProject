@@ -4,47 +4,24 @@ w3.includeHTML(() =>  {
     const hamburger = document.getElementById('hamburger');
     hamburger.addEventListener('click', toggleAside);   
 
-    if((sessionStorage.getItem('logged') === null)  || (sessionStorage.getItem('logged') === 'false')){
-      const login = document.getElementById('loginButton');
-      login.style.visibility='visible';
-      const loginMessage = document.getElementById("loginMessage");
-      loginMessage.style.visibility='hidden';
-    }
-      const loginForm = document.getElementById('login-form');
+    
       const welcomeMessage = document.getElementById('mensagem_boasVindas');
-      
       // Verificar se há um nome de utilizador armazenado no Session Storage
       const storedUsername = sessionStorage.getItem('username');
       if (storedUsername) {
         welcomeMessage.textContent = `Olá, ${storedUsername}!`;
       }  
-
       
-  
-    // Guardar o nome de utilizador no Session Storage quando o formulário for submetido
-    loginForm.addEventListener('submit', (event) => {
+      function logout(){
         const username = document.getElementById('username').value;
-        sessionStorage.setItem('username', username);
-        sessionStorage.setItem('logged', 'true');
-        welcomeMessage.textContent = `Olá, ${username}!`;
-        const loginMessage = document.getElementById("loginMessage");
-        loginMessage.style.display='block';
-        const login = document.getElementById('loginButton');
-        login.style.visibility='hidden';
-        console.log('user ' + storedUsername + ' logged');
-    });
-  
-
-    function logout(){
-        const username = document.getElementById('username').value;
-        console.log('user ' + username + ' logged out');
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('logged');
         const loginMessage = document.getElementById("loginMessage");
-        loginMessage.style.visibility='hidden';
+        loginMessage.style.visibility = 'hidden';
         const login = document.getElementById('loginButton');
-        login.style.visibility='visible';
-    }
+        login.style.visibility = 'visible';
+        window.location.href = "index.html";
+      }
   
     
     const addButton = document.getElementById('add-product-btn');
@@ -237,12 +214,3 @@ w3.includeHTML(() =>  {
     logoutButton.addEventListener('click', logout);
 
 });
-
-function showPassword() {
-    var password = document.getElementById("password");
-    if (password.type === "password") {
-      password.type = "text";
-    } else {
-      password.type = "password";
-    }
-  }
