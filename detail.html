@@ -7,43 +7,48 @@
 <link rel="stylesheet" href="detailStyle.css">
 </head>
 <body>
-<div w3-include-html="header.html"></div>
-<div class="container">
-    <aside id="aside-menu">
-        <form>
-            <input type="button" id="edit-product" value="Editar informações"><br>
-            <input type="button" id="delete-product" value="Eliminar produto"><br>
-        </form>
-    </aside>
-    <main class="main-content">
-        <h2 id="product-category">Categoria: a, b, c</h2>
-        <div class="product-details">
-            <img class="table-img" id="product-image" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
-            <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
-            <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
-            <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
-            <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
-            <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
-            <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
-        </div>
-           
+    <!--Header externo-->
+    <div w3-include-html="header.html"></div>
 
-              <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
-              <div id="contact-form" style="display: none;">
-                  <textarea id="message" placeholder="Escreva aqui a sua mensagem..."></textarea><br>
-                  <button id="send-btn" onclick="sendMessage()">Enviar</button>
-              </div>
+    <div class="container">
+        <!--Menu aside para alterar informações e eliminar produtos-->
+        <aside id="aside-menu">
+            <form>
+                <input type="button" id="edit-product" value="Editar informações"><br>
+                <input type="button" id="delete-product" value="Eliminar produto"><br>
+            </form>
+        </aside>
+        <main class="main-content">
+            <!--Título da categoria do produto-->
+            <h2 id="product-category">Categoria: a, b, c</h2>
+            <!--Informações do produto-->
+            <div class="product-details">
+                <img class="table-img" id="product-image" src='images/produtos/cabide.jpg' alt="Isto é um item"/>
+                <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
+                <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
+                <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
+                <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
+                <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
+                <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
+            </div>
 
+            <!--Butão de contacto-->
+            <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
+            <div id="contact-form" style="display: none;">
+                <textarea id="message" placeholder="Escreva aqui a sua mensagem..."></textarea><br>
+                <button id="send-btn" onclick="sendMessage()">Enviar</button>
+            </div>
 
-            <!-- The Modal -->
+            <!-- Janela modal para alterar informações de um produto -->
             <div id="modal-detail" class="modal-detail">
-                <!-- Modal content -->
+                <!-- Conteúdo da janela modal -->
                 <div class="modal-content-detail">
                     <div class="modal-header-detail" id="modal-header-detail">
                         <p class="modal-header-detail-title">Alterar informações de produto</p>
                         <p class="close-detail" id="close-detail">&times;</p>
                     </div>
                     <div class="modal-body-detail">
+                        <!--Formulário de edição de informações de um produto-->
                         <div class="edit-product-form" id="edit-product-form">
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-nome">Nome do Produto:</label>
@@ -87,7 +92,7 @@
 
         </main>
     </div>
-      <!-- Incluir o rodapé -->
+     <!--Footer externo-->
     <div w3-include-html="footer.html"></div>   
     </body>
         <script src="https://www.w3schools.com/lib/w3.js"></script>
