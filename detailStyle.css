@@ -1,3 +1,5 @@
+
+/* Estilo para o conteúdo da página detail */
 :root{
   --green: #B0B9A2;
   --beige: #f1f3eb;
@@ -56,6 +58,7 @@
 
 /*----Aside não apresentado por defaul-----*/
 /*----é apresentado apenas quando é feito click no botão hamburger---*/
+/* Estilo para o aside flutuante */
 aside {
   display: none;
   position: fixed; /* Para o aside flutuar sobre o conteúdo */
@@ -80,7 +83,6 @@ aside h3, aside ul {
 }
 
 /* Botão para Adicionar Produto */
-/* Botão elegante */
 #add-product-form-detail {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
@@ -92,7 +94,7 @@ aside h3, aside ul {
     font-size: 16px;
     margin-top: 20px;
     transition: background-color 0.3s ease;
-    text-align: center; /* Alinha o botão ao centro do contêiner */
+    text-align: center; /* Alinha o botão ao centro do conteiner */
 }
 
 #add-product-form-detail:hover {
@@ -110,11 +112,20 @@ aside h3, aside ul {
     transition: box-shadow 0.3s ease-in-out; /* Transição suave */
 }
 
+/* Efeito de sombra ao passar o mouse sobre a imagem */
 .table-img:hover {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
 }
 
-/*---------------Janela modal-----------------------*/
+/* Estilo para o conteúdo da tabela da página detail */
+.table-content {
+    overflow: hidden; /* Garante que o conteúdo não flutue ao redor da imagem */
+    margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
+    text-align: left; /* Alinha o texto à esquerda */
+}
+
+
+/*---------------The Modal (background)-----------------------*/
 .modal-detail {
     max-height:calc(100vh - 100px);
     display: none; /*escondida até ser clickado no botão de alterar informações*/
@@ -156,7 +167,7 @@ aside h3, aside ul {
     animation-duration: 0.4s
   }
   
-  /* Animação de 'queda' */
+  /*Adicionar animação ao modal*/
   @-webkit-keyframes animatetop {
     from {top:-300px; opacity:0} 
     to {top:0; opacity:1}
@@ -184,8 +195,7 @@ aside h3, aside ul {
     font-weight: bold;
 
   }
-  
-  /* Botão de fecho */
+  /*Botão de fechar o Modal*/
   .close-detail {
     display:flex;
     color: white;
@@ -195,7 +205,7 @@ aside h3, aside ul {
     font-weight: bold;
   }
   
-  /* Animação do botão de fecho */
+  /*Botão de fechar o Modal ao passar o mouse*/
   .close-detail:hover,
   .close-detail:focus {
     color: #000;
@@ -208,31 +218,33 @@ aside h3, aside ul {
     display: flex;
   }
 
-
-    /*--Formulário de edição de produto--*/
+/* Estilo para o formulário de edição de produto */
     .edit-product-form{
-        display: flex;
+        display: flex; /* Alinha os campos do formulário em linha */
         text-align: left;
     }
 
     .edit-product-form-field{
-      display: block;
+      display: block; /* Alinha os campos do formulário em bloco */
     }
 
+    /* Estilo para os rótulos e campos de entrada do formulário */
     .edit-product-form-field label{
         font-size: 18px;
         font-family: "Montserrat";
     }
 
+    /* Efeito de sublinhado ao passar o mouse sobre o rótulo */
     .edit-product-form-field label:hover{
       text-decoration: underline;
     }
 
+    /* Estilo para os campos de entrada do formulário */
     .edit-product-form-field input{
       font-size: 14px;
     }
 
-    /*--Botão de salvar as alterações--*/
+    /* Estilo para o botão de guardar produto */
     .save-product{
       float: inline-end;
       background-color: var(--green); /* Cor verde */
@@ -267,6 +279,7 @@ aside h3, aside ul {
     transition: background-color 0.3s ease;
 }
 
+/* Efeito de cor ao passar o rato sobre os botões */
 #edit-product:hover, #delete-product:hover {
     background-color: var(--beige); /* Cor verde mais escura */
     color: var(--darkGreen);
@@ -287,16 +300,19 @@ aside h3, aside ul {
   transition: background-color 0.3s ease; /* Transição suave */
 }
 
+/* Efeito de cor ao passar o rato sobre o botão */
 #contact-btn:hover {
     color: var(--darkGreen);
 }
 
+/* Estilo para o formulário de contato */
 #contact-form {
   text-align: center;
   margin: 20px auto;
   width: 80%;
 }
 
+/* Estilo para o campo de entrada de mensagem */
 #message {
   width: 100%;
   height: 100px;
@@ -307,6 +323,7 @@ aside h3, aside ul {
   font-family: Verdana;
 }
 
+/* Estilo para o botão de enviar mensagem */
 #send-btn {
   padding: 10px 20px;
   background-color: var(--green);
@@ -318,6 +335,7 @@ aside h3, aside ul {
   border-radius: 5px; /* Borda arredondada */
   transition: background-color 0.3s ease; /* Transição suave */
 }
+/* Efeito de cor ao passar o rato sobre o botão */
 #send-btn:hover {
   color: var(--darkGreen);
 }

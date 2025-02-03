@@ -1,9 +1,38 @@
 w3.includeHTML(() =>  {
 
-  //LOAD PAGE
-  const productIndex = new URLSearchParams(window.location.search).get('index');
+  //Obter o índice do produto a ser exibido
+  const productIndex = new URLSearchParams(window.location.search).get('index'); 
   let products = localStorage.getItem('products');
   products = JSON.parse(products);
+
+  // Verificar se o usuário está logado
+    const welcomeMessage = document.getElementById('mensagem_boasVindas');
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      // Se o utilizador estiver logado, exibir mensagem de boas-vindas
+      welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+    }
+  
+    const logoutButton = document.getElementById('logoutButton');
+    // Adicionar evento de clique ao botão de logout
+    logoutButton.addEventListener('click', logout);
+  
+    //Função para efetuar o Logout
+    function logout(){
+      // Remover o nome de utilizador da sessão
+      const username = document.getElementById('username').value;
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('logged');
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility = 'hidden';
+      const login = document.getElementById('loginButton');
+      login.style.visibility = 'visible';
+      // Redirecionar o utilizador para a página de login
+      window.location.href = "index.html";
+    }
+
+    const hamburger = document.getElementById('hamburger');
+    hamburger.addEventListener('click', toggleAside);
 
   // Verificar se o produto foi encontrado
   var product = products[productIndex];
@@ -38,36 +67,9 @@ if(product){
   document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
 }
 
-
-  //LOGOUT E MENSAGEM
-  const welcomeMessage = document.getElementById('mensagem_boasVindas');
-  const storedUsername = sessionStorage.getItem('username');
-  if (storedUsername) {
-    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-  }
-
-  const logoutButton = document.getElementById('logoutButton');
-  logoutButton.addEventListener('click', logout);
-
-  function logout(){
-    const username = document.getElementById('username').value;
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('logged');
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility = 'hidden';
-    const login = document.getElementById('loginButton');
-    login.style.visibility = 'visible';
-    window.location.href = "index.html";
-  }
-
-   
-  
-
-  const hamburger = document.getElementById('hamburger');
-  hamburger.addEventListener('click', toggleAside);
-
   document.getElementById('delete-product').addEventListener('click', deleteProduct);
 
+  // Função para excluir um produto
   function deleteProduct(){
     let productIndex = new URLSearchParams(window.location.search).get('index');
     productIndex = parseInt(productIndex);
@@ -84,7 +86,6 @@ if(product){
     }
   }
 
-  
     // Exibir o formulário de edição ao clicar no botão "Editar informações"
     document.getElementById('edit-product').addEventListener('click', function() {
       products = localStorage.getItem('products');
@@ -99,7 +100,6 @@ if(product){
 
     // Preencher o formulário de edição com os dados atuais do produto
     function fillEditForm() {
-      
       document.getElementById('edit-nome').value = product.nome;
       document.getElementById('edit-descricao').value = product.descricao;
       document.getElementById('edit-preco').value = product.preco;
@@ -111,18 +111,14 @@ if(product){
     }
   });
 
-
-//});
-
-///FIM DE LOAD PAGE
-  // Salvar as alterações e atualizar o localStorage
-  function saveProduct(event) {
+  // Função para guardar as alterações e atualizar o localStorage
+    function saveProduct(event) {
     event.preventDefault();
   
+    // Obter o índice do produto a ser editado
     const productIndex = new URLSearchParams(window.location.search).get('index');
     let products = localStorage.getItem('products');
-    products = JSON.parse(products);
-  
+    products = JSON.parse(products); // Converter a string de volta para um array
     const product = products[productIndex];
   
     // Atualizar os dados do produto com os valores do formulário de edição
@@ -136,8 +132,7 @@ if(product){
   
     // Atualizar o localStorage com os dados modificados
     products[productIndex] = product;
-    localStorage.setItem('products', JSON.stringify(products));
-  
+    localStorage.setItem('products', JSON.stringify(products)); // Converter o array para uma string
     alert('Produto atualizado com sucesso!');
     toggleAside();
   
@@ -149,18 +144,17 @@ if(product){
     document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
     document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
     document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
-    //document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
   
-
+// Fechar o formulário de edição
     modal.style.display = "none";
     modalDetail.style.display = "none";
-
     console.log('terminou');
   };
 
 // Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
   const contactForm = document.getElementById('contact-form');
+  // Se o formulário estiver oculto ou não existir, exibi-lo
   if (contactForm.style.display === 'none' || contactForm.style.display === '') {
     contactForm.style.display = 'inline-block';
   } else {
@@ -172,8 +166,10 @@ function toggleContactForm() {
 function sendMessage() {
   const message = document.getElementById('message').value;
   if (message.trim() === '') {
+    // Se a mensagem estiver vazia, exibir um alerta
     alert('Por favor, escreva uma mensagem antes de enviar.');
   } else {
+    // Se a mensagem não estiver vazia, exibir um alerta com a mensagem
     alert('Mensagem enviada: ' + message);
     document.getElementById('message').value = '';
     document.getElementById('contact-form').style.display = 'none';
@@ -181,8 +177,8 @@ function sendMessage() {
 }
 
 
-//FUNÇõES PARA EDIÇÃO DO PRODUTO
-  // Get the modal
+//Funções para edição do produto
+  // Get the modal´
   var modalDetail = document.getElementById("modal-detail");
   
 
@@ -207,7 +203,7 @@ function sendMessage() {
       document.getElementById('edit-imagem').value = product.imagem;
     }
 
-    // When the user clicks on <span> (x), close the modal
+    // Quando o utilizador clica no <span> (x), fecha o modal
     closeDetail.onclick = function() {
       console.log("correu este");
       modalDetail.style.display = "none";
