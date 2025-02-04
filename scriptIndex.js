@@ -18,7 +18,8 @@ w3.includeHTML(() =>  {
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const username = document.getElementById('username').value;
-    login(username);
+    const password = document.getElementById('password').value;
+    login(username, password);
     loginForm.reset();
   });
 
@@ -29,10 +30,14 @@ w3.includeHTML(() =>  {
 
   //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
   //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
-  function login(username){
-    if(checkUsernameExists(username)){
+  function login(username, password){
+      let users = JSON.parse(localStorage.getItem('users'));
+      let user = users.find(user => user.username === username && user.password === password)
+
+    if(user){
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
+      sessionStorage.setItem('userData', JSON.stringify(user));
       welcomeMessage.textContent = `Olá, ${username}!`;
       const loginMessage = document.getElementById("loginMessage");
       loginMessage.style.visibility= 'visible';
@@ -116,6 +121,13 @@ w3.includeHTML(() =>  {
     const password = document.getElementById('new-password').value;
     const passwordConfirm = document.getElementById('new-passwordConfirm').value;
     const email = document.getElementById('new-email').value;
+
+    const userData = {
+      nome: nome,
+      username: username,
+      password: password,
+      email: email
+    };
     
 
     if(nome.trim() === ""){
@@ -137,9 +149,17 @@ w3.includeHTML(() =>  {
       console.log("deu falso");
       alert("As passwords não correspondem");
     }
+    
+    else if(checkEmailExists(email)){
+      alert("Este email ja existe");
+    }
+    
     else if(email.trim() === ""){
       console.log("deu verdadeiro");
         alert("O email é de preenchimento obrigatório");
+    }
+    else if(!email.includes('@')){
+      alert ("O Email deve conter '@'.");
     }
     else{
       var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
@@ -151,9 +171,9 @@ w3.includeHTML(() =>  {
         } else {
           users = [];
         }
-        users.push(username);
+        users.push(userData);
         localStorage.setItem('users', JSON.stringify(users));
-        login(username);
+        //login(username);
         form.reset();
         modalRegister.style.display = "none";
       }
@@ -179,12 +199,27 @@ w3.includeHTML(() =>  {
     let users = localStorage.getItem('users');
     users = JSON.parse(users);
     if(users.includes(username)){
+      console.log("encontrou.")
       return true;
     }
     else{
+      console.log("nao encontrou.")
       return false;
     }
   }
+
+  //Procura se um Email existe na LocalStorage - no registo de novos utilizadores
+function checkEmailExists(email){
+  console.log("a correr comparacao de " + email);
+  let users = localStorage.getItem('users');
+  users=JSON.parse(users);
+  if (users.includes(email)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 
   // Função para alternar a apresentação do aside
     function toggleAside() {
