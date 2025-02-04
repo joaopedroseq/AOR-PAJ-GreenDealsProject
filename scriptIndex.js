@@ -6,7 +6,8 @@ w3.includeHTML(() =>  {
   }
 
   //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
-  if(logged === null){
+  if(!sessionStorage.getItem("logged")){
+    console.log("correu isto");
     sessionStorage.setItem('logged', 'false');
   }
   
