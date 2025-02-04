@@ -200,7 +200,16 @@ aside a:hover {
         text-align: left;
     }
 
-    .edit-id-form input[type="text"], input[type="password"]  {
+    .edit-id-form input[type="text"]  {
+      font-size: 18px;
+      font-family: "Montserrat";
+      border: none;
+      border-bottom: 1px solid #000;
+      width: 200px;
+      outline: none;
+    }
+    
+    .edit-id-form input[type="password"]  {
       font-size: 18px;
       font-family: "Montserrat";
       border: none;

@@ -7,7 +7,6 @@ w3.includeHTML(() =>  {
 
   //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
   if(!sessionStorage.getItem("logged")){
-    console.log("correu isto");
     sessionStorage.setItem('logged', 'false');
   }
   
@@ -235,22 +234,6 @@ function checkEmailExists(email){
 
 });
 
-  //Verficia se o utilizador pode ou não aceder ao main.html - não se não tiver feito
-  //login
-  function goToMain(){
-    let logged = sessionStorage.getItem("logged");
-    // Verifica se 'logged' existe no localStorage
-    if (logged) {
-        logged = JSON.parse(logged);
-        console.log(logged);
-    }
-    if(logged){
-      window.location.href = "main.html";
-    }
-    else {
-      alert("Terá de fazer login para aceder à página de produtos");
-    }
-  }
 
   //Função para mostrar a password no form de login
   function showPassword() {

@@ -14,24 +14,33 @@
     <!--Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login-->
     <div class="loginMessageDiv" id="loginMessage">
         <h2 class="loginMessage" id="mensagem_boasVindas"></h2>
-        <input type="submit" class="button" id="logoutButton" value="logout" size="12px">
+        <input type="submit" class="buttonSubmit" id="logoutButton" value="logout" size="12px">
     </div>
     <form id="logout-form" class="logout-form">    
     </form>
     <!--Botão de login- não apresentado se o utilizado fizer login-->
     <div class="login" id="loginButton">
         <img src="images\login.png" class='loginIcon' height="50px">
+        <div class="buttons">
+           
+        </div>
             <div class="dropdownLogin">
                 <form id="login-form" class="login-form">
                     <label for="login-form">Log In</label><br>
                     <label for="login-form">Username</label>
                     <input type="text" class="textbox" id="username" name="username" maxlength="20">
                     <label for="login-form">Password</label>
-                    <input type="password" class="textbox" id="password">
-                    <input type="checkbox" onclick="showPassword()">
-                    <label for="checkbox">mostrar password</label>
-                    <input type="submit" class="button" id="submit" value="submit" size="12px">
-                </form>
+                    <input type="password" class="textbox" id="password" length="20">
+                    <div>
+                        <input type="checkbox" onclick="showPassword()">
+                        <label for="checkbox">mostrar password</label>
+                        <input type="submit" class="buttonSubmit" id="submit" value="submit" size="12px">
+                    </div>
+                </form>            
+                    <div class="buttons">
+                        
+                        <input type="submit" class="buttonRegister" id="newAccountBtn" value="register" size="12px">    
+                    </div>
             </div>
     </div>
 </header>
