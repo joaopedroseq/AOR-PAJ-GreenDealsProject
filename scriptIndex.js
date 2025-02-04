@@ -148,11 +148,9 @@ w3.includeHTML(() =>  {
       console.log("deu falso");
       alert("As passwords não correspondem");
     }
-    
     else if(checkEmailExists(email)){
       alert("Este email ja existe");
     }
-    
     else if(email.trim() === ""){
       console.log("deu verdadeiro");
         alert("O email é de preenchimento obrigatório");
@@ -195,14 +193,20 @@ w3.includeHTML(() =>  {
   //funções de login, serve para verificar se o utilizador existe
   function checkUsernameExists(username){
     console.log("a correr comparação de " + username);
+    let users = JSON.parse(localStorage.getItem('users'));
+    let user = users.find(user => user.username === username);
+
+    /* localstorage.getItem s
     let users = localStorage.getItem('users');
     users = JSON.parse(users);
-    if(users.includes(username)){
-      console.log("encontrou.")
+    "O antigo if continha LocalStorage.includes -- mas so funcionas para valors primitovs, nao objetos"
+    */
+    if(user){ 
+      console.log("Username encontrado.")
       return true;
     }
     else{
-      console.log("nao encontrou.")
+      console.log("Username nao encontrou.")
       return false;
     }
   }
