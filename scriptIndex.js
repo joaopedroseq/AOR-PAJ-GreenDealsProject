@@ -116,21 +116,30 @@ w3.includeHTML(() =>  {
   function register(event){
     event.preventDefault();
     const nome = document.getElementById('new-name').value;
+    const lastname = document.getElementById('new-lastname').value;
     const username = document.getElementById('new-username').value;
     const password = document.getElementById('new-password').value;
     const passwordConfirm = document.getElementById('new-passwordConfirm').value;
     const email = document.getElementById('new-email').value;
+    const phone = document.getElementById('new-phone').value;
+    const photo = document.getElementById('new-photo').value;
 
     const userData = {
       nome: nome,
+      lastname: lastname,
       username: username,
       password: password,
-      email: email
+      email: email,
+      phone: phone,
+      photo: photo
     };
     
 
     if(nome.trim() === ""){
       alert("O nome é um campo de preenchimento obrigatório");
+    }
+    else if(lastname.trim() === ""){
+      alert ("O ultimo nome é obrigatório.")
     }
     else if(username.trim() === ""){
       alert("O username é de preenchimento obrigatório");
@@ -158,6 +167,16 @@ w3.includeHTML(() =>  {
     else if(!email.includes('@')){
       alert ("O Email deve conter '@'.");
     }
+    else if(phone.trim() === ""){
+      alert ("O número de telefone é obrigatório")
+    }
+    // ^ indica o inicio da string, \d signifca digit, e {9} faz com que seja 9 digitos, $ indica o final da string.
+    else if(!/^\d{9}$/.test(phone)){
+      alert("O número de telefone deve ter 9 dígitos.")
+    }
+    else if(photo.trim() === ""){
+      alert("A fotografia de perfil é obrigatória")
+    }
     else{
       var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
       if(confirm == true){
@@ -170,7 +189,7 @@ w3.includeHTML(() =>  {
         }
         users.push(userData);
         localStorage.setItem('users', JSON.stringify(users));
-        //login(username);
+        login(username, password);
         form.reset();
         modalRegister.style.display = "none";
       }
