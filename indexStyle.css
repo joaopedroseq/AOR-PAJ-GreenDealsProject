@@ -5,8 +5,8 @@
 }
 
 @font-face {
-  font-family: Montserrat;
-  src: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap';
+  font-family: 'Montserrat'; /*a name to be used later*/
+  src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'); /*URL to font*/
 }
 
 *, html{
