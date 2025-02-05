@@ -4,6 +4,11 @@
     --darkGreen: #132a0e;
 }
 
+@font-face {
+  font-family: Montserrat;
+  src: 'https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap';
+}
+
 *, html{
     margin: 0;
     padding: 0;
