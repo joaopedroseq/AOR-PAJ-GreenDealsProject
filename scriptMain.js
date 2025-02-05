@@ -64,10 +64,10 @@ w3.includeHTML(() =>  {
         const descricao = document.getElementById('edit-descricao').value;  
         const preco = document.getElementById('edit-preco').value;
         const categoria = document.getElementById('edit-categoria').value;
-        const anunciante = document.getElementById('edit-anunciante').value;
         const localidade = document.getElementById('edit-localidade').value;
         const imagem = document.getElementById('edit-imagem').value;
         const data = new Date(); // Data atual
+        const anunciante = sessionStorage.getItem('username');
 
         // Validações dos campos do formulário
         if(nome.trim() === ""){
@@ -81,9 +81,6 @@ w3.includeHTML(() =>  {
         }
         else if(!checkIfNumeric(preco)){
             alert("Preço inserido inválido. Apenas poderá escrever dígitos e sem quaisquer símbolos");
-        }
-        else if(anunciante.trim() === ""){
-            alert("O nome do anunciante é de preenchimento obrigatório");
         }
         else if(localidade.trim() === ""){
             alert("A sua morada é preenchimento obrigatório");
