@@ -4,9 +4,11 @@
     --darkGreen: #132a0e;
 }
 
-@font-face {
-  font-family: 'Montserrat'; /*a name to be used later*/
-  src: url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'); /*URL to font*/
+.montserrat-Montserrat {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
 }
 
 *, html{
