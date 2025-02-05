@@ -17,7 +17,8 @@ w3.includeHTML(() =>  {
   loginForm.addEventListener('submit', (event) => {
     event.preventDefault();
     const username = document.getElementById('username').value;
-    login(username);
+    const password = document.getElementById('password').value;
+    login(username, password);
     loginForm.reset();
   });
 
@@ -28,10 +29,14 @@ w3.includeHTML(() =>  {
 
   //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
   //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
-  function login(username){
-    if(checkUsernameExists(username)){
+  function login(username, password){
+      let users = JSON.parse(localStorage.getItem('users'));
+      let user = users.find(user => user.username === username && user.password === password)
+
+    if(user){
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
+      sessionStorage.setItem('userData', JSON.stringify(user));
       welcomeMessage.textContent = `Olá, ${username}!`;
       const loginMessage = document.getElementById("loginMessage");
       loginMessage.style.visibility= 'visible';
@@ -111,14 +116,30 @@ w3.includeHTML(() =>  {
   function register(event){
     event.preventDefault();
     const nome = document.getElementById('new-name').value;
+    const lastname = document.getElementById('new-lastname').value;
     const username = document.getElementById('new-username').value;
     const password = document.getElementById('new-password').value;
     const passwordConfirm = document.getElementById('new-passwordConfirm').value;
     const email = document.getElementById('new-email').value;
+    const phone = document.getElementById('new-phone').value;
+    const photo = document.getElementById('new-photo').value;
+
+    const userData = {
+      nome: nome,
+      lastname: lastname,
+      username: username,
+      password: password,
+      email: email,
+      phone: phone,
+      photo: photo
+    };
     
 
     if(nome.trim() === ""){
       alert("O nome é um campo de preenchimento obrigatório");
+    }
+    else if(lastname.trim() === ""){
+      alert ("O ultimo nome é obrigatório.")
     }
     else if(username.trim() === ""){
       alert("O username é de preenchimento obrigatório");
@@ -136,9 +157,25 @@ w3.includeHTML(() =>  {
       console.log("deu falso");
       alert("As passwords não correspondem");
     }
+    else if(checkEmailExists(email)){
+      alert("Este email ja existe");
+    }
     else if(email.trim() === ""){
       console.log("deu verdadeiro");
         alert("O email é de preenchimento obrigatório");
+    }
+    else if(!email.includes('@')){
+      alert ("O Email deve conter '@'.");
+    }
+    else if(phone.trim() === ""){
+      alert ("O número de telefone é obrigatório")
+    }
+    // ^ indica o inicio da string, \d signifca digit, e {9} faz com que seja 9 digitos, $ indica o final da string.
+    else if(!/^\d{9}$/.test(phone)){
+      alert("O número de telefone deve ter 9 dígitos.")
+    }
+    else if(photo.trim() === ""){
+      alert("A fotografia de perfil é obrigatória")
     }
     else{
       var confirm = window.confirm('Pretende criar um novo registo ' + nome + '?');
@@ -150,9 +187,9 @@ w3.includeHTML(() =>  {
         } else {
           users = [];
         }
-        users.push(username);
+        users.push(userData);
         localStorage.setItem('users', JSON.stringify(users));
-        login(username);
+        login(username, password);
         form.reset();
         modalRegister.style.display = "none";
       }
@@ -175,15 +212,36 @@ w3.includeHTML(() =>  {
   //funções de login, serve para verificar se o utilizador existe
   function checkUsernameExists(username){
     console.log("a correr comparação de " + username);
+    let users = JSON.parse(localStorage.getItem('users'));
+    let user = users.find(user => user.username === username);
+
+    /* localstorage.getItem s
     let users = localStorage.getItem('users');
     users = JSON.parse(users);
-    if(users.includes(username)){
+    "O antigo if continha LocalStorage.includes -- mas so funcionas para valors primitovs, nao objetos"
+    */
+    if(user){ 
+      console.log("Username encontrado.")
       return true;
     }
     else{
+      console.log("Username nao encontrou.")
       return false;
     }
   }
+
+  //Procura se um Email existe na LocalStorage - no registo de novos utilizadores
+function checkEmailExists(email){
+  console.log("a correr comparacao de " + email);
+  let users = localStorage.getItem('users');
+  users=JSON.parse(users);
+  if (users.includes(email)){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 
   // Função para alternar a apresentação do aside
     function toggleAside() {
