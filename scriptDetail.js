@@ -75,7 +75,7 @@ if(product){
     productIndex = parseInt(productIndex);
     let products = localStorage.getItem('products');
     products = JSON.parse(products);
-
+    
     var confirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
     if(confirm == true){
         products.splice(productIndex, 1);

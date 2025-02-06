@@ -5,6 +5,7 @@
     <title>GreenDeals</title>
     <link rel="icon" href="images\logo.png" type="image/x-icon">
 <link rel="stylesheet" href="detailStyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <!--Header externo-->
@@ -91,6 +92,43 @@
 
         </main>
     </div>
+    <div class="reviews">
+        <section id="avaliacao-form">
+            <h2>Adicionar Avaliação</h2>
+            <form id="formAvaliacao">
+                <textarea id="comentario" name="comentario" required></textarea>
+
+                <div class="rating-container">
+                    <div id="rating" class="rating">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                    <span id="rating-text"></span>
+                </div>
+                <input type="hidden" id="nota" name="nota">
+<br>
+                <button type="submit">Enviar Avaliação</button>
+            </form>
+        </section>
+
+        <h2>Estatísticas de Avaliações</h2>
+        
+        <div id="rating-summary">
+            <div id="average-rating"></div>
+            <div id="total-ratings"></div>
+        </div>
+
+        <div id="rating-stats"></div>
+
+        <section id="avaliacoes">
+            <h2>Avaliações</h2>
+            <div id="avaliacoes-container"></div>
+        </section>
+    </div>
+    
      <!--Footer externo-->
     <div w3-include-html="footer.html"></div>   
     </body>
@@ -98,4 +136,6 @@
         <script src="scriptDetail.js"></script>   
         <script src="scriptFooter.js"></script>
         <script src="scriptHeader.js"></script>
+        <script src="Avaliacoes.js"></script>
+    
 </html>
