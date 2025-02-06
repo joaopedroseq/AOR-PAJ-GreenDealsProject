@@ -6,7 +6,7 @@ w3.includeHTML(() =>  {
   products = JSON.parse(products);
 
   const hamburger = document.getElementById('hamburger');
-    hamburger.addEventListener('click', toggleAside);
+  hamburger.addEventListener('click', toggleAside);
 
   // Verificar se o produto foi encontrado
   var product = products[productIndex];
