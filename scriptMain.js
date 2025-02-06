@@ -96,15 +96,5 @@ w3.includeHTML(() =>  {
         });
     });
 
-    // Função para alternar a exibição do aside
-    function toggleAside() {
-        const asideMenu = document.getElementById("aside-menu");
-        // Se o aside estiver oculto ou não visível, exibe-o
-        if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-            asideMenu.style.display = 'block';
-        } else {
-            // Se o aside estiver visível, oculta-o
-            asideMenu.style.display = 'none';
-        }
-    }
+   
 });

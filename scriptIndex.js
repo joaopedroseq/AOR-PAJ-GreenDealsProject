@@ -243,18 +243,6 @@ function checkEmailExists(email){
   }
 }
 
-  // Função para alternar a apresentação do aside
-    function toggleAside() {
-      console.log("hamburger a correr");
-      const asideMenu = document.getElementById("aside-menu");
-      console.log(asideMenu);
-      if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-          asideMenu.style.display = 'block';
-      } else {
-          asideMenu.style.display = 'none';
-      }
-  } 
-
 });
 
 

@@ -123,7 +123,6 @@ if (sessionStorage.getItem('logged') === 'true') {
       document.getElementById('edit-descricao').value = product.descricao;
       document.getElementById('edit-preco').value = product.preco;
       document.getElementById('edit-categoria').value = product.categoria;
-      document.getElementById('edit-anunciante').value = product.anunciante;
       document.getElementById('edit-localidade').value = product.localidade;
       document.getElementById('edit-imagem').value = product.imagem;
       console.log("terminou de encher os dados para o form")
@@ -132,43 +131,40 @@ if (sessionStorage.getItem('logged') === 'true') {
 
   // Função para guardar as alterações e atualizar o localStorage
     function saveProduct(event) {
-    event.preventDefault();
+      event.preventDefault();
+      // Obter o índice do produto a ser editado
+      const productIndex = new URLSearchParams(window.location.search).get('index');
+      let products = localStorage.getItem('products');
+      products = JSON.parse(products); // Converter a string de volta para um array
+      const product = products[productIndex];
+      // Atualizar os dados do produto com os valores do formulário de edição
+      product.nome = document.getElementById('edit-nome').value;
+      product.descricao = document.getElementById('edit-descricao').value;
+      product.preco = document.getElementById('edit-preco').value;
+      product.categoria = document.getElementById('edit-categoria').value;
+      product.anunciante = document.getElementById('edit-anunciante').value;
+      product.localidade = document.getElementById('edit-localidade').value;
+      product.imagem = document.getElementById('edit-imagem').value;
+    
+      // Atualizar o localStorage com os dados modificados
+      products[productIndex] = product;
+      localStorage.setItem('products', JSON.stringify(products)); // Converter o array para uma string
+      alert('Produto atualizado com sucesso!');
   
-    // Obter o índice do produto a ser editado
-    const productIndex = new URLSearchParams(window.location.search).get('index');
-    let products = localStorage.getItem('products');
-    products = JSON.parse(products); // Converter a string de volta para um array
-    const product = products[productIndex];
+      // Atualizar a exibição dos dados do produto na página
+      document.getElementById('product-image').src = product.imagem;
+      document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
+      document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
+      document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
+      document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
+      document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
+      document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
   
-    // Atualizar os dados do produto com os valores do formulário de edição
-    product.nome = document.getElementById('edit-nome').value;
-    product.descricao = document.getElementById('edit-descricao').value;
-    product.preco = document.getElementById('edit-preco').value;
-    product.categoria = document.getElementById('edit-categoria').value;
-    product.anunciante = document.getElementById('edit-anunciante').value;
-    product.localidade = document.getElementById('edit-localidade').value;
-    product.imagem = document.getElementById('edit-imagem').value;
-  
-    // Atualizar o localStorage com os dados modificados
-    products[productIndex] = product;
-    localStorage.setItem('products', JSON.stringify(products)); // Converter o array para uma string
-    alert('Produto atualizado com sucesso!');
-    toggleAside();
-  
-    // Atualizar a exibição dos dados do produto na página
-    document.getElementById('product-image').src = product.imagem;
-    document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
-    document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
-    document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
-    document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
-    document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
-    document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
-  
-// Fechar o formulário de edição
-    modal.style.display = "none";
-    modalDetail.style.display = "none";
-    console.log('terminou');
-  };
+      // Fechar o formulário de edição
+      modal.style.display = "none";
+      modalDetail.style.display = "none";
+      console.log('terminou');
+    };
 
 // Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
