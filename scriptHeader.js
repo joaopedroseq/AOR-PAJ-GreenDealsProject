@@ -22,7 +22,7 @@ console.log(addButton);
      console.log("correu");
      event.preventDefault();
      modalAddProduct.style.display = "flex";
- });
+ }});
 
  // Quando o utilizador clicar no <span> (x), fecha o modal
  closeAddProduct.onclick = function() {
