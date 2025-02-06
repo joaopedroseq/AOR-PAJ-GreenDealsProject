@@ -15,11 +15,15 @@ var closeDetail = document.getElementsByClassName("close-detail")[0];
 var saveProductBtn = document.getElementById("save-product");
 
  // Adiciona o evento de clique ao botão para alternar o formulário
-addButton.addEventListener('click', function(event) {
-    console.log("correu");
-    event.preventDefault();
-    modalDetail.style.display = "flex";
-});
+ addButton.addEventListener('click', function(event) {
+    if((sessionStorage.getItem('logged') === 'false')){
+        alert("Tem que estar Logged in para vender um Produto!")
+    }else{
+     console.log("correu");
+     event.preventDefault();
+     modalDetail.style.display = "flex";
+    }
+ });
 
  // Quando o utilizador clicar no <span> (x), fecha o modal
 closeDetail.onclick = function() {
