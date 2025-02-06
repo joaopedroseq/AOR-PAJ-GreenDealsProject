@@ -1,4 +1,5 @@
 w3.includeHTML(() =>  {
+    console.log("ESTA A CORRER!!!!")
  // Obtém o botão para adicionar produto
  const addButton = document.getElementById('add-product-btn');
 

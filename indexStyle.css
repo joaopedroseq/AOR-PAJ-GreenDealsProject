@@ -11,6 +11,13 @@
   font-style: normal;
 }
 
+.playfair-display-Playfair Display {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
 *, html{
     margin: 0;
     padding: 0;
