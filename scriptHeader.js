@@ -1,5 +1,4 @@
 w3.includeHTML(() =>  {
-    console.log("ESTA A CORRER!!!!")
  // Obtém o botão para adicionar produto
  const addButton = document.getElementById('add-product-btn');
 
@@ -107,4 +106,9 @@ w3.includeHTML(() =>  {
      return !isNaN(string) && // Usa coerção de tipo para analisar toda a string
             !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
  };
+
+ function checkIfLogged(){
+    const logged = sessionStorage.getItem('logged');
+
+ }
 });
