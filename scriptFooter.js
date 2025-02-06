@@ -10,7 +10,6 @@ var privacyBtn = document.getElementById("privacyButton");
 
 // Get the <span> element that closes the modal
 var span = document.getElementsByClassName("close")[0];
-console.log(span);
 
 var aboutHeader = document.getElementById("modal-header");
 var line1 = document.getElementById("phrase1");
