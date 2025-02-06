@@ -6,7 +6,7 @@ console.log(addButton);
 
   //Funções para adicionar um produto
   var modalAddProduct = document.getElementById("modal-addProduct");
-  var form = document.getElementById("modal-header-addProduct");
+  var form = document.getElementById("add-product-form");
 
  // Obtém o elemento <span> que fecha o modal
  var closeAddProduct = document.getElementsByClassName("close-addProduct")[0];
@@ -19,7 +19,6 @@ console.log(addButton);
     if((sessionStorage.getItem('logged') === 'false')){
         alert("Tem que estar Logged in para vender um Produto!")
     }else{
-     console.log("correu");
      event.preventDefault();
      modalAddProduct.style.display = "flex";
  }});
@@ -33,12 +32,12 @@ console.log(addButton);
 saveProductBtn.addEventListener('click', function(event) {
     event.preventDefault();
      // Obtém os valores dos campos do formulário
-    const nome = document.getElementById('edit-nome').value;
-    const descricao = document.getElementById('edit-descricao').value;  
-    const preco = document.getElementById('edit-preco').value;
-    const categoria = document.getElementById('edit-categoria').value;
-    const localidade = document.getElementById('edit-localidade').value;
-    const imagem = document.getElementById('edit-imagem').value;
+    const nome = document.getElementById('add-nome').value;
+    const descricao = document.getElementById('add-descricao').value;  
+    const preco = document.getElementById('add-preco').value;
+    const categoria = document.getElementById('add-categoria').value;
+    const localidade = document.getElementById('add-localidade').value;
+    const imagem = document.getElementById('add-imagem').value;
      const data = new Date(); // Data atual
     const anunciante = sessionStorage.getItem('username');
 
@@ -90,7 +89,7 @@ saveProductBtn.addEventListener('click', function(event) {
              // Converte o array para uma string JSON
             localStorage.setItem('products', JSON.stringify(products)); 
             form.reset();
-            modalDetail.style.display = "none";
+            modalAddProduct.style.display = "none";
             window.location.reload();
         }
          // Se o utilizador cancelar, limpa o formulário e fecha o modal
