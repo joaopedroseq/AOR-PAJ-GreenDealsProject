@@ -169,7 +169,7 @@ header {
 
     /*---------------The Modal (background)-----------------------*/
 /* Estilo para o modal de detalhes */
-.modal-detail {
+.modal-addProduct {
     max-height:calc(100vh - 100px);
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
@@ -184,7 +184,7 @@ header {
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
   }
   
-  .modal-detail input[type="text"] {
+  .modal-addProduct input[type="text"] {
     font-size: 18px;
     font-family: "Montserrat";
     border: none;
@@ -194,7 +194,7 @@ header {
   }
   
   /* Modal Content */
-  .modal-content-detail {
+  .modal-content-addProduct {
     position: relative;
     background-color: #fefefe;
     margin: auto;
@@ -221,7 +221,7 @@ header {
   }
   
   /* Modal Header */
-  .modal-header-detail {
+  .modal-header-addProduct {
     display: flex;
     align-items: center;
     padding: 2px 16px;
@@ -230,7 +230,7 @@ header {
     justify-content: space-between;
   }
   
-  .modal-header-detail-title{
+  .modal-header-addProduct-title{
     font-family: "Playfair Display";
     color: var(--beige);
     font-size: 25px;
@@ -239,7 +239,7 @@ header {
   
   }
   /* Estilo para o botão de fechar o modal */
-  .close-detail {
+  .close-addProduct {
     display:flex;
     color: white;
     float: right;
@@ -249,43 +249,44 @@ header {
   }
   
   /* Efeito de hover para o botão de fechar o modal */
-  .close-detail:hover,
-  .close-detail:focus {
+  .close-addProduct:hover,
+  .close-addProduct:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
   }
     
   
-  .modal-body-detail {
+  .modal-body-addProduct {
     padding: 16px 16px;
   }
   
   /* Estilo para o botão de editar produto */
-    .edit-product-form{
+    .add-product-form{
         text-align: left;
     }
   
-    .edit-product-form-field{
+    .add-product-form-field{
       display: block;
       font-family: 'Montserrat';
+      padding: 12px;
     }
   
-    .edit-product-form-field label{
+    .add-product-form-field label{
         font-size: 18px;
-  
     }
   
-    .edit-product-form-field label:hover{
+    .add-product-form-field label:hover{
       text-decoration: underline;
+      
     }
   
-    .edit-product-form-field input{
+    .add-product-form-field input{
       font-size: 14px;
     }
   
     /* Estilo para o botão de guardar o produto */
-    .save-product{
+    .save-addProduct{
       float: inline-end;
       background-color: var(--green); /* Cor verde */
       color: white; /* Cor do texto */
@@ -329,3 +330,6 @@ header {
     text-decoration: none;
     cursor: pointer;
   }
+
+
+  

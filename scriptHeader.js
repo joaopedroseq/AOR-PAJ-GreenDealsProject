@@ -5,37 +5,37 @@ w3.includeHTML(() =>  {
  console.log(addButton);
 
   //Funções para adicionar um produto
-  var modalDetail = document.getElementById("modal-detail");
-  var form = document.getElementById("edit-product-form");
+  var modalAddProduct = document.getElementById("modal-addProduct");
+  var form = document.getElementById("modal-header-addProduct");
 
  // Obtém o elemento <span> que fecha o modal
- var closeDetail = document.getElementsByClassName("close-detail")[0];
+ var closeAddProduct = document.getElementsByClassName("close-addProduct")[0];
  
  // Adiciona o evento de submit ao formulário para guardar o produto
- var saveProductBtn = document.getElementById("save-product");
+ var saveProductBtn = document.getElementById("save-addProduct");
 
  // Adiciona o evento de clique ao botão para alternar o formulário
  addButton.addEventListener('click', function(event) {
      console.log("correu");
      event.preventDefault();
-     modalDetail.style.display = "flex";
+     modalAddProduct.style.display = "flex";
  });
 
  // Quando o utilizador clicar no <span> (x), fecha o modal
- closeDetail.onclick = function() {
-     modalDetail.style.display = "none";
+ closeAddProduct.onclick = function() {
+    modalAddProduct.style.display = "none";
  };  
  
  // Função para guardar o produto no local storage
  saveProductBtn.addEventListener('click', function(event) {
      event.preventDefault();
      // Obtém os valores dos campos do formulário
-     const nome = document.getElementById('edit-nome').value;
-     const descricao = document.getElementById('edit-descricao').value;  
-     const preco = document.getElementById('edit-preco').value;
-     const categoria = document.getElementById('edit-categoria').value;
-     const localidade = document.getElementById('edit-localidade').value;
-     const imagem = document.getElementById('edit-imagem').value;
+     const nome = document.getElementById('add-nome').value;
+     const descricao = document.getElementById('add-descricao').value;  
+     const preco = document.getElementById('add-preco').value;
+     const categoria = document.getElementById('add-categoria').value;
+     const localidade = document.getElementById('add-localidade').value;
+     const imagem = document.getElementById('add-imagem').value;
      const data = new Date(); // Data atual
      const anunciante = sessionStorage.getItem('username');
 
