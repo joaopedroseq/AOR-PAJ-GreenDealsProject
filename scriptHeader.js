@@ -1,8 +1,73 @@
 w3.includeHTML(() =>  {
- // Obtém o botão para adicionar produto
-const addButton = document.getElementById('add-product-btn');
+    //Verifica se existe user no localstorage, caso contrário cria um array vazio
+  if(!localStorage.getItem("users")){
+    localStorage.setItem('users', JSON.stringify([]));
+  }
 
-console.log(addButton);
+  //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
+  if(!sessionStorage.getItem("logged")){
+    sessionStorage.setItem('logged', 'false');
+  }
+  
+  //Obtem elemento do login-form
+  const loginForm = document.getElementById('login-form');
+
+  // Vai buscar o valor de username submetido no formulário, e chama a funcão login desse username, e faz reset ao formulário
+  loginForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    login(username, password);
+    loginForm.reset();
+  });
+
+  const welcomeMessage = document.getElementById('mensagem_boasVindas');
+
+
+  //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
+  //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
+  function login(username, password){
+      let users = JSON.parse(localStorage.getItem('users'));
+      let user = users.find(user => user.username === username && user.password === password)
+
+    if(user){
+      sessionStorage.setItem('logged', 'true');
+      sessionStorage.setItem('username', username);
+      sessionStorage.setItem('userData', JSON.stringify(user));
+      welcomeMessage.textContent = `Olá, ${username}!`;
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility= 'visible';
+      const login = document.getElementById('loginButton');
+      login.style.visibility='hidden';
+      console.log('user ' + username + ' logged');
+    }
+    else {
+      alert(username + " não encontrado. Por favor registe-se");  //caso contrário, avisa o utilizador que não existe o seu registo,
+      //e não faz login
+    }
+  }
+
+  //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
+  logoutButton.addEventListener('click', logout);
+
+
+  // Verificar se há um nome de utilizador armazenado no Session Storage
+  const storedUsername = sessionStorage.getItem('username');
+  if (storedUsername) {
+    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+  } 
+
+  //Caso não exista um utilizador logged, apresenta o botão de login
+  if((sessionStorage.getItem('logged') === 'false')){
+    const login = document.getElementById('loginButton');
+    login.style.visibility='visible';
+    const loginMessage = document.getElementById("loginMessage");
+    loginMessage.style.visibility='hidden';
+  }
+
+
+
+const addButton = document.getElementById('add-product-btn');
 
   //Funções para adicionar um produto
   var modalAddProduct = document.getElementById("modal-addProduct");
@@ -100,8 +165,37 @@ saveProductBtn.addEventListener('click', function(event) {
         
         // Exibe o produto na página
         displayProduct(product, products.length - 1);
-    }
+    } 
 });
+
+    //Função para efetuar o Logout
+    function logout(){
+    // Remover o nome de utilizador da sessão
+    const username = document.getElementById('username').value;
+    sessionStorage.removeItem('username');
+    sessionStorage.removeItem('logged');
+    const loginMessage = document.getElementById("loginMessage");
+    loginMessage.style.visibility = 'hidden';
+    const login = document.getElementById('loginButton');
+    login.style.visibility = 'visible';
+    console.log("agora vai fazer reload");
+    // Redirecionar o utilizador para a página de login
+    window.location.href = "index.html";
+}   
+
+
+    //Botão de acesso à área pessoal
+    const userAreaBtn = document.getElementById('userAreaBtn');
+    // Função para ir para a área pessoal
+    userAreaBtn.addEventListener('click', function(event) {
+        if(checkIfLogged()){
+            window.location.href = 'user.html';
+        }
+        else{
+            alert("Tem que estar Logged in para aceder à sua área pessoal!")
+        }
+    })
+
 
  // Função para verificar se uma string é um número
 function checkIfNumeric(string) {
@@ -109,10 +203,6 @@ function checkIfNumeric(string) {
             !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
 };
 
-function checkIfLogged(){
-    const logged = sessionStorage.getItem('logged');
-
-}
 
 });
 
@@ -126,5 +216,16 @@ function checkIfLogged(){
     } else {
         // Se o aside estiver visível, oculta-o
         asideMenu.style.display = 'none';
+    }
+}
+
+// FUnção para verificar se existe um utilizador logged
+function checkIfLogged(){
+    const logged = sessionStorage.getItem('logged');
+    if(logged == 'true'){
+        return true;
+    }
+    else if((logged == 'false') || (logged == null)){
+        return false;
     }
 }

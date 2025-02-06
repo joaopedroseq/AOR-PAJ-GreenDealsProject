@@ -5,33 +5,7 @@ w3.includeHTML(() =>  {
   let products = localStorage.getItem('products');
   products = JSON.parse(products);
 
-  // Verificar se o usuário está logado
-    const welcomeMessage = document.getElementById('mensagem_boasVindas');
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      // Se o utilizador estiver logado, exibir mensagem de boas-vindas
-      welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-    }
-  
-    const logoutButton = document.getElementById('logoutButton');
-    // Adicionar evento de clique ao botão de logout
-    logoutButton.addEventListener('click', logout);
-  
-    //Função para efetuar o Logout
-    function logout(){
-      // Remover o nome de utilizador da sessão
-      const username = document.getElementById('username').value;
-      sessionStorage.removeItem('username');
-      sessionStorage.removeItem('logged');
-      const loginMessage = document.getElementById("loginMessage");
-      loginMessage.style.visibility = 'hidden';
-      const login = document.getElementById('loginButton');
-      login.style.visibility = 'visible';
-      // Redirecionar o utilizador para a página de login
-      window.location.href = "index.html";
-    }
-
-    const hamburger = document.getElementById('hamburger');
+  const hamburger = document.getElementById('hamburger');
     hamburger.addEventListener('click', toggleAside);
 
   // Verificar se o produto foi encontrado

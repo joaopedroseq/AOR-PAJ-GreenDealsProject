@@ -1,38 +1,8 @@
 w3.includeHTML(() =>  {
 
-    // Mensagem de boas-vindas
-    const welcomeMessage = document.getElementById('mensagem_boasVindas');
-
-    // Verificar se há um nome de utilizador armazenado no Session Storage
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-        // Se houver um nome de utilizador armazenado, exibe a mensagem de boas-vindas
-        welcomeMessage.textContent = `Olá, ${storedUsername}!`;
-    }  
-    
-    // Função para fazer logout, removendo o nome de utilizador do Session Storage
-    function logout(){
-        const username = document.getElementById('username').value;
-        sessionStorage.removeItem('username');
-        sessionStorage.removeItem('logged');
-        const loginMessage = document.getElementById("loginMessage");
-        loginMessage.style.visibility = 'hidden';
-        const login = document.getElementById('loginButton');
-        login.style.visibility = 'visible';
-        // Redireciona para a página de login
-        window.location.href = "index.html"; 
-    }
-
-    // Adiciona o evento de clique ao botão de logout
-    const logoutButton = document.getElementById('logoutButton');
-    logoutButton.addEventListener('click', logout);
-
     // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
     const hamburger = document.getElementById('hamburger');
     hamburger.addEventListener('click', toggleAside); 
-
-
-    
 
     // Obtém o container dos produtos
     const gridContainer = document.querySelector('.grid-container');
