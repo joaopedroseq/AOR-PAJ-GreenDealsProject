@@ -5,6 +5,7 @@
     <title>GreenDeals</title>
     <link rel="icon" href="images\logo.png" type="image/x-icon">
 <link rel="stylesheet" href="detailStyle.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
     <!--Header externo-->
@@ -14,10 +15,6 @@
         <!--Menu aside para alterar informações e eliminar produtos-->
         <div w3-include-html="aside.html"></div>
         <main class="main-content">
-            <form>
-                <input type="button" id="edit-product" value="Editar informações"><br>
-                <input type="button" id="delete-product" value="Eliminar produto"><br>
-            </form>
             <!--Título da categoria do produto-->
             <h2 id="product-category">Categoria: a, b, c</h2>
             <!--Informações do produto-->
@@ -30,6 +27,11 @@
                 <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
                 <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
             </div>
+
+            <form id="edit-delete-buttons" style="display: none;">
+                <input type="button" id="edit-product" value="Editar informações"><br>
+                <input type="button" id="delete-product" value="Eliminar produto"><br>
+            </form>
 
             <!--Butão de contacto-->
             <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
@@ -87,6 +89,43 @@
 
         </main>
     </div>
+    <div class="reviews">
+        <section id="avaliacao-form">
+            <h2>Adicionar Avaliação</h2>
+            <form id="formAvaliacao">
+                <textarea id="comentario" name="comentario" required></textarea>
+
+                <div class="rating-container">
+                    <div id="rating" class="rating">
+                        <i class="fas fa-star" data-value="1"></i>
+                        <i class="fas fa-star" data-value="2"></i>
+                        <i class="fas fa-star" data-value="3"></i>
+                        <i class="fas fa-star" data-value="4"></i>
+                        <i class="fas fa-star" data-value="5"></i>
+                    </div>
+                    <span id="rating-text"></span>
+                </div>
+                <input type="hidden" id="nota" name="nota">
+<br>
+                <button type="submit">Enviar Avaliação</button>
+            </form>
+        </section>
+
+        <h2>Estatísticas de Avaliações</h2>
+        
+        <div id="rating-summary">
+            <div id="average-rating"></div>
+            <div id="total-ratings"></div>
+        </div>
+
+        <div id="rating-stats"></div>
+
+        <section id="avaliacoes">
+            <h2>Avaliações</h2>
+            <div id="avaliacoes-container"></div>
+        </section>
+    </div>
+    
      <!--Footer externo-->
     <div w3-include-html="footer.html"></div>   
     </body>
@@ -94,4 +133,6 @@
         <script src="scriptDetail.js"></script>   
         <script src="scriptFooter.js"></script>
         <script src="scriptHeader.js"></script>
+        <script src="Avaliacoes.js"></script>
+    
 </html>

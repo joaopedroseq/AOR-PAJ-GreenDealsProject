@@ -39,6 +39,25 @@ if(product){
   document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
   document.getElementById('product-image').setAttribute('src', product.imagem);
   document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
+
+  // Verificar se o utilizador logado é o dono do produto antes de mostrar os botões
+if (sessionStorage.getItem('logged') === 'true') {
+  const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
+  const productIndex = new URLSearchParams(window.location.search).get('index'); 
+  let products = JSON.parse(localStorage.getItem('products'));
+  let product = products[productIndex];
+
+  if (product && storedUsername === product.anunciante.trim().toLowerCase()) {
+      const addButton = document.getElementById('edit-delete-buttons');
+      addButton.style.display = "inline-block"; // Mostrar botão
+
+      addButton.addEventListener('click', function(event) {
+          event.preventDefault();
+          modalAddProduct.style.display = "flex";
+      });
+  }
+}
+
 }
 
   document.getElementById('delete-product').addEventListener('click', deleteProduct);
@@ -49,7 +68,7 @@ if(product){
     productIndex = parseInt(productIndex);
     let products = localStorage.getItem('products');
     products = JSON.parse(products);
-
+    
     var confirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
     if(confirm == true){
         products.splice(productIndex, 1);
@@ -188,3 +207,5 @@ function sendMessage() {
       asideMenu.style.display = 'none';
     }
   }
+
+  
