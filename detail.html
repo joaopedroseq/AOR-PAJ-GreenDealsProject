@@ -14,10 +14,6 @@
         <!--Menu aside para alterar informações e eliminar produtos-->
         <div w3-include-html="aside.html"></div>
         <main class="main-content">
-            <form>
-                <input type="button" id="edit-product" value="Editar informações"><br>
-                <input type="button" id="delete-product" value="Eliminar produto"><br>
-            </form>
             <!--Título da categoria do produto-->
             <h2 id="product-category">Categoria: a, b, c</h2>
             <!--Informações do produto-->
@@ -30,6 +26,11 @@
                 <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
                 <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
             </div>
+
+            <form id="edit-delete-buttons" style="display: none;">
+                <input type="button" id="edit-product" value="Editar informações"><br>
+                <input type="button" id="delete-product" value="Eliminar produto"><br>
+            </form>
 
             <!--Butão de contacto-->
             <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
