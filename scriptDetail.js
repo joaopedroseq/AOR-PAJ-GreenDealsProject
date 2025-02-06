@@ -73,7 +73,7 @@ if (sessionStorage.getItem('logged') === 'true') {
     if(confirm == true){
         products.splice(productIndex, 1);
         localStorage.setItem('products', JSON.stringify(products));
-        window.location.href = 'main.html';
+        history.back();
     }
     else {
     }
