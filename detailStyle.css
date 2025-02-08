@@ -507,6 +507,40 @@ button:hover {
   margin-right: 5px;
 }
 
+/*  Edit/delete Avaliacao  */
 
+/* Containar das actions dos reviews */
+.review-actions {
+  margin-top: 10px; 
+  display: flex;
+  gap: 10px; /* espaço entre botões*/
+}
+
+/* botões Delete e Edit */
+.review-actions button {
+  background-color: var(--green); 
+  color: white; 
+  border: none;
+  padding: 8px 16px; 
+  border-radius: 5px; /* cantos redondos */
+  cursor: pointer; /* cursor de pontar quando fizer hover */
+  font-family: "Montserrat"; 
+  font-size: 14px; 
+  transition: background-color 0.3s ease; 
+}
+
+/* Efeito hover nos botões */
+.review-actions button:hover {
+  background-color: var(--darkGreen); 
+}
+
+/* Style do botão Delete */
+.review-actions .delete-review {
+  background-color: #ff4d4d; 
+}
+
+.review-actions .delete-review:hover {
+  background-color: #cc0000; 
+}
 
 

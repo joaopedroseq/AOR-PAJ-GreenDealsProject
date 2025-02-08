@@ -147,14 +147,82 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Format the date
                 const dataFormatada = new Date(avaliacao.data).toLocaleString();
     
+                // Add Edit/Delete buttons if the logged-in user is the review author
+            const loggedUser = sessionStorage.getItem('username')?.trim().toLowerCase();// Segurança para consistencia
+
+            const reviewAuthor = avaliacao.usuario?.trim().toLowerCase(); // Segurança para consistencia
+
+            const buttonsHtml = (loggedUser === reviewAuthor)
+                ? `<div class="review-actions">
+                        <button class="edit-review" data-id="${avaliacao.data}">Editar</button>
+                        <button class="delete-review" data-id="${avaliacao.data}">Eliminar</button>
+                    </div>`
+                : '';
+
                 // Create the HTML for the review
                 avaliacaoElement.innerHTML = `
                     <p><strong>${avaliacao.usuario}:</strong> ${starsHtml}</p>
                     <p><strong>Comentário:</strong> ${avaliacao.comentario}</p>
                     <p><strong>Data:</strong> ${dataFormatada}</p>
+                    ${buttonsHtml}
                 `;
                 container.appendChild(avaliacaoElement);
             });
+
+// Add event listeners for Edit/Delete buttons
+container.addEventListener('click', (e) => {
+    const loggedUser = sessionStorage.getItem('username');
+
+    // Delete Review
+    if (e.target.classList.contains('delete-review')) {
+        if (!loggedUser) {
+            alert("Faça login para apagar avaliações!");
+            return;
+        }
+
+        const reviewId = e.target.getAttribute('data-id');
+        const confirmDelete = confirm('Tem certeza que deseja eliminar esta avaliação?');
+        if (confirmDelete) {
+            avaliacoes = avaliacoes.filter(av => av.data !== reviewId);
+            localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
+            displayAvaliacoes(anunciante); // Refresh the list
+        }
+    }
+
+    // Edit Review
+    if (e.target.classList.contains('edit-review')) {
+        if (!loggedUser) {
+            alert("Faça login para editar avaliações!");
+            return;
+        }
+
+        const reviewId = e.target.getAttribute('data-id');
+        const avaliacao = avaliacoes.find(av => av.data === reviewId);
+        
+        const newComment = prompt('Editar comentário:', avaliacao.comentario);
+        
+        let newNota = prompt('Editar a nota (1-5):', avaliacao.nota);
+        newNota = parseInt(newNota); // Converte para um numero
+        if (newComment !== null && !isNaN(newNota) && newNota >= 1 && newNota <=5) {
+            //Atualiza os comentarios e rating
+            avaliacao.comentario = newComment;
+            avaliacao.nota = newNota;
+
+            localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
+
+            //Atualiza as estatisticas dos Ratings
+            updateRatings();
+            localStorage.setItem('ratingCounts', JSON.stringify(ratingCounts));
+
+            //Refresh UI
+            displayAvaliacoes(anunciante); // Refresh the list
+            displayRatingSummary();
+            displayRatingStats();
+        }else{
+            alert("Nota invalida. Insira uma numero entre 1 e 5.");
+        }
+    }
+});
         }
     }
 
