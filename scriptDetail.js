@@ -105,6 +105,7 @@ if (sessionStorage.getItem('logged') === 'true') {
 
   // Função para guardar as alterações e atualizar o localStorage
     function saveProduct(event) {
+      console.log("entrou no save");
       event.preventDefault();
       // Obter o índice do produto a ser editado
       const productIndex = new URLSearchParams(window.location.search).get('index');
@@ -116,7 +117,6 @@ if (sessionStorage.getItem('logged') === 'true') {
       product.descricao = document.getElementById('edit-descricao').value;
       product.preco = document.getElementById('edit-preco').value;
       product.categoria = document.getElementById('edit-categoria').value;
-      product.anunciante = document.getElementById('edit-anunciante').value;
       product.localidade = document.getElementById('edit-localidade').value;
       product.imagem = document.getElementById('edit-imagem').value;
     
