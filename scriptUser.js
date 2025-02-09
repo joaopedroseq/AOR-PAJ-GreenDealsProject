@@ -48,13 +48,3 @@ w3.includeHTML(() =>  {
     
 }
 )
-
-function toggleAside() {
-    console.log("correu");
-    const asideMenu = document.getElementById("aside-menu-gestao-pessoal");
-    if (asideMenu.style.display === 'none' || asideMenu.style.display === '') {
-      asideMenu.style.display = 'block';
-    } else {
-      asideMenu.style.display = 'none';
-    }
-  }
