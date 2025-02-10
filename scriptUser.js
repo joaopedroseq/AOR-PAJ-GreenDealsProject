@@ -5,12 +5,50 @@ w3.includeHTML(() =>  {
 
     const loggedUser = sessionStorage.getItem('username');
 
-    // Obtém o container dos produtos
-    const gridContainer = document.querySelector('.grid-container');
+    let userData = JSON.parse(sessionStorage.getItem('userData'));
+    document.getElementById("infoName").innerHTML = userData.nome;
+    document.getElementById("infoLastName").innerHTML = userData.lastname;
+    document.getElementById("infoUsername").innerHTML = userData.username;
+    document.getElementById("infoEmail").innerHTML = userData.email;
+    document.getElementById("infoContact").innerHTML = userData.phone;
+
+    loadProducts();
+
+    
+    
+
+    const myProductsBtn = document.getElementById('myProductsBtn');
+
+    const myReviewsBtn = document.getElementById('myReviewsBtn');
+
+    const myInfoBtn = document.getElementById('myInfoBtn');
+
+
+    myProductsBtn.addEventListener('click', function(){
+        document.getElementById("informacoesPessoais").style.display = 'none';
+        document.getElementById("produtos").style.display = 'contents';
+    });
+
+    myInfoBtn.addEventListener('click', function(){
+        document.getElementById("informacoesPessoais").style.display = 'contents';
+        document.getElementById("produtos").style.display = 'none';
+    });
+
+    myReviewsBtn.addEventListener('click', function(){
+        console.log('correu reviews');
+        document.getElementById("informacoesPessoais").style.display = 'contents';
+        document.getElementById("produtos").style.display = 'none';
+    });
+
+
+
+
 
 
     // Função para exibir os produtos na página
     function displayProduct(product, index) {
+        // Obtém o container dos produtos
+        let gridContainer = document.querySelector('.grid-container');
         // Cria o HTML do produto
         const productHTML = `
             <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'"> 
@@ -43,8 +81,6 @@ w3.includeHTML(() =>  {
         }
     }
 
-    // Carrega os produtos ao carregar a página
-    loadProducts();
     
 }
 )

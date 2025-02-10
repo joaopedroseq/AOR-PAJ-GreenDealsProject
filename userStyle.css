@@ -97,6 +97,10 @@ aside {
     border: none;
 }
 
+.produtos {
+  display: none; /*de outra forma apresentar em - contents*/
+}
+
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
@@ -154,5 +158,10 @@ aside {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
     background-color: #f0f0f0; /* Cor de fundo para destaque */
     transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
+}
+
+.informacoesPessoais{
+  display: contents; /*none para não aparecer*/
+  align-content: center;
 }
 
