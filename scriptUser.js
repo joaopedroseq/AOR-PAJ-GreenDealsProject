@@ -6,6 +6,7 @@ w3.includeHTML(() =>  {
     const loggedUser = sessionStorage.getItem('username');
 
     let userData = JSON.parse(sessionStorage.getItem('userData'));
+    document.getElementById("infoPhoto").src = userData.photo;
     document.getElementById("infoName").innerHTML = userData.nome;
     document.getElementById("infoLastName").innerHTML = userData.lastname;
     document.getElementById("infoUsername").innerHTML = userData.username;

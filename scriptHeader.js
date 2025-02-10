@@ -39,6 +39,9 @@ w3.includeHTML(() =>  {
       loginMessage.style.visibility= 'visible';
       const login = document.getElementById('loginButton');
       login.style.visibility='hidden';
+      //mudar a imagem do login
+      console.log(user.photo);
+      document.getElementById('loginPhoto').src = user.photo;
       console.log('user ' + username + ' logged');
     }
     else {

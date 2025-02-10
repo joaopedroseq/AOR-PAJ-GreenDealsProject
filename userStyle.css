@@ -101,6 +101,10 @@ aside {
   display: none; /*de outra forma apresentar em - contents*/
 }
 
+.infoPhoto{
+  border-radius: 50%;
+}
+
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
