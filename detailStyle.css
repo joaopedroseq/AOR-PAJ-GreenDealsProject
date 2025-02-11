@@ -543,4 +543,93 @@ button:hover {
   background-color: #cc0000; 
 }
 
+/* User Page Styles */
+.profile-section {
+  background-color: white;
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
 
+.profile-section h3 {
+  color: var(--darkGreen);
+  font-family: 'Playfair Display';
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 0.5rem;
+}
+
+.user-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.user-info-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  font-family: 'Montserrat';
+}
+
+.user-info-table td:first-child {
+  font-weight: bold;
+  color: var(--darkGreen);
+  width: 30%;
+}
+
+/* Review Section Specific */
+.user-review-item {
+  background-color: var(--beige);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  border-left: 4px solid var(--green);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.review-header strong {
+  color: var(--darkGreen);
+  font-family: 'Playfair Display';
+}
+
+/* Hide profile sections by default */
+.profile-section {
+    display: none;
+}
+
+/* Show active profile section */
+.profile-section.active-section {
+    display: block;
+}
+
+/* Ensure produtos section is visible by default */
+#produtos {
+    display: block;
+}
+
+.edit-form div {
+  margin-bottom: 15px;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-family: 'Montserrat';
+  color: var(--darkGreen);
+}
+
+.edit-form input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: 'Montserrat';
+}
