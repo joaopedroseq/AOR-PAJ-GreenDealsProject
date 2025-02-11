@@ -58,6 +58,8 @@ w3.includeHTML(() =>  {
   const storedUsername = sessionStorage.getItem('username');
   if (storedUsername) {
     welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+    let user = JSON.parse(sessionStorage.getItem("userData"));
+    document.getElementById('loginPhoto').src = user.photo;
   } 
 
   //Caso não exista um utilizador logged, apresenta o botão de login
@@ -106,7 +108,7 @@ saveProductBtn.addEventListener('click', function(event) {
     const categoria = document.getElementById('add-categoria').value;
     const localidade = document.getElementById('add-localidade').value;
     const imagem = document.getElementById('add-imagem').value;
-     const data = new Date(); // Data atual
+    const data = new Date(); // Data atual
     const anunciante = sessionStorage.getItem('username');
 
      // Validações dos campos do formulário
