@@ -97,6 +97,14 @@ aside {
     border: none;
 }
 
+.produtos {
+  display: none; /*de outra forma apresentar em - contents*/
+}
+
+.infoPhoto{
+  border-radius: 50%;
+}
+
 /* Estilo para a grade de imagens */
 .grid-container {
     display: grid;
@@ -197,3 +205,43 @@ aside {
   position: relative;
 }
 
+/* New sections */
+.profile-section {
+  display: none;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.active-section {
+  display: block;
+}
+
+/* Personal info styles */
+.user-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.user-info-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.edit-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Review styles matching detail page */
+.user-review-item {
+  background-color: #f4f4f4;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+  position: relative;
+}
