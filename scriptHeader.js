@@ -1,8 +1,4 @@
 w3.includeHTML(() =>  {
-    //Verifica se existe user no localstorage, caso contrário cria um array vazio
-  if(!localStorage.getItem("users")){
-    localStorage.setItem('users', JSON.stringify([]));
-  }
 
   //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
   if(!sessionStorage.getItem("logged")){
@@ -23,32 +19,50 @@ w3.includeHTML(() =>  {
 
   const welcomeMessage = document.getElementById('mensagem_boasVindas');
 
-
   //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
   //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
   function login(username, password){
-      let users = JSON.parse(localStorage.getItem('users'));
-      let user = users.find(user => user.username === username && user.password === password)
 
-    if(user){
+    const loginUrl ='http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/login';
+
+    fetch(loginUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      })
+      .then(response => {
+        console.log('Status da resposta:', response.status);
+        return response.text().then(text => ({ status: response.status, text: text }));
+      })
+      .then(data => {
+        console.log('Dados recebidos:', data);
+        if (data.status === 200) {
+          handleSuccessfulLogin(username);
+        } else {
+          handleFailedLogin(data.text);
+        }
+      })
+      .catch(error => {
+        console.error('Erro detalhado:', error);
+        alert("Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes.");
+      });
+    }
+  
+    function handleSuccessfulLogin(username) {
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
-      sessionStorage.setItem('userData', JSON.stringify(user));
       welcomeMessage.textContent = `Olá, ${username}!`;
-      const loginMessage = document.getElementById("loginMessage");
-      loginMessage.style.visibility= 'visible';
-      const login = document.getElementById('loginButton');
-      login.style.visibility='hidden';
-      //mudar a imagem do login
-      console.log(user.photo);
-      document.getElementById('loginPhoto').src = user.photo;
-      console.log('user ' + username + ' logged');
+      document.getElementById("loginMessage").style.visibility = 'visible';
+      document.getElementById('loginButton').style.visibility = 'hidden';
+      console.log('Login bem-sucedido para:', username);
     }
-    else {
-      alert(username + " não encontrado. Por favor registe-se");  //caso contrário, avisa o utilizador que não existe o seu registo,
-      //e não faz login
+  
+    function handleFailedLogin(message) {
+      alert(message || "Login falhou. Por favor, tente novamente.");
+      console.log('Login falhou:', message);
     }
-  }
 
   //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
