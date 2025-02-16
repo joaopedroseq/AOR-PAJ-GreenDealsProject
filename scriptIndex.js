@@ -113,54 +113,6 @@ w3.includeHTML(() =>  {
     }
 }
 
-  
-  //Verifica se duas strings são iguais - serve para assim comparar se
-  //a password e a password de confirmação correspondem
-  function comparePasswords(passwordA, passwordB){
-    if((passwordA.localeCompare(passwordB)) == 0){
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  //Procura se um username existe na localStorage - no registo de novos utilizadores
-  //para verificar se o nome de utilizador não pode ser escolhido por já existir, e para
-  //funções de login, serve para verificar se o utilizador existe
-  function checkUsernameExists(username){
-    console.log("a correr comparação de " + username);
-    let users = JSON.parse(localStorage.getItem('users'));
-    let user = users.find(user => user.username === username);
-
-    /* localstorage.getItem s
-    let users = localStorage.getItem('users');
-    users = JSON.parse(users);
-    "O antigo if continha LocalStorage.includes -- mas so funcionas para valors primitovs, nao objetos"
-    */
-    if(user){ 
-      console.log("Username encontrado.")
-      return true;
-    }
-    else{
-      console.log("Username nao encontrou.")
-      return false;
-    }
-  }
-
-  //Procura se um Email existe na LocalStorage - no registo de novos utilizadores
-function checkEmailExists(email){
-  console.log("a correr comparacao de " + email);
-  let users = localStorage.getItem('users');
-  users=JSON.parse(users);
-  if (users.includes(email)){
-    return true;
-  }
-  else{
-    return false;
-  }
-}
-
 });
 
 
