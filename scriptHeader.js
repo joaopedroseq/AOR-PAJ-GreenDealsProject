@@ -117,52 +117,51 @@ const addButton = document.getElementById('add-product-btn');
 saveProductBtn.addEventListener('click', function(event) {
     event.preventDefault();
      // Obtém os valores dos campos do formulário
-    const nome = document.getElementById('add-nome').value;
-    const descricao = document.getElementById('add-descricao').value;  
-    const preco = document.getElementById('add-preco').value;
-    const categoria = document.getElementById('add-categoria').value;
-    const localidade = document.getElementById('add-localidade').value;
-    const imagem = document.getElementById('add-imagem').value;
-    const data = new Date(); // Data atual
-    const anunciante = sessionStorage.getItem('username');
+    const name = document.getElementById('add-nome').value;
+    const description = document.getElementById('add-descricao').value;  
+    const price = document.getElementById('add-preco').value;
+    const category = document.getElementById('add-categoria').value;
+    const location = document.getElementById('add-localidade').value;
+    const urlImage = document.getElementById('add-imagem').value;
+    const seller = sessionStorage.getItem('username');
 
      // Validações dos campos do formulário
-    if(nome.trim() === ""){
+    if(name.trim() === ""){
         alert("O nome do produto é de preenchimento obrigatório");
     }
-    else if(descricao.trim() === ""){
+    else if(description.trim() === ""){
         alert("A descrição do produto é de preenchimento obrigatório");
     }
-    else if(preco.trim() === ""){
+    else if(price.trim() === ""){
         alert("O preço do produto é de preenchimento obrigatório");
     }
-    else if(!checkIfNumeric(preco)){
+    else if(!checkIfNumeric(price)){
         alert("Preço inserido inválido. Apenas poderá escrever dígitos e sem quaisquer símbolos");
     }
-    else if(localidade.trim() === ""){
+    else if(location.trim() === ""){
         alert("A sua morada é preenchimento obrigatório");
     }
-    else if(imagem.trim() === ""){
+    else if(urlImage.trim() === ""){
         alert("Terá de colocar um URL válido da imagem do produto que pretende anunciar");
     }
     else {
 
          // Cria um objeto com os dados do produto
         const product = {
-            nome,
-            descricao,
-            preco,
-            categoria,
-            anunciante,
-            localidade,
-            imagem,
-            data
+            name,
+            description,
+            price,
+            category,
+            seller,
+            location,
+            urlImage
         }
-        var confirm = window.confirm('Tem a certeza que pretende adicionar o produto ' + nome + '?'); 
+        var confirm = window.confirm('Tem a certeza que pretende adicionar o produto ' + name + '?'); 
 
          // Se o utilizador confirmar, guarda o produto no local storage
         if(confirm == true){
             console.log("salvar");
+            addProduct(sessionStorage.getItem('username'), sessionStorage.getItem('password'), product);
             let products = localStorage.getItem('products');
             if (products) {
                  // Converte a string JSON para um array
@@ -188,18 +187,32 @@ saveProductBtn.addEventListener('click', function(event) {
     } 
 });
     function addProduct(username, password, product){
+      console.log(username);
+      console.log(password);
       const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+username+'/add';
 
       const addProductHeaders = new Headers();
-      addProductHeaders.append('Content-Type', 'application/json');
+      addProductHeaders.append('Content-Type','application/json');
       addProductHeaders.append('password', password);
+
+      console.log(addProductHeaders);
+      console.log(JSON.stringify(product.name));
 
       fetch(addProductURL, {
         method: 'POST',
         headers: addProductHeaders,
         body: JSON.stringify({product})
       })
-
+      .then(response => {
+        console.log('Status da resposta:', response.status);
+        return response.text().then(text => ({ status: response.status, text: text }));
+      })
+      .then(data => {
+        console.log('Texto da resposta:', data.text);
+      })
+      .catch(error => {
+        console.error('Erro:', error);
+      });
     }
 
     //Função para efetuar o Logout
