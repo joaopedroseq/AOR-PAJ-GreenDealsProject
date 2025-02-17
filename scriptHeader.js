@@ -218,7 +218,7 @@ saveProductBtn.addEventListener('click', function(event) {
 async function addProduct(username, password, product) { //async e wai
   console.log(username);
   console.log(password);
-  const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+ username + '/add';
+  const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+username + 'jpsequeira/add';
 
   const addProductHeaders = new Headers();
   addProductHeaders.append('Content-Type', 'application/json');
