@@ -219,20 +219,42 @@ async function addProduct(username, password, product) { //async e wai
 }
 
     //Função para efetuar o Logout
-    function logout(){
-    // Remover o nome de utilizador da sessão
-    const username = document.getElementById('username').value;
-    sessionStorage.removeItem('username');
-    sessionStorage.removeItem('logged');
-    const loginMessage = document.getElementById("loginMessage");
-    loginMessage.style.visibility = 'hidden';
-    const login = document.getElementById('loginButton');
-    login.style.visibility = 'visible';
-    console.log("agora vai fazer reload");
-    // Redirecionar o utilizador para a página de login
-    window.location.href = "index.html";
-}   
-
+    async function logout() {
+      try {
+        const response = await fetch('http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout', {
+          method: 'POST',
+          credentials: 'include', // Inclui cookies na requisição
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+    
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Falha no logout: ${errorMessage}`);
+        }
+    
+        // Limpar dados de sessão locais
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('logged');
+        sessionStorage.removeItem('password'); // Removendo a senha
+        localStorage.removeItem('token'); // Se estiver usando JWT
+    
+        // Atualizar a interface do usuário
+        const loginMessage = document.getElementById("loginMessage");
+        if (loginMessage) loginMessage.style.visibility = 'hidden';
+    
+        const loginButton = document.getElementById('loginButton');
+        if (loginButton) loginButton.style.visibility = 'visible';
+    
+        console.log("Logout bem-sucedido, redirecionando...");
+        window.location.href = "index.html";
+      } catch (error) {
+        console.error('Erro durante o logout:', error);
+        alert(`Ocorreu um erro durante o logout: ${error.message}`);
+      }
+    }
+    
 
     //Botão de acesso à área pessoal
     const userAreaBtn = document.getElementById('userAreaBtn');
