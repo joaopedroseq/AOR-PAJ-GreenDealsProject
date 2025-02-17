@@ -186,34 +186,35 @@ saveProductBtn.addEventListener('click', function(event) {
         displayProduct(product, products.length - 1);
     } 
 });
-    function addProduct(username, password, product){
-      console.log(username);
-      console.log(password);
-      const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+username+'/add';
+function addProduct(username, password, product) {
+  console.log(username);
+  console.log(password);
+  const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/' + username + '/add';
 
-      const addProductHeaders = new Headers();
-      addProductHeaders.append('Content-Type','application/json');
-      addProductHeaders.append('password', password);
+  const addProductHeaders = new Headers();
+  addProductHeaders.append('Content-Type', 'application/json');
+  addProductHeaders.append('password', password);
 
-      console.log(addProductHeaders);
-      console.log(JSON.stringify(product.name));
+  console.log('Cabeçalhos da solicitação:', addProductHeaders);
+  console.log('Corpo da solicitação:', JSON.stringify(product));
 
-      fetch(addProductURL, {
-        method: 'POST',
-        headers: addProductHeaders,
-        body: JSON.stringify({product})
-      })
-      .then(response => {
-        console.log('Status da resposta:', response.status);
-        return response.text().then(text => ({ status: response.status, text: text }));
-      })
-      .then(data => {
-        console.log('Texto da resposta:', data.text);
-      })
-      .catch(error => {
-        console.error('Erro:', error);
-      });
-    }
+  fetch(addProductURL, {
+    method: 'POST',
+    headers: addProductHeaders,
+    body: JSON.stringify(product)
+  })
+  .then(response => {
+    console.log('Status da resposta:', response.status);
+    return response.text().then(text => ({ status: response.status, text: text }));
+  })
+  .then(data => {
+    console.log('Texto da resposta:', data.text);
+  })
+  .catch(error => {
+    console.error('Erro:', error);
+    alert('Ocorreu um erro: ' + error.message);
+  });
+}
 
     //Função para efetuar o Logout
     function logout(){
