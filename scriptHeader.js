@@ -39,7 +39,7 @@ w3.includeHTML(() =>  {
       .then(data => {
         console.log('Dados recebidos:', data);
         if (data.status === 200) {
-          handleSuccessfulLogin(username);
+          handleSuccessfulLogin(username, password);
         } else {
           handleFailedLogin(data.text);
         }
@@ -50,9 +50,10 @@ w3.includeHTML(() =>  {
       });
     }
   
-    function handleSuccessfulLogin(username) {
+    function handleSuccessfulLogin(username, password) {
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
+      sessionStorage.setItem('password', password);
       welcomeMessage.textContent = `Olá, ${username}!`;
       document.getElementById("loginMessage").style.visibility = 'visible';
       document.getElementById('loginButton').style.visibility = 'hidden';
@@ -186,6 +187,20 @@ saveProductBtn.addEventListener('click', function(event) {
         displayProduct(product, products.length - 1);
     } 
 });
+    function addProduct(username, password, product){
+      const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+username+'/add';
+
+      const addProductHeaders = new Headers();
+      addProductHeaders.append('Content-Type', 'application/json');
+      addProductHeaders.append('password', password);
+
+      fetch(addProductURL, {
+        method: 'POST',
+        headers: addProductHeaders,
+        body: JSON.stringify({product})
+      })
+
+    }
 
     //Função para efetuar o Logout
     function logout(){
