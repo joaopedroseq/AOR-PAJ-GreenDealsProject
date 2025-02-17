@@ -81,6 +81,15 @@
                                 <label for="edit-imagem">url de imagem:</label>
                                 <input type="text" id="edit-imagem" name="edit-imagem">
                              </div>
+                             <div class="edit-product-form-field" id="edit-product-form-field">
+                                <label for="edit-categoria">Estado do artigo:</label>
+                                <select id="edit-state" name="edit-state">
+                                    <option value="RASCUNHO">Rascunho</option>
+                                    <option value="DISPONIVEL">Disponível</option>
+                                    <option value="RESERVADO">Reservado</option>
+                                    <option value="COMPRADO">Comprado</option>
+                                </select>
+                            </div>
                              <input type="submit" class="save-product" id="save-product" value="Guardar Alterações" onclick="saveEditedProduct(productId)">                    
                         </div>
                     </div>

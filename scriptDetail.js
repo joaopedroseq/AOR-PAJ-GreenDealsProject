@@ -157,6 +157,7 @@ function fetchProductDetails(productId, storedUsername) {
       document.getElementById('edit-categoria').value = product.category;
       document.getElementById('edit-localidade').value = product.location;
       document.getElementById('edit-imagem').value = product.urlImage;
+      document.getElementById('edit-state').value=product.state;
   
       // Adicionar event listener para o botão de salvar
       document.getElementById('save-product').addEventListener('click', () => saveEditedProduct(product.id));
@@ -170,7 +171,8 @@ function fetchProductDetails(productId, storedUsername) {
         price: parseFloat(document.getElementById('edit-preco').value),
         category: document.getElementById('edit-categoria').value,
         location: document.getElementById('edit-localidade').value,
-        urlImage: document.getElementById('edit-imagem').value
+        urlImage: document.getElementById('edit-imagem').value,
+        state: document.getElementById('edit-state').value
     };
 
     fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/products/${productId}`, {
@@ -249,6 +251,7 @@ function sendMessage() {
       document.getElementById('edit-anunciante').value = product.anunciante;
       document.getElementById('edit-localidade').value = product.localidade;
       document.getElementById('edit-imagem').value = product.imagem;
+      document.getElementById('edit-state').value=product.state;
     }
 
     // Quando o utilizador clica no <span> (x), fecha o modal
