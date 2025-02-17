@@ -162,37 +162,41 @@ function fetchProductDetails(productId, storedUsername) {
       document.getElementById('save-product').addEventListener('click', () => saveEditedProduct(product.id));
   }
   
-  function saveProduct(productId) {
-      const editedProduct = {
-          name: document.getElementById('edit-nome').value,
-          description: document.getElementById('edit-descricao').value,
-          price: parseFloat(document.getElementById('edit-preco').value),
-          category: document.getElementById('edit-categoria').value,
-          location: document.getElementById('edit-localidade').value,
-          urlImage: document.getElementById('edit-imagem').value
-      };
-  
-      fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`, {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-              'password': sessionStorage.getItem('password')
-          },
-          body: JSON.stringify(editedProduct)
-      })
-      .then(response => {
-          if (response.ok) {
-              alert('Produto atualizado com sucesso');
-              window.location.reload(); // Recarregar a página para mostrar as alterações
-          } else {
-              throw new Error('Falha ao atualizar o produto');
-          }
-      })
-      .catch(error => {
-          console.error('Erro:', error);
-          alert('Erro ao atualizar o produto');
-      });
-  }
+  function saveEditedProduct(productId) {
+    const username = sessionStorage.getItem('username'); 
+    const editedProduct = {
+        name: document.getElementById('edit-nome').value,
+        description: document.getElementById('edit-descricao').value,
+        price: parseFloat(document.getElementById('edit-preco').value),
+        category: document.getElementById('edit-categoria').value,
+        location: document.getElementById('edit-localidade').value,
+        urlImage: document.getElementById('edit-imagem').value
+    };
+
+    fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/products/${productId}`, {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editedProduct)
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text(); 
+        } else {
+            throw new Error('Falha ao atualizar o produto');
+        }
+    })
+    .then(data => {
+        alert(data); 
+        window.location.reload(); 
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert('Erro ao atualizar o produto');
+    });
+}
+
   
 
 // Função para alternar a exibição do formulário de contato
