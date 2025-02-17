@@ -69,25 +69,39 @@ w3.includeHTML(() =>  {
 
 
   // Verificar se o utilizador logado é o dono do produto antes de mostrar os botões
-if (sessionStorage.getItem('logged') === 'true') {
-  const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
-  const productIndex = new URLSearchParams(window.location.search).get('index'); 
-  let products = JSON.parse(localStorage.getItem('products'));
-  let product = products[productIndex];
+  document.addEventListener('DOMContentLoaded', function() {
+    if (sessionStorage.getItem('logged') === 'true') {
+        const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
+        const productId = new URLSearchParams(window.location.search).get('index');
 
-  if (product && storedUsername === product.anunciante.trim().toLowerCase()) {
-      const addButton = document.getElementById('edit-delete-buttons');
-      addButton.style.display = "inline-block"; // Mostrar botão
+        if (productId) {
+            fetchProductDetails(productId, storedUsername);
+        }
+    }
+});
 
-      addButton.addEventListener('click', function(event) {
-          event.preventDefault();
-          modalAddProduct.style.display = "flex";
-      });
-  }
+function fetchProductDetails(productId, storedUsername) {
+    fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Produto não encontrado');
+            }
+            return response.json();
+        })
+        .then(product => {
+            if (product && storedUsername === product.seller.trim().toLowerCase()) {
+                const editDeleteButtons = document.getElementById('edit-delete-buttons');
+                editDeleteButtons.style.display = "inline-block";
+
+                // Adicionar event listeners para os botões
+                document.getElementById('delete-product').addEventListener('click', () => deleteProduct(productId));
+                document.getElementById('edit-product').addEventListener('click', () => showEditForm(product));
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar detalhes do produto:', error);
+        });
 }
-
-
-  document.getElementById('delete-product').addEventListener('click', deleteProduct);
 
   // Função para excluir um produto
   function deleteProduct(){
@@ -108,65 +122,54 @@ if (sessionStorage.getItem('logged') === 'true') {
 
 
     // Exibir o formulário de edição ao clicar no botão "Editar informações"
-    document.getElementById('edit-product').addEventListener('click', function() {
-      products = localStorage.getItem('products');
-      products = JSON.parse(products);
-      product = products[productIndex];
-      console.log(product);
-      document.getElementById('edit-product-form').style.display = 'block';
-      console.log(document.getElementById('save-product'));
-      fillEditForm();
-    });
-
-
-    // Preencher o formulário de edição com os dados atuais do produto
-    function fillEditForm() {
-      document.getElementById('edit-nome').value = product.nome;
-      document.getElementById('edit-descricao').value = product.descricao;
-      document.getElementById('edit-preco').value = product.preco;
-      document.getElementById('edit-categoria').value = product.categoria;
-      document.getElementById('edit-localidade').value = product.localidade;
-      document.getElementById('edit-imagem').value = product.imagem;
-      console.log("terminou de encher os dados para o form")
-    }
- 
-
-  // Função para guardar as alterações e atualizar o localStorage
-    function saveProduct(event) {
-      console.log("entrou no save");
-      event.preventDefault();
-      // Obter o índice do produto a ser editado
-      const productIndex = new URLSearchParams(window.location.search).get('index');
-      let products = localStorage.getItem('products');
-      products = JSON.parse(products); // Converter a string de volta para um array
-      const product = products[productIndex];
-      // Atualizar os dados do produto com os valores do formulário de edição
-      product.nome = document.getElementById('edit-nome').value;
-      product.descricao = document.getElementById('edit-descricao').value;
-      product.preco = document.getElementById('edit-preco').value;
-      product.categoria = document.getElementById('edit-categoria').value;
-      product.localidade = document.getElementById('edit-localidade').value;
-      product.imagem = document.getElementById('edit-imagem').value;
-    
-      // Atualizar o localStorage com os dados modificados
-      products[productIndex] = product;
-      localStorage.setItem('products', JSON.stringify(products)); // Converter o array para uma string
-      alert('Produto atualizado com sucesso!');
+    function showEditForm(product) {
+      const form = document.getElementById('edit-product-form');
+      form.style.display = 'block';
+      
+      // Preencher o formulário com os dados atuais do produto
+      document.getElementById('edit-nome').value = product.name;
+      document.getElementById('edit-descricao').value = product.description;
+      document.getElementById('edit-preco').value = product.price;
+      document.getElementById('edit-categoria').value = product.category;
+      document.getElementById('edit-localidade').value = product.location;
+      document.getElementById('edit-imagem').value = product.urlImage;
   
-      // Atualizar a exibição dos dados do produto na página
-      document.getElementById('product-image').src = product.imagem;
-      document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
-      document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
-      document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
-      document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
-      document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
-      document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
+      // Adicionar event listener para o botão de salvar
+      document.getElementById('save-product').addEventListener('click', () => saveEditedProduct(product.id));
+  }
   
-      // Fechar o formulário de edição
-      modal.style.display = "none";
-      modalDetail.style.display = "none";
-      console.log('terminou');
-    };
+  function saveProduct(productId) {
+      const editedProduct = {
+          name: document.getElementById('edit-nome').value,
+          description: document.getElementById('edit-descricao').value,
+          price: parseFloat(document.getElementById('edit-preco').value),
+          category: document.getElementById('edit-categoria').value,
+          location: document.getElementById('edit-localidade').value,
+          urlImage: document.getElementById('edit-imagem').value
+      };
+  
+      fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json',
+              'password': sessionStorage.getItem('password')
+          },
+          body: JSON.stringify(editedProduct)
+      })
+      .then(response => {
+          if (response.ok) {
+              alert('Produto atualizado com sucesso');
+              window.location.reload(); // Recarregar a página para mostrar as alterações
+          } else {
+              throw new Error('Falha ao atualizar o produto');
+          }
+      })
+      .catch(error => {
+          console.error('Erro:', error);
+          alert('Erro ao atualizar o produto');
+      });
+  }
+  
 
 // Função para alternar a exibição do formulário de contato
 function toggleContactForm() {
