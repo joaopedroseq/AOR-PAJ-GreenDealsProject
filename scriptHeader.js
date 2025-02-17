@@ -68,6 +68,43 @@ w3.includeHTML(() =>  {
   //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
 
+  //Função para efetuar o Logout
+  async function logout() {
+    try {
+      const response = await fetch('http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout', {
+        method: 'POST',
+        credentials: 'include', // Inclui cookies na requisição
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Falha no logout: ${errorMessage}`);
+      }
+  
+      // Limpar dados de sessão locais
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('logged');
+      sessionStorage.removeItem('password'); // Removendo a senha
+      localStorage.removeItem('token'); // Se estiver usando JWT
+  
+      // Atualizar a interface do usuário
+      const loginMessage = document.getElementById("loginMessage");
+      if (loginMessage) loginMessage.style.visibility = 'hidden';
+  
+      const loginButton = document.getElementById('loginButton');
+      if (loginButton) loginButton.style.visibility = 'visible';
+  
+      console.log("Logout bem-sucedido, redirecionando...");
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error('Erro durante o logout:', error);
+      alert(`Ocorreu um erro durante o logout: ${error.message}`);
+    }
+  }
+
 
   // Verificar se há um nome de utilizador armazenado no Session Storage
   const storedUsername = sessionStorage.getItem('username');
@@ -203,6 +240,13 @@ async function addProduct(username, password, product) {
       body: JSON.stringify(product)
     });
 
+  try {
+    const response = await fetch(addProductURL, {
+      method: 'POST',
+      headers: addProductHeaders,
+      body: JSON.stringify(product)
+    });
+
     console.log('Status da resposta:', response.status);
     const text = await response.text();
     console.log('Texto da resposta:', text);
@@ -279,8 +323,8 @@ function checkIfNumeric(string) {
             !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
 };
 
-
 });
+
 
  // Função para alternar a exibição do aside
  function toggleAside() {
@@ -319,3 +363,4 @@ function checkIfLogged(){
         return false;
     }
 }
+

@@ -7,7 +7,6 @@ w3.includeHTML(() =>  {
 
 
     getUserProducts();
-
     
     
 
@@ -76,7 +75,7 @@ w3.includeHTML(() =>  {
     }
 
     function getUserProducts() {
-        const getAvaiableProductsUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+loggedUser+'/products/';
+        const getAvaiableProductsUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+ loggedUser +'/products/';
         fetch(getAvaiableProductsUrl, {
           method: 'GET',
           headers: {'Content-Type': 'application/json',}

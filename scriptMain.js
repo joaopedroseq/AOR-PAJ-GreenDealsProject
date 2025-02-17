@@ -24,20 +24,8 @@ w3.includeHTML(() =>  {
         gridContainer.insertAdjacentHTML('beforeend', productHTML); 
     }
 
-    // Função para carregar os produtos do local storage e exibi-los na página
-    function loadProducts() {
-        getAvaiableProducts();
 
-        let products = localStorage.getItem('products');
-        if (products) {
-            // Converte a string JSON para um array
-            products = JSON.parse(products);
-            products.forEach((product, index) => {
-                displayProduct(product, index);
-            });
-        }
-    }
-
+    //fetch dos produtos
     function getAvaiableProducts() {
         const getAvaiableProductsUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/';
         fetch(getAvaiableProductsUrl, {
@@ -67,7 +55,7 @@ w3.includeHTML(() =>  {
       }
 
     // Carrega os produtos ao carregar a página
-    loadProducts();
+    getAvaiableProducts();
 
     // Função para fazer a ligação das categorias no aside com os artigos
     const categories = document.querySelectorAll('aside ul li');
