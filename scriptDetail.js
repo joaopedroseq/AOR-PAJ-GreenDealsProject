@@ -104,21 +104,45 @@ function fetchProductDetails(productId, storedUsername) {
 }
 
   // Função para excluir um produto
-  function deleteProduct(){
-    let productIndex = new URLSearchParams(window.location.search).get('index');
-    productIndex = parseInt(productIndex);
-    let products = localStorage.getItem('products');
-    products = JSON.parse(products);
+  function deleteProduct() {
+    let productId = new URLSearchParams(window.location.search).get('index');
+    productId = parseInt(productId);
     
-    var confirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
-    if(confirm == true){
-        products.splice(productIndex, 1);
-        localStorage.setItem('products', JSON.stringify(products));
-        history.back();
+    let username = sessionStorage.getItem('username');
+    
+    var userConfirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
+    
+    if (userConfirm) {
+        // Fazer a requisição DELETE para o backend
+        fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/products/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                // Adicione headers de autenticação se necessário
+            },
+        })
+        .then(response => {
+            if (response.ok) {
+                // Produto deletado com sucesso
+                alert('Produto eliminado com sucesso!');
+                // Atualizar a lista local de produtos
+                let products = JSON.parse(localStorage.getItem('products') || '[]');
+                products = products.filter(p => p.id !== productId);
+                localStorage.setItem('products', JSON.stringify(products));
+                // Voltar para a página anterior
+                history.back();
+            } else {
+                // Erro ao deletar o produto
+                alert('Erro ao eliminar o produto. Por favor, tente novamente.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro ao tentar eliminar o produto.');
+        });
     }
-    else {
-    }
-  }
+}
+
 
 
     // Exibir o formulário de edição ao clicar no botão "Editar informações"
