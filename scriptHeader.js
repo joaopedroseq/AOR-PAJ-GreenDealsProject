@@ -114,7 +114,7 @@ const addButton = document.getElementById('add-product-btn');
  };  
  
  // Função para guardar o produto no local storage
-saveProductBtn.addEventListener('click', function(event) {
+saveProductBtn.addEventListener('click', async function(event) {
     event.preventDefault();
      // Obtém os valores dos campos do formulário
     const name = document.getElementById('add-nome').value;
@@ -159,27 +159,20 @@ saveProductBtn.addEventListener('click', function(event) {
         var confirm = window.confirm('Tem a certeza que pretende adicionar o produto ' + name + '?'); 
 
          // Se o utilizador confirmar, guarda o produto no local storage
-        if(confirm == true){
-            console.log("salvar");
-            addProduct(sessionStorage.getItem('username'), sessionStorage.getItem('password'), product);
-            let products = localStorage.getItem('products');
-            if (products) {
-                 // Converte a string JSON para um array
-                products = JSON.parse(products); 
-            } else {
-                products = [];
-            }
-            products.push(product);
-             // Converte o array para uma string JSON
-            localStorage.setItem('products', JSON.stringify(products)); 
+         if(confirm) {
+          try {
+            const result = await addProduct(sessionStorage.getItem('username'), sessionStorage.getItem('password'), product);
+            console.log("Produto adicionado com sucesso:", result);
             form.reset();
             modalAddProduct.style.display = "none";
             window.location.reload();
-        }
-         // Se o utilizador cancelar, limpa o formulário e fecha o modal
-        else {
-            form.reset();
-            modalDetail.style.display = "none";
+          } catch (error) {
+            console.error("Erro ao adicionar produto:", error);
+            alert('Ocorreu um erro ao adicionar o produto: ' + error.message);
+          }
+        } else {
+          form.reset();
+          modalDetail.style.display = "none";
         }
         
         // Exibe o produto na página
@@ -188,35 +181,46 @@ saveProductBtn.addEventListener('click', function(event) {
 });
 
 
-async function addProduct(username, password, product) { //async e wai
-  console.log(username);
-  console.log(password);
-  const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/' + username + '/add';
+async function addProduct(username, password, product) {
+  console.log('Username:', username);
+  console.log('Password:', password);
+  
+  const addProductURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/add`;
 
-  const addProductHeaders = new Headers();
-  addProductHeaders.append('Content-Type', 'application/json');
-  addProductHeaders.append('password', password);
+  const addProductHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'password': password
+  });
 
-  console.log('Cabeçalhos da solicitação:', addProductHeaders);
+  console.log('URL da solicitação:', addProductURL);
+  console.log('Cabeçalhos da solicitação:', Object.fromEntries(addProductHeaders));
   console.log('Corpo da solicitação:', JSON.stringify(product));
 
-  fetch(addProductURL, {
-    method: 'POST',
-    headers: addProductHeaders,
-    body: JSON.stringify(product)
-  })
-  .then(response => {
+  try {
+    const response = await fetch(addProductURL, {
+      method: 'POST',
+      headers: addProductHeaders,
+      body: JSON.stringify(product)
+    });
+
     console.log('Status da resposta:', response.status);
-    return response.text().then(text => ({ status: response.status, text: text }));
-  })
-  .then(data => {
-    console.log('Texto da resposta:', data.text);
-  })
-  .catch(error => {
-    console.error('Erro:', error);
-    alert('Ocorreu um erro: ' + error.message);
-  });
+    const text = await response.text();
+    console.log('Texto da resposta:', text);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return { status: response.status, text: text };
+  } catch (error) {
+    console.error('Erro detalhado:', error);
+    if (error.name === 'TypeError') {
+      console.error('Possível erro de rede ou CORS');
+    }
+    throw error;
+  }
 }
+
 
     //Função para efetuar o Logout
     async function logout() {
