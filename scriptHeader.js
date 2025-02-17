@@ -151,7 +151,7 @@ const addButton = document.getElementById('add-product-btn');
  };  
  
  // Função para guardar o produto no local storage
-saveProductBtn.addEventListener('click', function(event) {
+saveProductBtn.addEventListener('click', async function(event) {
     event.preventDefault();
      // Obtém os valores dos campos do formulário
     const name = document.getElementById('add-nome').value;
@@ -196,17 +196,20 @@ saveProductBtn.addEventListener('click', function(event) {
         var confirm = window.confirm('Tem a certeza que pretende adicionar o produto ' + name + '?'); 
 
          // Se o utilizador confirmar, guarda o produto no local storage
-        if(confirm == true){
-            console.log("salvar");
-            addProduct(sessionStorage.getItem('username'), sessionStorage.getItem('password'), product);
+         if(confirm) {
+          try {
+            const result = await addProduct(sessionStorage.getItem('username'), sessionStorage.getItem('password'), product);
+            console.log("Produto adicionado com sucesso:", result);
             form.reset();
             modalAddProduct.style.display = "none";
             window.location.reload();
-        }
-         // Se o utilizador cancelar, limpa o formulário e fecha o modal
-        else {
-            form.reset();
-            modalDetail.style.display = "none";
+          } catch (error) {
+            console.error("Erro ao adicionar produto:", error);
+            alert('Ocorreu um erro ao adicionar o produto: ' + error.message);
+          }
+        } else {
+          form.reset();
+          modalDetail.style.display = "none";
         }
         
         // Exibe o produto na página
@@ -215,16 +218,19 @@ saveProductBtn.addEventListener('click', function(event) {
 });
 
 
-async function addProduct(username, password, product) { //async e wai
-  console.log(username);
-  console.log(password);
-  const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+username + 'jpsequeira/add';
+async function addProduct(username, password, product) {
+  console.log('Username:', username);
+  console.log('Password:', password);
+  
+  const addProductURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/add`;
 
-  const addProductHeaders = new Headers();
-  addProductHeaders.append('Content-Type', 'application/json');
-  addProductHeaders.append('password', password);
+  const addProductHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'password': password
+  });
 
-  console.log('Cabeçalhos da solicitação:', addProductHeaders);
+  console.log('URL da solicitação:', addProductURL);
+  console.log('Cabeçalhos da solicitação:', Object.fromEntries(addProductHeaders));
   console.log('Corpo da solicitação:', JSON.stringify(product));
 
   try {
@@ -234,24 +240,68 @@ async function addProduct(username, password, product) { //async e wai
       body: JSON.stringify(product)
     });
 
+  try {
+    const response = await fetch(addProductURL, {
+      method: 'POST',
+      headers: addProductHeaders,
+      body: JSON.stringify(product)
+    });
+
     console.log('Status da resposta:', response.status);
+    const text = await response.text();
+    console.log('Texto da resposta:', text);
 
     if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erro na resposta: ${errorMessage}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    const responseData = await response.text();
-    console.log('Texto da resposta:', responseData);
-    alert('Produto adicionado com sucesso!');
-
+    return { status: response.status, text: text };
   } catch (error) {
-    console.error('Erro:', error);
-    alert(`Ocorreu um erro: ${error.message}`);
+    console.error('Erro detalhado:', error);
+    if (error.name === 'TypeError') {
+      console.error('Possível erro de rede ou CORS');
+    }
+    throw error;
   }
 }
 
+
+    //Função para efetuar o Logout
+    async function logout() {
+      try {
+        const response = await fetch('http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout', {
+          method: 'POST',
+          credentials: 'include', // Inclui cookies na requisição
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
     
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Falha no logout: ${errorMessage}`);
+        }
+    
+        // Limpar dados de sessão locais
+        sessionStorage.removeItem('username');
+        sessionStorage.removeItem('logged');
+        sessionStorage.removeItem('password'); // Removendo a senha
+        localStorage.removeItem('token'); // Se estiver usando JWT
+    
+        // Atualizar a interface do usuário
+        const loginMessage = document.getElementById("loginMessage");
+        if (loginMessage) loginMessage.style.visibility = 'hidden';
+    
+        const loginButton = document.getElementById('loginButton');
+        if (loginButton) loginButton.style.visibility = 'visible';
+    
+        console.log("Logout bem-sucedido, redirecionando...");
+        window.location.href = "index.html";
+      } catch (error) {
+        console.error('Erro durante o logout:', error);
+        alert(`Ocorreu um erro durante o logout: ${error.message}`);
+      }
+    }
     
 
     //Botão de acesso à área pessoal
