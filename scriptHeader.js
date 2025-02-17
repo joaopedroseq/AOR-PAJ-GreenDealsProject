@@ -103,7 +103,7 @@ w3.includeHTML(() =>  {
       console.error('Erro durante o logout:', error);
       alert(`Ocorreu um erro durante o logout: ${error.message}`);
     }
-  }
+  };
 
 
   // Verificar se há um nome de utilizador armazenado no Session Storage
@@ -112,7 +112,7 @@ w3.includeHTML(() =>  {
     welcomeMessage.textContent = `Olá, ${storedUsername}!`;
     let user = JSON.parse(sessionStorage.getItem("userData"));
     document.getElementById('loginPhoto').src = user.photo;
-  } 
+  };
 
   //Caso não exista um utilizador logged, apresenta o botão de login
   if((sessionStorage.getItem('logged') === 'false')){
@@ -233,13 +233,7 @@ async function addProduct(username, password, product) {
   console.log('Cabeçalhos da solicitação:', Object.fromEntries(addProductHeaders));
   console.log('Corpo da solicitação:', JSON.stringify(product));
 
-  try {
-    const response = await fetch(addProductURL, {
-      method: 'POST',
-      headers: addProductHeaders,
-      body: JSON.stringify(product)
-    });
-
+  
   try {
     const response = await fetch(addProductURL, {
       method: 'POST',
@@ -314,7 +308,9 @@ async function addProduct(username, password, product) {
         else{
             alert("Tem que estar Logged in para aceder à sua área pessoal!")
         }
-    })
+    });
+
+ 
 
 
  // Função para verificar se uma string é um número
@@ -324,6 +320,7 @@ function checkIfNumeric(string) {
 };
 
 });
+
 
 
  // Função para alternar a exibição do aside
