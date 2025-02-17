@@ -39,7 +39,7 @@ w3.includeHTML(() =>  {
       .then(data => {
         console.log('Dados recebidos:', data);
         if (data.status === 200) {
-          handleSuccessfulLogin(username, password);
+          handleSuccessfulLogin(username, password, data.url);
         } else {
           handleFailedLogin(data.text);
         }
@@ -186,7 +186,9 @@ saveProductBtn.addEventListener('click', function(event) {
         displayProduct(product, products.length - 1);
     } 
 });
-function addProduct(username, password, product) {
+
+
+async function addProduct(username, password, product) { //async e wai
   console.log(username);
   console.log(password);
   const addProductURL = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/' + username + '/add';

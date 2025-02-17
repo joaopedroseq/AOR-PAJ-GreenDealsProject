@@ -6,7 +6,7 @@ w3.includeHTML(() =>  {
     const loggedUser = sessionStorage.getItem('username');
 
 
-    loadProducts();
+    getUserProducts();
 
     
     
@@ -46,11 +46,11 @@ w3.includeHTML(() =>  {
         // Cria o HTML do produto
         const productHTML = `
             <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'"> 
-                <img src='${product.imagem}' alt="${product.nome}"/>
+                <img src='${product.urlImage}' alt="${product.name}"/>
                 <div class="text-overlay">
-                    <h2 style="background-color: transparent;">${product.nome}</h2>
-                    <p style="background-color: transparent;">Preço: €${product.preco}</p>
-                    <p style="background-color: transparent;">Categoria: ${product.categoria}</p>
+                    <h2 style="background-color: transparent;">${product.name}</h2>
+                    <p style="background-color: transparent;">Preço: €${product.price}</p>
+                    <p style="background-color: transparent;">Categoria: ${product.category}</p>
                 </div>
             </div>
         `;
@@ -75,7 +75,34 @@ w3.includeHTML(() =>  {
         }
     }
 
-    
+    function getUserProducts() {
+        const getAvaiableProductsUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+loggedUser+'/products/';
+        fetch(getAvaiableProductsUrl, {
+          method: 'GET',
+          headers: {'Content-Type': 'application/json',}
+        })
+        .then(response => {
+          console.log('Status da resposta:', response.status);
+          return response.text().then(text => ({ status: response.status, text: text }));
+        })
+        .then(data => {
+            if(data){
+            console.log('Resposta JSON:', data);
+            const products = JSON.parse(data.text); // Converter a string JSON para um array
+            products.forEach((product) => {
+                displayProduct(product, product.id);
+              });
+            }
+            else{
+                console.log("No products to load")
+            }  
+          })
+        .catch(error => {
+          console.error('Erro:', error);
+          alert('Ocorreu um erro: ' + error.message);
+        });
+      }
+
 })
 
 function showSection(sectionId) {

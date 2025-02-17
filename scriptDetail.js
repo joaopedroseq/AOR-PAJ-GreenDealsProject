@@ -7,38 +7,66 @@ w3.includeHTML(() =>  {
 
   const hamburger = document.getElementById('hamburger');
   hamburger.addEventListener('click', toggleAside);
+  getProductInformation(productIndex);
 
-  // Verificar se o produto foi encontrado
-  var product = products[productIndex];
+  async function getProductInformation(productIndex){
+    const getProductInformationUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/'+productIndex;
+    await fetch(getProductInformationUrl, {
+      method: 'GET',
+      headers: {'Content-Type': 'application/json',}
+    })
+    .then(response => {
+      console.log('Status da resposta:', response.status);
+      return response.text().then(text => ({ status: response.status, text: text }));
+    })
+    .then(product => {
+      if(product){
+      console.log('Resposta JSON:', product);
+      console.log(JSON.parse(product.text));
+      product=JSON.parse(product.text);
+        // Pega a data original do produto
+      const dataCompleta = new Date(product.date);
+      console.log("teste");
+      console.log(product.name);
+  
+      // Formatar a data no formato 'dd/mm/aaaa'
+      /*padStart utilizado para preencher uma string até que ela tenha um comprimento
+      especificado, O comprimento final da string depois que os caracteres forem adicionados*/
+    
+      const dia = dataCompleta.getDate().toString().padStart(2, '0'); // Adiciona o zero à esquerda se necessário
+      const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, '0'); // Meses começam do 0, então soma-se 1
+      const ano = dataCompleta.getFullYear(); //p
+    
+      // Formatar a hora no formato 'hh:mm'
+      const horas = dataCompleta.getHours().toString().padStart(2, '0');
+      const minutos = dataCompleta.getMinutes().toString().padStart(2, '0');
+    
+      // Combinar data e hora
+      const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+    
+      // Atualizar os dados do produto na página
+      document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.name}`;
+      document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.description}`;
+      document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.price}`;
+      document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.category}`;
+      document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.seller}`;
+      document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.location}`;
+      document.getElementById('product-image').setAttribute('src', product.urlImage);
+      document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
+      } 
+      else{
+      console.log("Produto vazio")
+        }  
+      })
+    .catch(error => {
+      console.error('Erro:', error);
+      alert('Ocorreu um erro: ' + error.message);
+    });
+  }
+})
 
-if(product){
-  // Pega a data original do produto
-  const dataCompleta = new Date(product.data);
+ 
 
-  // Formatar a data no formato 'dd/mm/aaaa'
-  /*padStart utilizado para preencher uma string até que ela tenha um comprimento
-   especificado, O comprimento final da string depois que os caracteres forem adicionados*/
-
-  const dia = dataCompleta.getDate().toString().padStart(2, '0'); // Adiciona o zero à esquerda se necessário
-  const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, '0'); // Meses começam do 0, então soma-se 1
-  const ano = dataCompleta.getFullYear(); //p
-
-  // Formatar a hora no formato 'hh:mm'
-  const horas = dataCompleta.getHours().toString().padStart(2, '0');
-  const minutos = dataCompleta.getMinutes().toString().padStart(2, '0');
-
-  // Combinar data e hora
-  const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
-
-  // Atualizar os dados do produto na página
-  document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.nome}`;
-  document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.descricao}`;
-  document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.preco}`;
-  document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.categoria}`;
-  document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.anunciante}`;
-  document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.localidade}`;
-  document.getElementById('product-image').setAttribute('src', product.imagem);
-  document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
 
   // Verificar se o utilizador logado é o dono do produto antes de mostrar os botões
 if (sessionStorage.getItem('logged') === 'true') {
@@ -58,7 +86,6 @@ if (sessionStorage.getItem('logged') === 'true') {
   }
 }
 
-}
 
   document.getElementById('delete-product').addEventListener('click', deleteProduct);
 
@@ -78,6 +105,7 @@ if (sessionStorage.getItem('logged') === 'true') {
     else {
     }
   }
+
 
     // Exibir o formulário de edição ao clicar no botão "Editar informações"
     document.getElementById('edit-product').addEventListener('click', function() {
@@ -101,7 +129,7 @@ if (sessionStorage.getItem('logged') === 'true') {
       document.getElementById('edit-imagem').value = product.imagem;
       console.log("terminou de encher os dados para o form")
     }
-  });
+ 
 
   // Função para guardar as alterações e atualizar o localStorage
     function saveProduct(event) {
