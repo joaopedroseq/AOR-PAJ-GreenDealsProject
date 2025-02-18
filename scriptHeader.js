@@ -51,7 +51,8 @@ w3.includeHTML(() =>  {
         alert("Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes.");
       });
     }
-  
+
+    //possivelmente alterar esta função  
     async function handleSuccessfulLogin(username, password) {
       await loadUserInfo(username);
       await addDetailsUserInSessionStorage(username,password);
@@ -73,7 +74,6 @@ w3.includeHTML(() =>  {
 
     
     async function loadUserInfo(loggedUser) {
-      console.log("a correr loaduserinfo");
       
       const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
       console.log('URL:', getUserInfoUrl);
@@ -404,6 +404,12 @@ function addDetailsUserInSessionStorage(username,password){
 
 
 }
+
+ // Função para verificar se uma string é um número
+ function checkIfNumeric(string) {
+  return !isNaN(string) && // Usa coerção de tipo para analisar toda a string
+         !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
+};
 
 // FUnção para verificar se existe um utilizador logged
 function checkIfLogged(){
