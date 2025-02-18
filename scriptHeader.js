@@ -21,11 +21,11 @@ w3.includeHTML(() =>  {
 
   //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
   //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
-  function login(username, password){
+  async function login(username, password){
 
     const loginUrl ='http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/login';
 
-    fetch(loginUrl, {
+    await fetch(loginUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,8 +51,8 @@ w3.includeHTML(() =>  {
       });
     }
   
-    function handleSuccessfulLogin(username, password) {
-      loadUserInfo(username);
+    async function handleSuccessfulLogin(username, password) {
+      await loadUserInfo(username);
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
       sessionStorage.setItem('password', password);
@@ -329,6 +329,8 @@ async function addProduct(username, password, product) {
         sessionStorage.removeItem('username');
         sessionStorage.removeItem('logged');
         sessionStorage.removeItem('password'); // Removendo a senha
+        sessionStorage.removeItem('firstName');
+        sessionStorage.removeItem('photo');
         localStorage.removeItem('token'); // Se estiver usando JWT
     
         // Atualizar a interface do usuário
