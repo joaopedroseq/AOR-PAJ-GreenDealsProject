@@ -1,3 +1,4 @@
+
 w3.includeHTML(() =>  {
 
   //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
@@ -53,9 +54,7 @@ w3.includeHTML(() =>  {
   
     async function handleSuccessfulLogin(username, password) {
       await loadUserInfo(username);
-      sessionStorage.setItem('logged', 'true');
-      sessionStorage.setItem('username', username);
-      sessionStorage.setItem('password', password);
+      await addDetailsUserInSessionStorage(username,password);
       let firstName = sessionStorage.getItem('firstName');
       welcomeMessage.textContent = `Olá, ${firstName}!`;
       document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
@@ -64,6 +63,8 @@ w3.includeHTML(() =>  {
       console.log('Login bem-sucedido para:', username);
       window.reload();
     }
+
+    
   
     function handleFailedLogin(message) {
       alert(message || "Login falhou. Por favor, tente novamente.");
@@ -361,15 +362,21 @@ async function addProduct(username, password, product) {
  
 
 
- // Função para verificar se uma string é um número
-function checkIfNumeric(string) {
-     return !isNaN(string) && // Usa coerção de tipo para analisar toda a string
-            !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
-};
+
 
 });
 
+ // Função para verificar se uma string é um número
+function checkIfNumeric(string) {
+  return !isNaN(string) && // Usa coerção de tipo para analisar toda a string
+         !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
+};
 
+function addDetailsUserInSessionStorage(username,password){
+  sessionStorage.setItem('logged', 'true');
+  sessionStorage.setItem('username', username);
+  sessionStorage.setItem('password', password);
+}
 
  // Função para alternar a exibição do aside
  function toggleAside() {
@@ -409,3 +416,27 @@ function checkIfLogged(){
     }
 }
 
+function initializeLoginForm() {
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) {
+    loginForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      // Rest of your login logic
+    });
+  }
+}
+
+function initializeHTML(callback) {
+  w3.includeHTML(callback);
+}
+
+
+// Export the function
+module.exports = {
+  initializeHTML,
+  addDetailsUserInSessionStorage,
+  checkIfNumeric,
+  initializeLoginForm,
+};
