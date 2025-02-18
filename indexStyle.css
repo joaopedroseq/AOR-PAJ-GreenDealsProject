@@ -82,11 +82,7 @@ body{
     padding-top: 5%;
 }
 
-.container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
+
 
 /*---------------Janela modal de registo-----------------------*/
 /*Não apresentada por defeito, apenas após ser selecionado na criação de novo registo*/

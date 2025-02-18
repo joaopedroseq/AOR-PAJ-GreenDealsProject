@@ -7,6 +7,7 @@ w3.includeHTML(() =>  {
 
 
     getUserProducts();
+    loadUserInfo(loggedUser);
     
     
 
@@ -57,23 +58,7 @@ w3.includeHTML(() =>  {
         gridContainer.insertAdjacentHTML('beforeend', productHTML); 
     }
 
-    // Função para carregar os produtos do local storage e exibi-los na página
-    function loadProducts() {
-        let products = localStorage.getItem('products');
-        if (products) {
-            // Converte a string JSON para um array
-            products = JSON.parse(products);
-            products.forEach((product, index) => {
-                console.log(product.anunciante);
-                if(product.anunciante === loggedUser){
-                    displayProduct(product, index);
-                }
-                else {
-                }
-            });
-        }
-    }
-
+    // Função para os productos do backend e exibi-los na página de utilizador
     function getUserProducts() {
         const getAvaiableProductsUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/'+ loggedUser +'/products/';
         fetch(getAvaiableProductsUrl, {
@@ -129,62 +114,97 @@ function showSection(sectionId) {
     if(sectionId === 'informacoes') loadUserInfo();
 }
 
-// User info functionality
-function loadUserInfo() {
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const currentUser = users.find(u => u.username === sessionStorage.getItem('username'));
+async function loadUserInfo(loggedUser) {
+    console.log("a correr loaduserinfo");
     
-    const infoContainer = document.getElementById('user-info-container');
-    infoContainer.innerHTML = `
-        <table class="user-info-table">
-            <tr><td>Nome:</td><td>${currentUser.nome} ${currentUser.lastname}</td></tr>
-            <tr><td>Email:</td><td>${currentUser.email}</td></tr>
-            <tr><td>Telefone:</td><td>${currentUser.phone}</td></tr>
-        </table>
-    `;
-}
-// função para alternar a visibilidade do formulário de edição de informações
-function toggleEditForm() {
-    const formContainer = document.getElementById('edit-form-container');
-    formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
-    
-    // Se o formulário estiver visível, preenche os campos com os dados atuais do utilizador
-    if(formContainer.style.display === 'block') {
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const currentUser = users.find(u => u.username === sessionStorage.getItem('username'));
+    const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${loggedUser}`;
+    console.log('URL:', getUserInfoUrl);
+  
+    try {
+        const response = await fetch(getUserInfoUrl, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include' // Inclui as credenciais de sessão
+        });
+  
+      console.log('Status da resposta:', response.status);
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Erro na resposta: ${errorMessage}`);
+      }
+  
+      const responseData = await response.json();
+      console.log('Resposta JSON:', responseData);
+      
+      if (responseData) {
+        const currentUser = responseData;
+        console.log('Dados do usuário:', currentUser);
+      } else {
+        console.log("Not a user logged");
+      }
+    } catch (error) {
+      console.error('Erro:', error);
+      alert('Ocorreu um erro: ' + error.message);
+    }
+  }
+
+    // User info functionality
+    function fillUserInfo(currentUser) {
+        console.log(currentUser);
         
-         // Cria o formulário de edição com os campos preenchidos
-        formContainer.innerHTML = `
-            <form class="edit-form" onsubmit="saveUserInfo(event)">
-                <div>
-                    <label>Primeiro Nome:</label>
-                    <input type="text" id="edit-firstname" value="${currentUser.nome}" required>
-                </div>
-                <div>
-                    <label>Último Nome:</label>
-                    <input type="text" id="edit-lastname" value="${currentUser.lastname}" required>
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input type="email" id="edit-email" value="${currentUser.email}" required>
-                </div>
-                <div>
-                    <label>Telefone:</label>
-                    <input type="tel" id="edit-phone" value="${currentUser.phone}">
-                </div>
-                <div>
-                    <label>Nova Password:</label>
-                    <input type="password" id="edit-password">
-                </div>
-                <div>
-                    <label>Confirmar Password:</label>
-                    <input type="password" id="edit-password-confirm">
-                </div>
-                <button type="submit">Guardar Alterações</button>
-            </form>
+        const infoContainer = document.getElementById('user-info-container');
+        infoContainer.innerHTML = `
+            <table class="user-info-table">
+                <tr><td>Nome:</td><td>${currentUser.firstName} ${currentUser.lastName}</td></tr>
+                <tr><td>Email:</td><td>${currentUser.email}</td></tr>
+                <tr><td>Telefone:</td><td>${currentUser.phoneNumber}</td></tr>
+            </table>
         `;
     }
-}
+
+    // função para alternar a visibilidade do formulário de edição de informações
+    function toggleEditForm() {
+        const formContainer = document.getElementById('edit-form-container');
+        formContainer.style.display = formContainer.style.display === 'none' ? 'block' : 'none';
+        
+        // Se o formulário estiver visível, preenche os campos com os dados atuais do utilizador
+        if(formContainer.style.display === 'block') {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const currentUser = users.find(u => u.username === sessionStorage.getItem('username'));
+            
+            // Cria o formulário de edição com os campos preenchidos
+            formContainer.innerHTML = `
+                <form class="edit-form" onsubmit="saveUserInfo(event)">
+                    <div>
+                        <label>Primeiro Nome:</label>
+                        <input type="text" id="edit-firstname" value="${currentUser.nome}" required>
+                    </div>
+                    <div>
+                        <label>Último Nome:</label>
+                        <input type="text" id="edit-lastname" value="${currentUser.lastname}" required>
+                    </div>
+                    <div>
+                        <label>Email:</label>
+                        <input type="email" id="edit-email" value="${currentUser.email}" required>
+                    </div>
+                    <div>
+                        <label>Telefone:</label>
+                        <input type="tel" id="edit-phone" value="${currentUser.phone}">
+                    </div>
+                    <div>
+                        <label>Nova Password:</label>
+                        <input type="password" id="edit-password">
+                    </div>
+                    <div>
+                        <label>Confirmar Password:</label>
+                        <input type="password" id="edit-password-confirm">
+                    </div>
+                    <button type="submit">Guardar Alterações</button>
+                </form>
+            `;
+        }
+    }
 
 // Função para guardar as alterações das informações do utilizador
 function saveUserInfo(event) {

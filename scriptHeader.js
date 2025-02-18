@@ -30,6 +30,7 @@ w3.includeHTML(() =>  {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ username, password })
       })
       .then(response => {
@@ -48,6 +49,7 @@ w3.includeHTML(() =>  {
         console.error('Erro detalhado:', error);
         alert("Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes.");
       });
+      loadUserInfo(username);/////////////////////////////////////////////////////////////////////////////////
     }
   
     function handleSuccessfulLogin(username, password) {
@@ -65,6 +67,45 @@ w3.includeHTML(() =>  {
       console.log('Login falhou:', message);
     }
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    //PARA APAGAR!!!!
+    async function loadUserInfo(loggedUser) {
+      console.log("a correr loaduserinfo");
+      
+      const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${loggedUser}`;
+      console.log('URL:', getUserInfoUrl);
+    
+      try {
+          const response = await fetch(getUserInfoUrl, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include' // Inclui as credenciais de sessão
+          });
+    
+        console.log('Status da resposta:', response.status);
+    
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Erro na resposta: ${errorMessage}`);
+        }
+    
+        const responseData = await response.json();
+        console.log('Resposta JSON:', responseData);
+        
+        if (responseData) {
+          const currentUser = responseData;
+          console.log('Dados do usuário:', currentUser);
+        } else {
+          console.log("Not a user logged");
+        }
+      } catch (error) {
+        console.error('Erro:', error);
+        alert('Ocorreu um erro: ' + error.message);
+      }
+    }
+    ///PARA APAGAR!!!
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
   //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
 
@@ -73,10 +114,10 @@ w3.includeHTML(() =>  {
     try {
       const response = await fetch('http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout', {
         method: 'POST',
-        credentials: 'include', // Inclui cookies na requisição
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        credentials: 'include', // Inclui cookies na requisição
       });
   
       if (!response.ok) {
@@ -111,7 +152,7 @@ w3.includeHTML(() =>  {
   if (storedUsername) {
     welcomeMessage.textContent = `Olá, ${storedUsername}!`;
     let user = JSON.parse(sessionStorage.getItem("userData"));
-    document.getElementById('loginPhoto').src = user.photo;
+    //document.getElementById('loginPhoto').src = user.photo;  ///para implementar
   };
 
   //Caso não exista um utilizador logged, apresenta o botão de login
@@ -124,7 +165,7 @@ w3.includeHTML(() =>  {
 
 
 
-const addButton = document.getElementById('add-product-btn');
+  const addButton = document.getElementById('add-product-btn');
 
   //Funções para adicionar um produto
   var modalAddProduct = document.getElementById("modal-addProduct");
