@@ -244,6 +244,7 @@ function saveUserInfo(event) {
     console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
       updateUser(sessionStorage.getItem("username"), updatedUser);
+      
     }
   }
   /*
