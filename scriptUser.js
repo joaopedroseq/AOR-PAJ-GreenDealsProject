@@ -5,10 +5,10 @@ w3.includeHTML(() => {
 
   const loggedUser = sessionStorage.getItem("username");
 
-  loadUserInfo(loggedUser);
-  getUserProducts();
-
-  const myProductsBtn = document.getElementById("myProductsBtn");
+    loadUserInfo(loggedUser);
+    getUserProducts();
+    
+    const myProductsBtn = document.getElementById('myProductsBtn');
 
   const myReviewsBtn = document.getElementById("myReviewsBtn");
 
@@ -247,10 +247,10 @@ function saveUserInfo(event) {
       
     }
   }
-  /*
+  
     loadUserInfo();
     toggleEditForm();
-    alert("Informacoes Atualizadas com Sucesso!");*/
+    alert("Informacoes Atualizadas com Sucesso!");
 }
 
 async function updateUser(username, updatedUser) {
@@ -288,120 +288,172 @@ async function updateUser(username, updatedUser) {
   }
 }
 
-// Função para carregar e exibir as avaliações do utilizador
-function loadUserReviews() {
-  const container = document.getElementById("user-reviews-container");
-  container.innerHTML = ""; // Limpa o conteúdo anterior
+async function loadUserReviews() {
+    const container = document.getElementById('user-reviews-container');
+    container.innerHTML = 'Carregando...';
+    
+    const loggedUser = sessionStorage.getItem('username');
+    
+    try {
+        const response = await fetch(
+            `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/all/evaluations/${loggedUser}`
+        );
+        const evaluations = await response.json();
 
-  const allReviews = JSON.parse(localStorage.getItem("avaliacoes")) || [];
-  const username = sessionStorage.getItem("username");
+        container.innerHTML = ''; // Clear container
+        
+        // Filter evaluations where loggedUser is the seller
+        const sellerEvaluations = evaluations.filter(ev => ev.seller === loggedUser);
+        
+        if (sellerEvaluations.length === 0) {
+            container.innerHTML = "<p>Você ainda não recebeu avaliações.</p>";
+            return;
+        }
 
-  // Filtra as avaliações para mostrar apenas as do utilizador logado
-  const userReviews = allReviews.filter((r) => r.usuario === username);
+        // Display each evaluation
+        sellerEvaluations.forEach(review => {
+            const reviewElement = document.createElement('div');
+            reviewElement.classList.add('avaliacao-item');
+            reviewElement.innerHTML = `
+                <div class="review-header">
+                    <strong>${review.userName}</strong>
+                    <span>${new Date(review.date).toLocaleString()}</span>
+                </div>
+                ${generateStars(review.starNumber)}
+                <p>${review.comment}</p>
+            `;
+            container.appendChild(reviewElement);
+        });
 
-  // Itera sobre as avaliações e cria o HTML para cada uma
-  userReviews.forEach((review) => {
-    const reviewElement = document.createElement("div");
-    reviewElement.className = "user-review-item";
-    reviewElement.innerHTML = `
-            <div class="review-header">
-                <strong>Avaliação para o Anunciante: ${
-                  review.anunciante
-                }</strong>
-                <span>${new Date(review.data).toLocaleDateString()}</span>
-            </div>
-            ${generateStars(review.nota)}
-            <p>${review.comentario}</p>
-            <div class="review-actions">
-                <button class="edit-review" onclick="editUserReview('${
-                  review.data
-                }')">Editar</button>
-                <button class="delete-review" onclick="deleteUserReview('${
-                  review.data
-                }')">Eliminar</button>
-            </div>
-        `;
-    container.appendChild(reviewElement);
-  });
+    } catch (error) {
+        console.error('Erro ao carregar avaliações:', error);
+        container.innerHTML = "<p>Erro ao carregar avaliações.</p>";
+    }
 }
 
+// Add stars generation helper
 function generateStars(nota) {
-  let stars = "";
-  for (let i = 1; i <= 5; i++) {
-    stars +=
-      i <= nota
-        ? '<i class="fas fa-star" style="color: #ffd700;"></i>'
-        : '<i class="far fa-star" style="color: #ccc;"></i>';
-  }
-  return stars;
+    let stars = '';
+    for(let i = 1; i <= 5; i++) {
+        stars += i <= nota 
+            ? '<i class="fas fa-star" style="color: #ffd700;"></i>'
+            : '<i class="far fa-star" style="color: #ccc;"></i>';
+    }
+    return stars;
 }
 
-function editUserReview(reviewId) {
-  const allReviews = JSON.parse(localStorage.getItem("avaliacoes"));
-  const review = allReviews.find((r) => r.data === reviewId);
 
-  // Solicita ao utilizador o novo comentário e nota
-  const newComment = prompt("Editar comentário:", review.comentario);
-  let newNota = prompt("Editar nota (1-5):", review.nota);
-  newNota = parseInt(newNota);
-
-  // Valida a nova nota e atualiza a avaliação
-  if (newComment && !isNaN(newNota) && newNota >= 1 && newNota <= 5) {
-    review.comentario = newComment;
-    review.nota = newNota;
-    localStorage.setItem("avaliacoes", JSON.stringify(allReviews));
-    loadUserReviews(); // Recarrega as avaliações
-  }
-}
-
-function deleteUserReview(reviewId) {
-  if (confirm("Tem certeza que deseja eliminar esta avaliação?")) {
-    const allReviews = JSON.parse(localStorage.getItem("avaliacoes"));
-    const updatedReviews = allReviews.filter((r) => r.data !== reviewId);
-    localStorage.setItem("avaliacoes", JSON.stringify(updatedReviews));
-    loadUserReviews();
-  }
-}
-
-async function addProduct(username, password, product) {
-  console.log("Username:", username);
-  console.log("Password:", password);
-
-  const addProductURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/add`;
-
-  const addProductHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-  });
-
-  console.log("URL da solicitação:", addProductURL);
-  console.log(
-    "Cabeçalhos da solicitação:",
-    Object.fromEntries(addProductHeaders)
-  );
-  console.log("Corpo da solicitação:", JSON.stringify(product));
-
-  try {
-    const response = await fetch(addProductURL, {
-      method: "POST",
-      headers: addProductHeaders,
-      body: JSON.stringify(product),
-    });
-
-    console.log("Status da resposta:", response.status);
-    const text = await response.text();
-    console.log("Texto da resposta:", text);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+async function editReview(evaluationId, currentComment, currentStarNumber, seller) {
+    const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
+    
+    if (!loggedUser) {
+        alert("Faça login para editar avaliações!");
+        return;
     }
 
-    return { status: response.status, text: text };
-  } catch (error) {
-    console.error("Erro detalhado:", error);
-    if (error.name === "TypeError") {
-      console.error("Possível erro de rede ou CORS");
+    const newComment = prompt('Editar comentário:', currentComment);
+    let newStarNumber = prompt('Editar a nota (1-5):', currentStarNumber);
+    newStarNumber = parseInt(newStarNumber); // Convert to number
+
+    if (newComment !== null && !isNaN(newStarNumber) && newStarNumber >= 1 && newStarNumber <= 5) {
+        const updatedEvaluation = {
+            evaluationId,
+            comment: newComment,
+            starNumber: newStarNumber
+        };
+
+        try {
+            const response = await fetch(
+                `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedEvaluation)
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Erro ao atualizar avaliação');
+            }
+
+            alert("Avaliação atualizada com sucesso!");
+            loadUserReviews();  // Reload the reviews
+            updateRatings();  // Update statistics
+        } catch (error) {
+            console.error('Error updating evaluation:', error);
+            alert(error.message);
+        }
+    } else {
+        alert("Nota inválida. Insira um número entre 1 e 5.");
     }
-    throw error;
-  }
 }
+
+
+async function deleteReview(evaluationId, seller) {
+    const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
+
+    if (!loggedUser) {
+        alert("Faça login para apagar avaliações!");
+        return;
+    }
+
+    const confirmDelete = confirm('Tem certeza que deseja eliminar esta avaliação?');
+    if (confirmDelete) {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
+                {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                }
+            );
+            
+            if (!response.ok) {
+                throw new Error('Erro ao excluir a avaliação');
+            }
+
+            alert("Avaliação excluída com sucesso!");
+            loadUserReviews();  // Reload the reviews
+            updateRatings();  // Update statistics
+        } catch (error) {
+            console.error('Error deleting evaluation:', error);
+            alert(error.message);
+        }
+    }
+}
+
+
+
+    async function getUserInfo(loggedUser) {
+        
+        const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
+        console.log('URL:', getUserInfoUrl);
+      
+        try {
+            const response = await fetch(getUserInfoUrl, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include' // Inclui as credenciais de sessão
+            });
+      
+          console.log('Status da resposta:', response.status);
+      
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Erro na resposta: ${errorMessage}`);
+          }
+      
+          const userInfo = await response.json();
+          console.log('Resposta JSON:', userInfo);
+          
+          if (userInfo) {
+            return userInfo;            
+          } else {
+            console.log("User info is empty");
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Ocorreu um erro: ' + error.message);
+        }
+      }
+    
