@@ -70,8 +70,7 @@ w3.includeHTML(() =>  {
       console.log('Login falhou:', message);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    //PARA APAGAR!!!!
+    
     async function loadUserInfo(loggedUser) {
       console.log("a correr loaduserinfo");
       
@@ -106,8 +105,6 @@ w3.includeHTML(() =>  {
         alert('Ocorreu um erro: ' + error.message);
       }
     }
-    ///PARA APAGAR!!!
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
