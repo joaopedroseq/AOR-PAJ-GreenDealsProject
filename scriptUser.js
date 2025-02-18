@@ -105,11 +105,7 @@ w3.includeHTML(() =>  {
                     </div>
                     <div>
                         <label>Foto url:</label>
-                        <input type="text" id="edit-photoUrl" value="${currentUser.urlImage}>
-                    </div>
-                    <div>
-                        <label>Nova Password:</label>
-                        <input type="password" id="edit-password">
+                        <input type="text" id="edit-photoUrl" value="${currentUser.url}">
                     </div>
                     <div>
                         <label>Nova Password:</label>
