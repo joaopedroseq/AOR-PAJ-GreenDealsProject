@@ -61,8 +61,8 @@ w3.includeHTML(() =>  {
       document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
       document.getElementById("loginMessage").style.visibility = 'visible';
       document.getElementById('loginButton').style.visibility = 'hidden';
-
-      console.log('Login bem-sucedido para:', username);  
+      console.log('Login bem-sucedido para:', username);
+      window.reload();
     }
   
     function handleFailedLogin(message) {
@@ -70,8 +70,7 @@ w3.includeHTML(() =>  {
       console.log('Login falhou:', message);
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    //PARA APAGAR!!!!
+    
     async function loadUserInfo(loggedUser) {
       console.log("a correr loaduserinfo");
       
@@ -106,8 +105,6 @@ w3.includeHTML(() =>  {
         alert('Ocorreu um erro: ' + error.message);
       }
     }
-    ///PARA APAGAR!!!
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
 
   //Chama a função logout aquando do click no logoutButton(encontra-se no header.html)
   logoutButton.addEventListener('click', logout);
