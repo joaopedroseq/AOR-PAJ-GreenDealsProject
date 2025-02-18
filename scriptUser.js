@@ -86,7 +86,7 @@ w3.includeHTML(() =>  {
 
             // Cria o formulário de edição com os campos preenchidos
             formContainer.innerHTML = `
-                <form class="edit-form" onsubmit="saveUserInfo(event)">
+                <form class="edit-form" id="edit-form" onsubmit="saveUserInfo(event)">
                     <div>
                         <label>Primeiro Nome:</label>
                         <input type="text" id="edit-firstname" value="${currentUser.firstName}" required>
@@ -226,43 +226,83 @@ function showSection(sectionId) {
 
 // Função para guardar as alterações das informações do utilizador
 function saveUserInfo(event) {
+    console.log("correu");
     event.preventDefault(); // Evita o comportamento padrão de submissão do formulário
-    const users = JSON.parse(localStorage.getItem('users'));
-     // Encontra o índice do utilizador logado
-    const currentUserIndex = users.findIndex(u => u.username === sessionStorage.getItem('username'));
+    const form = document.getElementById('edit-form');
+    
     
     // Obtém os valores do formulário
     const newPassword = document.getElementById('edit-password').value;
     const confirmPassword = document.getElementById('edit-password-confirm').value;
+    console.log("new password: " + newPassword);
+    console.log("confirm password: " + confirmPassword);
     
     
-    if(newPassword && newPassword !== confirmPassword) {
-        alert("As passwords não coincidem!");
+    if((newPassword.trim() === "") || (confirmPassword.trim() ==="")) {
+        alert("Os campos de password estão vazios");
+        form.reset();
         return;
     }
-
-     // Atualiza os dados do utilizador
-    const updatedUser = {
-        ...users[currentUserIndex], // Mantém os dados existentes
-        nome: document.getElementById('edit-firstname').value,
-        lastname: document.getElementById('edit-lastname').value, // Fix property name (was lastName)
-        email: document.getElementById('edit-email').value,
-        phone: document.getElementById('edit-phone').value
-    };
-
-    if(newPassword) {
-        updatedUser.password = newPassword;
+    else if(newPassword != confirmPassword){
+        alert("As passwords não coincidem!");
+        form.reset();
+        return;
     }
-
-    // Substitui o utilizador antigo pelo atualizado no array de utilizadores
-    users[currentUserIndex] = updatedUser;
-    
-    localStorage.setItem('users', JSON.stringify(users));
-     // Recarrega as informações do utilizador e fecha o formulário
+    else{
+        // Atualiza os dados do utilizador
+         const updatedUser = {
+        'firstName': document.getElementById('edit-firstname').value,
+        'lastName' : document.getElementById('edit-lastname').value,
+        'email': document.getElementById('edit-email').value,
+        'phoneNumber': document.getElementById('edit-phone').value,
+        'url': document.getElementById('edit-photoUrl').value,
+        'password': document.getElementById('edit-password').value,
+    };
+    console.log(updatedUser);
+    if (confirm('Pretende alterar as suas informações?')) {
+        updateUser(sessionStorage.getItem('username'), updatedUser);
+    }
+}
+    /*
     loadUserInfo();
     toggleEditForm();
-    alert("Informacoes Atualizadas com Sucesso!");
+    alert("Informacoes Atualizadas com Sucesso!");*/
 }
+
+async function updateUser(username, updatedUser) {
+    
+    const updateUserURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/update/${username}`;
+    console.log(updatedUser);
+    
+    try {
+      const response = await fetch(updateUserURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+          },
+        body: JSON.stringify(updatedUser)
+      });
+  
+      console.log('Status da resposta:', response.status);
+      const text = await response.text();
+      console.log('Texto da resposta:', text);
+      alert("Informações atualizadas")
+      window.location.reload();
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return {
+        status: response.status, text: text };
+    }
+    catch (error) {
+      console.error('Erro detalhado:', error);
+      if (error.name === 'TypeError') {
+        console.error('Possível erro de rede ou CORS');
+      }
+      throw error;
+    }
+  }
 
 // Função para carregar e exibir as avaliações do utilizador
 function loadUserReviews() {
@@ -334,35 +374,43 @@ function deleteUserReview(reviewId) {
 
     
 
-    async function getUserInfo(loggedUser) {
-        
-        const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
-        console.log('URL:', getUserInfoUrl);
-      
-        try {
-            const response = await fetch(getUserInfoUrl, {
-              method: 'GET',
-              headers: { 'Content-Type': 'application/json' },
-              credentials: 'include' // Inclui as credenciais de sessão
-            });
-      
-          console.log('Status da resposta:', response.status);
-      
-          if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`Erro na resposta: ${errorMessage}`);
-          }
-      
-          const userInfo = await response.json();
-          console.log('Resposta JSON:', userInfo);
-          
-          if (userInfo) {
-            return userInfo;            
-          } else {
-            console.log("User info is empty");
-          }
-        } catch (error) {
-          console.error('Erro:', error);
-          alert('Ocorreu um erro: ' + error.message);
-        }
-      }
+    async function addProduct(username, password, product) {
+  console.log('Username:', username);
+  console.log('Password:', password);
+  
+  const addProductURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/add`;
+
+  const addProductHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'password': password
+  });
+
+  console.log('URL da solicitação:', addProductURL);
+  console.log('Cabeçalhos da solicitação:', Object.fromEntries(addProductHeaders));
+  console.log('Corpo da solicitação:', JSON.stringify(product));
+
+  
+  try {
+    const response = await fetch(addProductURL, {
+      method: 'POST',
+      headers: addProductHeaders,
+      body: JSON.stringify(product)
+    });
+
+    console.log('Status da resposta:', response.status);
+    const text = await response.text();
+    console.log('Texto da resposta:', text);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return { status: response.status, text: text };
+  } catch (error) {
+    console.error('Erro detalhado:', error);
+    if (error.name === 'TypeError') {
+      console.error('Possível erro de rede ou CORS');
+    }
+    throw error;
+  }
+}
