@@ -5,10 +5,10 @@ w3.includeHTML(() => {
 
   const loggedUser = sessionStorage.getItem("username");
 
-    loadUserInfo(loggedUser);
-    getUserProducts();
+  loadUserInfo(loggedUser);
+  getUserProducts();
     
-    const myProductsBtn = document.getElementById('myProductsBtn');
+  const myProductsBtn = document.getElementById('myProductsBtn');
 
   const myReviewsBtn = document.getElementById("myReviewsBtn");
 
@@ -244,15 +244,21 @@ function saveUserInfo(event) {
     console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
       updateUser(sessionStorage.getItem("username"), updatedUser);
-      
-    }
+      updateWithNewInformation(updatedUser);
+    }   
   }
-  
-    loadUserInfo();
-    toggleEditForm();
     alert("Informacoes Atualizadas com Sucesso!");
 }
 
+//função para guarda novos dados na sessionStorage
+function updateWithNewInformation(updatedUser){
+  sessionStorage.setItem('password', updatedUser.password);
+  sessionStorage.setItem('firstName', updatedUser.firstName);
+  sessionStorage.setItem('photo', updatedUser.url);
+}
+
+
+//função alterar no backend
 async function updateUser(username, updatedUser) {
   const updateUserURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/update/${username}`;
   console.log(updatedUser);

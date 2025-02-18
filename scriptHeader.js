@@ -437,12 +437,3 @@ function initializeLoginForm() {
 function initializeHTML(callback) {
   w3.includeHTML(callback);
 }
-
-
-// Export the function
-module.exports = {
-  initializeHTML,
-  addDetailsUserInSessionStorage,
-  checkIfNumeric,
-  initializeLoginForm,
-};
