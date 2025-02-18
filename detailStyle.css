@@ -257,6 +257,7 @@ aside h3, aside ul {
     .edit-product-form-field input{
       font-size: 14px;
     }
+    
 
     /* Estilo para o botão de guardar produto */
     .save-product{
@@ -280,7 +281,7 @@ aside h3, aside ul {
 
 
 /* Estilo para os botões de Eliminar e Editar Produto no aside*/
-#edit-product, #delete-product {
+#edit-product, #delete-product, #buy-button {
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     padding: 10px 20px;
@@ -294,7 +295,7 @@ aside h3, aside ul {
 }
 
 /* Efeito de cor ao passar o rato sobre os botões */
-#edit-product:hover, #delete-product:hover {
+#edit-product:hover, #delete-product:hover, #buy-button:hover {
     background-color: var(--beige); /* Cor verde mais escura */
     color: var(--darkGreen);
 }

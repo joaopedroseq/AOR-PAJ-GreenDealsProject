@@ -103,6 +103,102 @@ function fetchProductDetails(productId, storedUsername) {
         });
 }
 
+var buyButton=document.getElementById("buy-button");
+// Chame esta função quando a página carregar
+document.addEventListener('DOMContentLoaded', checkAndDisplayBuyButton);
+
+buyButton.onclick = function() {
+  if (sessionStorage.getItem('logged') === 'true') {
+      const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
+      const productId = new URLSearchParams(window.location.search).get('index');
+      fetchProductDetailsForBuying(productId, storedUsername);
+  } else {
+      alert("Necessário estar logado para comprar um produto!");
+  }
+}
+
+
+async function checkAndDisplayBuyButton() {
+  const productId = new URLSearchParams(window.location.search).get('index');
+  const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
+  const isLogged = sessionStorage.getItem('logged') === 'true';
+
+  if (!isLogged || !productId) {
+      return; // Não exibe o botão se não estiver logado ou não houver ID do produto
+  }
+
+  try {
+      const response = await fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`);
+      if (!response.ok) {
+          throw new Error('Produto não encontrado');
+      }
+      const product = await response.json();
+
+      const buyButton = document.getElementById('buy-button');
+      if (product && storedUsername !== product.seller.trim().toLowerCase()) {
+          buyButton.style.display = 'block';
+          buyButton.onclick = () => fetchProductDetailsForBuying(productId, storedUsername);
+      } else {
+          buyButton.style.display = 'none';
+      }
+  } catch (error) {
+      console.error('Erro ao verificar o produto:', error);
+  }
+}
+
+
+
+async function fetchProductDetailsForBuying(productId, storedUsername) {
+  try {
+      const response = await fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`);
+      if (!response.ok) {
+          throw new Error('Produto não encontrado');
+      }
+      const product = await response.json();
+      
+      if (product && storedUsername !== product.seller.trim().toLowerCase()) {
+           confirmAndBuyProduct(productId);
+      } else {
+          alert("Você não pode comprar seu próprio produto.");
+      }
+  } catch (error) {
+      console.error('Erro ao buscar detalhes do produto:', error);
+      alert('Erro ao buscar detalhes do produto');
+  }
+}
+
+
+function confirmAndBuyProduct(productId) {
+  if (confirm('Tem certeza que deseja comprar este produto?')) {
+      buyProduct(productId);
+  }
+}
+
+function buyProduct(productId) {
+   fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/buy/${productId}`, {
+  
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+  })
+  .then(response => {
+      if (response.ok) {
+          return response.text();
+      }
+      throw new Error('Falha na requisição');
+  })
+  .then(data => {
+      alert(data); // Mostra a mensagem de sucesso
+      window.location.href="index.html";
+  })
+  .catch(error => {
+      console.error('Erro:', error);
+      alert('Falha ao comprar o produto');
+  });
+}
+
+
   // Função para excluir um produto
   function deleteProduct() {
     let productId = new URLSearchParams(window.location.search).get('index');
