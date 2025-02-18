@@ -40,7 +40,7 @@ w3.includeHTML(() =>  {
       .then(data => {
         console.log('Dados recebidos:', data);
         if (data.status === 200) {
-          handleSuccessfulLogin(username, password, data.url);
+          handleSuccessfulLogin(username, password);
         } else {
           handleFailedLogin(data.text);
         }
@@ -52,11 +52,12 @@ w3.includeHTML(() =>  {
     }
   
     function handleSuccessfulLogin(username, password) {
-      loadUserPhoto(username);
+      loadUserInfo(username);
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
       sessionStorage.setItem('password', password);
-      welcomeMessage.textContent = `Olá, ${username}!`;
+      let firstName = sessionStorage.getItem('firstName');
+      welcomeMessage.textContent = `Olá, ${firstName}!`;
       document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
       document.getElementById("loginMessage").style.visibility = 'visible';
       document.getElementById('loginButton').style.visibility = 'hidden';
@@ -71,7 +72,7 @@ w3.includeHTML(() =>  {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     //PARA APAGAR!!!!
-    async function loadUserPhoto(loggedUser) {
+    async function loadUserInfo(loggedUser) {
       console.log("a correr loaduserinfo");
       
       const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
@@ -95,7 +96,8 @@ w3.includeHTML(() =>  {
         console.log('Resposta JSON:', responseData);
         
         if (responseData) {
-          sessionStorage.setItem('photo', responseData.url)
+          sessionStorage.setItem('photo', responseData.url);
+          sessionStorage.setItem('firstName', responseData.firstName);
         } else {
           console.log("Not a user logged");
         }
@@ -151,7 +153,8 @@ w3.includeHTML(() =>  {
   // Verificar se há um nome de utilizador armazenado no Session Storage
   const storedUsername = sessionStorage.getItem('username');
   if (storedUsername) {
-    welcomeMessage.textContent = `Olá, ${storedUsername}!`;
+    let firstName = sessionStorage.getItem('firstName');
+    welcomeMessage.textContent = `Olá, ${firstName}!`;
     let user = JSON.parse(sessionStorage.getItem("userData"));
     document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
   };

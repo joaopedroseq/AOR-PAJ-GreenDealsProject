@@ -35,6 +35,40 @@ w3.includeHTML(() =>  {
     });
 
 
+    async function loadUserInfo(loggedUser) {
+        console.log("a correr loaduserinfo");
+        
+        const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${loggedUser}`;
+        console.log('URL:', getUserInfoUrl);
+      
+        try {
+            const response = await fetch(getUserInfoUrl, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include' // Inclui as credenciais de sessão
+            });
+      
+          console.log('Status da resposta:', response.status);
+      
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Erro na resposta: ${errorMessage}`);
+          }
+      
+          const responseData = await response.json();
+          console.log('Resposta JSON:', responseData);
+          
+          if (responseData) {
+            const currentUser = responseData;
+            console.log('Dados do usuário:', currentUser);
+          } else {
+            console.log("Not a user logged");
+          }
+        } catch (error) {
+          console.error('Erro:', error);
+          alert('Ocorreu um erro: ' + error.message);
+        }
+      }
 
 
 
@@ -114,40 +148,7 @@ function showSection(sectionId) {
     if(sectionId === 'informacoes') loadUserInfo();
 }
 
-async function loadUserInfo(loggedUser) {
-    console.log("a correr loaduserinfo");
-    
-    const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${loggedUser}`;
-    console.log('URL:', getUserInfoUrl);
-  
-    try {
-        const response = await fetch(getUserInfoUrl, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include' // Inclui as credenciais de sessão
-        });
-  
-      console.log('Status da resposta:', response.status);
-  
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Erro na resposta: ${errorMessage}`);
-      }
-  
-      const responseData = await response.json();
-      console.log('Resposta JSON:', responseData);
-      
-      if (responseData) {
-        const currentUser = responseData;
-        console.log('Dados do usuário:', currentUser);
-      } else {
-        console.log("Not a user logged");
-      }
-    } catch (error) {
-      console.error('Erro:', error);
-      alert('Ocorreu um erro: ' + error.message);
-    }
-  }
+
 
     // User info functionality
     function fillUserInfo(currentUser) {
