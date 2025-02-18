@@ -49,17 +49,19 @@ w3.includeHTML(() =>  {
         console.error('Erro detalhado:', error);
         alert("Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes.");
       });
-      loadUserInfo(username);/////////////////////////////////////////////////////////////////////////////////
     }
   
     function handleSuccessfulLogin(username, password) {
+      loadUserPhoto(username);
       sessionStorage.setItem('logged', 'true');
       sessionStorage.setItem('username', username);
       sessionStorage.setItem('password', password);
       welcomeMessage.textContent = `Olá, ${username}!`;
+      document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
       document.getElementById("loginMessage").style.visibility = 'visible';
       document.getElementById('loginButton').style.visibility = 'hidden';
-      console.log('Login bem-sucedido para:', username);
+
+      console.log('Login bem-sucedido para:', username);  
     }
   
     function handleFailedLogin(message) {
@@ -69,10 +71,10 @@ w3.includeHTML(() =>  {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     //PARA APAGAR!!!!
-    async function loadUserInfo(loggedUser) {
+    async function loadUserPhoto(loggedUser) {
       console.log("a correr loaduserinfo");
       
-      const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${loggedUser}`;
+      const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
       console.log('URL:', getUserInfoUrl);
     
       try {
@@ -93,8 +95,7 @@ w3.includeHTML(() =>  {
         console.log('Resposta JSON:', responseData);
         
         if (responseData) {
-          const currentUser = responseData;
-          console.log('Dados do usuário:', currentUser);
+          sessionStorage.setItem('photo', responseData.url)
         } else {
           console.log("Not a user logged");
         }
@@ -152,7 +153,7 @@ w3.includeHTML(() =>  {
   if (storedUsername) {
     welcomeMessage.textContent = `Olá, ${storedUsername}!`;
     let user = JSON.parse(sessionStorage.getItem("userData"));
-    //document.getElementById('loginPhoto').src = user.photo;  ///para implementar
+    document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
   };
 
   //Caso não exista um utilizador logged, apresenta o botão de login
@@ -311,6 +312,10 @@ async function addProduct(username, password, product) {
             'Content-Type': 'application/json'
           }
         });
+
+        console.log('Status da resposta:', response.status);
+        const text = await response.text();
+        console.log('Texto da resposta:', text);
     
         if (!response.ok) {
           const errorMessage = await response.text();
