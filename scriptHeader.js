@@ -61,8 +61,8 @@ w3.includeHTML(() =>  {
       document.getElementById('loginPhoto').src = sessionStorage.getItem('photo');  ///para implementar
       document.getElementById("loginMessage").style.visibility = 'visible';
       document.getElementById('loginButton').style.visibility = 'hidden';
-
-      console.log('Login bem-sucedido para:', username);  
+      console.log('Login bem-sucedido para:', username);
+      window.reload();
     }
   
     function handleFailedLogin(message) {
