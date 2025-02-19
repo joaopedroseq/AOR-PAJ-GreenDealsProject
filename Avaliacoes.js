@@ -96,11 +96,20 @@ document.addEventListener('DOMContentLoaded', async function () {
                 productId: productIndex
             };
 
+            let storedUsername = sessionStorage.getItem('username');
+            let password = sessionStorage.getItem('password');
+
+            const addEvaluationtHeader = new Headers({
+                'Content-Type': 'application/json',
+                'password': password,
+                'username': storedUsername
+              });
+
             const response = await fetch(
                 `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/add/evaluation/${anunciante}`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: addEvaluationtHeader,
                     body: JSON.stringify(evaluation)
                 }
             );
@@ -150,52 +159,6 @@ function clearStars() {
     stars.forEach(s => {
         s.classList.remove('active');
     });
-}
-
-async function getProductInformation(productIndex) {
-    const getProductInformationUrl = 'http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/' + productIndex;
-    
-    try {
-        const response = await fetch(getProductInformationUrl, {
-            method: 'GET',
-            headers: {'Content-Type': 'application/json'}
-        });
-
-        if (!response.ok) {
-            throw new Error('Product not found');
-        }
-
-        const product = await response.json();  // Directly parse the response as JSON
-        console.log('Produto obtido:', product);
-
-        // Format product data (as you already have)
-        const dataCompleta = new Date(product.date);
-        const dia = dataCompleta.getDate().toString().padStart(2, '0');
-        const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, '0');
-        const ano = dataCompleta.getFullYear();
-        const horas = dataCompleta.getHours().toString().padStart(2, '0');
-        const minutos = dataCompleta.getMinutes().toString().padStart(2, '0');
-        const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
-
-        // Update product information on the page
-        document.getElementById('product-name').innerHTML = `<strong>Nome do Produto:</strong> ${product.name}`;
-        document.getElementById('product-description').innerHTML = `<strong>Descrição:</strong> ${product.description}`;
-        document.getElementById('product-price').innerHTML = `<strong>Preço:</strong> €${product.price}`;
-        document.getElementById('product-category').innerHTML = `<strong>Categoria:</strong> ${product.category}`;
-        document.getElementById('product-seller').innerHTML = `<strong>Nome do Anunciante:</strong> ${product.seller}`;
-        document.getElementById('product-location').innerHTML = `<strong>Localização:</strong> ${product.location}`;
-        document.getElementById('product-image').setAttribute('src', product.urlImage);
-        document.getElementById('product-date').innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
-
-        console.log("Product details fetched:", product);
-        return product;
-        
-
-    } catch (error) {
-        console.error('Erro ao buscar detalhes do produto:', error);
-        alert('Erro ao carregar produto: ' + error.message);
-        return null;
-    }
 }
 
 
@@ -341,12 +304,21 @@ async function deleteReview(evaluationId, seller) {
 
     const confirmDelete = confirm('Tem certeza que deseja eliminar esta avaliação?');
     if (confirmDelete) {
+        let storedUsername = sessionStorage.getItem('username');
+        let password = sessionStorage.getItem('password');
+
+        const deleteEvaluationHeader = new Headers({
+            'Content-Type': 'application/json',
+            'password': password,
+            'username': storedUsername
+          });
+
         try {
             const response = await fetch(
                 `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
                 {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: deleteEvaluationHeader,
                 }
             );
             
@@ -392,12 +364,20 @@ async function editReview(evaluationId, currentComment, currentStarNumber, selle
             starNumber: newStarNumber
         };
 
+        let storedUsername = sessionStorage.getItem('username');
+        let password = sessionStorage('password');
+        const editReviewHeader = new Headers({
+            'Content-Type': 'application/json',
+            'password': password,
+            'username': storedUsername
+          });
+
         try {
             const response = await fetch(
                 `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: editReviewHeader,
                     body: JSON.stringify(updatedEvaluation)
                 }
             );

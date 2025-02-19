@@ -283,7 +283,7 @@ function buyProduct(productId, storedUsername, password) {
     else if(!checkIfNumeric(document.getElementById('edit-preco').value)){
         alert("Preço inserido inválido. Apenas poderá escrever dígitos e sem quaisquer símbolos");
     }
-    else if(document.getElementById('edit-categoria').value === ""){
+    else if(document.getElementById('edit-localidade').value === ""){
         alert("A sua morada é preenchimento obrigatório");
     }
     else if(document.getElementById('edit-imagem').value === ""){
