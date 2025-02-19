@@ -73,14 +73,15 @@ w3.includeHTML(() =>  {
     if (sessionStorage.getItem('logged') === 'true') {
         const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
         const productId = new URLSearchParams(window.location.search).get('index');
+        const password = sessionStorage.getItem('password');
 
         if (productId) {
-            fetchProductDetails(productId, storedUsername);
+            fetchProductDetails(productId, storedUsername, password);
         }
     }
 });
 
-function fetchProductDetails(productId, storedUsername) {
+function fetchProductDetails(productId, storedUsername, password) {
     fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`)
         .then(response => {
             if (!response.ok) {
@@ -94,8 +95,8 @@ function fetchProductDetails(productId, storedUsername) {
                 editDeleteButtons.style.display = "inline-block";
 
                 // Adicionar event listeners para os botões
-                document.getElementById('delete-product').addEventListener('click', () => deleteProduct(productId));
-                document.getElementById('edit-product').addEventListener('click', () => showEditForm(product));
+                document.getElementById('delete-product').addEventListener('click', () => deleteProduct(productId, storedUsername, password));
+                document.getElementById('edit-product').addEventListener('click', () => showEditForm(product, storedUsername, password));
             }
         })
         .catch(error => {
@@ -111,7 +112,9 @@ buyButton.onclick = function() {
   if (sessionStorage.getItem('logged') === 'true') {
       const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
       const productId = new URLSearchParams(window.location.search).get('index');
-      fetchProductDetailsForBuying(productId, storedUsername);
+      const password = sessionStorage.getItem('password');
+      console.log("Password do onclick: " + password);
+      fetchProductDetailsForBuying(productId, storedUsername, password);
   } else {
       alert("Necessário estar logado para comprar um produto!");
   }
@@ -122,6 +125,8 @@ async function checkAndDisplayBuyButton() {
   const productId = new URLSearchParams(window.location.search).get('index');
   const storedUsername = sessionStorage.getItem('username')?.trim().toLowerCase();
   const isLogged = sessionStorage.getItem('logged') === 'true';
+  const password = sessionStorage.getItem('password');
+  console.log("Password do check and displayBuy: " + password);
 
   if (!isLogged || !productId) {
       return; // Não exibe o botão se não estiver logado ou não houver ID do produto
@@ -137,7 +142,7 @@ async function checkAndDisplayBuyButton() {
       const buyButton = document.getElementById('buy-button');
       if (product && storedUsername !== product.seller.trim().toLowerCase()) {
           buyButton.style.display = 'block';
-          buyButton.onclick = () => fetchProductDetailsForBuying(productId, storedUsername);
+          buyButton.onclick = () => fetchProductDetailsForBuying(productId, storedUsername, password);
       } else {
           buyButton.style.display = 'none';
       }
@@ -148,16 +153,17 @@ async function checkAndDisplayBuyButton() {
 
 
 
-async function fetchProductDetailsForBuying(productId, storedUsername) {
+async function fetchProductDetailsForBuying(productId, storedUsername, password) {
+
   try {
-      const response = await fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`);
+      const response = await fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/${productId}`)
       if (!response.ok) {
           throw new Error('Produto não encontrado');
       }
       const product = await response.json();
       
       if (product && storedUsername !== product.seller.trim().toLowerCase()) {
-           confirmAndBuyProduct(productId);
+           confirmAndBuyProduct(productId, storedUsername, password);
       } else {
           alert("Você não pode comprar seu próprio produto.");
       }
@@ -168,19 +174,23 @@ async function fetchProductDetailsForBuying(productId, storedUsername) {
 }
 
 
-function confirmAndBuyProduct(productId) {
+function confirmAndBuyProduct(productId, storedUsername, password) {
   if (confirm('Tem certeza que deseja comprar este produto?')) {
-      buyProduct(productId);
+      buyProduct(productId, storedUsername, password);
   }
 }
 
-function buyProduct(productId) {
+function buyProduct(productId, storedUsername, password) {
+  const buyProductHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'password': password,
+    'username': storedUsername
+  });
+  
    fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/products/buy/${productId}`, {
   
       method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-      },
+      headers: buyProductHeaders,
   })
   .then(response => {
       if (response.ok) {
@@ -200,22 +210,21 @@ function buyProduct(productId) {
 
 
   // Função para excluir um produto
-  function deleteProduct() {
-    let productId = new URLSearchParams(window.location.search).get('index');
-    productId = parseInt(productId);
-    
-    let username = sessionStorage.getItem('username');
-    
+  function deleteProduct(productId, storedUsername, password) {
+       
     var userConfirm = window.confirm('Tem a certeza que pretende eliminar este produto?');
     
     if (userConfirm) {
+
+        const deleteProductHeader = new Headers({
+          'Content-Type': 'application/json',
+          'password': password,
+          'username': storedUsername
+        });
         // Fazer a requisição DELETE para o backend
-        fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/products/${productId}`, {
+        fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${storedUsername}/products/${productId}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                // Adicione headers de autenticação se necessário
-            },
+            headers: deleteProductHeader,
         })
         .then(response => {
             if (response.ok) {
@@ -242,7 +251,7 @@ function buyProduct(productId) {
 
 
     // Exibir o formulário de edição ao clicar no botão "Editar informações"
-    function showEditForm(product) {
+    function showEditForm(product, storedUsername, password) {
       const form = document.getElementById('edit-product-form');
       form.style.display = 'block';
       
@@ -254,13 +263,37 @@ function buyProduct(productId) {
       document.getElementById('edit-localidade').value = product.location;
       document.getElementById('edit-imagem').value = product.urlImage;
       document.getElementById('edit-state').value=product.state;
+
   
       // Adicionar event listener para o botão de salvar
-      document.getElementById('save-product').addEventListener('click', () => saveEditedProduct(product.id));
+      document.getElementById('save-product').addEventListener('click', () => saveEditedProduct(product.id, storedUsername, password));
   }
   
-  function saveEditedProduct(productId) {
-    const username = sessionStorage.getItem('username'); 
+  async function saveEditedProduct(productId, storedUsername, password) {
+    // Validações dos campos do formulário
+    if(document.getElementById('edit-nome').value.trim() === ""){
+      alert("O nome do produto é de preenchimento obrigatório");
+    }
+    else if(document.getElementById('edit-descricao').value === ""){
+        alert("A descrição do produto é de preenchimento obrigatório");
+    }
+    else if(document.getElementById('edit-preco').value === ""){
+        alert("O preço do produto é de preenchimento obrigatório");
+    }
+    else if(!checkIfNumeric(document.getElementById('edit-preco').value)){
+        alert("Preço inserido inválido. Apenas poderá escrever dígitos e sem quaisquer símbolos");
+    }
+    else if(document.getElementById('edit-categoria').value === ""){
+        alert("A sua morada é preenchimento obrigatório");
+    }
+    else if(document.getElementById('edit-imagem').value === ""){
+        alert("Terá de colocar um URL válido da imagem do produto que pretende anunciar");
+    }
+    else if(document.getElementById('edit-categoria').value === ""){
+      alert("Produto sem categoria");
+    }
+    else {
+
     const editedProduct = {
         name: document.getElementById('edit-nome').value,
         description: document.getElementById('edit-descricao').value,
@@ -271,17 +304,22 @@ function buyProduct(productId) {
         state: document.getElementById('edit-state').value
     };
 
-    fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${username}/products/${productId}`, {
+    const editProductHeader = new Headers({
+      'Content-Type': 'application/json',
+      'password': password,
+      'username': storedUsername
+    });
+
+    await fetch(`http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/${storedUsername}/products/${productId}`, {
         method: 'POST', 
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: editProductHeader,
         body: JSON.stringify(editedProduct)
     })
     .then(response => {
         if (response.ok) {
             return response.text(); 
         } else {
+            console.log(response.text())
             throw new Error('Falha ao atualizar o produto');
         }
     })
@@ -293,6 +331,7 @@ function buyProduct(productId) {
         console.error('Erro:', error);
         alert('Erro ao atualizar o produto');
     });
+  }
 }
 
   
