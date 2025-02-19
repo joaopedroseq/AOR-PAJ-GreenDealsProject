@@ -405,12 +405,6 @@ function addDetailsUserInSessionStorage(username,password){
 
 }
 
- // Função para verificar se uma string é um número
- function checkIfNumeric(string) {
-  return !isNaN(string) && // Usa coerção de tipo para analisar toda a string
-         !isNaN(parseFloat(string)) // Garante que strings de espaços em branco falhem
-};
-
 // FUnção para verificar se existe um utilizador logged
 function checkIfLogged(){
     const logged = sessionStorage.getItem('logged');
