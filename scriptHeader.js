@@ -54,7 +54,7 @@ w3.includeHTML(() =>  {
 
     //possivelmente alterar esta função  
     async function handleSuccessfulLogin(username, password) {
-      await loadUserInfo(username);
+      await loadUserInfo(username, password);
       await addDetailsUserInSessionStorage(username,password);
       let firstName = sessionStorage.getItem('firstName');
       welcomeMessage.textContent = `Olá, ${firstName}!`;
@@ -73,15 +73,21 @@ w3.includeHTML(() =>  {
     }
 
     
-    async function loadUserInfo(loggedUser) {
+    async function loadUserInfo(loggedUser, password) {
       
       const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
       console.log('URL:', getUserInfoUrl);
+
+      const loadUserInfoHeaders = new Headers({
+        'Content-Type': 'application/json',
+        'password': password,
+        'username': loggedUser
+      });
     
       try {
           const response = await fetch(getUserInfoUrl, {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
+            headers: loadUserInfoHeaders,
             credentials: 'include' // Inclui as credenciais de sessão
           });
     
