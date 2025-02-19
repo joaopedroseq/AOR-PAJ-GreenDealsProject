@@ -411,7 +411,7 @@ async function editReview(evaluationId, currentComment, currentStarNumber, selle
         };
 
         let storedUsername = sessionStorage.getItem('username');
-        let password = sessionStorage('password');
+        let password = sessionStorage.getItem('password');
         const editReviewHeader = new Headers({
             'Content-Type': 'application/json',
             'password': password,
