@@ -478,6 +478,30 @@ function displayRatingStats() {
     statsContainer.innerHTML = statsHTML;
 }
 
+test('Display rating statistics', () => {
+    const statsContainer = document.getElementById('rating-stats');
+  
+    // Simulate rating counts and display stats
+    ratingCounts = { 1: 0, 2: 2, 3: 3, 4: 5, 5: 10 };
+    displayRatingStats();
+  
+    // Check if the stats container contains the correct elements
+    expect(statsContainer.innerHTML).toContain('<div class="rating-bar">'); // Check that the bars are being rendered
+    expect(statsContainer.innerHTML).toContain('<span>10</span>'); // Check if the count 10 appears in the stats
+  });
+
+  const ratingWords = {
+    1: 'Péssimo',
+    2: 'Mau',
+    3: 'OK',
+    4: 'Bom',
+    5: 'Excelente'
+  };
+
+module.exports = { displayRatingStats, ratingWords};
+
+
+
 
 
 
