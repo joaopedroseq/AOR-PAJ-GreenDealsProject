@@ -4,9 +4,10 @@ w3.includeHTML(() => {
   hamburger.addEventListener("click", toggleAside);
 
   const loggedUser = sessionStorage.getItem("username");
+  const password = sessionStorage.getItem("password");
 
-  loadUserInfo(loggedUser);
-  getUserProducts();
+  loadUserInfo(loggedUser, password);
+  getUserProducts(loggedUser, password);
     
   const myProductsBtn = document.getElementById('myProductsBtn');
 
@@ -33,14 +34,21 @@ w3.includeHTML(() => {
     document.getElementById("produtos").style.display = "none";
   });
 
-  async function loadUserInfo(loggedUser) {
+  async function loadUserInfo(loggedUser, password) {
     const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
     console.log("URL:", getUserInfoUrl);
+
+    const loadUserInfoHeaders = new Headers({
+      'Content-Type': 'application/json',
+      'password': password,
+      'username': loggedUser
+    });
+
 
     try {
       const response = await fetch(getUserInfoUrl, {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: loadUserInfoHeaders,
         credentials: "include", // Inclui as credenciais de sessão
       });
 
@@ -147,14 +155,19 @@ w3.includeHTML(() => {
   }
 
   // Função para os productos do backend e exibi-los na página de utilizador
-  function getUserProducts() {
+  function getUserProducts(loggedUser, password) {
     const getAvaiableProductsUrl =
       "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/" +
       loggedUser +
       "/products/";
+    const getUserProductstHeaders = new Headers({
+        'Content-Type': 'application/json',
+        'password': password,
+        'username': loggedUser
+      });
     fetch(getAvaiableProductsUrl, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: getUserProductstHeaders
     })
       .then((response) => {
         console.log("Status da resposta:", response.status);
@@ -243,7 +256,7 @@ function saveUserInfo(event) {
     };
     console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
-      updateUser(sessionStorage.getItem("username"), updatedUser);
+      updateUser(loggedUser, password, updatedUser);
       updateWithNewInformation(updatedUser);
     }   
   }
@@ -259,16 +272,19 @@ function updateWithNewInformation(updatedUser){
 
 
 //função alterar no backend
-async function updateUser(username, updatedUser) {
+async function updateUser(loggedUser, password, updatedUser) {
   const updateUserURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/update/${username}`;
   console.log(updatedUser);
+  const updateUserHeaders = new Headers({
+    'Content-Type': 'application/json',
+    'password': password,
+    'username': loggedUser
+  });
 
   try {
     const response = await fetch(updateUserURL, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: updateUserHeaders,
       body: JSON.stringify(updatedUser),
     });
 
@@ -351,6 +367,7 @@ function generateStars(nota) {
 
 async function editReview(evaluationId, currentComment, currentStarNumber, seller) {
     const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
+    const password = sessionStorage.getItem('password');
     
     if (!loggedUser) {
         alert("Faça login para editar avaliações!");
@@ -369,11 +386,17 @@ async function editReview(evaluationId, currentComment, currentStarNumber, selle
         };
 
         try {
+
+          const editReviewHeaders = new Headers({
+            'Content-Type': 'application/json',
+            'password': password,
+            'username': loggedUser
+          });
             const response = await fetch(
                 `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
                 {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: editReviewHeaders,
                     body: JSON.stringify(updatedEvaluation)
                 }
             );
@@ -397,6 +420,7 @@ async function editReview(evaluationId, currentComment, currentStarNumber, selle
 
 async function deleteReview(evaluationId, seller) {
     const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
+    const password = sessionStorage.getItem('password');
 
     if (!loggedUser) {
         alert("Faça login para apagar avaliações!");
@@ -406,11 +430,16 @@ async function deleteReview(evaluationId, seller) {
     const confirmDelete = confirm('Tem certeza que deseja eliminar esta avaliação?');
     if (confirmDelete) {
         try {
+          const deleteReviewHeaders = new Headers({
+            'Content-Type': 'application/json',
+            'password': password,
+            'username': loggedUser
+          });
             const response = await fetch(
                 `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
                 {
                     method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: deleteReviewHeaders,
                 }
             );
             
@@ -430,15 +459,21 @@ async function deleteReview(evaluationId, seller) {
 
 
 
-    async function getUserInfo(loggedUser) {
+    async function getUserInfo(loggedUser, password) {
         
         const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
         console.log('URL:', getUserInfoUrl);
+
+        const getUserInfoHeaders = new Headers({
+          'Content-Type': 'application/json',
+          'password': password,
+          'username': loggedUser
+        });
       
         try {
             const response = await fetch(getUserInfoUrl, {
               method: 'GET',
-              headers: { 'Content-Type': 'application/json' },
+              headers: getUserInfoHeaders,
               credentials: 'include' // Inclui as credenciais de sessão
             });
       
