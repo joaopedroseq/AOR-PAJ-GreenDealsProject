@@ -1,4 +1,6 @@
 // Mock w3 before any tests run
+// Esta função beforeAll é executada uma vez antes de todos os testes. 
+// Ela cria um mock global do objeto w3 com uma função includeHTML simulada que executa imediatamente o callback fornecido.
 beforeAll(() => {
     global.w3 = {
       includeHTML: jest.fn(callback => callback())
@@ -6,6 +8,8 @@ beforeAll(() => {
   });
 
 // Mock DOM elements for modal tests
+// Esta função beforeEach é executada antes de cada teste. 
+// Ela cria um mock do DOM com botões "About" e "Privacy", e um elemento de fechamento.
 beforeEach(() => {
     document.body.innerHTML = `
       <button id='aboutButton'></button>
@@ -13,12 +17,15 @@ beforeEach(() => {
       <div class='close'></div>
     `;
     // Spy on addEventListener
+    // Estas linhas criam spies nos métodos addEventListener de todos os elementos button e div.
   jest.spyOn(HTMLButtonElement.prototype, 'addEventListener');
   jest.spyOn(HTMLDivElement.prototype, 'addEventListener');
 });
 
 
   // Adding a basic test to ensure the test suite is not empty
+  //O principal objetivo deste teste é garantir que a suite de testes está funcionando corretamente
+  //e que o ambiente de teste está configurado adequadamente.
 test('scriptFooter has a working modal', () => {
     expect(true).toBe(true);
   });
@@ -27,6 +34,7 @@ test('scriptFooter has a working modal', () => {
 test('open about modal', () => {
     const aboutBtn = document.getElementById('aboutButton');
     aboutBtn.addEventListener('click', () => {});
+    //Simula um clique no botão.
     aboutBtn.click();
     expect(aboutBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
 });
@@ -34,12 +42,14 @@ test('open about modal', () => {
 test('open privacy modal', () => {
     const privacyBtn = document.getElementById('privacyButton');
     privacyBtn.addEventListener('click', () => {});
+    //Simula um clique no botão.
     privacyBtn.click();
     expect(privacyBtn.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
 });
 
 test('close modal on click', () => {
     const closeButton = document.getElementsByClassName('close')[0];
+    //Simula um clique no botão.
     closeButton.click();
     expect(closeButton).toBeDefined();
 });
