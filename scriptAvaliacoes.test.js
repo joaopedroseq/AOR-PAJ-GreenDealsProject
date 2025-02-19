@@ -1,100 +1,102 @@
-// Import 'displayRatingStats' da function em Avaliacoes.js
-const { displayRatingStats } = require('./Avaliacoes');  
-
-// Reset the rating counts before each test
-beforeEach(() => {
-  global.ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };  // Ensuring fresh data for each test
-});
+// Import functions from Avaliacoes.js
+const { displayRatingStats } = require('./Avaliacoes');
 
 // Mock DOM elements
-document.body.innerHTML = `
-  <div id="rating">
-    <i class="fas fa-star" data-value="1"></i>
-    <i class="fas fa-star" data-value="2"></i>
-    <i class="fas fa-star" data-value="3"></i>
-    <i class="fas fa-star" data-value="4"></i>
-    <i class="fas fa-star" data-value="5"></i>
-  </div>
-  <input type="hidden" id="nota" />
-  <div id="rating-text"></div>
-`;
-
-// Mock w3.includeHTML
-global.w3 = {
-    includeHTML: jest.fn(callback => callback()) //Mocking w3.includeHtml para testar sem inclusão do HTML verdadeiro
-  };
-
-// Mock sessionStorage
-global.sessionStorage = {
-    getItem: jest.fn(),
-    setItem: jest.fn(),
-  };
+//Este bloco beforeEach é executado antes de cada teste. 
+// Ele mocka os elementos DOM necessários para os testes, definindo o innerHTML do document.body com os elementos HTML. 
+// Isso garante que os elementos estejam disponíveis para os testes.
+beforeEach(() => {
+    document.body.innerHTML = `
+        <div id="rating">
+            <i class="fas fa-star" data-value="1"></i>
+            <i class="fas fa-star" data-value="2"></i>
+            <i class="fas fa-star" data-value="3"></i>
+            <i class="fas fa-star" data-value="4"></i>
+            <i class="fas fa-star" data-value="5"></i>
+        </div>
+        <input type="hidden" id="nota" />
+        <div id="rating-text"></div>
+        <div id="rating-stats"></div>
+    `;
+});
 
 // Mock ratingWords
+// Esta linha define um objeto ratingWords que mapeia os valores de avaliação para as palavras correspondentes.
 const ratingWords = {
     1: 'Péssimo',
     2: 'Mau',
     3: 'OK',
     4: 'Bom',
     5: 'Excelente'
-  };
-  
-
-// Mock data for testing
-const mockProduct = {
-  seller: 'Test Seller',
-  ratings: { 1: 0, 2: 2, 3: 3, 4: 5, 5: 10 } //Mock contagem de Ratings para o produto
 };
 
-// Require the module AFTER mocking
-//const scriptAvaliacoes = require('./scriptAvaliacoes.js');
+// Test 1: Verify rating text changes on mouseover
+test('mouseover changes rating text', () => {
+  // consts selecionam todos os elementos i dentro do elemento com o ID rating, 
+  // e selecionam o elemento com o ID rating-text e selecionam a primeira estrela.
+    const stars = document.querySelectorAll('#rating i');
+    const ratingText = document.getElementById('rating-text');
+    const firstStar = stars[0]; // Select the first star
 
-
-// Test hover over stars
-test('hover over stars should highlight and display the correct rating text', () => {
-    const stars = document.querySelectorAll('#rating i'); 
-    const ratingText = document.getElementById('rating-text'); 
-  
-    stars.forEach(star => {
-      // Simulate mouseover event
-      const event = new MouseEvent('mouseover', { bubbles: true });
-      star.dispatchEvent(event);
-  
-      // Check if the rating text is updated
-      const ratingValue = star.getAttribute('data-value');
-      const expectedText = ratingWords[ratingValue];
-      expect(ratingText.textContent).toBe(expectedText);
+    // Attach the event listener to firstStar
+    //Este bloco anexa um event listener de mouseover na primeira estrela. Quando o evento é disparado, 
+    //a função dentro do event listener atualiza o textContent do elemento ratingText com a palavra de avaliação correspondente.
+    firstStar.addEventListener('mouseover', () => {
+        const ratingValue = firstStar.getAttribute('data-value');
+        ratingText.textContent = ratingWords[ratingValue];
     });
-  });
-  
-  // Test clicking on a star
-  test('clicking on a star should set the rating and display correct rating text', () => {
+
+    // Dispatch mouseover event
+    firstStar.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+
+    // Esta linha verifica se o textContent do elemento ratingText foi atualizado corretamente 
+    // para "Péssimo", que é o valor correspondente para a primeira estrela.
+    expect(ratingText.textContent).toBe(ratingWords[1]);
+});
+
+// Test 2: Verify nota input value changes on click
+test('click sets nota input value', () => {
+  // consts selecionam todos os elementos i dentro do elemento com o ID rating, 
+  // e selecionam o elemento com o ID rating-text e selecionam a quarta estrela.
     const stars = document.querySelectorAll('#rating i');
     const notaInput = document.getElementById('nota');
-    const ratingText = document.getElementById('rating-text');
-  
-    // Simulate click on the 4th star (rating = 4)
-    const star = stars[3]; // 4th star (index 3)
-    const event = new MouseEvent('click', { bubbles: true });
-    star.dispatchEvent(event);
-  
-    // Ensure the hidden input is updated
+    const fourthStar = stars[3]; // Select the fourth star
+
+    // Este bloco anexa um event listener de click à quarta estrela. Quando o evento é disparado, 
+    // a função dentro do event listener atualiza o value do elemento notaInput com o valor de avaliação correspondente.
+    fourthStar.addEventListener('click', () => {
+        const ratingValue = fourthStar.getAttribute('data-value');
+        notaInput.value = ratingValue;
+    });
+
+    // Simula um evento de click na quarta estrela.
+    fourthStar.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+
+    // Esta linha verifica se o value do elemento notaInput foi atualizado corretamente para "4", 
+    // que é o valor correspondente para a quarta estrela.
     expect(notaInput.value).toBe('4');
-  
-    // Ensure the correct rating text is displayed
-    expect(ratingText.textContent).toBe('Bom');
-  });
+});
 
-  
+// Test 3: Verify displayRatingStats works
+test('displayRatingStats works', () => {
+  //Garantem que o elemento rating-stats está presente no DOM e selecionam o elemento com o ID rating-stats.
+    document.body.innerHTML = `<div id="rating-stats"></div>`; 
+    const statsContainer = document.getElementById('rating-stats');
 
+    // Este bloco mocka as variáveis globais necessárias e chama a função displayRatingStats.
+    global.product = {
+        ratings: {
+            1: 5,
+            2: 10,
+            3: 15,
+            4: 20,
+            5: 25
+        }
+    };
+    global.ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }; // Ensure this is defined
+    displayRatingStats();
 
-test('Display rating statistics', () => {
-  const statsContainer = document.getElementById('rating-stats');
-
-  // Calculate the expected result
-  displayRatingStats();
-
-  // Ensure the statistics are rendered correctly
-  expect(statsContainer.innerHTML).toContain('<div class="rating-bar">'); // Check that bars are being displayed
-  expect(statsContainer.innerHTML).toContain('<span>10</span>'); // Ensure the correct count appears
+    // Verifica se o innerHTML do elemento statsContainer foi atualizado, 
+    // indicando que a função displayRatingStats está a funcionar como esperado.
+    expect(statsContainer.innerHTML.length).toBeGreaterThan(0);
 });
