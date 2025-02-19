@@ -269,6 +269,7 @@ async function addProduct(username, password, product) {
 
   const addProductHeaders = new Headers({
     'Content-Type': 'application/json',
+    'username': username,
     'password': password
   });
 
