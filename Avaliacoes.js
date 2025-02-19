@@ -379,6 +379,7 @@ async function deleteReview(evaluationId, seller) {
             //displayRatingSummary();
             //displayRatingStats();
             alert("Avaliação excluída com sucesso!");
+            window.location.reload();
         } catch (error) {
             console.error('Error deleting evaluation:', error);
             alert(error.message);
