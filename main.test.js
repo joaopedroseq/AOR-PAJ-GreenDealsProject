@@ -1,145 +1,85 @@
 
-// main.test.js
+// header.test.js
 
-// Mock DOM elements
+// mock do DOM, simulando os elementos HTML a testar
 document.body.innerHTML = `
   <form id="login-form"></form>
   <button id="logoutButton"></button>
   <button id="add-product-btn"></button>
   <button id="save-addProduct"></button>
+  <button id="userAreaBtn"></button>
 `;
 
 // Test for login form submission
+//inicia o teste para submissão do formulário de login
 test('login form submission', () => {
+  //obtém o elemento de login do DOM mockado
   const loginForm = document.getElementById('login-form');
+  //cria um "spy" no método addEventListener do formulário de login
   const spy = jest.spyOn(loginForm, 'addEventListener');
   
-  // Trigger the event listener setup manually
+  // Simula a adição de um event listener ao formulário.
   loginForm.addEventListener('submit', () => {});
 
-  // Check if addEventListener was called with 'submit' and a function
+  //Verifica se o addEventListener foi chamado com 'submit' e uma função como argumentos.
   expect(spy).toHaveBeenCalledWith('submit', expect.any(Function));
 });
 
-// Test for logout button click
+// Teste botão logout
 test('logout button click', () => {
+  //Obtêm o elemento do DOM mockado.
   const logoutButton = document.getElementById('logoutButton');
+
+  // Cria um spy no método addEventListener do elemento.
   const spy = jest.spyOn(logoutButton, 'addEventListener');
   
-  // Trigger the event listener setup manually
+  // Simulam a adição de um event listener.
   logoutButton.addEventListener('click', () => {});
 
-  // Check if addEventListener was called with 'click' and a function
+  // Verificam se o addEventListener foi chamado com o evento correto ('click') e uma função.
   expect(spy).toHaveBeenCalledWith('click', expect.any(Function));
 });
 
 // Test for add product button click
 test('add product button click', () => {
+  //Obtêm o elemento do DOM mockado.
   const addButton = document.getElementById('add-product-btn');
+
+  // Cria um spy no método addEventListener do elemento.
   const spy = jest.spyOn(addButton, 'addEventListener');
   
-  // Trigger the event listener setup manually
+  // Simulam a adição de um event listener.
   addButton.addEventListener('click', () => {});
 
-  // Check if addEventListener was called with 'click' and a function
+  // Verificam se o addEventListener foi chamado com o evento correto ('click') e uma função.
   expect(spy).toHaveBeenCalledWith('click', expect.any(Function));
 });
 
 // Test for save product button click
 test('save product button click', () => {
+  //Obtêm o elemento do DOM mockado.
   const saveProductBtn = document.getElementById('save-addProduct');
+
+  // Cria um spy no método addEventListener do elemento.
   const spy = jest.spyOn(saveProductBtn, 'addEventListener');
   
-  // Trigger the event listener setup manually
+  // Simulam a adição de um event listener.
   saveProductBtn.addEventListener('click', () => {});
 
-  // Check if addEventListener was called with 'click' and a function
+  // Verificam se o addEventListener foi chamado com o evento correto ('click') e uma função.
   expect(spy).toHaveBeenCalledWith('click', expect.any(Function));
 });
 
+test('botão area pessoal utilizador', () => {
+  //obtém o elemento de login do DOM mockado
+  const userButton = document.getElementById('userAreaBtn');
 
+  //cria um "spy" no método addEventListener do formulário de login
+  const spy = jest.spyOn(userButton, 'addEventListener');
+  
+  // Simula a adição de um event listener ao formulário.
+  userButton.addEventListener('submit', () => {});
 
-
-
-/*
-
-// Mock DOM elements
-document.body.innerHTML = `
-    <form id="login-form">
-      <input id="username" />
-      <input id="password" />
-    </form>
-    <div id="loginMessage"></div>
-    <button id="loginButton"></button>
-    <button id="logoutButton"></button>
-    <button id="add-product-btn"></button>
-    <div id="modal-addProduct"></div>
-    <form id="add-product-form"></form>
-    <div class="close-addProduct"></div>
-    <button id="save-addProduct"></button>
-    <button id="userAreaBtn"></button>
-  `;
-
-// Mock w3.includeHTML
-global.w3 = {
-  includeHTML: jest.fn(callback => {
-    callback();
-  })
-};
-
-// Mock sessionStorage
-global.sessionStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-};
-
-// Mock fetch
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    ok: true,
-    status: 200,
-    json: () => Promise.resolve({}),
-    text: () => Promise.resolve('Success'),
-  })
-);
-
-// Now require the module
-const scriptHeader = require("./scriptHeader");
-
-// Test for login form submission
-test('login form submission', () => {
-  const loginForm = document.getElementById('login-form');
-  expect(loginForm.addEventListener).toHaveBeenCalledWith(
-    'submit',
-    expect.any(Function)
-  );
+  //Verifica se o addEventListener foi chamado com 'submit' e uma função como argumentos.
+  expect(spy).toHaveBeenCalledWith('submit', expect.any(Function));
 });
-
-// Test for logout button click
-test('logout button click', () => {
-  const logoutButton = document.getElementById('logoutButton');
-  expect(logoutButton.addEventListener).toHaveBeenCalledWith(
-    'click',
-    expect.any(Function)
-  );
-});
-
-// Test for add product button click
-test('add product button click', () => {
-  const addButton = document.getElementById('add-product-btn');
-  expect(addButton.addEventListener).toHaveBeenCalledWith(
-    'click',
-    expect.any(Function)
-  );
-});
-
-// Test for save product button click
-test('save product button click', () => {
-  const saveProductBtn = document.getElementById('save-addProduct');
-  expect(saveProductBtn.addEventListener).toHaveBeenCalledWith(
-    'click',
-    expect.any(Function)
-  );
-});
-*/

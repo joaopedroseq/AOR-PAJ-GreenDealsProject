@@ -422,19 +422,3 @@ function checkIfLogged(){
         return false;
     }
 }
-
-function initializeLoginForm() {
-  const loginForm = document.getElementById('loginForm');
-  if (loginForm) {
-    loginForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      // Rest of your login logic
-    });
-  }
-}
-
-function initializeHTML(callback) {
-  w3.includeHTML(callback);
-}

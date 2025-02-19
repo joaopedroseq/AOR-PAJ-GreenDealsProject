@@ -9,21 +9,23 @@
     `;
   
   // Mock w3.includeHTML
+  // Cria um mock da função w3.includeHTML, que simula a execução imediata do callback.
   global.w3 = {
     includeHTML: jest.fn(callback => 
         callback())
 };
   
   // Mock sessionStorage
+  // Cria um mock do sessionStorage com funções simuladas getItem e setItem.
   global.sessionStorage = {
     getItem: jest.fn(),
     setItem: jest.fn(),
   };
   
-  // Mock the toggleAside function
-global.toggleAside = jest.fn();
+  // Cria um mock da função toggleAside.
+  global.toggleAside = jest.fn();
 
-  // Now require the module
+  // Importa o módulo scriptIndex que será testado.
   const scriptIndex = require('./scriptIndex');
   
   // Test for hamburger button click
