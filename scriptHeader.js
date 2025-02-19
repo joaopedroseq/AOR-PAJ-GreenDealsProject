@@ -298,8 +298,8 @@ async function addProduct(username, password, product) {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
-    return { status: response.status, text: text };
+    alert("O seu produto foi adicionado como RASCUNHO\nPara alterar edite o produto na sua página pessoal");
+    return {status: response.status, text: text };
   } catch (error) {
     console.error('Erro detalhado:', error);
     if (error.name === 'TypeError') {

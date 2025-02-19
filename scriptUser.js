@@ -147,6 +147,7 @@ w3.includeHTML(() => {
                     <h2 style="background-color: transparent;">${product.name}</h2>
                     <p style="background-color: transparent;">Preço: €${product.price}</p>
                     <p style="background-color: transparent;">Categoria: ${product.category}</p>
+                    <p style="background-color: transparent;">Estado: ${product.state}</p>
                 </div>
             </div>
         `;

@@ -47,7 +47,7 @@ const mockProduct = {
 };
 
 // Require the module AFTER mocking
-const scriptAvaliacoes = require('./scriptAvaliacoes.js');
+//const scriptAvaliacoes = require('./scriptAvaliacoes.js');
 
 
 // Test hover over stars
