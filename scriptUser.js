@@ -256,11 +256,12 @@ function saveUserInfo(event) {
     };
     console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
+      let loggedUser = sessionStorage.getItem('username');
+      let password = sessionStorage.getItem('password');
       updateUser(loggedUser, password, updatedUser);
       updateWithNewInformation(updatedUser);
     }   
   }
-    alert("Informacoes Atualizadas com Sucesso!");
 }
 
 //função para guarda novos dados na sessionStorage
