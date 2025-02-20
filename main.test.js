@@ -85,7 +85,7 @@ test('botão area pessoal utilizador', () => {
 });
 
 
-// Testar a função de guardar detalhes no session storage
+// Testar a função de guardar detalhes no Session Storage
 const addDetailsUserInSessionStorage = function (username, password) {
   sessionStorage.setItem('logged', 'true');
   sessionStorage.setItem('username', username);
@@ -94,9 +94,8 @@ const addDetailsUserInSessionStorage = function (username, password) {
 
 describe('addDetailsUserInSessionStorage', () => {
   let sessionStorageMock;
-
   beforeEach(() => {
-    // Mock sessionStorage
+    // Mock do sessionStorage
     sessionStorageMock = (() => {
       let store = {};
       return {
@@ -105,12 +104,6 @@ describe('addDetailsUserInSessionStorage', () => {
         }),
         getItem: jest.fn((key) => {
           return store[key] || null;
-        }),
-        removeItem: jest.fn((key) => {
-          delete store[key];
-        }),
-        clear: jest.fn(() => {
-          store = {};
         })
       };
     })();
@@ -121,10 +114,7 @@ describe('addDetailsUserInSessionStorage', () => {
     });
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
+  
   test('guardar informações de username, password e logged no sessionStorage', () => {
     const username = 'jpsequeira';
     const password = 'admin';
