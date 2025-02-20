@@ -9,15 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-    <header id="headerFetch">
-    </header>
-    <script>
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('headerFetch').innerHTML = data;
-        });
-    </script>
+    <div w3-include-html="header.html"></div> 
     <div class="container">
         <div w3-include-html="asideGestaoPessoal.html"></div>
         <main class="main-content">

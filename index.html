@@ -9,15 +9,7 @@
 </head>
 <body>
     <!--Header externo-->
-    <header id="headerFetch">
-    </header>
-    <script>
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('headerFetch').innerHTML = data;
-        });
-    </script>  
+    <div w3-include-html="header.html"></div> 
     <!--Conteudo total-->   
         <!--Menu aside para registo e aceder ao registo-->
         <div w3-include-html="aside.html"></div>

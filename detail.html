@@ -9,15 +9,7 @@
 </head>
 <body>
     <!--Header externo-->
-    <header id="headerFetch">
-    </header>
-    <script>
-        fetch('header.html')
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('headerFetch').innerHTML = data;
-        });
-    </script>
+    <div w3-include-html="header.html"></div> 
     <div class="container">
         <main class="main-content">
             <!--Título da categoria do produto-->
@@ -62,15 +54,15 @@
                         <div class="edit-product-form" id="edit-product-form">
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-nome">Nome do Produto:</label>
-                                <input type="text" id="edit-nome" name="edit-nome">
+                                <input type="text" id="edit-nome" name="edit-nome" maxlength="30">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-descricao">Descrição:</label>
-                                <input type="text" id="edit-descricao" name="edit-descricao">
+                                <input type="text" id="edit-descricao" name="edit-descricao" maxlength="30">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-preco">Preço do Produto:</label>
-                                <input type="text" id="edit-preco" name="edit-preco">
+                                <input type="text" id="edit-preco" name="edit-preco" maxlength="6">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-categoria">Categoria do Produto:</label>
@@ -84,7 +76,7 @@
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-localidade">Localização:</label>
-                                <input type="text" id="edit-localidade" name="edit-localidade">
+                                <input type="text" id="edit-localidade" name="edit-localidade" maxlength="10">
                             </div>
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-imagem">url de imagem:</label>
@@ -111,7 +103,7 @@
         <section id="avaliacao-form">
             <h2>Adicionar Avaliação</h2>
             <form id="formAvaliacao">
-                <textarea id="comentario" name="comentario" required></textarea>
+                <textarea id="comentario" name="comentario" required maxlength="100"></textarea>
 
                 <div class="rating-container">
                     <div id="rating" class="rating">
