@@ -54,6 +54,54 @@ test('mouseover changes rating text', () => {
     expect(ratingText.textContent).toBe(ratingWords[1]);
 });
 
+//Teste para avaliação 'Mau'
+test('mouseover changes rating text', () => {
+    // consts selecionam todos os elementos i dentro do elemento com o ID rating, 
+    // e selecionam o elemento com o ID rating-text e selecionam a primeira estrela.
+      const stars = document.querySelectorAll('#rating i');
+      const ratingText = document.getElementById('rating-text');
+      const secondStar = stars[1]; // Select the second star
+  
+      // Attach the event listener to firstStar
+      //Este bloco anexa um event listener de mouseover na primeira estrela. Quando o evento é disparado, 
+      //a função dentro do event listener atualiza o textContent do elemento ratingText com a palavra de avaliação correspondente.
+      secondStar.addEventListener('mouseover', () => {
+          const ratingValue = secondStar.getAttribute('data-value');
+          ratingText.textContent = ratingWords[ratingValue];
+      });
+  
+      // Dispatch mouseover event
+      secondStar.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+  
+      // Esta linha verifica se o textContent do elemento ratingText foi atualizado corretamente 
+      // para "Péssimo", que é o valor correspondente para a primeira estrela.
+      expect(ratingText.textContent).toBe(ratingWords[2]);
+  });
+
+  //Teste para avaliação 'Excelente'
+test('mouseover changes rating text', () => {
+    // consts selecionam todos os elementos i dentro do elemento com o ID rating, 
+    // e selecionam o elemento com o ID rating-text e selecionam a primeira estrela.
+      const stars = document.querySelectorAll('#rating i');
+      const ratingText = document.getElementById('rating-text');
+      const fiveStar = stars[4]; // Select the second star
+  
+      // Attach the event listener to firstStar
+      //Este bloco anexa um event listener de mouseover na primeira estrela. Quando o evento é disparado, 
+      //a função dentro do event listener atualiza o textContent do elemento ratingText com a palavra de avaliação correspondente.
+      fiveStar.addEventListener('mouseover', () => {
+          const ratingValue = fiveStar.getAttribute('data-value');
+          ratingText.textContent = ratingWords[ratingValue];
+      });
+  
+      // Dispatch mouseover event
+      fiveStar.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }));
+  
+      // Esta linha verifica se o textContent do elemento ratingText foi atualizado corretamente 
+      // para "Péssimo", que é o valor correspondente para a primeira estrela.
+      expect(ratingText.textContent).toBe(ratingWords[5]);
+  });
+
 // Test 2: Verify nota input value changes on click
 test('click sets nota input value', () => {
   // consts selecionam todos os elementos i dentro do elemento com o ID rating, 

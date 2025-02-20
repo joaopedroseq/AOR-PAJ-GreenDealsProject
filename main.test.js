@@ -83,3 +83,59 @@ test('botão area pessoal utilizador', () => {
   //Verifica se o addEventListener foi chamado com 'submit' e uma função como argumentos.
   expect(spy).toHaveBeenCalledWith('submit', expect.any(Function));
 });
+
+
+// Testar a função de guardar detalhes no session storage
+const addDetailsUserInSessionStorage = function (username, password) {
+  sessionStorage.setItem('logged', 'true');
+  sessionStorage.setItem('username', username);
+  sessionStorage.setItem('password', password);
+};
+
+describe('addDetailsUserInSessionStorage', () => {
+  let sessionStorageMock;
+
+  beforeEach(() => {
+    // Mock sessionStorage
+    sessionStorageMock = (() => {
+      let store = {};
+      return {
+        setItem: jest.fn((key, value) => {
+          store[key] = value;
+        }),
+        getItem: jest.fn((key) => {
+          return store[key] || null;
+        }),
+        removeItem: jest.fn((key) => {
+          delete store[key];
+        }),
+        clear: jest.fn(() => {
+          store = {};
+        })
+      };
+    })();
+
+    Object.defineProperty(window, 'sessionStorage', {
+      value: sessionStorageMock,
+      writable: true
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('guardar informações de username, password e logged no sessionStorage', () => {
+    const username = 'jpsequeira';
+    const password = 'admin';
+
+    addDetailsUserInSessionStorage(username, password);
+
+    expect(sessionStorage.getItem('username')).toBe('jpsequeira');
+    expect(sessionStorage.getItem('password')).toBe('admin');
+    expect(sessionStorage.getItem('logged')).toBe('true');
+    expect(sessionStorage.getItem('username')).not.toBe('admin');
+    expect(sessionStorage.getItem('password')).not.toBe('administrator');
+    expect(sessionStorage.getItem('logged')).not.toBe('false');
+  });
+});

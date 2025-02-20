@@ -1,4 +1,3 @@
-
 w3.includeHTML(() =>  {
 
   //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
