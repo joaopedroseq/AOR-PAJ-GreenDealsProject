@@ -9,8 +9,15 @@
 </head>
 <body>
     <!--Header externo-->
-    <div w3-include-html="header.html"></div>
-
+    <header id="headerFetch">
+    </header>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('headerFetch').innerHTML = data;
+        });
+    </script>
     <div class="container">
         <!--Menu aside para alterar informações e eliminar produtos-->
         <div w3-include-html="aside.html"></div>

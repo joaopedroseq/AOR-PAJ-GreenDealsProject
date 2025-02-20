@@ -7,7 +7,15 @@
     <link rel="icon" href="images\logo.png" type="image/x-icon">
 </head>
 <body>
-    <div w3-include-html="header.html"></div>
+    <header id="headerFetch">
+    </header>
+    <script>
+        fetch('header.html')
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById('headerFetch').innerHTML = data;
+        });
+    </script> 
 
     <div class="container">
         <div w3-include-html="aside.html"></div>
@@ -20,6 +28,7 @@
     </div>
     <div w3-include-html="footer.html"></div>
 </body>
+
 <script src="https://www.w3schools.com/lib/w3.js"></script>
 <script src="scriptMain.js"></script>
 <script src="scriptFooter.js"></script>
