@@ -1,12 +1,3 @@
-// Mock w3 before any tests run
-// Esta função beforeAll é executada uma vez antes de todos os testes. 
-// Ela cria um mock global do objeto w3 com uma função includeHTML simulada que executa imediatamente o callback fornecido.
-beforeAll(() => {
-    global.w3 = {
-      includeHTML: jest.fn(callback => callback())
-    };
-  });
-
 // Mock DOM elements for modal tests
 // Esta função beforeEach é executada antes de cada teste. 
 // Ela cria um mock do DOM com botões "About" e "Privacy", e um elemento de fechamento.
