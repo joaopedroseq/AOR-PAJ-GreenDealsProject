@@ -1,0 +1,13 @@
+pt/uc/dei/proj3/service/ApplicationConfig.class
+pt/uc/dei/proj3/pojo/EvaluationCounts.class
+pt/uc/dei/proj3/dto/ProductDto.class
+pt/uc/dei/proj3/service/CorsFilter.class
+pt/uc/dei/proj3/dto/StateId.class
+pt/uc/dei/proj3/dto/UserDto.class
+pt/uc/dei/proj3/pojo/ProductPojo.class
+pt/uc/dei/proj3/pojo/UserPojo.class
+pt/uc/dei/proj3/beans/UserBean.class
+pt/uc/dei/proj3/service/UserService.class
+pt/uc/dei/proj3/beans/LoginBean.class
+pt/uc/dei/proj3/beans/ApplicationBean.class
+pt/uc/dei/proj3/pojo/Evaluation.class

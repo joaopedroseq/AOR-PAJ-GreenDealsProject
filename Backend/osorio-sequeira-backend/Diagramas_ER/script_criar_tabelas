@@ -7,6 +7,7 @@ CREATE TABLE userpojo (
 	phonenumber SMALLINT NOT NULL,
 	admin	 BOOL NOT NULL,
 	url	 VARCHAR(512) NOT NULL,
+	excluded	 BOOL NOT NULL,
 	PRIMARY KEY(username)
 );
 
@@ -20,6 +21,7 @@ CREATE TABLE product (
 	pubdate		 TIMESTAMP NOT NULL,
 	edited		 BOOL NOT NULL,
 	urlimage		 VARCHAR(512) NOT NULL,
+	excluded		 BOOL NOT NULL,
 	category_nome	 VARCHAR(30) NOT NULL,
 	userpojo_username VARCHAR(30) NOT NULL,
 	PRIMARY KEY(id)
@@ -38,10 +40,3 @@ CREATE TABLE evaluation (
 	userpojo_username	 VARCHAR(30) NOT NULL,
 	userpojo_username1 VARCHAR(30) NOT NULL,
 	PRIMARY KEY(evaluationid)
-);
-
-ALTER TABLE product ADD CONSTRAINT product_fk1 FOREIGN KEY (category_nome) REFERENCES category(nome);
-ALTER TABLE product ADD CONSTRAINT product_fk2 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
-ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk1 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
-ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk2 FOREIGN KEY (userpojo_username1) REFERENCES userpojo(username);
-

@@ -1,0 +1,13 @@
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/service/ApplicationConfig.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/beans/UserBean.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/pojo/ProductPojo.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/pojo/Evaluation.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/pojo/EvaluationCounts.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/service/UserService.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/dto/StateId.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/dto/UserDto.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/pojo/UserPojo.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/beans/ApplicationBean.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/service/CorsFilter.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/dto/ProductDto.java
+/home/joao/Projetos-PAJ/projeto-3-aor-paj-2024-25-grupo7/Backend/osorio-sequeira-backend/src/main/java/pt/uc/dei/proj3/beans/LoginBean.java

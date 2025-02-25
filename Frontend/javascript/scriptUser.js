@@ -8,8 +8,8 @@ w3.includeHTML(() => {
 
   loadUserInfo(loggedUser, password);
   getUserProducts(loggedUser, password);
-    
-  const myProductsBtn = document.getElementById('myProductsBtn');
+
+  const myProductsBtn = document.getElementById("myProductsBtn");
 
   const myReviewsBtn = document.getElementById("myReviewsBtn");
 
@@ -35,15 +35,14 @@ w3.includeHTML(() => {
   });
 
   async function loadUserInfo(loggedUser, password) {
-    const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
+    const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
     console.log("URL:", getUserInfoUrl);
 
     const loadUserInfoHeaders = new Headers({
-      'Content-Type': 'application/json',
-      'password': password,
-      'username': loggedUser
+      "Content-Type": "application/json",
+      password: password,
+      username: loggedUser,
     });
-
 
     try {
       const response = await fetch(getUserInfoUrl, {
@@ -158,17 +157,17 @@ w3.includeHTML(() => {
   // Função para os productos do backend e exibi-los na página de utilizador
   function getUserProducts(loggedUser, password) {
     const getAvaiableProductsUrl =
-      "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/" +
+      "http://localhost:8080/osorio-sequeira-proj3/rest/user/" +
       loggedUser +
       "/products/";
     const getUserProductstHeaders = new Headers({
-        'Content-Type': 'application/json',
-        'password': password,
-        'username': loggedUser
-      });
+      "Content-Type": "application/json",
+      password: password,
+      username: loggedUser,
+    });
     fetch(getAvaiableProductsUrl, {
       method: "GET",
-      headers: getUserProductstHeaders
+      headers: getUserProductstHeaders,
     })
       .then((response) => {
         console.log("Status da resposta:", response.status);
@@ -257,30 +256,29 @@ function saveUserInfo(event) {
     };
     console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
-      let loggedUser = sessionStorage.getItem('username');
-      let password = sessionStorage.getItem('password');
+      let loggedUser = sessionStorage.getItem("username");
+      let password = sessionStorage.getItem("password");
       updateUser(loggedUser, password, updatedUser);
       updateWithNewInformation(updatedUser);
-    }   
+    }
   }
 }
 
 //função para guarda novos dados na sessionStorage
-function updateWithNewInformation(updatedUser){
-  sessionStorage.setItem('password', updatedUser.password);
-  sessionStorage.setItem('firstName', updatedUser.firstName);
-  sessionStorage.setItem('photo', updatedUser.url);
+function updateWithNewInformation(updatedUser) {
+  sessionStorage.setItem("password", updatedUser.password);
+  sessionStorage.setItem("firstName", updatedUser.firstName);
+  sessionStorage.setItem("photo", updatedUser.url);
 }
-
 
 //função alterar no backend
 async function updateUser(loggedUser, password, updatedUser) {
-  const updateUserURL = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/update/${username}`;
+  const updateUserURL = `http://localhost:8080/osorio-sequeira-proj3/rest/user/update/${username}`;
   console.log(updatedUser);
   const updateUserHeaders = new Headers({
-    'Content-Type': 'application/json',
-    'password': password,
-    'username': loggedUser
+    "Content-Type": "application/json",
+    password: password,
+    username: loggedUser,
   });
 
   try {
@@ -313,32 +311,34 @@ async function updateUser(loggedUser, password, updatedUser) {
 }
 
 async function loadUserReviews() {
-    const container = document.getElementById('user-reviews-container');
-    container.innerHTML = 'Carregando...';
-    
-    const loggedUser = sessionStorage.getItem('username');
-    
-    try {
-        const response = await fetch(
-            `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/all/evaluations/${loggedUser}`
-        );
-        const evaluations = await response.json();
+  const container = document.getElementById("user-reviews-container");
+  container.innerHTML = "Carregando...";
 
-        container.innerHTML = ''; // Clear container
-        
-        // Filter evaluations where loggedUser is the seller
-        const sellerEvaluations = evaluations.filter(ev => ev.seller === loggedUser);
-        
-        if (sellerEvaluations.length === 0) {
-            container.innerHTML = "<p>Você ainda não recebeu avaliações.</p>";
-            return;
-        }
+  const loggedUser = sessionStorage.getItem("username");
 
-        // Display each evaluation
-        sellerEvaluations.forEach(review => {
-            const reviewElement = document.createElement('div');
-            reviewElement.classList.add('avaliacao-item');
-            reviewElement.innerHTML = `
+  try {
+    const response = await fetch(
+      `http://localhost:8080/osorio-sequeira-proj3/rest/user/all/evaluations/${loggedUser}`
+    );
+    const evaluations = await response.json();
+
+    container.innerHTML = ""; // Clear container
+
+    // Filter evaluations where loggedUser is the seller
+    const sellerEvaluations = evaluations.filter(
+      (ev) => ev.seller === loggedUser
+    );
+
+    if (sellerEvaluations.length === 0) {
+      container.innerHTML = "<p>Você ainda não recebeu avaliações.</p>";
+      return;
+    }
+
+    // Display each evaluation
+    sellerEvaluations.forEach((review) => {
+      const reviewElement = document.createElement("div");
+      reviewElement.classList.add("avaliacao-item");
+      reviewElement.innerHTML = `
                 <div class="review-header">
                     <strong>${review.userName}</strong>
                     <span>${new Date(review.date).toLocaleString()}</span>
@@ -346,157 +346,162 @@ async function loadUserReviews() {
                 ${generateStars(review.starNumber)}
                 <p>${review.comment}</p>
             `;
-            container.appendChild(reviewElement);
-        });
-
-    } catch (error) {
-        console.error('Erro ao carregar avaliações:', error);
-        container.innerHTML = "<p>Erro ao carregar avaliações.</p>";
-    }
+      container.appendChild(reviewElement);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar avaliações:", error);
+    container.innerHTML = "<p>Erro ao carregar avaliações.</p>";
+  }
 }
 
 // Add stars generation helper
 function generateStars(nota) {
-    let stars = '';
-    for(let i = 1; i <= 5; i++) {
-        stars += i <= nota 
-            ? '<i class="fas fa-star" style="color: #ffd700;"></i>'
-            : '<i class="far fa-star" style="color: #ccc;"></i>';
-    }
-    return stars;
+  let stars = "";
+  for (let i = 1; i <= 5; i++) {
+    stars +=
+      i <= nota
+        ? '<i class="fas fa-star" style="color: #ffd700;"></i>'
+        : '<i class="far fa-star" style="color: #ccc;"></i>';
+  }
+  return stars;
 }
 
+async function editReview(
+  evaluationId,
+  currentComment,
+  currentStarNumber,
+  seller
+) {
+  const loggedUser = sessionStorage.getItem("username"); // Retrieve logged-in user
+  const password = sessionStorage.getItem("password");
 
-async function editReview(evaluationId, currentComment, currentStarNumber, seller) {
-    const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
-    const password = sessionStorage.getItem('password');
-    
-    if (!loggedUser) {
-        alert("Faça login para editar avaliações!");
-        return;
-    }
+  if (!loggedUser) {
+    alert("Faça login para editar avaliações!");
+    return;
+  }
 
-    const newComment = prompt('Editar comentário:', currentComment);
-    let newStarNumber = prompt('Editar a nota (1-5):', currentStarNumber);
-    newStarNumber = parseInt(newStarNumber); // Convert to number
+  const newComment = prompt("Editar comentário:", currentComment);
+  let newStarNumber = prompt("Editar a nota (1-5):", currentStarNumber);
+  newStarNumber = parseInt(newStarNumber); // Convert to number
 
-    if (newComment !== null && !isNaN(newStarNumber) && newStarNumber >= 1 && newStarNumber <= 5) {
-        const updatedEvaluation = {
-            evaluationId,
-            comment: newComment,
-            starNumber: newStarNumber
-        };
+  if (
+    newComment !== null &&
+    !isNaN(newStarNumber) &&
+    newStarNumber >= 1 &&
+    newStarNumber <= 5
+  ) {
+    const updatedEvaluation = {
+      evaluationId,
+      comment: newComment,
+      starNumber: newStarNumber,
+    };
 
-        try {
-
-          const editReviewHeaders = new Headers({
-            'Content-Type': 'application/json',
-            'password': password,
-            'username': loggedUser
-          });
-            const response = await fetch(
-                `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
-                {
-                    method: 'POST',
-                    headers: editReviewHeaders,
-                    body: JSON.stringify(updatedEvaluation)
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error('Erro ao atualizar avaliação');
-            }
-
-            alert("Avaliação atualizada com sucesso!");
-            loadUserReviews();  // Reload the reviews
-            updateRatings();  // Update statistics
-        } catch (error) {
-            console.error('Error updating evaluation:', error);
-            alert(error.message);
+    try {
+      const editReviewHeaders = new Headers({
+        "Content-Type": "application/json",
+        password: password,
+        username: loggedUser,
+      });
+      const response = await fetch(
+        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
+        {
+          method: "POST",
+          headers: editReviewHeaders,
+          body: JSON.stringify(updatedEvaluation),
         }
-    } else {
-        alert("Nota inválida. Insira um número entre 1 e 5.");
-    }
-}
+      );
 
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar avaliação");
+      }
+
+      alert("Avaliação atualizada com sucesso!");
+      loadUserReviews(); // Reload the reviews
+      updateRatings(); // Update statistics
+    } catch (error) {
+      console.error("Error updating evaluation:", error);
+      alert(error.message);
+    }
+  } else {
+    alert("Nota inválida. Insira um número entre 1 e 5.");
+  }
+}
 
 async function deleteReview(evaluationId, seller) {
-    const loggedUser = sessionStorage.getItem('username');  // Retrieve logged-in user
-    const password = sessionStorage.getItem('password');
+  const loggedUser = sessionStorage.getItem("username"); // Retrieve logged-in user
+  const password = sessionStorage.getItem("password");
 
-    if (!loggedUser) {
-        alert("Faça login para apagar avaliações!");
-        return;
-    }
+  if (!loggedUser) {
+    alert("Faça login para apagar avaliações!");
+    return;
+  }
 
-    const confirmDelete = confirm('Tem certeza que deseja eliminar esta avaliação?');
-    if (confirmDelete) {
-        try {
-          const deleteReviewHeaders = new Headers({
-            'Content-Type': 'application/json',
-            'password': password,
-            'username': loggedUser
-          });
-            const response = await fetch(
-                `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
-                {
-                    method: 'DELETE',
-                    headers: deleteReviewHeaders,
-                }
-            );
-            
-            if (!response.ok) {
-                throw new Error('Erro ao excluir a avaliação');
-            }
-
-            alert("Avaliação excluída com sucesso!");
-            loadUserReviews();  // Reload the reviews
-            updateRatings();  // Update statistics
-        } catch (error) {
-            console.error('Error deleting evaluation:', error);
-            alert(error.message);
+  const confirmDelete = confirm(
+    "Tem certeza que deseja eliminar esta avaliação?"
+  );
+  if (confirmDelete) {
+    try {
+      const deleteReviewHeaders = new Headers({
+        "Content-Type": "application/json",
+        password: password,
+        username: loggedUser,
+      });
+      const response = await fetch(
+        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
+        {
+          method: "DELETE",
+          headers: deleteReviewHeaders,
         }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir a avaliação");
+      }
+
+      alert("Avaliação excluída com sucesso!");
+      loadUserReviews(); // Reload the reviews
+      updateRatings(); // Update statistics
+    } catch (error) {
+      console.error("Error deleting evaluation:", error);
+      alert(error.message);
     }
+  }
 }
 
+async function getUserInfo(loggedUser, password) {
+  const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
+  console.log("URL:", getUserInfoUrl);
 
+  const getUserInfoHeaders = new Headers({
+    "Content-Type": "application/json",
+    password: password,
+    username: loggedUser,
+  });
 
-    async function getUserInfo(loggedUser, password) {
-        
-        const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
-        console.log('URL:', getUserInfoUrl);
+  try {
+    const response = await fetch(getUserInfoUrl, {
+      method: "GET",
+      headers: getUserInfoHeaders,
+      credentials: "include", // Inclui as credenciais de sessão
+    });
 
-        const getUserInfoHeaders = new Headers({
-          'Content-Type': 'application/json',
-          'password': password,
-          'username': loggedUser
-        });
-      
-        try {
-            const response = await fetch(getUserInfoUrl, {
-              method: 'GET',
-              headers: getUserInfoHeaders,
-              credentials: 'include' // Inclui as credenciais de sessão
-            });
-      
-          console.log('Status da resposta:', response.status);
-      
-          if (!response.ok) {
-            const errorMessage = await response.text();
-            throw new Error(`Erro na resposta: ${errorMessage}`);
-          }
-      
-          const userInfo = await response.json();
-          console.log('Resposta JSON:', userInfo);
-          
-          if (userInfo) {
-            return userInfo;            
-          } else {
-            console.log("User info is empty");
-          }
-        } catch (error) {
-          console.error('Erro:', error);
-          alert('Ocorreu um erro: ' + error.message);
-        }
-      }
-    
+    console.log("Status da resposta:", response.status);
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erro na resposta: ${errorMessage}`);
+    }
+
+    const userInfo = await response.json();
+    console.log("Resposta JSON:", userInfo);
+
+    if (userInfo) {
+      return userInfo;
+    } else {
+      console.log("User info is empty");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Ocorreu um erro: " + error.message);
+  }
+}
