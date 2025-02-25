@@ -103,7 +103,7 @@ header {
     }
 
     .dropdownLogout{
-        display: none;
+        /*display: none;*/
         position: absolute;
         right: 0;
         color: white; /* Cor do texto */
