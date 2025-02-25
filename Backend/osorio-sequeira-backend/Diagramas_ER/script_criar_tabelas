@@ -1,6 +1,7 @@
 CREATE TABLE userpojo (
 	username	 VARCHAR(30),
 	password	 VARCHAR(30) NOT NULL,
+	token	 VARCHAR(512),
 	firstname	 VARCHAR(30) NOT NULL,
 	lastname	 VARCHAR(30) NOT NULL,
 	email	 VARCHAR(30) NOT NULL,
@@ -40,3 +41,11 @@ CREATE TABLE evaluation (
 	userpojo_username	 VARCHAR(30) NOT NULL,
 	userpojo_username1 VARCHAR(30) NOT NULL,
 	PRIMARY KEY(evaluationid)
+);
+
+ALTER TABLE userpojo ADD UNIQUE (token);
+ALTER TABLE product ADD CONSTRAINT product_fk1 FOREIGN KEY (category_nome) REFERENCES category(nome);
+ALTER TABLE product ADD CONSTRAINT product_fk2 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
+ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk1 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
+ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk2 FOREIGN KEY (userpojo_username1) REFERENCES userpojo(username);
+
