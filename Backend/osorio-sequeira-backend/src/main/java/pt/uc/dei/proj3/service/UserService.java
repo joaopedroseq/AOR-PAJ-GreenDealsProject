@@ -37,7 +37,6 @@ public class UserService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
-        //teste
         if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
                 || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
                 userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
