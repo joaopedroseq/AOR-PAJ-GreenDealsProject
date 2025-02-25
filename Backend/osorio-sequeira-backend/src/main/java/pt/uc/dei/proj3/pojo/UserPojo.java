@@ -5,17 +5,18 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class UserPojo implements Serializable {
-    private String firstName;
-    private String lastName;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private String url;
     private ArrayList<ProductPojo> productPojos;
     private EvaluationCounts evaluationCounts;
     private ArrayList <Evaluation> evaluations;
-
+    private boolean admin;
+    private boolean excluded;
 
     public UserPojo(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, ArrayList<ProductPojo> productPojos) {
         this.firstName = firstName;
