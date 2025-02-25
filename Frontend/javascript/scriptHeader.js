@@ -67,8 +67,6 @@ function addDetailsUserInSessionStorage(username,password){
             asideGestaoPessoal.style.display = 'none';
         }
     }
-
-
 }
 
 

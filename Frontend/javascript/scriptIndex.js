@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
   carregarHeader();
+  carregarAside();
 
   function carregarHeader() {
     fetch("header.html")
@@ -64,8 +65,25 @@ document.addEventListener("DOMContentLoaded", function () {
         //Botão de acesso à área pessoal
         const userAreaBtn = document.getElementById("userAreaBtn");
         userAreaBtn.addEventListener("click", openUserArea);
+
+        //Funções para o aside
+        //vai  buscar o elemento "hamburger"
+        const hamburger = document.getElementById("hamburger");
+        // Adiciona o evento de clique ao ícone de hambúrguer para alternar a apresentação do aside
+        hamburger.addEventListener("click", toggleAside);
+
+        console.log(hamburger);
       });
   }
+
+  function carregarAside() {
+    fetch("aside.html")
+      .then((response) => response.text())
+      .then(async (data) => {
+        document.getElementById("aside-placeholder").innerHTML = data;
+      })
+    }
+
 
       // FUnção para verificar se existe um utilizador logged
     function checkIfLogged(){
@@ -87,6 +105,140 @@ document.addEventListener("DOMContentLoaded", function () {
     const password = document.getElementById("password").value;
     login(username, password);
     loginForm.reset();
+  }
+
+  //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
+  //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
+  async function login(username, password) {
+    const loginUrl =
+      "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/login";
+
+    await fetch(loginUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password })
+    })
+      .then(async (response) => {
+        console.log("Status da resposta:", response.status);
+        const text = await response
+              .text();
+          return ({ status: response.status, text: text });
+      })
+      .then((data) => {
+        console.log("Dados recebidos:", data);
+        if (data.status === 200) {
+          handleSuccessfulLogin(username, password);
+        } else {
+          handleFailedLogin(data.text);
+        }
+      })
+      .catch((error) => {
+        console.error("Erro detalhado:", error);
+        alert(
+          "Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes."
+        );
+      });
+  }
+
+  //possivelmente alterar esta função
+  async function handleSuccessfulLogin(username, password) {
+    console.log("correu successfull login");
+    await loadUserInfo(username, password);
+    await addDetailsUserInSessionStorage(username, password);
+    let firstName = sessionStorage.getItem("firstName");
+    welcomeMessage.textContent = `Olá, ${firstName}!`;
+    document.getElementById("loginPhoto").src = sessionStorage.getItem("photo"); ///para implementar
+    document.getElementById("loginMessage").style.visibility = "visible";
+    document.getElementById("loginButton").style.visibility = "hidden";
+    console.log("Login bem-sucedido para:", username);
+    window.location.reload();
+  }
+
+  function handleFailedLogin(message) {
+    console.log("correu unsuccessfull login");
+    alert(message || "Login falhou. Por favor, tente novamente.");
+    console.log("Login falhou:", message);
+  }
+
+  async function loadUserInfo(loggedUser, password) {
+    const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
+    console.log("URL:", getUserInfoUrl);
+
+    const loadUserInfoHeaders = new Headers({
+      "Content-Type": "application/json",
+      password: password,
+      username: loggedUser,
+    });
+
+    try {
+      const response = await fetch(getUserInfoUrl, {
+        method: "GET",
+        headers: loadUserInfoHeaders,
+        credentials: "include", // Inclui as credenciais de sessão
+      });
+
+      console.log("Status da resposta:", response.status);
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Erro na resposta: ${errorMessage}`);
+      }
+
+      const responseData = await response.json();
+      console.log("Resposta JSON:", responseData);
+
+      if (responseData) {
+        sessionStorage.setItem("photo", responseData.url);
+        sessionStorage.setItem("firstName", responseData.firstName);
+      } else {
+        console.log("Not a user logged");
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Ocorreu um erro: " + error.message);
+    }
+  }
+
+  //Função para efetuar o Logout
+  async function logout() {
+    try {
+      const response = await fetch(
+        "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // Inclui cookies na requisição
+        }
+      );
+
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(`Falha no logout: ${errorMessage}`);
+      }
+
+      // Limpar dados de sessão locais
+      sessionStorage.removeItem("username");
+      sessionStorage.removeItem("logged");
+      sessionStorage.removeItem("password"); // Removendo a senha
+      localStorage.removeItem("token"); // Se estiver usando JWT
+
+      // Atualizar a interface do usuário
+      const loginMessage = document.getElementById("loginMessage");
+      if (loginMessage) loginMessage.style.visibility = "hidden";
+
+      const loginButton = document.getElementById("loginButton");
+      if (loginButton) loginButton.style.visibility = "visible";
+
+      console.log("Logout bem-sucedido, redirecionando...");
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("Erro durante o logout:", error);
+      alert(`Ocorreu um erro durante o logout: ${error.message}`);
+    }
   }
 
   // Função para ir para a área pessoal
@@ -226,148 +378,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  //Chama a função para verificar se o username passado como parâmetro existe, se sim, então guarda este no sessionStorage
-  //e aplica a visibilidade no elementos de login e da mensagem de boas vindas
-  async function login(username, password) {
-    const loginUrl =
-      "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/login";
-
-    await fetch(loginUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({ username, password }),
-    })
-      .then((response) => {
-        console.log("Status da resposta:", response.status);
-        return response
-          .text()
-          .then((text) => ({ status: response.status, text: text }));
-      })
-      .then((data) => {
-        console.log("Dados recebidos:", data);
-        if (data.status === 200) {
-          handleSuccessfulLogin(username, password);
-        } else {
-          handleFailedLogin(data.text);
-        }
-      })
-      .catch((error) => {
-        console.error("Erro detalhado:", error);
-        alert(
-          "Erro ao tentar fazer login. Por favor, verifique o console para mais detalhes."
-        );
-      });
-  }
-
-  //possivelmente alterar esta função
-  async function handleSuccessfulLogin(username, password) {
-    console.log("correu successfull login");
-    await loadUserInfo(username, password);
-    await addDetailsUserInSessionStorage(username, password);
-    let firstName = sessionStorage.getItem("firstName");
-    welcomeMessage.textContent = `Olá, ${firstName}!`;
-    document.getElementById("loginPhoto").src = sessionStorage.getItem("photo"); ///para implementar
-    document.getElementById("loginMessage").style.visibility = "visible";
-    document.getElementById("loginButton").style.visibility = "hidden";
-    console.log("Login bem-sucedido para:", username);
-    window.location.reload();
-  }
-
-  function handleFailedLogin(message) {
-    console.log("correu unsuccessfull login");
-    alert(message || "Login falhou. Por favor, tente novamente.");
-    console.log("Login falhou:", message);
-  }
-
-  async function loadUserInfo(loggedUser, password) {
-    const getUserInfoUrl = `http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/infoPessoal/${loggedUser}`;
-    console.log("URL:", getUserInfoUrl);
-
-    const loadUserInfoHeaders = new Headers({
-      "Content-Type": "application/json",
-      password: password,
-      username: loggedUser,
-    });
-
-    try {
-      const response = await fetch(getUserInfoUrl, {
-        method: "GET",
-        headers: loadUserInfoHeaders,
-        credentials: "include", // Inclui as credenciais de sessão
-      });
-
-      console.log("Status da resposta:", response.status);
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Erro na resposta: ${errorMessage}`);
-      }
-
-      const responseData = await response.json();
-      console.log("Resposta JSON:", responseData);
-
-      if (responseData) {
-        sessionStorage.setItem("photo", responseData.url);
-        sessionStorage.setItem("firstName", responseData.firstName);
-      } else {
-        console.log("Not a user logged");
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
-    }
-  }
-
-  //Função para efetuar o Logout
-  async function logout() {
-    try {
-      const response = await fetch(
-        "http://localhost:8080/berta-sequeira-miguel-proj2/rest/user/logout",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // Inclui cookies na requisição
-        }
-      );
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Falha no logout: ${errorMessage}`);
-      }
-
-      // Limpar dados de sessão locais
-      sessionStorage.removeItem("username");
-      sessionStorage.removeItem("logged");
-      sessionStorage.removeItem("password"); // Removendo a senha
-      localStorage.removeItem("token"); // Se estiver usando JWT
-
-      // Atualizar a interface do usuário
-      const loginMessage = document.getElementById("loginMessage");
-      if (loginMessage) loginMessage.style.visibility = "hidden";
-
-      const loginButton = document.getElementById("loginButton");
-      if (loginButton) loginButton.style.visibility = "visible";
-
-      console.log("Logout bem-sucedido, redirecionando...");
-      window.location.href = "index.html";
-    } catch (error) {
-      console.error("Erro durante o logout:", error);
-      alert(`Ocorreu um erro durante o logout: ${error.message}`);
-    }
-  }
 
   //FUNÇÕES PREVIAS DO INDEX
 
-  //Funções para o aside
-  //vai  buscar o elemento "hamburger"
-  const hamburger = document.getElementById("hamburger");
-  // Adiciona o evento de clique ao ícone de hambúrguer para alternar a apresentação do aside
-  hamburger.addEventListener("click", toggleAside);
+  
+  
 
   //Registo de utilizadores
   //Procura de elementos
