@@ -85,7 +85,7 @@ header {
     
 
     .dropdownLogin{
-        display: none;
+        /*display: none;*/
         top: 50px;
         position: absolute;
         right: 0;
@@ -103,7 +103,7 @@ header {
     }
 
     .dropdownLogout{
-        display: none;
+        /*display: none;*/
         position: absolute;
         right: 0;
         color: white; /* Cor do texto */

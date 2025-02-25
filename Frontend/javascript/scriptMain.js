@@ -1,6 +1,3 @@
-w3.includeHTML(() => {
-    const hamburger = document.getElementById('hamburger');
-    hamburger.addEventListener('click', toggleAside);
 
     const gridContainer = document.querySelector('.grid-container');
 
@@ -58,4 +55,3 @@ w3.includeHTML(() => {
     }
 
     getAvaiableProducts();
-});
