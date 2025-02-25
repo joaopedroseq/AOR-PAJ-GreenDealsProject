@@ -1,0 +1,47 @@
+CREATE TABLE userpojo (
+	username	 VARCHAR(30),
+	password	 VARCHAR(30) NOT NULL,
+	firstname	 VARCHAR(30) NOT NULL,
+	lastname	 VARCHAR(30) NOT NULL,
+	email	 VARCHAR(30) NOT NULL,
+	phonenumber SMALLINT NOT NULL,
+	admin	 BOOL NOT NULL,
+	url	 VARCHAR(512) NOT NULL,
+	PRIMARY KEY(username)
+);
+
+CREATE TABLE product (
+	id		 BIGINT,
+	name		 VARCHAR(30) NOT NULL,
+	description	 TEXT NOT NULL,
+	price		 FLOAT(10) NOT NULL,
+	location		 VARCHAR(30) NOT NULL,
+	state		 SMALLINT NOT NULL,
+	pubdate		 TIMESTAMP NOT NULL,
+	edited		 BOOL NOT NULL,
+	urlimage		 VARCHAR(512) NOT NULL,
+	category_nome	 VARCHAR(30) NOT NULL,
+	userpojo_username VARCHAR(30) NOT NULL,
+	PRIMARY KEY(id)
+);
+
+CREATE TABLE category (
+	nome VARCHAR(30),
+	PRIMARY KEY(nome)
+);
+
+CREATE TABLE evaluation (
+	evaluationid	 BIGINT,
+	starnumber	 SMALLINT NOT NULL,
+	comment		 TEXT NOT NULL,
+	evaldate		 TIMESTAMP NOT NULL,
+	userpojo_username	 VARCHAR(30) NOT NULL,
+	userpojo_username1 VARCHAR(30) NOT NULL,
+	PRIMARY KEY(evaluationid)
+);
+
+ALTER TABLE product ADD CONSTRAINT product_fk1 FOREIGN KEY (category_nome) REFERENCES category(nome);
+ALTER TABLE product ADD CONSTRAINT product_fk2 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
+ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk1 FOREIGN KEY (userpojo_username) REFERENCES userpojo(username);
+ALTER TABLE evaluation ADD CONSTRAINT evaluation_fk2 FOREIGN KEY (userpojo_username1) REFERENCES userpojo(username);
+
