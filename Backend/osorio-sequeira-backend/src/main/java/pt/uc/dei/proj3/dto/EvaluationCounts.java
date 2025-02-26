@@ -1,9 +1,8 @@
-package pt.uc.dei.proj3.pojo;
+package pt.uc.dei.proj3.dto;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EvaluationCounts implements Serializable {
+public class EvaluationCounts {
     private int oneStar;
     private int twoStar;
     private int threeStar;

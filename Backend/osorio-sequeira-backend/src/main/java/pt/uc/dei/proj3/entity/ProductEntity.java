@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name="product")
+@NamedQuery(name = "Product.getAllProducts", query = "SELECT p FROM ProductEntity p")
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

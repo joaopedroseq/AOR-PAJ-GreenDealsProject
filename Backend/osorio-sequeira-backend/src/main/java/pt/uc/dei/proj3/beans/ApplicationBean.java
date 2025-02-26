@@ -1,121 +1,40 @@
 package pt.uc.dei.proj3.beans;
 
-import jakarta.annotation.PreDestroy;
-import jakarta.json.*;
+import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
+import pt.uc.dei.proj3.dao.CategoryDao;
+import pt.uc.dei.proj3.dao.ProductDao;
+import pt.uc.dei.proj3.dao.UserDao;
 import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.StateId;
 import pt.uc.dei.proj3.dto.UserDto;
-import pt.uc.dei.proj3.pojo.Evaluation;
-import pt.uc.dei.proj3.pojo.EvaluationCounts;
-import pt.uc.dei.proj3.pojo.ProductPojo;
-import pt.uc.dei.proj3.pojo.UserPojo;
-import jakarta.enterprise.context.ApplicationScoped;
+import pt.uc.dei.proj3.dto.Evaluation;
+import pt.uc.dei.proj3.dto.EvaluationCounts;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
 
 import java.io.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-@ApplicationScoped
+@Stateless
 public class ApplicationBean implements Serializable {
-    final String fileUsers = "greendealsUsers.json";
-    private ArrayList<UserPojo> userPojos;
+    UserDao userDao;
+    ProductDao productDao;
+    CategoryDao categoryDao;
+
+    @Inject
+    public ApplicationBean(final UserDao userDao, final ProductDao productDao, final CategoryDao categoryDao) {
+        this.userDao = userDao;
+        this.productDao = productDao;
+        this.categoryDao = categoryDao;
+    }
 
     public ApplicationBean() {
-        File fUsers = new File(fileUsers);
-        if (fUsers.exists()) {
-            try {
-                /*Original
-                FileReader filereader = new FileReader(fUsers);
-                userPojos = JsonbBuilder.create().fromJson(filereader, new ArrayList<UserPojo>() {}.getClass().getGenericSuperclass());*/
-
-                //Copilot
-                FileReader filereader = new FileReader(fUsers);
-                JsonReader jsonReader = Json.createReader(filereader);
-                JsonArray jsonArray = jsonReader.readArray();
-                userPojos = new ArrayList<>();
-
-                for (JsonValue value : jsonArray) {
-                    JsonObject jsonUser = value.asJsonObject();
-
-                    String firstName = jsonUser.getString("firstName");
-                    String lastName = jsonUser.getString("lastName");
-                    String username = jsonUser.getString("username");
-                    String password = jsonUser.getString("password");
-                    String email = jsonUser.getString("email");
-                    String phoneNumber = jsonUser.getString("phoneNumber");
-                    String url = jsonUser.getString("url");
-
-                    ArrayList<ProductPojo> productPojos = new ArrayList<>();
-                    JsonArray jsonProducts = jsonUser.getJsonArray("productPojos");
-                    if (jsonProducts != null) {
-                        for (JsonValue productValue : jsonProducts) {
-                            JsonObject jsonProduct = productValue.asJsonObject();
-                            // Supondo que ProductPojo tenha um construtor que aceite esses parâmetros
-                            productPojos.add(new ProductPojo(
-                                    jsonProduct.getString("seller"),
-                                    jsonProduct.getString("name"),
-                                    jsonProduct.getString("description"),
-                                    jsonProduct.getJsonNumber("price").doubleValue(),
-                                    jsonProduct.getString("category"),
-                                    jsonProduct.getString("location"),
-                                    jsonProduct.getString("urlImage"),
-                                    StateId.valueOf(jsonProduct.getString("state")), // Supondo que 'state' é uma string no JSON e corresponde ao valor do enum
-                                    LocalDateTime.parse(jsonProduct.getString("date")), // Supondo que 'date' é uma string no formato ISO-8601 no JSON
-                                    jsonProduct.getInt("id")
-                            ));
-                        }
-                    }
-
-                    ArrayList<Evaluation> evaluations = new ArrayList<>();
-                    JsonArray jsonEvaluations = jsonUser.getJsonArray("evaluations");
-                    if (jsonEvaluations != null) {
-                        for (JsonValue evalValue : jsonEvaluations) {
-                            JsonObject jsonEvaluation = evalValue.asJsonObject();
-                            // Supondo que Evaluation tenha um construtor que aceite esses parâmetros
-                            evaluations.add(new Evaluation(
-                                    jsonEvaluation.getJsonNumber("starNumber").intValue(),
-                                    jsonEvaluation.getString("comment"),
-                                    jsonEvaluation.getString("userName"),
-                                    jsonEvaluation.getString("seller"),
-                                    LocalDateTime.parse(jsonEvaluation.getString("date")),
-                                    jsonEvaluation.getInt("evaluationId")
-                            ));
-                        }
-                    }
-
-                    // Supondo que EvaluationCounts tenha um construtor que aceite esses parâmetros
-                    JsonObject jsonEvaluationCounts = jsonUser.getJsonObject("evaluationCounts");
-                    EvaluationCounts evaluationCounts = new EvaluationCounts(
-                            jsonEvaluationCounts.getJsonNumber("oneStar").intValue(),
-                            jsonEvaluationCounts.getJsonNumber("twoStar").intValue(),
-                            jsonEvaluationCounts.getJsonNumber("threeStar").intValue(),
-                            jsonEvaluationCounts.getJsonNumber("fourStar").intValue(),
-                            jsonEvaluationCounts.getJsonNumber("fiveStar").intValue()
-                    );
-
-                    userPojos.add(new UserPojo(firstName, lastName, username, password, email, phoneNumber, url, productPojos, evaluations, evaluationCounts));
-                }
-
-                jsonReader.close();
-                //Fim de copilot
-            } catch (FileNotFoundException e) {
-                fUsers.delete();
-                throw new RuntimeException(e);
-            }
-
-        } else {
-            userPojos = new ArrayList<UserPojo>();
-        }
     }
 
-    @PreDestroy
-    public void preDestroy() {
-        writeUserIntoJsonFile();
-    }
 
+    /*
     public boolean addProduct(String username, String seller, String name, String description, double price, String category, String location, String urlImage) {
         for (UserPojo userPojo : userPojos) {
             if (userPojo.getUsername().equals(username)) {
@@ -393,4 +312,5 @@ public class ApplicationBean implements Serializable {
         }
         return false;
     }
+    */
 }

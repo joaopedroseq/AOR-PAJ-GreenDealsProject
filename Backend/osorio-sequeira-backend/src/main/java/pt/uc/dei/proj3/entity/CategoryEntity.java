@@ -2,16 +2,19 @@ package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+
 @Entity
 @Table(name="category")
-public class CategoryEntity {
+public class CategoryEntity implements Serializable {
 
     @Id
     @Column(name="nome", nullable=false, unique = true, updatable = false)
     private String nome;
 
     @OneToMany(mappedBy = "category")
-    private ProductEntity product;
+    private ArrayList<ProductEntity> product;
 
     //Constructors
     public CategoryEntity() {

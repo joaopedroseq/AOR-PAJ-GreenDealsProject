@@ -1,9 +1,8 @@
-package pt.uc.dei.proj3.pojo;
+package pt.uc.dei.proj3.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Evaluation implements Serializable {
+public class Evaluation {
     private int starNumber;
     private String comment;
     private String userName;

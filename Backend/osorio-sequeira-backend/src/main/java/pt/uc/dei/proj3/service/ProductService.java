@@ -20,10 +20,12 @@ public class ProductService {
     @Path("/products")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts() {
+        /*
         if (applicationBean.getProductsAllUsers() != null) {
             return Response.status(200).entity(applicationBean.getProductsAllUsers()).build();
         } else {
             return Response.status(400).entity("Failed").build();
-        }
+        }*/
+        return null;
     }
 }
