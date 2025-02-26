@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-@Table(name="userpojo")
+@Table(name="user")
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 @NamedQuery(name = "User.findUserByToken", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.token = :token")
 public class UserEntity implements Serializable {
