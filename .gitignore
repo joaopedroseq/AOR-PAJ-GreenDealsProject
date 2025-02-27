@@ -6,4 +6,8 @@ node_modules
 /Backend/osorio-sequeira-backend/.idea/*
 /Backend/osorio-sequeira-backend/.mvn
 /Backend/osorio-sequeira-backend/.mvn/*
+.vscode
+.vscode/*
+/Frontend/.vscode
+/Frontend/.vscode/*
 
