@@ -1,11 +1,9 @@
 package pt.uc.dei.proj3.service;
 
 import pt.uc.dei.proj3.beans.ApplicationBean;
-import pt.uc.dei.proj3.beans.LoginBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.ProductDto;
-import pt.uc.dei.proj3.pojo.Evaluation;
-import pt.uc.dei.proj3.pojo.UserPojo;
+import pt.uc.dei.proj3.dto.Evaluation;
 import pt.uc.dei.proj3.dto.UserDto;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,13 +28,13 @@ public class UserService {
 
     @Context
     private HttpServletRequest request;
-    @Inject
-    private LoginBean loginBean;
+
 
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
+        /*
         if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
                 || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
                 userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
@@ -49,8 +47,10 @@ public class UserService {
             return Response.status(200).entity("The new user is registered").build();
         }
         return Response.status(400).entity("There is a user with the same username!").build();
+        */
+        return null;
     }
-
+/*
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -380,5 +380,5 @@ public class UserService {
             }
             return Response.status(400).entity("Product not found!").build();
         }
-    }
+    }*/
 }

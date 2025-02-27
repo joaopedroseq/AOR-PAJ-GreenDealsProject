@@ -1,11 +1,11 @@
 package pt.uc.dei.proj3.dto;
 
-import pt.uc.dei.proj3.pojo.Evaluation;
-import pt.uc.dei.proj3.pojo.EvaluationCounts;
+import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+@XmlRootElement
 public class UserDto implements Serializable {
 
     private String firstName;
