@@ -9,7 +9,9 @@
 </head>
 <body>
     <!--Header externo-->
-    <div w3-include-html="header.html"></div> 
+    <header id="header-placeholder"></header>
+    <aside id="aside-placeholder"></aside>
+
     <div class="container">
         <main class="main-content">
             <!--Título da categoria do produto-->
@@ -35,10 +37,10 @@
             
 
             <!--Butão de contacto-->
-            <button id="contact-btn" onclick="toggleContactForm()">Contatar o Anunciante</button>
+            <button id="contact-btn">Contatar o Anunciante</button>
             <div id="contact-form" style="display: none;">
                 <textarea id="message" placeholder="Escreva aqui a sua mensagem..."></textarea><br>
-                <button id="send-btn" onclick="sendMessage()">Enviar</button>
+                <button id="send-btn">Enviar</button>
             </div>
 
             <!-- Janela modal para alterar informações de um produto -->
@@ -91,7 +93,7 @@
                                     <option value="COMPRADO">Comprado</option>
                                 </select>
                             </div>
-                             <input type="submit" class="save-product" id="save-product" value="Guardar Alterações" onclick="saveEditedProduct">                    
+                             <input type="button" class="save-product" id="save-product" value="Guardar Alterações">                    
                         </div>
                     </div>
                 </div>
@@ -137,12 +139,11 @@
     </div>
     
      <!--Footer externo-->
-    <div w3-include-html="footer.html"></div>   
+     <div id="footer-placeholder"></div>
     </body>
-        <script src="https://www.w3schools.com/lib/w3.js"></script>
-        <script src="../javascript/scriptDetail.js"></script>   
-        <script src="../javascript/scriptFooter.js"></script>
-        <script src="../javascript/scriptHeader.js"></script>
-        <script src="../javascript/Avaliacoes.js"></script>
+        <script type ="module" src="../javascript/scriptDetail.js"></script>   
+        <script type ="module" src="../javascript/scriptFooter.js"></script>
+        <script type ="module" src="../javascript/scriptHeader.js"></script>
+      <!--  <script type ="module" src="../javascript/Avaliacoes.js"></script> -->
     
 </html>

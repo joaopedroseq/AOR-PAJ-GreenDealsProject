@@ -551,7 +551,7 @@ function displayRatingStats() {
 
   statsContainer.innerHTML = statsHTML;
 }
-
+/*
 test("Display rating statistics", () => {
   const statsContainer = document.getElementById("rating-stats");
 
@@ -573,3 +573,4 @@ const ratingWords = {
 };
 
 module.exports = { displayRatingStats, ratingWords };
+*/

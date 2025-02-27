@@ -6,13 +6,18 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400" rel="stylesheet">
     <link rel="icon" href="../images/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../css/indexStyle.css">
+    <link rel="stylesheet" href="../css/headerStyle.css">
+    <link rel="stylesheet" href="../css/mainStyle.css">
 </head>
 <body>
     <!--Header externo-->
-    <div w3-include-html="header.html"></div> 
-    <!--Conteudo total-->   
+    <!--<div w3-include-html="header.html"></div> -->
+    <!--Conteudo total--> 
+    <header id="header-placeholder"></header>
+
         <!--Menu aside para registo e aceder ao registo-->
-        <div w3-include-html="aside.html"></div>
+        <!--<div w3-include-html="aside.html"></div>-->
+        <aside id="aside-placeholder"></aside>
         <main class="main-content-index">
             
             <div class="main-title">
@@ -32,7 +37,6 @@
                     <div class="grid-container"></div>
                 </span>
                 <span class="sustentabilityBannerSpan">
-                    <a href="main.html">
                         <img class="sustentabilityBanner" id="sustentabilityBanner" src='../images/banner.png' alt="barra de produtos sustentaveis">
                     </a>
                 </span>
@@ -81,18 +85,17 @@
                             <label for="edit-photo">Fotografia de Perfil (URL):</label>
                             <input type="url" id="new-photo" name="new-photo" placeholder="URL da imagem">
                         </div>
-                        <input type="submit" id="registerBtn" class="registerBtn" value="Register">                
+                        <input type="button" id="registerBtn" class="registerBtn" value="Register">                
                     </form>
                 </div>
             </div>
         </div>  
         
     <!--Footer externo-->
-    <div w3-include-html="footer.html"></div>
+    <div id="footer-placeholder"></div>
 </body>
-    <script src="https://www.w3schools.com/lib/w3.js"></script>
-    <script src="../javascript/scriptIndex.js"></script>
-    <script src="../javascript/scriptMain.js"></script>
-    <script src="../javascript/scriptFooter.js"></script>
-    <script src="../javascript/scriptHeader.js"></script>
+    <script type="module" src="../javascript/scriptIndex.js"></script>
+    <script type="module" src="../javascript/scriptHeader.js"></script>
+    <script type="module" src="../javascript/scriptFooter.js"></script>
+    
 </html>
