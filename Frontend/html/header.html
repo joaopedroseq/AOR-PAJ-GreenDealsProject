@@ -20,7 +20,7 @@
     <!--Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login-->
     <div class="loginMessageDiv" id="loginMessage">
         <h2 class="loginMessage" id="mensagem_boasVindas"></h2>
-        <input type="submit" class="buttonSubmit" id="logoutButton" value="logout" size="12px">
+        <input type="button" class="buttonSubmit" id="logoutButton" value="logout" size="12px">
         <a href="#">
             <img id="loginPhoto" class="loginPhoto" src="../images/login.png"></img>
         </a>
@@ -42,20 +42,20 @@
                     <label for="login-form">Password</label>
                     <input type="password" class="textbox" id="password" length="20">
                     <div>
-                        <input type="checkbox" onclick="showPassword()">
+                        <input type="checkbox" id="showPasswordBtn">
                         <label for="checkbox">mostrar password</label>
-                        <input type="submit" class="buttonSubmit" id="submit" value="submit" size="12px">
+                        <input type="button" class="buttonSubmit" id="loginSubmit" value="submit" size="12px">
                     </div>
                 </form>            
                     <div class="buttons">
                         
-                        <input type="submit" class="buttonRegister" id="newAccountBtn" value="register" size="12px">    
+                        <input type="button" class="buttonRegister" id="newAccountBtn" value="register" size="12px">    
                     </div>
             </div>
     </div>
 
     <!-- Modal para adicionar produto -->
-    <div id="modal-addProduct" class="modal-addProduct">
+    <div id="modal-addProduct" class="modal-addProduct" style="display: none;">
         <!-- Modal content -->
         <div class="modal-content-addProduct">
             <div class="modal-header-addProduct" id="modal-header-addProduct">
@@ -94,7 +94,7 @@
                         <label for="add-imagem">url de imagem:</label>
                         <input type="text" id="add-imagem" name="add-imagem">
                      </div>
-                     <input type="submit" class="save-addProduct" id="save-addProduct" value="Guardar Alterações">                     
+                     <input type="button" class="save-addProduct" id="save-addProduct" value="Guardar Alterações">                     
                 </form>
             </div>
         </div>

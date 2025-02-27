@@ -1,81 +1,88 @@
-w3.includeHTML(() => {
-  // Adiciona o evento de clique ao ícone de hambúrguer para alternar o aside
-  const hamburger = document.getElementById("hamburger");
-  hamburger.addEventListener("click", toggleAside);
+import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
+import { carregarFooter } from "./scriptFooter.js";
 
-  const loggedUser = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-
-  loadUserInfo(loggedUser, password);
-  getUserProducts(loggedUser, password);
-
-  const myProductsBtn = document.getElementById("myProductsBtn");
-
-  const myReviewsBtn = document.getElementById("myReviewsBtn");
-
-  const myInfoBtn = document.getElementById("myInfoBtn");
-
+document.addEventListener("DOMContentLoaded", async function () {
+  await carregarHeader();
+  await carregarAsideUser();
+  await carregarFooter();
+  await loadUserInfo();
+  await getUserProducts();
+  //botao editar informaçoes
   const editFormButton = document.getElementById("toggleEditForm");
   editFormButton.addEventListener("click", toggleEditForm);
+});
 
-  myProductsBtn.addEventListener("click", function () {
-    document.getElementById("informacoesPessoais").style.display = "none";
+async function carregarAsideUser() {
+  fetch("asideGestaoPessoal.html")
+    .then((response) => response.text())
+    .then(async (data) => {
+      document.getElementById("aside-placeholder").innerHTML = data;
+      inicializarBotoesAsideUser();
+    });
+}
+
+function inicializarBotoesAsideUser() {
+  const myProductsBtn = document.getElementById("myProductsBtn");
+  myProductsBtn.addEventListener("click", () => {
     document.getElementById("produtos").style.display = "contents";
+    showSection("produtos");
   });
 
+  const myReviewsBtn = document.getElementById("myReviewsBtn");
+  myReviewsBtn.addEventListener("click", () => {
+    document.getElementById("produtos").style.display = "none";
+    showSection("avaliacoes");
+  });
+
+  const myInfoBtn = document.getElementById("myInfoBtn");
   myInfoBtn.addEventListener("click", function () {
-    document.getElementById("informacoesPessoais").style.display = "contents";
     document.getElementById("produtos").style.display = "none";
+    showSection("informacoes");
+  });
+}
+
+async function loadUserInfo() {
+  const loggedUser = sessionStorage.getItem("username");
+  const password = sessionStorage.getItem("password");
+  const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
+
+  const loadUserInfoHeaders = new Headers({
+    "Content-Type": "application/json",
+    password: password,
+    username: loggedUser,
   });
 
-  myReviewsBtn.addEventListener("click", function () {
-    console.log("correu reviews");
-    document.getElementById("informacoesPessoais").style.display = "contents";
-    document.getElementById("produtos").style.display = "none";
-  });
-
-  async function loadUserInfo(loggedUser, password) {
-    const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
-    console.log("URL:", getUserInfoUrl);
-
-    const loadUserInfoHeaders = new Headers({
-      "Content-Type": "application/json",
-      password: password,
-      username: loggedUser,
+  try {
+    const response = await fetch(getUserInfoUrl, {
+      method: "GET",
+      headers: loadUserInfoHeaders,
+      credentials: "include", // Inclui as credenciais de sessão
     });
 
-    try {
-      const response = await fetch(getUserInfoUrl, {
-        method: "GET",
-        headers: loadUserInfoHeaders,
-        credentials: "include", // Inclui as credenciais de sessão
-      });
+    console.log("Status da resposta:", response.status);
 
-      console.log("Status da resposta:", response.status);
-
-      if (!response.ok) {
-        const errorMessage = await response.text();
-        throw new Error(`Erro na resposta: ${errorMessage}`);
-      }
-
-      const userInfo = await response.json();
-      console.log("Resposta JSON:", userInfo);
-
-      if (userInfo) {
-        fillUserInfo(userInfo);
-      } else {
-        console.log("User info is empty");
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(`Erro na resposta: ${errorMessage}`);
     }
-  }
 
-  // User info functionality
-  function fillUserInfo(currentUser) {
-    const infoContainer = document.getElementById("user-info-container");
-    infoContainer.innerHTML = `
+    const userInfo = await response.json();
+
+    if (userInfo) {
+      fillUserInfo(userInfo);
+    } else {
+      console.log("User info is empty");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Ocorreu um erro: " + error.message);
+  }
+}
+
+// User info functionality
+function fillUserInfo(currentUser) {
+  const infoContainer = document.getElementById("user-info-container");
+  infoContainer.innerHTML = `
                 <table class="user-info-table">
                     <tr><td>Nome:</td><td>${currentUser.firstName} ${currentUser.lastName}</td></tr>
                     <tr><td>Email:</td><td>${currentUser.email}</td></tr>
@@ -83,11 +90,11 @@ w3.includeHTML(() => {
                 </table>
             `;
 
-    const formContainer = document.getElementById("edit-form-container");
+  const formContainer = document.getElementById("edit-form-container");
 
-    // Cria o formulário de edição com os campos preenchidos
-    formContainer.innerHTML = `
-                <form class="edit-form" id="edit-form" onsubmit="saveUserInfo(event)">
+  // Cria o formulário de edição com os campos preenchidos
+  formContainer.innerHTML = `
+                <form class="edit-form" id="edit-form">
                     <div>
                         <label>Primeiro Nome:</label>
                         <input type="text" id="edit-firstname" value="${currentUser.firstName}" required>
@@ -116,30 +123,33 @@ w3.includeHTML(() => {
                         <label>Confirmar Password:</label>
                         <input type="password" id="edit-password-confirm">
                     </div>
-                    <button type="submit">Guardar Alterações</button>
+                    <button type="button" id="guardarAlteracoesUserBtn">Guardar Alterações</button>
                 </form>
             `;
-  }
+  const guardarAlteracoesUserBtn = document.getElementById(
+    "guardarAlteracoesUserBtn"
+  );
+  guardarAlteracoesUserBtn.addEventListener("click", saveUserInfo);
+}
 
-  // função para alternar a visibilidade do formulário de edição de informações
-  function toggleEditForm() {
-    console.log("correu o toggle edit form");
-    const formContainer = document.getElementById("edit-form-container");
-    formContainer.style.display =
-      formContainer.style.display === "none" ? "block" : "none";
+// função para alternar a visibilidade do formulário de edição de informações
+function toggleEditForm() {
+  const formContainer = document.getElementById("edit-form-container");
+  formContainer.style.display =
+    formContainer.style.display === "none" ? "block" : "none";
 
-    /*// Se o formulário estiver visível, preenche os campos com os dados atuais do utilizador
+  /*// Se o formulário estiver visível, preenche os campos com os dados atuais do utilizador
         if(formContainer.style.display === 'block') {
             const currentUser = getUserInfo(sessionStorage.getItem('username'));
             console.log(currentUser);*/
-  }
+}
 
-  // Função para exibir os produtos na página
-  function displayProduct(product, index) {
-    // Obtém o container dos produtos
-    let gridContainer = document.querySelector(".grid-container");
-    // Cria o HTML do produto
-    const productHTML = `
+// Função para exibir os produtos na página
+function displayProduct(product, index) {
+  // Obtém o container dos produtos
+  let gridContainer = document.querySelector(".grid-container");
+  // Cria o HTML do produto
+  const productHTML = `
             <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'"> 
                 <img src='${product.urlImage}' alt="${product.name}"/>
                 <div class="text-overlay">
@@ -150,48 +160,48 @@ w3.includeHTML(() => {
                 </div>
             </div>
         `;
-    // Insere o produto no container
-    gridContainer.insertAdjacentHTML("beforeend", productHTML);
-  }
+  // Insere o produto no container
+  gridContainer.insertAdjacentHTML("beforeend", productHTML);
+}
 
-  // Função para os productos do backend e exibi-los na página de utilizador
-  function getUserProducts(loggedUser, password) {
-    const getAvaiableProductsUrl =
-      "http://localhost:8080/osorio-sequeira-proj3/rest/user/" +
-      loggedUser +
-      "/products/";
-    const getUserProductstHeaders = new Headers({
-      "Content-Type": "application/json",
-      password: password,
-      username: loggedUser,
-    });
-    fetch(getAvaiableProductsUrl, {
-      method: "GET",
-      headers: getUserProductstHeaders,
+// Função para os productos do backend e exibi-los na página de utilizador
+async function getUserProducts() {
+  const loggedUser = sessionStorage.getItem("username");
+  const password = sessionStorage.getItem("password");
+  const getAvaiableProductsUrl =
+    "http://localhost:8080/osorio-sequeira-proj3/rest/user/" +
+    loggedUser +
+    "/products";
+  const getUserProductstHeaders = new Headers({
+    "Content-Type": "application/json",
+    password: password,
+    username: loggedUser,
+  });
+  fetch(getAvaiableProductsUrl, {
+    method: "GET",
+    headers: getUserProductstHeaders,
+  })
+    .then((response) => {
+      console.log("Status da resposta:", response.status);
+      return response
+        .text()
+        .then((text) => ({ status: response.status, text: text }));
     })
-      .then((response) => {
-        console.log("Status da resposta:", response.status);
-        return response
-          .text()
-          .then((text) => ({ status: response.status, text: text }));
-      })
-      .then((data) => {
-        if (data) {
-          console.log("Resposta JSON:", data);
-          const products = JSON.parse(data.text); // Converter a string JSON para um array
-          products.forEach((product) => {
-            displayProduct(product, product.id);
-          });
-        } else {
-          console.log("No products to load");
-        }
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-        alert("Ocorreu um erro: " + error.message);
-      });
-  }
-});
+    .then((data) => {
+      if (data) {
+        const products = JSON.parse(data.text); // Converter a string JSON para um array
+        products.forEach((product) => {
+          displayProduct(product, product.id);
+        });
+      } else {
+        console.log("No products to load");
+      }
+    })
+    .catch((error) => {
+      console.error("Erro:", error);
+      alert("Ocorreu um erro: " + error.message);
+    });
+}
 
 function showSection(sectionId) {
   // Hide all sections
@@ -218,13 +228,13 @@ function showSection(sectionId) {
   // Load content if needed
   if (sectionId === "avaliacoes") loadUserReviews();
   if (sectionId === "informacoes") {
+    const loggedUser = sessionStorage.getItem("username");
     loadUserInfo(loggedUser);
   }
 }
 
 // Função para guardar as alterações das informações do utilizador
 function saveUserInfo(event) {
-  console.log("correu");
   event.preventDefault(); // Evita o comportamento padrão de submissão do formulário
   const form = document.getElementById("edit-form");
 
@@ -233,8 +243,6 @@ function saveUserInfo(event) {
   const confirmPassword = document.getElementById(
     "edit-password-confirm"
   ).value;
-  console.log("new password: " + newPassword);
-  console.log("confirm password: " + confirmPassword);
 
   if (newPassword.trim() === "" || confirmPassword.trim() === "") {
     alert("Os campos de password estão vazios");
@@ -254,7 +262,6 @@ function saveUserInfo(event) {
       url: document.getElementById("edit-photoUrl").value,
       password: document.getElementById("edit-password").value,
     };
-    console.log(updatedUser);
     if (confirm("Pretende alterar as suas informações?")) {
       let loggedUser = sessionStorage.getItem("username");
       let password = sessionStorage.getItem("password");
@@ -274,7 +281,6 @@ function updateWithNewInformation(updatedUser) {
 //função alterar no backend
 async function updateUser(loggedUser, password, updatedUser) {
   const updateUserURL = `http://localhost:8080/osorio-sequeira-proj3/rest/user/update/${username}`;
-  console.log(updatedUser);
   const updateUserHeaders = new Headers({
     "Content-Type": "application/json",
     password: password,
@@ -465,43 +471,5 @@ async function deleteReview(evaluationId, seller) {
       console.error("Error deleting evaluation:", error);
       alert(error.message);
     }
-  }
-}
-
-async function getUserInfo(loggedUser, password) {
-  const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
-  console.log("URL:", getUserInfoUrl);
-
-  const getUserInfoHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: loggedUser,
-  });
-
-  try {
-    const response = await fetch(getUserInfoUrl, {
-      method: "GET",
-      headers: getUserInfoHeaders,
-      credentials: "include", // Inclui as credenciais de sessão
-    });
-
-    console.log("Status da resposta:", response.status);
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erro na resposta: ${errorMessage}`);
-    }
-
-    const userInfo = await response.json();
-    console.log("Resposta JSON:", userInfo);
-
-    if (userInfo) {
-      return userInfo;
-    } else {
-      console.log("User info is empty");
-    }
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Ocorreu um erro: " + error.message);
   }
 }
