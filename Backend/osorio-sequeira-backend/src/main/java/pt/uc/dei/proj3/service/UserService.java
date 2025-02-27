@@ -34,21 +34,19 @@ public class UserService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
-        /*
         if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
                 || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
                 userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
                 || userDto.getUrl().trim().equals("")) {
             return Response.status(400).entity("Missing parameters").build();
         }
+
         String usernameToSave = userDto.getUsername().trim();
         if (userbean.register(userDto.getFirstName(), userDto.getLastName(), usernameToSave, userDto.getPassword(),
                 userDto.getEmail(), userDto.getPhoneNumber(), userDto.getUrl())) {
             return Response.status(200).entity("The new user is registered").build();
         }
         return Response.status(400).entity("There is a user with the same username!").build();
-        */
-        return null;
     }
 /*
     @POST

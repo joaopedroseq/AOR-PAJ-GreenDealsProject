@@ -3,14 +3,21 @@ package pt.uc.dei.proj3.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import pt.uc.dei.proj3.dao.UserDao;
+import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.entity.UserEntity;
 
 @Stateless
 public class UserBean implements Serializable {
 
     @Inject
     ApplicationBean applicationBean;
+
+    @EJB
+    UserDao userDao;
 
 
     public UserBean() {
@@ -34,19 +41,19 @@ public class UserBean implements Serializable {
         } else {
             return false;
         }
-    }
+    }*/
 
-    public boolean register(String firstName, String lastName, String username, String password, String email,String phoneNumber,String url){
-        UserPojo u = applicationBean.getUser(username);
-        if (u==null){
+    public boolean register(UserDto userDto) {
+        UserEntity user = userDao.findUserByUsername(userDto.getUsername());
+        if (user==null){
             UserDto newUserDto= new UserDto(firstName,lastName,username,password,email,phoneNumber,url);
-            UserPojo newUserPojo =convertNewUserDtoToUser(newUserDto);
             applicationBean.addUser(newUserPojo);
             return true;
         }else
             return false;
     }
 
+    /*
     private UserPojo convertNewUserDtoToUser(UserDto up){
         UserPojo userPojo = new UserPojo(up.getFirstName(), up.getLastName(),up.getUsername(),up.getPassword(), up.getEmail(), up.getPhoneNumber(), up.getUrl());
         return userPojo;
