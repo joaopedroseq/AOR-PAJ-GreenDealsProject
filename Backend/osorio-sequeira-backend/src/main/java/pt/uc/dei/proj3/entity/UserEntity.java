@@ -1,12 +1,13 @@
 package pt.uc.dei.proj3.entity;
 
 import jakarta.persistence.*;
+import pt.uc.dei.proj3.dto.Evaluation;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 @Entity
-@Table(name="user")
+@Table(name="userpojo")
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 @NamedQuery(name = "User.findUserByToken", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.token = :token")
 public class UserEntity implements Serializable {
@@ -56,6 +57,12 @@ public class UserEntity implements Serializable {
 
     @OneToMany(mappedBy = "seller")
     private ArrayList<ProductEntity> products;
+
+    @OneToMany(mappedBy = "username")
+    private ArrayList<EvaluationEntity> evaluationsWritten;
+
+    @OneToMany(mappedBy = "seller")
+    private ArrayList<EvaluationEntity> evaluationsReceived;
 
     //Constructors
     //Empty constructor
