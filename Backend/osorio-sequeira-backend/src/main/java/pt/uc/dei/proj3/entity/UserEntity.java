@@ -155,4 +155,20 @@ public class UserEntity implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public ArrayList<EvaluationEntity> getEvaluationsReceived() {
+        return evaluationsReceived;
+    }
+
+    public void setEvaluationsReceived(ArrayList<EvaluationEntity> evaluationsReceived) {
+        this.evaluationsReceived = evaluationsReceived;
+    }
+
+    public ArrayList<EvaluationEntity> getEvaluationsWritten() {
+        return evaluationsWritten;
+    }
+
+    public void setEvaluationsWritten(ArrayList<EvaluationEntity> evaluationsWritten) {
+        this.evaluationsWritten = evaluationsWritten;
+    }
 }

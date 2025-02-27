@@ -46,11 +46,23 @@ public class UserBean implements Serializable {
     public boolean register(UserDto userDto) {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
         if (user==null){
-            UserDto newUserDto= new UserDto(firstName,lastName,username,password,email,phoneNumber,url);
+            UserEntity newUserDto= convertUserDtotoUserEntity(userDto);
             applicationBean.addUser(newUserPojo);
             return true;
         }else
             return false;
+    }
+
+    private UserEntity convertUserDtotoUserEntity(UserDto user){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setLastName(user.getLastName());
+        userEntity.setUsername(user.getUsername());
+        userEntity.setPassword(user.getPassword());
+        userEntity.setEmail(user.getEmail());
+        userEntity.setPhoneNumber(user.getPhoneNumber());
+        userEntity.setUrl(user.getUrl());
+        return userEntity;
     }
 
     /*
