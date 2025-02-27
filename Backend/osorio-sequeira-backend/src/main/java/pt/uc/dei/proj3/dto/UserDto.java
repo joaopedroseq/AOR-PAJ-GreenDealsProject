@@ -4,19 +4,20 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 @XmlRootElement
 public class UserDto implements Serializable {
 
-    private String firstName;
-    private String lastName;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private String url;
-    private ArrayList<ProductDto> products;
-    private ArrayList<Evaluation> evaluations;
+    private Set<ProductDto> products;
+    private Set<Evaluation> evaluations;
     private EvaluationCounts evaluationCounts;
 
 
@@ -35,7 +36,7 @@ public class UserDto implements Serializable {
     }
 
     //Construtor para conversão de Pojo para Dto
-    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, ArrayList<ProductDto> productDtos, ArrayList<Evaluation> evaluations, EvaluationCounts ratings) {
+    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Set<ProductDto>productDtos, Set<Evaluation> evaluations, EvaluationCounts ratings) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -112,19 +113,19 @@ public class UserDto implements Serializable {
         this.evaluationCounts = evaluationCounts;
     }
 
-    public ArrayList<Evaluation> getEvaluations() {
+    public Set<Evaluation> getEvaluations() {
         return evaluations;
     }
 
-    public void setEvaluations(ArrayList<Evaluation> evaluations) {
+    public void setEvaluations(Set<Evaluation> evaluations) {
         this.evaluations = evaluations;
     }
 
-    public ArrayList<ProductDto> getProducts() {
+    public Set<ProductDto> getProducts() {
         return products;
     }
 
-    public void setProducts(ArrayList<ProductDto> productDtos) {
-        this.products = productDtos;
+    public void setProducts(Set<ProductDto> products) {
+        this.products = products;
     }
 }
