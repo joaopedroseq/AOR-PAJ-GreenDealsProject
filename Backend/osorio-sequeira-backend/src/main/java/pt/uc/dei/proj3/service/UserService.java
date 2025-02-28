@@ -299,19 +299,19 @@ public class UserService {
     @Path("/{username}/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
-        if (!newProductDto.newProductIsValid()){
-            logger.error("Invalid data - adding new product");
-            return Response.status(400).entity("Invalid data").build();
+        UserDto user = userbean.verifyToken(token);
+        if(user == null){
+            logger.error("Invalid token - adding new product to {}", pathUsername);
+            return Response.status(401).entity("Invalid token").build();
         } else {
-            UserEntity user = userbean.verifyToken(token);
-            if(user == null){
-                logger.error("Invalid token - adding new product to {}", pathUsername);
-                return Response.status(401).entity("Invalid token").build();
+            if (!newProductDto.newProductIsValid()){
+                logger.error("Invalid data - adding new product");
+                return Response.status(400).entity("Invalid data").build();
             }else if (!user.getUsername().equals(pathUsername)){
                 logger.error("Permission denied - {} adding new product to {}",user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             }else{
-                //userbean.addProduct();
+                userbean.addProduct(user, newProductDto);
                 logger.info("Added new product to {}", pathUsername);
                 return Response.status(200).entity("Added product").build();
             }
