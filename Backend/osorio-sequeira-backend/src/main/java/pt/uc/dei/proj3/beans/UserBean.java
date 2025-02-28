@@ -37,6 +37,17 @@ public class UserBean implements Serializable {
             return false;
     }
 
+    public boolean registerAdmin(UserDto userDto) {
+        UserEntity user = userDao.findUserByUsername(userDto.getUsername());
+        if (user==null){
+            UserEntity newUserEntity= convertUserDtotoUserEntity(userDto);
+            newUserEntity.setAdmin(true);
+            userDao.persist(newUserEntity);
+            return true;
+        }else
+            return false;
+    }
+
 
     public String login(LoginDto user){
         UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
@@ -59,20 +70,15 @@ public class UserBean implements Serializable {
         return false;
     }
 
+    public UserDto getUserLogged(String token){
+        UserEntity u= userDao.findUserByToken(token);
+        if(u!=null){
 
-
-    /*
-    public boolean checkPassword (String username, String password) {
-        UserPojo u = applicationBean.getLogin(username,password);
-        if(u!= null){
-            return true;
-        } else {
-            return false;
+        }
+        else {
+            return null;
         }
     }
-
-
-
 
 
     /*
@@ -127,29 +133,22 @@ public class UserBean implements Serializable {
         return userEntity;
     }
 
-
-    /*
-    private UserPojo convertUserDtoToUser(UserDto ud){
-        ArrayList<ProductPojo>productsPojo = new ArrayList<>();
-        if(ud.getProducts() != null){
-            for(ProductDto productDto: ud.getProducts()){
-                productsPojo.add(applicationBean.convertProductDtoToProduct(productDto));
-            }
-        }
-        UserPojo userPojo = new UserPojo(ud.getFirstName(), ud.getLastName(),ud.getUsername(),ud.getPassword(), ud.getEmail(), ud.getPhoneNumber(), ud.getUrl(), productsPojo, ud.getEvaluations(), ud.getEvaluationCounts());
-        return userPojo;
+    private UserDto convertUserUserEntitytoUserDto(UserEntity user){
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPhoneNumber(user.getPhoneNumber());
+        userDto.setUrl(user.getUrl());
+        userDto.setAdmin(user.getAdmin());
+        userDto.setExcluded(user.getExcluded());
+        userDto.setProducts(user.getProducts());
+        userDto.setEvaluationsReceived(user.getEvaluationsReceived());
+        return userDto;
     }
 
-    private UserDto convertUserToUserDto(UserPojo up){
-        ArrayList<ProductDto>productDtos = new ArrayList<>();
-        if(up.getProductPojos() != null){
-            for(ProductPojo productPojo: up.getProductPojos()){
-                productDtos.add(applicationBean.convertProductToProductDto(productPojo));
-            }
-        }
-        UserDto userDto = new UserDto(up.getFirstName(), up.getLastName(),up.getUsername(),up.getPassword(), up.getEmail(), up.getPhoneNumber(), up.getUrl(), productDtos, up.getEvaluations(), up.getEvaluationCounts());
-        return userDto;
-    }*/
 
     private String generateNewToken() {
         SecureRandom secureRandom = new SecureRandom(); //threadsafe

@@ -16,8 +16,10 @@ public class UserDto implements Serializable {
     private String email;
     private String phoneNumber;
     private String url;
+    private Boolean admin;
+    private Boolean excluded;
     private Set<ProductDto> products;
-    private Set<Evaluation> evaluations;
+    private Set<Evaluation> evaluationsReceived;
     private EvaluationCounts evaluationCounts;
 
 
@@ -35,8 +37,8 @@ public class UserDto implements Serializable {
         this.url = url;
     }
 
-    //Construtor para conversão de Pojo para Dto
-    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Set<ProductDto>productDtos, Set<Evaluation> evaluations, EvaluationCounts ratings) {
+    //Construtor para conversão de Entity para Dto
+    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, Boolean excluded, Set<ProductDto>productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -44,8 +46,10 @@ public class UserDto implements Serializable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.url = url;
+        this.admin = admin;
+        this.excluded = excluded;
         this.products = productDtos;
-        this.evaluations = evaluations;
+        this.evaluationsReceived = evaluationsReceived;
         this.evaluationCounts = ratings;
     }
 
@@ -113,12 +117,12 @@ public class UserDto implements Serializable {
         this.evaluationCounts = evaluationCounts;
     }
 
-    public Set<Evaluation> getEvaluations() {
-        return evaluations;
+    public Set<Evaluation> getEvaluationsReceived() {
+        return evaluationsReceived;
     }
 
-    public void setEvaluations(Set<Evaluation> evaluations) {
-        this.evaluations = evaluations;
+    public void setEvaluationsReceived(Set<Evaluation> evaluationsReceived) {
+        this.evaluationsReceived = evaluationsReceived;
     }
 
     public Set<ProductDto> getProducts() {
@@ -127,5 +131,21 @@ public class UserDto implements Serializable {
 
     public void setProducts(Set<ProductDto> products) {
         this.products = products;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
+
+    public Boolean getExcluded() {
+        return excluded;
+    }
+
+    public void setExcluded(Boolean excluded) {
+        this.excluded = excluded;
     }
 }
