@@ -2,9 +2,12 @@ package pt.uc.dei.proj3.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
+import pt.uc.dei.proj3.entity.ProductEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
+import static com.sun.tools.javac.jvm.PoolConstant.LoadableConstant.Int;
 
 @XmlRootElement
 public class ProductDto implements Serializable{
@@ -45,6 +48,9 @@ public class ProductDto implements Serializable{
         this.state = state;
         this.date = date;
         this.id = id;
+    }
+
+    public ProductDto() {
     }
 
 
