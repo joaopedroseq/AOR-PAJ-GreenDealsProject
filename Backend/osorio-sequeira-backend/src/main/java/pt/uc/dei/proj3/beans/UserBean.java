@@ -14,6 +14,7 @@ import jakarta.inject.Inject;
 import org.hibernate.collection.spi.PersistentBag;
 import pt.uc.dei.proj3.dao.UserDao;
 import pt.uc.dei.proj3.dto.LoginDto;
+import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.UserEntity;
 
@@ -72,6 +73,20 @@ public class UserBean implements Serializable {
             return true;
         }
         return false;
+    }
+
+    public UserEntity verifyToken(String token) {
+        try {
+            UserEntity user = userDao.findUserByToken(token);
+            return user;
+        }catch (Exception e){
+            logger.error(e);
+            return null;
+        }
+    }
+
+    public boolean addProduct(UserEntity userEntity, ProductDto newProductDto) {
+
     }
 
     public UserDto getUserLogged(String token){

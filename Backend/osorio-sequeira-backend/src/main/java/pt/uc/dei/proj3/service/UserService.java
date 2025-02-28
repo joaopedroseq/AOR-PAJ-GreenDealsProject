@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pt.uc.dei.proj3.entity.UserEntity;
 
 
 @Path("/user")
@@ -39,12 +40,16 @@ public class UserService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
+        logger.info("Registering user: " + userDto);
         if (!userDto.isValid()) {
+            logger.error("Invalid data - Registering user");
             return Response.status(400).entity("Invalid data").build();
         }
         if (userbean.registerNormalUser(userDto)) {
+            logger.info("Registering user: " + userDto);
             return Response.status(200).entity("The new user is registered").build();
         } else {
+            logger.error("Same username conflict - Registering user");
             return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
@@ -289,30 +294,31 @@ public class UserService {
             }
         }
     }
+*/
 
     @POST
     @Path("/{username}/add")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, ProductDto product) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
+    public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
+        if (!newProductDto.newProductIsValid()){
+            logger.error("Invalid data - adding new product");
+            return Response.status(400).entity("Invalid data").build();
         } else {
-            if (userbean.checkPassword(username, password)) {
-                if ((product.getSeller().trim().equals("")) || product.getName().trim().equals("")
-                        || product.getDescription().equals("") || product.getCategory().trim().equals("")
-                        || product.getLocation().trim().equals("") || product.getUrlImage().trim().equals("")) {
-                    return Response.status(400).entity("Parameters missing").build();
-                }
-                if (applicationBean.addProduct(username, product.getSeller(), product.getName(), product.getDescription(), product.getPrice(), product.getCategory(), product.getLocation(), product.getUrlImage())) {
-                    return Response.status(200).entity("New product added").build();
-                }
-                return Response.status(403).entity("Failed").build();
-            } else {
-                return Response.status(403).entity("Forbidden").build();
+            UserEntity user = userbean.verifyToken(token);
+            if(user == null){
+                logger.error("Invalid token - adding new product to {}", pathUsername);
+                return Response.status(401).entity("Invalid token").build();
+            }else if (!user.getUsername().equals(pathUsername)){
+                logger.error("Permission denied - {} adding new product to {}",user.getUsername(), pathUsername);
+                return Response.status(403).entity("Permission denied").build();
+            }else{
+                //userbean.addProduct();
+                logger.info("Added new product to {}", pathUsername);
+                return Response.status(200).entity("Added product").build();
             }
         }
     }
-
+/*
     @POST
     @Path("/{username}/products/{ProductId}")
     @Consumes(MediaType.APPLICATION_JSON)

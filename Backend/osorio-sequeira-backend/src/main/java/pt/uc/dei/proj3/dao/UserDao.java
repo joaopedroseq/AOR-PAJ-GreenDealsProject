@@ -40,5 +40,4 @@ public class UserDao extends AbstractDao<UserEntity> {
 
 
 
-
 }
