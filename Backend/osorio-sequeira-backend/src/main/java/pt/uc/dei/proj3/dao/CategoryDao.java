@@ -1,9 +1,16 @@
 package pt.uc.dei.proj3.dao;
 
 import jakarta.ejb.Stateless;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.NoResultException;
 import pt.uc.dei.proj3.entity.CategoryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pt.uc.dei.proj3.entity.UserEntity;
+
+import java.util.List;
+import java.util.Set;
+
 
 @Stateless
 public class CategoryDao extends AbstractDao<CategoryEntity>{
@@ -12,6 +19,15 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
 
     public CategoryDao() {
         super(CategoryEntity.class);
+    }
+
+    public List<CategoryEntity> getAllCategories() {
+        try {
+            return (List<CategoryEntity>) em.createNamedQuery("Category.getAllCategories").getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
 
