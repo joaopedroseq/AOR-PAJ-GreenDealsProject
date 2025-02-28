@@ -94,9 +94,15 @@ public class UserBean implements Serializable {
     }
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
-        UserEntity user = convertUserDtotoUserEntity(userDto);
-        ProductDto productDto = new ProductDto(newProductDto);
-        ProductEntity product = convertSingleProductDtotoProductEntity(newProductDto);
+        try {
+            ProductDto completeProductDto = new ProductDto(newProductDto);
+            ProductEntity product = convertSingleProductDtotoProductEntity(completeProductDto);
+            productDao.persist(product);
+            return true;
+        }catch (Exception e){
+            logger.error("Error while adding product to user {}",userDto.getUsername(), e);
+            return false;
+        }
     }
 
 

@@ -308,7 +308,7 @@ public class UserService {
             if (!newProductDto.newProductIsValid()){
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();
-            }else if (!user.getUsername().equals(pathUsername)){
+            }else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())){
                 logger.error("Permission denied - {} adding new product to {}",user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             }else{

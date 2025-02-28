@@ -7,8 +7,6 @@ import pt.uc.dei.proj3.entity.ProductEntity;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static com.sun.tools.javac.jvm.PoolConstant.LoadableConstant.Int;
-
 @XmlRootElement
 public class ProductDto implements Serializable{
     private Integer id;
@@ -50,7 +48,18 @@ public class ProductDto implements Serializable{
         this.id = id;
     }
 
-    public ProductDto() {
+    public ProductDto(ProductDto productDto) {
+        this.seller = productDto.seller;
+        this.name = productDto.name;
+        this.description = productDto.description;
+        this.price = productDto.price;
+        this.category = productDto.category;
+        this.location = productDto.location;
+        this.urlImage = productDto.urlImage;
+        this.state = StateId.RASCUNHO;
+        this.date = LocalDateTime.now();
+        this.id = generateHash(seller,name,description,price,category,location,urlImage,date);
+
     }
 
 
