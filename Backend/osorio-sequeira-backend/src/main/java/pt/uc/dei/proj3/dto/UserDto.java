@@ -1,5 +1,6 @@
 package pt.uc.dei.proj3.dto;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
@@ -82,7 +83,7 @@ public class UserDto implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = BCrypt.withDefaults().hashToString(10, password.toCharArray());
     }
 
     public String getEmail() {
