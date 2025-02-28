@@ -16,6 +16,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj3.entity.UserEntity;
@@ -23,7 +24,7 @@ import pt.uc.dei.proj3.entity.UserEntity;
 
 @Path("/user")
 public class UserService {
-    private static final Logger logger = LogManager.getLogger(UserService.class);
+    private final Logger logger = LogManager.getLogger(UserService.class);
 
     @Inject
     UserBean userbean;
@@ -74,13 +75,12 @@ public class UserService {
     public Response login(LoginDto user) {
         if (!user.isValid()) {
             return Response.status(400).entity("Invalid data").build();
+        }
+        String token = userbean.login(user);
+        if (token == null) {
+            return Response.status(401).entity("Wrong Username or Password !").build();
         } else {
-            String token = userbean.login(user);
-            if (token == null) {
-                return Response.status(401).entity("Wrong Username or Password !").build();
-            } else {
-                return Response.status(200).entity(token).build();
-            }
+            return Response.status(200).entity(token).build();
         }
     }
 
@@ -102,7 +102,8 @@ public class UserService {
 
         if (token != null) {
             return Response.status(200).entity(token).build();
-        } else {
+        }
+        else{
             return Response.status(401).entity("Wrong Username or Password !").build();
         }
     }
@@ -203,7 +204,7 @@ public class UserService {
             return Response.status(403).entity("Forbidden").build();
         } else {
             Evaluation newEvaluation = new Evaluation(evaluation.getStarNumber(), evaluation.getComment(), evaluation.getUserName(), evaluation.getSeller());
-            if (applicationBean.addEvaluation(newEvaluation)) {
+            if (applicationBean.addEvaluation( newEvaluation)) {
                 return Response.status(200).entity("Evaluation added!").build();
             } else {
                 return Response.status(400).entity("Failed").build();
@@ -365,7 +366,7 @@ public class UserService {
     @POST
     @Path("/products/buy/{ProductId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buyProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, @PathParam("ProductId") int id) {
+    public Response buyProduct(@HeaderParam("username") String username, @HeaderParam("password") String password,@PathParam("ProductId") int id) {
         if (password.trim().equals("") || username.trim().equals("")) {
             return Response.status(401).entity("Parameters missing").build();
         } else if (!userbean.checkPassword(username, password)) {
@@ -392,8 +393,5 @@ public class UserService {
             }
             return Response.status(400).entity("Product not found!").build();
         }
-    }
-
-
- */
+    }*/
 }

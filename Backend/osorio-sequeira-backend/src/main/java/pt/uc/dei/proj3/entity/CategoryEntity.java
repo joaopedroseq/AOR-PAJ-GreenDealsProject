@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+//to get all categories
+@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c")
 @Entity
 @Table(name="category")
 

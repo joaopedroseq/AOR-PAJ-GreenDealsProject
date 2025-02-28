@@ -39,7 +39,7 @@ public class UserDto implements Serializable {
     }
 
     //Construtor para conversão de Entity para Dto
-    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, Boolean excluded, Set<ProductDto>productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
+    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, Boolean excluded, Set<ProductDto> productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -149,6 +149,7 @@ public class UserDto implements Serializable {
     public void setExcluded(Boolean excluded) {
         this.excluded = excluded;
     }
+
     public boolean isValid() {
         return this.firstName != null && !this.firstName.isEmpty()
                 && this.lastName != null && !this.lastName.isEmpty()
@@ -161,6 +162,3 @@ public class UserDto implements Serializable {
 
     }
 }
-
-
-

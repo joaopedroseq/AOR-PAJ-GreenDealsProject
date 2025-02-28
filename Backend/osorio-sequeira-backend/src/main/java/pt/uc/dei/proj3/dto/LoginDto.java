@@ -1,5 +1,6 @@
 package pt.uc.dei.proj3.dto;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -17,7 +18,7 @@ public class LoginDto implements Serializable {
 
     @XmlElement
     public void setPassword(String password) {
-        this.password = password;
+        this.password = BCrypt.withDefaults().hashToString(10, password.toCharArray());
     }
 
     @XmlElement
