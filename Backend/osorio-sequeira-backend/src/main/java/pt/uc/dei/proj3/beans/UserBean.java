@@ -13,9 +13,12 @@ import pt.uc.dei.proj3.dao.UserDao;
 import pt.uc.dei.proj3.dto.LoginDto;
 import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.UserEntity;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Stateless
 public class UserBean implements Serializable {
+    private static final Logger logger = LogManager.getLogger(UserBean.class);
 
     @Inject
     ApplicationBean applicationBean;
@@ -70,6 +73,7 @@ public class UserBean implements Serializable {
         return false;
     }
 
+    /*
     public UserDto getUserLogged(String token){
         UserEntity u= userDao.findUserByToken(token);
         if(u!=null){
@@ -78,7 +82,7 @@ public class UserBean implements Serializable {
         else {
             return null;
         }
-    }
+    }*/
 
 
     /*
@@ -133,6 +137,7 @@ public class UserBean implements Serializable {
         return userEntity;
     }
 
+    /*
     private UserDto convertUserUserEntitytoUserDto(UserEntity user){
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
@@ -147,7 +152,7 @@ public class UserBean implements Serializable {
         userDto.setProducts(user.getProducts());
         userDto.setEvaluationsReceived(user.getEvaluationsReceived());
         return userDto;
-    }
+    }*/
 
 
     private String generateNewToken() {

@@ -6,12 +6,15 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.List;
 
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public abstract class AbstractDao<T extends Serializable> implements Serializable {
+    private static final Logger logger = LogManager.getLogger(AbstractDao.class);
 
     private static final long serialVersionUID = 1L;
 

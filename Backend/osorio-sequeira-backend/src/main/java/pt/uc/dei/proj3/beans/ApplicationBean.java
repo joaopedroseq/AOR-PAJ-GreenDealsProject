@@ -13,12 +13,15 @@ import pt.uc.dei.proj3.dto.EvaluationCounts;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbConfig;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
 
 @Stateless
 public class ApplicationBean implements Serializable {
+    private static final Logger logger = LogManager.getLogger(ApplicationBean.class);
     UserDao userDao;
     ProductDao productDao;
     CategoryDao categoryDao;

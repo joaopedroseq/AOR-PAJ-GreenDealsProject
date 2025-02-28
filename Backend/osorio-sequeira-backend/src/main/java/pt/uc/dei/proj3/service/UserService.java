@@ -16,10 +16,13 @@ import jakarta.ws.rs.core.Response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 @Path("/user")
 public class UserService {
+    private static final Logger logger = LogManager.getLogger(UserService.class);
 
     @Inject
     UserBean userbean;
@@ -97,6 +100,7 @@ public class UserService {
         }
     }
 
+    /*
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -9,9 +9,12 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pt.uc.dei.proj3.beans.ApplicationBean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Path("/products")
 public class ProductService {
+    private static final Logger logger = LogManager.getLogger(ProductService.class);
 
     @Inject
     ApplicationBean applicationBean;
