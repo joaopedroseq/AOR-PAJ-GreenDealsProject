@@ -4,19 +4,22 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 @XmlRootElement
 public class UserDto implements Serializable {
 
-    private String firstName;
-    private String lastName;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private String email;
     private String phoneNumber;
     private String url;
-    private ArrayList<ProductDto> products;
-    private ArrayList<Evaluation> evaluations;
+    private Boolean admin;
+    private Boolean excluded;
+    private Set<ProductDto> products;
+    private Set<Evaluation> evaluationsReceived;
     private EvaluationCounts evaluationCounts;
 
 
@@ -34,8 +37,8 @@ public class UserDto implements Serializable {
         this.url = url;
     }
 
-    //Construtor para conversão de Pojo para Dto
-    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, ArrayList<ProductDto> productDtos, ArrayList<Evaluation> evaluations, EvaluationCounts ratings) {
+    //Construtor para conversão de Entity para Dto
+    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, Boolean excluded, Set<ProductDto>productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -43,8 +46,10 @@ public class UserDto implements Serializable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.url = url;
+        this.admin = admin;
+        this.excluded = excluded;
         this.products = productDtos;
-        this.evaluations = evaluations;
+        this.evaluationsReceived = evaluationsReceived;
         this.evaluationCounts = ratings;
     }
 
@@ -112,19 +117,35 @@ public class UserDto implements Serializable {
         this.evaluationCounts = evaluationCounts;
     }
 
-    public ArrayList<Evaluation> getEvaluations() {
-        return evaluations;
+    public Set<Evaluation> getEvaluationsReceived() {
+        return evaluationsReceived;
     }
 
-    public void setEvaluations(ArrayList<Evaluation> evaluations) {
-        this.evaluations = evaluations;
+    public void setEvaluationsReceived(Set<Evaluation> evaluationsReceived) {
+        this.evaluationsReceived = evaluationsReceived;
     }
 
-    public ArrayList<ProductDto> getProducts() {
+    public Set<ProductDto> getProducts() {
         return products;
     }
 
-    public void setProducts(ArrayList<ProductDto> productDtos) {
-        this.products = productDtos;
+    public void setProducts(Set<ProductDto> products) {
+        this.products = products;
+    }
+
+    public Boolean getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
+
+    public Boolean getExcluded() {
+        return excluded;
+    }
+
+    public void setExcluded(Boolean excluded) {
+        this.excluded = excluded;
     }
 }

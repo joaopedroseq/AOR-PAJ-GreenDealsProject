@@ -2,6 +2,7 @@ package pt.uc.dei.proj3.service;
 
 import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dto.LoginDto;
 import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.Evaluation;
 import pt.uc.dei.proj3.dto.UserDto;
@@ -40,57 +41,72 @@ public class UserService {
                 || userDto.getUrl().trim().equals("")) {
             return Response.status(400).entity("Missing parameters").build();
         }
-
-        String usernameToSave = userDto.getUsername().trim();
-        //if (userbean.register(userDto.getFirstName(), userDto.getLastName(), usernameToSave, userDto.getPassword(),
-          //      userDto.getEmail(), userDto.getPhoneNumber(), userDto.getUrl())) {
-          //  return Response.status(200).entity("The new user is registered").build();
-       // }
-        return Response.status(400).entity("There is a user with the same username!").build();
+        if (userbean.registerNormalUser(userDto)) {
+            return Response.status(200).entity("The new user is registered").build();
+        }
+        else{
+            return Response.status(400).entity("There is a user with the same username!").build();
+        }
     }
-/*
+
+    @POST
+    @Path("/registerAdmin")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response registerAdmin(UserDto userDto) {
+        if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
+                || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
+                userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
+                || userDto.getUrl().trim().equals("")) {
+            return Response.status(400).entity("Missing parameters").build();
+        }
+        if (userbean.registerAdmin(userDto)) {
+            return Response.status(200).entity("The new admin is registered").build();
+        }
+        else{
+            return Response.status(400).entity("There is a user with the same username!").build();
+        }
+    }
+
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(UserDto userDto) {
-        if (loginBean.checkIfLogged()) {
-            return Response.status(401).entity("An user is already logged").build();
+    public Response login(LoginDto user) {
+        if(user.getUsername().trim().equals("") || user.getPassword().trim().equals("")){
+            return Response.status(400).entity("Missing parameters").build();
         }
-        if (userbean.login(userDto.getUsername(), userDto.getPassword())) {
-
-            HttpSession session = request.getSession();
-            System.out.println("Session ID após login: " + session.getId());
-
-            return Response.status(200).entity("Login Successful!").build();
+        else{
+            String token = userbean.login(user);
+            if (token != null) {
+                return Response.status(200).entity(token).build();
+            }
+            else{
+                return Response.status(401).entity("Wrong Username or Password !").build();
+            }
         }
-        return Response.status(401).entity("Wrong Username or Password !").build();
+    }
+
+    @POST
+    @Path("/logout")
+    public Response logout(@HeaderParam("token") String token) {
+        if (userbean.logout(token)) {
+            return Response.status(200).entity("Logout Successful!").build();
+        }
+        else{
+            return Response.status(401).entity("Invalid Token!").build();
+        }
     }
 
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserLoged(@HeaderParam("username") String username, @HeaderParam("password") String password, @Context HttpServletRequest request) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
-        } else {
-            HttpSession session = request.getSession(false); // Não criar uma nova sessão
-            if (session != null) {
-                System.out.println("Session ID: " + session.getId());
-                System.out.println("Session User: " + loginBean.getCurrentUserUsername());
-            } else {
-                System.out.println("No session found");
-            }
-            if (loginBean.checkIfLogged()) {
-                if (loginBean.getCurrentUserUsername().equals(username)) {
-                    return Response.status(200).entity(loginBean.getCurrentUser()).build();
-                }
-                return Response.status(400).entity("Request Failed.").build();
-            } else {
-                return Response.status(400).entity("Request Failed.").build();
-            }
+    public Response getUserLogged(@HeaderParam("token") String token) {
+
+        if (token != null) {
+            return Response.status(200).entity(token).build();
+        }
+        else{
+            return Response.status(401).entity("Wrong Username or Password !").build();
         }
     }
 

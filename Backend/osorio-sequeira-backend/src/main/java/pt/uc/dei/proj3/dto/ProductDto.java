@@ -135,5 +135,16 @@ public class ProductDto implements Serializable{
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
+
+    private Integer generateHash(String seller, String name, String description, double price, String category, String location, String urlImage, LocalDateTime date) {
+        int hash = 0;
+        String string = seller.concat(name).concat(description).concat(String.valueOf(price)).concat(category).concat(location).concat(urlImage).concat(date.toString());
+        for (int i = 0; i < string.length(); i++) {
+            int chr = Character.codePointAt(string, i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+    }
 }
 
