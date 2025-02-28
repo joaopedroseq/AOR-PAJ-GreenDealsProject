@@ -42,10 +42,10 @@ public class UserService {
         }
 
         String usernameToSave = userDto.getUsername().trim();
-        if (userbean.register(userDto.getFirstName(), userDto.getLastName(), usernameToSave, userDto.getPassword(),
-                userDto.getEmail(), userDto.getPhoneNumber(), userDto.getUrl())) {
-            return Response.status(200).entity("The new user is registered").build();
-        }
+        //if (userbean.register(userDto.getFirstName(), userDto.getLastName(), usernameToSave, userDto.getPassword(),
+          //      userDto.getEmail(), userDto.getPhoneNumber(), userDto.getUrl())) {
+          //  return Response.status(200).entity("The new user is registered").build();
+       // }
         return Response.status(400).entity("There is a user with the same username!").build();
     }
 /*

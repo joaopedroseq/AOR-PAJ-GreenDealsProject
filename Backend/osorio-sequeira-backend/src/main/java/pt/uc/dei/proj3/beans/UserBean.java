@@ -2,7 +2,9 @@ package pt.uc.dei.proj3.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+//import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -12,7 +14,7 @@ import pt.uc.dei.proj3.entity.UserEntity;
 
 @Stateless
 public class UserBean implements Serializable {
-
+    private static final Logger logger = LogManager.getLogger(UserBean.class);
     @Inject
     ApplicationBean applicationBean;
 
@@ -47,7 +49,7 @@ public class UserBean implements Serializable {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
         if (user==null){
             UserEntity newUserDto= convertUserDtotoUserEntity(userDto);
-            applicationBean.addUser(newUserPojo);
+          //  applicationBean.addUser(newUserPojo);
             return true;
         }else
             return false;
