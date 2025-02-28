@@ -158,7 +158,7 @@ public class UserDto implements Serializable {
                 && this.url != null && !this.url.isEmpty();
 
 
-
+    }
 }
 
 

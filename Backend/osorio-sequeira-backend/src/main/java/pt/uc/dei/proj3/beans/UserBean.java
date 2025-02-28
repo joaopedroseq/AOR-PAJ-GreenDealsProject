@@ -81,6 +81,7 @@ public class UserBean implements Serializable {
         else {
             return null;
         }
+        return null;
     }
 
 
@@ -135,7 +136,7 @@ public class UserBean implements Serializable {
         userEntity.setExcluded(false);
         return userEntity;
     }
-
+/*
     private UserDto convertUserUserEntitytoUserDto(UserEntity user){
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
@@ -151,7 +152,7 @@ public class UserBean implements Serializable {
         userDto.setEvaluationsReceived(user.getEvaluationsReceived());
         return userDto;
     }
-
+*/
 
     private String generateNewToken() {
         SecureRandom secureRandom = new SecureRandom(); //threadsafe

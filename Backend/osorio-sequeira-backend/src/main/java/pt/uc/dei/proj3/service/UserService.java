@@ -43,8 +43,7 @@ public class UserService {
         }
         if (userbean.registerNormalUser(userDto)) {
             return Response.status(200).entity("The new user is registered").build();
-        }
-        else{
+        } else {
             return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
@@ -58,8 +57,7 @@ public class UserService {
         }
         if (userbean.registerAdmin(userDto)) {
             return Response.status(200).entity("The new admin is registered").build();
-        }
-        else{
+        } else {
             return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
@@ -69,15 +67,14 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto user) {
-        if(!user.isValid()){
+        if (!user.isValid()) {
             return Response.status(400).entity("Invalid data").build();
-        }
-        String token = userbean.login(user);
-        if (token == null) {
-                return Response.status(200).entity(token).build();
-            }
-            else{
+        } else {
+            String token = userbean.login(user);
+            if (token == null) {
                 return Response.status(401).entity("Wrong Username or Password !").build();
+            } else {
+                return Response.status(200).entity(token).build();
             }
         }
     }
@@ -87,8 +84,7 @@ public class UserService {
     public Response logout(@HeaderParam("token") String token) {
         if (userbean.logout(token)) {
             return Response.status(200).entity("Logout Successful!").build();
-        }
-        else{
+        } else {
             return Response.status(401).entity("Invalid Token!").build();
         }
     }
@@ -101,12 +97,11 @@ public class UserService {
 
         if (token != null) {
             return Response.status(200).entity(token).build();
-        }
-        else{
+        } else {
             return Response.status(401).entity("Wrong Username or Password !").build();
         }
     }
-
+/*
     @GET
     @Path("/infoPessoal/{username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -203,7 +198,7 @@ public class UserService {
             return Response.status(403).entity("Forbidden").build();
         } else {
             Evaluation newEvaluation = new Evaluation(evaluation.getStarNumber(), evaluation.getComment(), evaluation.getUserName(), evaluation.getSeller());
-            if (applicationBean.addEvaluation( newEvaluation)) {
+            if (applicationBean.addEvaluation(newEvaluation)) {
                 return Response.status(200).entity("Evaluation added!").build();
             } else {
                 return Response.status(400).entity("Failed").build();
@@ -364,7 +359,7 @@ public class UserService {
     @POST
     @Path("/products/buy/{ProductId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buyProduct(@HeaderParam("username") String username, @HeaderParam("password") String password,@PathParam("ProductId") int id) {
+    public Response buyProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, @PathParam("ProductId") int id) {
         if (password.trim().equals("") || username.trim().equals("")) {
             return Response.status(401).entity("Parameters missing").build();
         } else if (!userbean.checkPassword(username, password)) {
@@ -391,5 +386,8 @@ public class UserService {
             }
             return Response.status(400).entity("Product not found!").build();
         }
-    }*/
+    }
+
+
+ */
 }
