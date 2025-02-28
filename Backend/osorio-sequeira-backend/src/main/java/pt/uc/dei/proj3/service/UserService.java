@@ -35,17 +35,14 @@ public class UserService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
-        if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
-                || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
-                userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
-                || userDto.getUrl().trim().equals("")) {
-            return Response.status(400).entity("Missing parameters").build();
+        if (!userDto.isValid()) {
+            return Response.status(400).entity("Invalid data").build();
         }
         if (userbean.registerNormalUser(userDto)) {
             return Response.status(200).entity("The new user is registered").build();
         }
         else{
-            return Response.status(400).entity("There is a user with the same username!").build();
+            return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
 
@@ -53,17 +50,14 @@ public class UserService {
     @Path("/registerAdmin")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAdmin(UserDto userDto) {
-        if (userDto.getFirstName().trim().equals("") || userDto.getLastName().trim().equals("")
-                || userDto.getUsername().trim().equals("") || userDto.getPassword().trim().equals("") ||
-                userDto.getEmail().trim().equals("") || userDto.getPhoneNumber().trim().equals("")
-                || userDto.getUrl().trim().equals("")) {
-            return Response.status(400).entity("Missing parameters").build();
+        if (!userDto.isValid()) {
+            return Response.status(400).entity("Invalid Data").build();
         }
         if (userbean.registerAdmin(userDto)) {
             return Response.status(200).entity("The new admin is registered").build();
         }
         else{
-            return Response.status(400).entity("There is a user with the same username!").build();
+            return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
 
@@ -72,12 +66,11 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto user) {
-        if(user.getUsername().trim().equals("") || user.getPassword().trim().equals("")){
-            return Response.status(400).entity("Missing parameters").build();
+        if(!user.isValid()){
+            return Response.status(400).entity("Invalid data").build();
         }
-        else{
-            String token = userbean.login(user);
-            if (token != null) {
+        String token = userbean.login(user);
+        if (token == null) {
                 return Response.status(200).entity(token).build();
             }
             else{

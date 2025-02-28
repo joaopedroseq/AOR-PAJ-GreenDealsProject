@@ -29,4 +29,9 @@ public class LoginDto implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public boolean isValid() {
+        return this.username != null && !this.username.isEmpty()
+                && this.password != null && !this.password.isEmpty();
+    }
 }

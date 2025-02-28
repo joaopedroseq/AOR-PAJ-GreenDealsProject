@@ -148,4 +148,18 @@ public class UserDto implements Serializable {
     public void setExcluded(Boolean excluded) {
         this.excluded = excluded;
     }
+    public boolean isValid() {
+        return this.firstName != null && !this.firstName.isEmpty()
+                && this.lastName != null && !this.lastName.isEmpty()
+                && this.username != null && !this.username.isEmpty()
+                && this.password != null && !this.password.isEmpty()
+                && this.phoneNumber != null && !this.phoneNumber.isEmpty()
+                && this.email != null && !this.email.isEmpty()
+                && this.url != null && !this.url.isEmpty();
+
+
+
 }
+
+
+
