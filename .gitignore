@@ -6,6 +6,7 @@ node_modules
 /Backend/osorio-sequeira-backend/.idea/*
 /Backend/osorio-sequeira-backend/.mvn
 /Backend/osorio-sequeira-backend/.mvn/*
+/Backend/osorio-sequeira-backend/src/main/resources/META-INF/persistence.xml
 .vscode
 .vscode/*
 /Frontend/.vscode
