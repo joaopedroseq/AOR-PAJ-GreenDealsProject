@@ -7,8 +7,11 @@ import java.util.ArrayList;
 
 @Entity
 @Table(name="category")
-public class CategoryEntity implements Serializable {
 
+@NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
+
+
+public class CategoryEntity implements Serializable {
     @Id
     @Column(name="nome", nullable=false, unique = true, updatable = false)
     private String nome;
