@@ -146,5 +146,28 @@ public class ProductDto implements Serializable{
         }
         return hash;
     }
+    public boolean newProductIsValid(){
+        return this.seller != null && !this.seller.isEmpty()
+                && this.name != null && !this.name.isEmpty()
+                && this.description != null && !this.description.isEmpty()
+                && this.price != 0
+                && this.category != null && !this.category.isEmpty()
+                && this.location != null && !this.location.isEmpty()
+                && this.urlImage != null && !this.urlImage.isEmpty();
+
+    }
+    public boolean isValid(){
+        return this.id != null && this.id != null
+                && this.seller != null && !this.seller.isEmpty()
+                && this.name != null && !this.name.isEmpty()
+                && this.description != null && !this.description.isEmpty()
+                && this.price != 0
+                && this.category != null && !this.category.isEmpty()
+                && this.location != null && !this.location.isEmpty()
+                && this.urlImage != null && !this.urlImage.isEmpty()
+                && this.state != null
+                && this.date != null;
+    }
+
 }
 

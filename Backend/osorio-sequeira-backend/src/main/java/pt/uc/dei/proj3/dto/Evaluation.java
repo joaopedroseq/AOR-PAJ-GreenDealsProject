@@ -93,4 +93,5 @@ public class Evaluation {
         }
         return hash;
     }
+    //todo evaluation isValid() method
 }
