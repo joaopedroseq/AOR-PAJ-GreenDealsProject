@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 //import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -66,7 +67,8 @@ public class UserBean implements Serializable {
     public String login(LoginDto user){
         UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
         if (userEntity != null){
-            if (userEntity.getPassword().equals(user.getPassword())){
+            BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userEntity.getPassword());
+            if(result.verified){
                 String token = generateNewToken();
                 userEntity.setToken(token);
                 return token;
