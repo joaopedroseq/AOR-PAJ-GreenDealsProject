@@ -59,11 +59,14 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAdmin(UserDto userDto) {
         if (!userDto.isValid()) {
+            logger.error("Invalid data - registering new admin {}", userDto.getUsername());
             return Response.status(400).entity("Invalid Data").build();
         }
         if (userbean.registerAdmin(userDto)) {
+            logger.info("New admin registered {}", userDto.getUsername());
             return Response.status(200).entity("The new admin is registered").build();
         } else {
+            logger.error("Same username conflict - Registering admin {}", userDto.getUsername());
             return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
@@ -74,12 +77,15 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto user) {
         if (!user.isValid()) {
+            logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
         String token = userbean.login(user);
         if (token == null) {
+            logger.error("Login failed from {} - wrong username/password", user.getUsername());
             return Response.status(401).entity("Wrong Username or Password !").build();
         } else {
+            logger.info("Login from {} successful", user.getUsername());
             return Response.status(200).entity(token).build();
         }
     }
@@ -88,26 +94,30 @@ public class UserService {
     @Path("/logout")
     public Response logout(@HeaderParam("token") String token) {
         if (userbean.logout(token)) {
+            logger.info("Logout successful");
             return Response.status(200).entity("Logout Successful!").build();
         } else {
+            logger.error("Logout failed");
             return Response.status(401).entity("Invalid Token!").build();
         }
     }
 
-    /*
+
     @GET
-    @Path("/{username}")
+    @Path("/user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserLogged(@HeaderParam("token") String token) {
-
-        if (token != null) {
-            return Response.status(200).entity(token).build();
+        UserDto user = userbean.verifyToken(token);
+        if(user == null) {
+            logger.error("Invalid token from user {}", user.getUsername());
+            return Response.status(401).entity("Invalid token").build();
         }
-        else{
-            return Response.status(401).entity("Wrong Username or Password !").build();
+        else {
+            logger.info("User information retrieved from user {}", user.getUsername());
+            return Response.status(200).entity(user).build();
         }
     }
-
+/*
     @GET
     @Path("/infoPessoal/{username}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -133,19 +143,6 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserPojo> getUser() {
         return userbean.getUsersAplicationBean();
-    }
-
-
-    @POST
-    @Path("/logout")
-    public Response logout() {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-            return Response.status(200).entity("Logout Successful!").build();
-        } else {
-            return Response.status(200).entity("No active session found").build();
-        }
     }
 
 
