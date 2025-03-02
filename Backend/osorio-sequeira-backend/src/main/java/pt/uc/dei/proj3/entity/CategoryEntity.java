@@ -1,9 +1,8 @@
 package pt.uc.dei.proj3.entity;
-
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Set;
 
 //to get all categories
 @NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c")
@@ -19,7 +18,7 @@ public class CategoryEntity implements Serializable {
     private String nome;
 
     @OneToMany(mappedBy = "category")
-    private ArrayList<ProductEntity> product;
+    private Set<ProductEntity> product;
 
     //Constructors
     public CategoryEntity() {
@@ -32,5 +31,13 @@ public class CategoryEntity implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Set<ProductEntity> getProduct() {
+        return product;
+    }
+
+    public void setProduct(Set<ProductEntity> product) {
+        this.product = product;
     }
 }

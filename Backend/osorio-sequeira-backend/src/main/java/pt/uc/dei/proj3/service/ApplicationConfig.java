@@ -15,6 +15,8 @@ public class ApplicationConfig extends Application {
         resources.add(CorsFilter.class);
         resources.add(ApplicationBean.class);
         resources.add(UserService.class);
+        resources.add(CategoryService.class);
+        resources.add(ProductService.class);
         return resources;
     }
 }

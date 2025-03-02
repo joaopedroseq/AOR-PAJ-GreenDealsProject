@@ -48,19 +48,20 @@ public class CategoryService {
         } else {
             UserDto user = userbean.verifyToken(token);
             if (user == null) {
-                logger.error("Invalid token for user {}- adding new category - {}", user.getUsername(), categoryDto.getName());
+                logger.error("Invalid token for user  adding new category - {}", categoryDto.getName());
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 if (!user.getAdmin()) {
                     logger.error("Permission denied - not admin privileges - {} adding new category - {}", user.getUsername(), categoryDto.getName());
                     return Response.status(403).entity("Permission denied").build();
                 } else {
+                    categoryDto.setName(categoryDto.getName().trim());
                     if (!categoryBean.registerNewCategory(categoryDto)) {
                         logger.error("Conflict - category {} already exists - {}", user.getUsername(), categoryDto.getName());
                         return Response.status(409).entity("Conflict - category already exists").build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
-                        return Response.status(200).entity("Added product").build();
+                        return Response.status(200).entity("Added new catergory " + categoryDto.getName()).build();
                     }
                 }
             }
