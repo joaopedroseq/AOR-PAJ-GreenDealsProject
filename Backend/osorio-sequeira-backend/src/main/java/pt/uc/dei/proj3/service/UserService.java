@@ -42,7 +42,7 @@ public class UserService {
     public Response registerUser(UserDto userDto) {
         logger.info("Registering user: " + userDto);
         if (!userDto.isValid()) {
-            logger.error("Invalid data - Registering user");
+            logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
         }
         if (userbean.registerNormalUser(userDto)) {
@@ -117,6 +117,34 @@ public class UserService {
             return Response.status(200).entity(user).build();
         }
     }
+    @POST
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
+        if (!userDto.isValid()) {
+            logger.error("Invalid data - missing params - Registering user");
+            return Response.status(400).entity("Invalid data").build();
+        }
+        else{
+            if(!userbean.checkIfTokenValid(token)) {
+                logger.error("Invalid token from user {}", userDto.getUsername());
+                return Response.status(401).entity("Invalid token").build();
+            }
+            else {
+                if(userbean.updateUser(token, userDto)){
+                    logger.info("User {} updated successful", userDto.getUsername());
+                    return Response.status(200).entity("Updated user " + userDto.getUsername() + " successfully").build();
+                }
+                else {
+                    logger.error("User {} not updated", userDto.getUsername());
+                    return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
+                }
+            }
+        }
+    }
+
+
 /*
     @GET
     @Path("/infoPessoal/{username}")

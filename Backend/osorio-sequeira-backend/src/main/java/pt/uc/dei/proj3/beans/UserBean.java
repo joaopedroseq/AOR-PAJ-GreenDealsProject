@@ -95,6 +95,34 @@ public class UserBean implements Serializable {
         }
     }
 
+    public boolean checkIfTokenValid(String token) {
+        return userDao.findIfTokenExists(token);
+    }
+
+    public boolean updateUser(String token, UserDto userDto) {
+        UserEntity userToUpdate = userDao.findUserByToken(token);
+        if(userToUpdate==null){
+            return false;
+        }
+        else {
+            try {
+                userToUpdate.setPassword(userDto.getPassword());
+                userToUpdate.setFirstName(userDto.getFirstName());
+                userToUpdate.setLastName(userDto.getLastName());
+                userToUpdate.setEmail(userDto.getEmail());
+                userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
+                userToUpdate.setUrl(userToUpdate.getUrl());
+                userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
+                //adicionar evaluations
+                return true;
+            }
+            catch (Exception e){
+                logger.error("Error in UserBean.updateUser - error {}", e.getMessage());
+                return false;
+            }
+        }
+    }
+
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
             ProductDto completeProductDto = new ProductDto(newProductDto);
@@ -109,7 +137,8 @@ public class UserBean implements Serializable {
 
 
 
-    public UserDto getUserLogged(String token){
+    //Provavelmente para apagar - não será necessário já que obter informações de user usa o verifyToken()
+    /*public UserDto getUserLogged(String token){
         UserEntity u= userDao.findUserByToken(token);
         if(u!=null){
 
@@ -118,7 +147,7 @@ public class UserBean implements Serializable {
             return null;
         }
         return null;
-    }
+    }*/
 
 
     //Converts
@@ -159,6 +188,15 @@ public class UserBean implements Serializable {
             productDtos.add(produto);
         }
         return productDtos;
+    }
+
+    private Set<ProductEntity> convertGroupProductDtoToGroupProductEntity(Set<ProductDto> products) {
+        Set<ProductEntity> productEntities = new HashSet<>();
+        for (ProductDto productDto : products) {
+            ProductEntity productEntity = convertSingleProductDtotoProductEntity(productDto);
+            productEntities.add(productEntity);
+        }
+        return productEntities;
     }
 
     public ProductEntity convertSingleProductDtotoProductEntity(ProductDto productDto){

@@ -27,14 +27,27 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public UserEntity findUserByUsername(String username) {
         try {
-            System.out.println(username);
             return (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username)
                     .getSingleResult();
 
         } catch (NoResultException e) {
-            System.out.println("Exception");
-            System.out.println(e.getMessage());
+            logger.error("Exception {} in UserDao.findUserByUsername", e.getMessage());
             return null;
+        }
+    }
+
+    public boolean findIfTokenExists(String token) {
+        try{
+            if ((String) em.createNamedQuery("User.findToken").setParameter("token", token).getSingleResult() != null) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findToken", e.getMessage());
+            return false;
         }
     }
 

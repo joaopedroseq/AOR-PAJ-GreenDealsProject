@@ -13,6 +13,8 @@ import java.util.Set;
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
 //to login
 @NamedQuery(name = "User.findUserByToken", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.token = :token")
+//to find if token exists
+@NamedQuery(name = "User.findToken", query = "SELECT token FROM UserEntity WHERE token = :token")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
