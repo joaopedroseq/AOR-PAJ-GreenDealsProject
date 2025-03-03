@@ -98,8 +98,10 @@ public class UserService {
     @Path("/logout")
     public Response logout(@HeaderParam("token") String token) {
         if (userbean.logout(token)) {
+            logger.info("Logout successful");
             return Response.status(200).entity("Logout Successful!").build();
         } else {
+            logger.error("Logout failed");
             return Response.status(401).entity("Invalid Token!").build();
         }
     }
@@ -109,6 +111,7 @@ public class UserService {
     @Path("/user")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserLogged(@HeaderParam("token") String token) {
+        System.out.println(userbean.checkIfTokenValid(token));
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
             logger.error("Invalid token from user {}", user.getUsername());
