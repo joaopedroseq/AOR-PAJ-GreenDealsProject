@@ -49,13 +49,13 @@ public class ProductBean {
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());
+        produto.setExcluded(productEntity.getExcluded());
         return produto;
     }
 
     public boolean buyProduct(ProductDto productDto) {
         try {
-            ProductEntity productEntity = productDao.getProductById(productDto.getId());
-            productEntity.setState(4);
+            productDao.buyProduct(productDto.getId());
             return true;
         } catch (Exception e) {
             logger.error("Erro ao comprar produto {}", productDto.getId());

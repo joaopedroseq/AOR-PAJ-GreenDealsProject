@@ -35,6 +35,25 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
     }
 
+    public void buyProduct(int id) {
+        try{
+            em.createNamedQuery("Product.buyProduct").setParameter("id", id);
+        }catch(NoResultException e){
+            logger.error("Error buying product");
+            //logger.error(e);
+        }
+    }
+
+    public void excludeProduct(int id) {
+        try{
+            System.out.println("Excluding product product dao. id: " + id);
+            em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
+            System.out.println("Excluding product product dao");
+        }catch(NoResultException e){
+            logger.error("Error excluding product in product dao");
+            //logger.error(e);
+        }
+    }
     public void setProductsOfUserToExcluded(String username) {
         try {
             UserEntity userEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();

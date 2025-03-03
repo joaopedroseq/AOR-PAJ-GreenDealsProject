@@ -196,6 +196,16 @@ public class UserBean implements Serializable {
         }
     }
 
+    public boolean excludeProduct(int productId) {
+        try{
+            productDao.excludeProduct(productId);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error while excluding product {}", productId);
+            logger.error(e);
+            return false;
+        }
+    }
 
     //Converts
     private UserEntity convertUserDtotoUserEntity(UserDto user) {
