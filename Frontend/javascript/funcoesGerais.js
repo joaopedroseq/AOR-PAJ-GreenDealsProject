@@ -6,7 +6,7 @@ export async function fetchRequest(endpoint, requestType, body = null) {
     const url = `${baseUrl}${endpoint}`;
     const token = sessionStorage.getItem("token");
     const headers = {
-        "Content-Type" : "application/json",
+        "Content-Type": "application/json",
         "token": `${token}`
     };
 
@@ -21,7 +21,14 @@ export async function fetchRequest(endpoint, requestType, body = null) {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+
+        const contentType = response.headers.get("Content-Type");
+        if (contentType && contentType.includes("application/json")) {
+            return await response.json();
+        } else {
+            // No JSON body; return an empty object or response text (optional)
+            return null; 
+        }
     } catch (error) {
         console.error('Fetch request failed:', error);
         throw error;

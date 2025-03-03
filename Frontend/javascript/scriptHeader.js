@@ -147,45 +147,13 @@ export function handleFailedLogin(message) {
   console.log("Login falhou:", message);
 }
 
-export function addDetailsUserInSessionStorage(username, password) {
-  sessionStorage.setItem("logged", "true");
-  sessionStorage.setItem("username", username);
-  sessionStorage.setItem("password", password);
-}
-
 //Função para efetuar o Logout
 export async function logout() {
   try {
-    const response = await fetch(
-      "http://localhost:8080/osorio-sequeira-proj3/rest/user/logout",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Inclui cookies na requisição
-      }
-    );
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Falha no logout: ${errorMessage}`);
-    }
-
-    // Limpar dados de sessão locais
-    sessionStorage.removeItem("username");
-    sessionStorage.removeItem("logged");
-    sessionStorage.removeItem("password"); // Removendo a senha
-    localStorage.removeItem("token"); // Se estiver usando JWT
-
-    // Atualizar a interface do usuário
-    const loginMessage = document.getElementById("loginMessage");
-    if (loginMessage) loginMessage.style.visibility = "hidden";
-
-    const loginButton = document.getElementById("loginButton");
-    if (loginButton) loginButton.style.visibility = "visible";
-
-    console.log("Logout bem-sucedido, redirecionando...");
+    const endpoint = "/user/logout";
+    await fetchRequest(endpoint, "POST");
+    localStorage.removeItem("token");
+    console.log("Logout bem-sucedido");
     window.location.href = "index.html";
   } catch (error) {
     console.error("Erro durante o logout:", error);
