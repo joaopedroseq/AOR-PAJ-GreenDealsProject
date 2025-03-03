@@ -1,9 +1,12 @@
 import { carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
+import { fetchRequest ,baseUrl} from './funcoesGerais.js';
+
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
-  await carregarAsideNormal();
+  //await carregarAsideNormal();
+  await carregarCategorias();
   await carregarFooter();
   await getAvailableProducts();
 });
@@ -13,6 +16,7 @@ async function carregarAsideNormal() {
     .then((response) => response.text())
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
+      carregarCategorias();
     });
 }
 
@@ -76,3 +80,23 @@ function setupCategoryFiltering() {
     }
   });
 }
+
+async function carregarCategorias() {
+    try {
+        const categorias = await fetchRequest("/category/all", "GET");
+        const asideMenu = document.getElementById("aside-menu");
+        const ul = asideMenu.querySelector("ul");
+
+        ul.innerHTML = '<h3>Categorias</h3>';
+
+        categorias.forEach((categoria) => {
+            const li = document.createElement('li');
+            li.name = categoria.name; 
+            li.textContent = categoria.name;
+            ul.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Failed to load categories:', error);
+    }
+}
+
