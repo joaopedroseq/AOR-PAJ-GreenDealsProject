@@ -44,31 +44,31 @@ public class UserBean implements Serializable {
 
     public boolean registerNormalUser(UserDto userDto) {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
-        if (user==null){
-            UserEntity newUserEntity= convertUserDtotoUserEntity(userDto);
+        if (user == null) {
+            UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             userDao.persist(newUserEntity);
             return true;
-        }else
+        } else
             return false;
     }
 
     public boolean registerAdmin(UserDto userDto) {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
-        if (user==null){
-            UserEntity newUserEntity= convertUserDtotoUserEntity(userDto);
+        if (user == null) {
+            UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             newUserEntity.setAdmin(true);
             userDao.persist(newUserEntity);
             return true;
-        }else
+        } else
             return false;
     }
 
 
-    public String login(LoginDto user){
+    public String login(LoginDto user) {
         UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
-        if (userEntity != null){
+        if (userEntity != null) {
             BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userEntity.getPassword());
-            if(result.verified){
+            if (result.verified) {
                 String token = generateNewToken();
                 userEntity.setToken(token);
                 return token;
@@ -78,8 +78,8 @@ public class UserBean implements Serializable {
     }
 
     public boolean logout(String token) {
-        UserEntity u= userDao.findUserByToken(token);
-        if(u!=null){
+        UserEntity u = userDao.findUserByToken(token);
+        if (u != null) {
             u.setToken(null);
             return true;
         }
@@ -89,11 +89,67 @@ public class UserBean implements Serializable {
     public UserDto verifyToken(String token) {
         try {
             return convertUserEntitytoUserDto(userDao.findUserByToken(token));
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e);
             return null;
         }
     }
+
+    public boolean checkIfTokenValid(String token) {
+        return userDao.findIfTokenExists(token);
+    }
+
+    public boolean checkIfUserExists(String username) {
+        return userDao.findIfUserExists(username);
+    }
+
+    public boolean updateUser(String token, UserDto userDto) {
+        UserEntity userToUpdate = userDao.findUserByToken(token);
+        if (userToUpdate == null) {
+            return false;
+        } else {
+            try {
+                //não é feito set de username, admin ou excluded
+                userToUpdate.setPassword(userDto.getPassword());
+                userToUpdate.setFirstName(userDto.getFirstName());
+                userToUpdate.setLastName(userDto.getLastName());
+                userToUpdate.setEmail(userDto.getEmail());
+                userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
+                userToUpdate.setUrl(userToUpdate.getUrl());
+                userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
+                //adicionar evaluations
+                return true;
+            } catch (Exception e) {
+                logger.error("Error in UserBean.updateUser - error {}", e.getMessage());
+                return false;
+            }
+        }
+    }
+
+    public boolean deleteUser(String username) {
+        try {
+            if (userDao.deleteUser(username)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean excludeUser(String username) {
+        try {
+            if (userDao.excludeUser(username)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
@@ -101,15 +157,15 @@ public class UserBean implements Serializable {
             ProductEntity product = convertSingleProductDtotoProductEntity(completeProductDto);
             productDao.persist(product);
             return true;
-        }catch (Exception e){
-            logger.error("Error while adding product to user {}",userDto.getUsername(), e);
+        } catch (Exception e) {
+            logger.error("Error while adding product to user {}", userDto.getUsername(), e);
             return false;
         }
     }
 
 
-
-    public UserDto getUserLogged(String token){
+    //Provavelmente para apagar - não será necessário já que obter informações de user usa o verifyToken()
+    /*public UserDto getUserLogged(String token){
         UserEntity u= userDao.findUserByToken(token);
         if(u!=null){
 
@@ -118,11 +174,11 @@ public class UserBean implements Serializable {
             return null;
         }
         return null;
-    }
+    }*/
 
 
     //Converts
-    private UserEntity convertUserDtotoUserEntity(UserDto user){
+    private UserEntity convertUserDtotoUserEntity(UserDto user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(user.getPassword());
@@ -136,7 +192,7 @@ public class UserBean implements Serializable {
         return userEntity;
     }
 
-    private UserDto convertUserEntitytoUserDto(UserEntity user){
+    private UserDto convertUserEntitytoUserDto(UserEntity user) {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
@@ -148,7 +204,7 @@ public class UserBean implements Serializable {
         userDto.setAdmin(user.getAdmin());
         userDto.setExcluded(user.getExcluded());
         userDto.setProducts(convertGroupProductEntityToGroupProductDto(user.getProducts()));
-      //userDto.setEvaluationsReceived(user.getEvaluationsReceived());
+        //userDto.setEvaluationsReceived(user.getEvaluationsReceived());
         return userDto;
     }
 
@@ -161,26 +217,32 @@ public class UserBean implements Serializable {
         return productDtos;
     }
 
-    public ProductEntity convertSingleProductDtotoProductEntity(ProductDto productDto){
+    private Set<ProductEntity> convertGroupProductDtoToGroupProductEntity(Set<ProductDto> products) {
+        Set<ProductEntity> productEntities = new HashSet<>();
+        for (ProductDto productDto : products) {
+            ProductEntity productEntity = convertSingleProductDtotoProductEntity(productDto);
+            productEntities.add(productEntity);
+        }
+        return productEntities;
+    }
+
+    public ProductEntity convertSingleProductDtotoProductEntity(ProductDto productDto) {
         ProductEntity product = new ProductEntity();
         product.setId(productDto.getId());
         product.setDescription(productDto.getDescription());
         product.setPrice(productDto.getPrice());
         product.setName(productDto.getName());
-        product.setExcluded(productDto.isExcluded());
         product.setDate(productDto.getDate());
-        product.setEditedDate(productDto.getEdited());
         product.setLocation(productDto.getLocation());
-        StateId state = StateId.RASCUNHO;
-        int stateInt = state.intFromStateId(productDto.getState());
-        product.setState( stateInt);
+        StateId state = null;
+        product.setState(state.intFromStateId(productDto.getState()));
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
         product.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
         product.setUrlImage(productDto.getUrlImage());
         return product;
     }
 
-    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity){
+    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
         ProductDto produto = new ProductDto();
         produto.setId(productEntity.getId());
         produto.setDescription(productEntity.getDescription());
@@ -188,8 +250,8 @@ public class UserBean implements Serializable {
         produto.setName(productEntity.getName());
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
-        StateId state = StateId.RASCUNHO;
-        produto.setState( state.stateIdFromInt(productEntity.getState()));
+        StateId state = null;
+        produto.setState(state.stateIdFromInt(productEntity.getState()));
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());

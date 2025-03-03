@@ -39,8 +39,6 @@ public class CategoryService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
-        logger.info("Registering new category");
-        System.out.println(categoryDto);
         if (token == null || token.trim().isEmpty()) {
             logger.error("Invalid token - adding new category - {}", categoryDto.getName());
             return Response.status(401).entity("Invalid token").build();
@@ -57,7 +55,6 @@ public class CategoryService {
                     logger.error("Permission denied - not admin privileges - {} adding new category - {}", user.getUsername(), categoryDto.getName());
                     return Response.status(403).entity("Permission denied").build();
                 } else {
-                    categoryDto.setName(categoryDto.getName().trim());
                     if (!categoryBean.registerNewCategory(categoryDto)) {
                         logger.error("Conflict - category {} already exists - {}", user.getUsername(), categoryDto.getName());
                         return Response.status(409).entity("Conflict - category already exists").build();

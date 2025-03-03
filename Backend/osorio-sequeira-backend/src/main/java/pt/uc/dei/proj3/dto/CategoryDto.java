@@ -1,15 +1,19 @@
 package pt.uc.dei.proj3.dto;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 public class CategoryDto implements Serializable {
     private String name;
+    private Set<ProductDto> products;
 
     //Constructors
     public CategoryDto() {}
 
-    public CategoryDto(String name) {
-        this.name = name;
+    public CategoryDto(String nome, Set<ProductDto> products) {
+        this.name = nome;
+        this.products = products;
     }
 
     //Setter and Getters
@@ -23,6 +27,14 @@ public class CategoryDto implements Serializable {
 
     public boolean isValid() {
         return this.name != null && !this.name.isEmpty();
+    }
+
+    public Set<ProductDto> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<ProductDto> products) {
+        this.products = products;
     }
 
 }
