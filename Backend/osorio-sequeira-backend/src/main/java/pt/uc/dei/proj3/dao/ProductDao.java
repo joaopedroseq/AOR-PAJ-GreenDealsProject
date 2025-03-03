@@ -42,4 +42,15 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             //logger.error(e);
         }
     }
+
+    public void excludeProduct(int id) {
+        try{
+            System.out.println("Excluding product product dao. id: " + id);
+            em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
+            System.out.println("Excluding product product dao");
+        }catch(NoResultException e){
+            logger.error("Error excluding product in product dao");
+            //logger.error(e);
+        }
+    }
 }

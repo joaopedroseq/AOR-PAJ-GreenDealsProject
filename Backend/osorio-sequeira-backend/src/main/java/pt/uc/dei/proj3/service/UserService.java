@@ -6,18 +6,13 @@ import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj3.entity.UserEntity;
 
 
 @Path("/user")
@@ -464,21 +459,34 @@ public class UserService {
             }
         }
     }
-/*
-    @DELETE
+
+
+    @PATCH
     @Path("/{username}/products/{ProductId}")
-    public Response deleteProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, @PathParam("ProductId") int id) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
+    public Response excludeProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - excludeProduct");
+            return Response.status(401).entity("Invalid token").build();
         } else {
-            if (applicationBean.deleteProduct(id, username)) {
-                return Response.status(200).entity("Product deleted!").build();
+            ProductDto product = productbean.findProductById(pathProductId);
+            System.out.println("product: " + product);
+            if (product == null) {
+                logger.error("Excluding product - Product with id {} not found", pathProductId);
+                return Response.status(404).entity("Product not found").build();
+            } else if (product.isExcluded()){
+                logger.error("Permission denied - {} excluding already excluded product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - excluding already excluded product").build();
+            } else if (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller()))) {
+                logger.error("Permission denied - {} excluding Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                return Response.status(403).entity("Permission denied").build();
+            } else if (userbean.excludeProduct(pathProductId)) {
+                logger.info("excluding product -  {} excluded Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                return Response.status(200).entity("Updated product").build();
+            } else {
+                logger.error("Error : Product with id {} not excluded by {}", pathProductId, user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
-            return Response.status(400).entity("Product not found!").build();
         }
     }
-    */
-
 }
