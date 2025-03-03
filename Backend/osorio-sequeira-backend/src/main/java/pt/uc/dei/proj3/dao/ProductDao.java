@@ -38,22 +38,23 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
     public void buyProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.buyProduct").setParameter("id", id);
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error buying product");
             //logger.error(e);
         }
     }
 
     public void excludeProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error excluding product in product dao");
             //logger.error(e);
         }
     }
+
     public void setProductsOfUserToExcluded(String username) {
         try {
             UserEntity userEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();
@@ -63,10 +64,21 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
     }
 
+    public void setProductsOfUserToAnonymous(String username) {
+        try {
+            UserEntity userEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();
+            UserEntity anonymous = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", "anonymous").getSingleResult();
+            em.createNamedQuery("Product.setProductsOfUserToAnonymous").setParameter("anonymous", anonymous).setParameter("seller", userEntity).executeUpdate();
+        } catch (Exception e) {
+            logger.error("Exception {} in ProductDao.setProductsOfUserToAnonymous", e.getMessage());
+        }
+    }
+
+
     public void deleteProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.deleteProduct").setParameter("id", id).executeUpdate();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error deleting product in product dao");
             //logger.error(e);
         }
