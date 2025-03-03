@@ -39,6 +39,8 @@ public class CategoryService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
+        logger.info("Registering new category");
+        System.out.println(categoryDto);
         if (token == null || token.trim().isEmpty()) {
             logger.error("Invalid token - adding new category - {}", categoryDto.getName());
             return Response.status(401).entity("Invalid token").build();

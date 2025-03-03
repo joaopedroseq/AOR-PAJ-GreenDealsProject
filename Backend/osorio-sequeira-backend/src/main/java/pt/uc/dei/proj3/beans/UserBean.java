@@ -188,7 +188,7 @@ public class UserBean implements Serializable {
         produto.setName(productEntity.getName());
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
-        StateId state = null;
+        StateId state = StateId.RASCUNHO;
         produto.setState( state.stateIdFromInt(productEntity.getState()));
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());

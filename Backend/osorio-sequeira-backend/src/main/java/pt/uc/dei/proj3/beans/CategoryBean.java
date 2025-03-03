@@ -24,7 +24,8 @@ public class CategoryBean implements Serializable {
     }
 
     public boolean registerNewCategory(CategoryDto category) {
-        if(categoryDao.getAllCategories().contains(category)) {
+        category.setName(category.getName().toLowerCase());
+        if(categoryDao.findCategoryByName(category.getName()) != null) {
             return false;
         }
         else{

@@ -95,11 +95,11 @@ public class ProductDto implements Serializable{
 
     @XmlElement
     public String getCategory() {
-        return category;
+        return category.toLowerCase();
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = category.toLowerCase();
     }
 
     @XmlElement

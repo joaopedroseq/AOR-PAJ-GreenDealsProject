@@ -22,7 +22,7 @@ public class ProductEntity implements Serializable {
     private String name;
 
     //description
-    @Column(name="description", nullable=true, unique = true, updatable = true)
+    @Column(name="description", nullable=false, unique = false, updatable = true)
     private String description;
 
     //price

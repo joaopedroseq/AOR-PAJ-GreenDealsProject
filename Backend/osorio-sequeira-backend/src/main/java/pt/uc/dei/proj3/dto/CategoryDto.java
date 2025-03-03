@@ -8,8 +8,8 @@ public class CategoryDto implements Serializable {
     //Constructors
     public CategoryDto() {}
 
-    public CategoryDto(String nome) {
-        this.name = nome;
+    public CategoryDto(String name) {
+        this.name = name;
     }
 
     //Setter and Getters
