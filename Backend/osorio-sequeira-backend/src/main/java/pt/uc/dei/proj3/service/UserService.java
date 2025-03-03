@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+
 
 @Path("/user")
 public class UserService {
@@ -218,19 +220,35 @@ public class UserService {
         }
     }
 
-
-/*
-
-
-    //para debug - a ser removido
+    //Get All Regular Users
     @GET
-    @Path("/all")
+    @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<UserPojo> getUser() {
-        return userbean.getUsersAplicationBean();
+    public Response getAllUsers(@HeaderParam("token") String token) {
+        if (!userbean.checkIfTokenValid(token)) {
+            logger.error("Invalid token when trying to get all users");
+            return Response.status(401).entity("Invalid token").build();
+        } else {
+            UserDto user = userbean.verifyToken(token);
+            if (user == null) {
+                logger.error("Invalid token when trying to get all users {}", user.getUsername());
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                if (!user.getAdmin()) {
+                    logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
+                    return Response.status(403).entity("User does not have admin permission to views other user's information").build();
+                }
+                else {
+                    Set<UserDto> users = userbean.getAllUsers();
+                    logger.info("User {} accessed to get all user's information", user.getUsername());
+                    return Response.status(200).entity(users).build();
+                }
+            }
+        }
     }
 
 
+    /*
     //Evaluations
 
     @GET
@@ -326,27 +344,9 @@ public class UserService {
                 }
             }
         }
-    }
+    }*/
 
     //Produtos
-    @GET
-    @Path("/{username}/products")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductsOfUser(@HeaderParam("username") String username, @HeaderParam("password") String password) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
-        } else {
-            if (applicationBean.isUserExist(username)) {
-                return Response.status(200).entity(applicationBean.getProductsUser(username)).build();
-            } else {
-                return Response.status(400).entity("User not found!").build();
-            }
-        }
-    }
-*/
-
     //Add product to user
     @POST
     @Path("/{username}/add")
@@ -517,4 +517,8 @@ public class UserService {
             }
         }
     }
+
+
+
+
 }

@@ -156,6 +156,17 @@ public class UserBean implements Serializable {
         }
     }
 
+    public Set<UserDto> getAllUsers() {
+        try{
+            List<UserEntity> userEntityList = userDao.getAllUsers();
+            return convertGroupUserEntityToUserDto(userEntityList);
+        }
+        catch(Exception e) {
+            logger.error("Error in UserBean.getAllUsers - error {}", e.getMessage());
+            return null;
+        }
+    }
+
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
@@ -217,6 +228,14 @@ public class UserBean implements Serializable {
     }
 
     //Converts
+    private Set<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {
+        Set<UserDto> userDtos = new HashSet<>();
+        for (UserEntity userEntity : userEntities) {
+            userDtos.add(convertUserEntitytoUserDto(userEntity));
+        }
+        return userDtos;
+    }
+
     private UserEntity convertUserDtotoUserEntity(UserDto user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());

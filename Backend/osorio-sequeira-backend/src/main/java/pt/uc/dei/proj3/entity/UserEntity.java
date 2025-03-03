@@ -21,6 +21,8 @@ import java.util.Set;
 @NamedQuery(name="User.deleteUser", query = "DELETE FROM UserEntity WHERE username = :username")
 //exclude user
 @NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET excluded = true WHERE username = :username")
+//get all non-admin users
+@NamedQuery(name="User.getAllUsers", query = "SELECT u FROM UserEntity u WHERE u.admin = false")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
