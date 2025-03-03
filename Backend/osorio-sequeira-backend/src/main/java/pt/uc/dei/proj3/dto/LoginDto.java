@@ -16,16 +16,10 @@ public class LoginDto implements Serializable {
         return password;
     }
 
-    /*@XmlElement
-    public void setPassword(String password) {
-        this.password = BCrypt.withDefaults().hashToString(10, password.toCharArray());
-    }*/
-
     @XmlElement
     public void setPassword(String password) {
         this.password = password;
     }
-
 
     @XmlElement
     public String getUsername() {

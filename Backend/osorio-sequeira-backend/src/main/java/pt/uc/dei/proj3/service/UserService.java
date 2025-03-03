@@ -170,7 +170,7 @@ public class UserService {
                     } else {
                         if (!userbean.checkIfUserExists(usernameUserExclude)) {
                             logger.error("User {} tried to exclude a user - {} - not found", user.getUsername(), usernameUserExclude);
-                            return Response.status(404).entity("User " + usernameUserExclude +" to exclude not found").build();
+                            return Response.status(404).entity("User " + usernameUserExclude + " to exclude not found").build();
                         } else {
                             if (userbean.excludeUser(usernameUserExclude)) {
                                 logger.info("User {} excluded {} successfully", user.getUsername(), usernameUserExclude);
@@ -210,7 +210,7 @@ public class UserService {
                         usernameUserDelete = usernameUserDelete.trim();
                         if (!userbean.checkIfUserExists(usernameUserDelete)) {
                             logger.error("User {} tried to delete a user - {} - not found", user.getUsername(), usernameUserDelete);
-                            return Response.status(404).entity("User " + usernameUserDelete +" to delete not found").build();
+                            return Response.status(404).entity("User " + usernameUserDelete + " to delete not found").build();
                         } else {
                             if (userbean.deleteUser(usernameUserDelete)) {
                                 logger.info("User {} deleted {} successfully", user.getUsername(), usernameUserDelete);
@@ -361,17 +361,17 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
         UserDto user = userbean.verifyToken(token);
-        if(user == null){
+        if (user == null) {
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
         } else {
-            if (!newProductDto.newProductIsValid()){
+            if (!newProductDto.newProductIsValid()) {
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();
-            }else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())){
-                logger.error("Permission denied - {} adding new product to {}",user.getUsername(), pathUsername);
+            } else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())) {
+                logger.error("Permission denied - {} adding new product to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            }else{
+            } else {
                 userbean.addProduct(user, newProductDto);
                 logger.info("Added new product to {}", pathUsername);
                 return Response.status(200).entity("Added product").build();
@@ -379,63 +379,57 @@ public class UserService {
         }
     }
 
-    /*
+
     //Update product info from user
-    @POST
+    @PUT
     @Path("/{username}/products/{ProductId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, @PathParam("ProductId") int id, ProductDto
-            product) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (userbean.checkPassword(username, password)) {
-            ProductDto existingProduct = applicationBean.getProduct(id, username);
-            if (existingProduct == null) {
-                return Response.status(404).entity("Product not found!").build();
-            }
-            existingProduct.setName(product.getName());
-            existingProduct.setDescription(product.getDescription());
-            existingProduct.setPrice(product.getPrice());
-            existingProduct.setCategory(product.getCategory());
-            existingProduct.setLocation(product.getLocation());
-            existingProduct.setUrlImage(product.getUrlImage());
-            existingProduct.setState(product.getState());
-
-            boolean updateSuccessful = applicationBean.updateProduct(existingProduct, username);
-            if (updateSuccessful) {
-                return Response.status(200).entity("Product updated!").build();
-            } else {
-                return Response.status(400).entity("Product not updated!").build();
-            }
-
-        }
-
-
-    }
-*/
-
-    @GET
-    @Path("/products/{ProductId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+    public Response updateProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId, ProductDto productDto) {
         UserDto user = userbean.verifyToken(token);
-        if(user == null){
-            logger.error("Invalid token - getting product with id: {}", pathProductId);
+        if (user == null) {
+            logger.error("Invalid token - updateProduct to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
-        } else{
+        } else if (!productDto.isValid()) {
+            logger.error("Invalid data - user {} updateProduct to {}", user.getUsername(), pathUsername);
+            return Response.status(400).entity("Invalid data").build();
+        } else {
             ProductDto product = productbean.findProductById(pathProductId);
-            if(product == null){
-                logger.error("Product with id {} not found", pathProductId);
-                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
-            }else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())){
-                logger.error("Permission denied - {} getting product with id: {}",user.getUsername(), pathProductId);
+            if(product == null) {
+                return Response.status(404).entity("Product not found").build();
+            } else if ( productDto.isExcluded() || (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller()) ))) {
+                logger.error("Permission denied - {} updateProduct to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            }else{
-                logger.info("Product with id {} found by {}", pathProductId,user.getUsername());
-                return Response.status(200).entity(product).build();
+            }else {
+                userbean.updateProduct(productDto);
+                logger.info("{} updated product {}", user.getUsername(), pathProductId);
+                return Response.status(200).entity("Updated product").build();
             }
         }
     }
+
+
+@GET
+@Path("/products/{ProductId}")
+@Produces(MediaType.APPLICATION_JSON)
+public Response getProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+    UserDto user = userbean.verifyToken(token);
+    if (user == null) {
+        logger.error("Invalid token - getting product with id: {}", pathProductId);
+        return Response.status(401).entity("Invalid token").build();
+    } else {
+        ProductDto product = productbean.findProductById(pathProductId);
+        if (product == null) {
+            logger.error("Product with id {} not found", pathProductId);
+            return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
+        } else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())) {
+            logger.error("Permission denied - {} getting product with id: {}", user.getUsername(), pathProductId);
+            return Response.status(403).entity("Permission denied").build();
+        } else {
+            logger.info("Product with id {} found by {}", pathProductId, user.getUsername());
+            return Response.status(200).entity(product).build();
+        }
+    }
+}
 
 /*
     @POST

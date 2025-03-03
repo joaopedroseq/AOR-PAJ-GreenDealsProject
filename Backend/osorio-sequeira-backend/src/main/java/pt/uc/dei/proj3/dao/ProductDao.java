@@ -33,4 +33,5 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             return null;
         }
     }
+
 }

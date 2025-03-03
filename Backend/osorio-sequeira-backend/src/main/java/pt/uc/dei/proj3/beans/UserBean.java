@@ -2,12 +2,14 @@ package pt.uc.dei.proj3.beans;
 
 import java.io.Serializable;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 //import java.util.logging.Logger;
+import jakarta.ejb.Local;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
@@ -161,23 +163,35 @@ public class UserBean implements Serializable {
             productDao.persist(product);
             return true;
         } catch (Exception e) {
-            logger.error("Error while adding product to user {}", userDto.getUsername(), e);
+            logger.error("Error while adding product to user {}", userDto.getUsername());
+            //logger.error(e.getMessage());
             return false;
         }
     }
 
-
-    //Provavelmente para apagar - não será necessário já que obter informações de user usa o verifyToken()
-    /*public UserDto getUserLogged(String token){
-        UserEntity u= userDao.findUserByToken(token);
-        if(u!=null){
-
-        }
-        else {
-            return null;
-        }
-        return null;
-    }*/
+    public boolean updateProduct(ProductDto productDto) {
+       try{
+           System.out.println("updating product.\nproduct: " +productDto);
+           ProductEntity productEntity = productDao.getProductById(productDto.getId());
+           productEntity.setName(productDto.getName());
+           productEntity.setDescription(productDto.getDescription());
+           productEntity.setPrice(productDto.getPrice());
+           productEntity.setLocation(productDto.getLocation());
+           productEntity.setDate(productDto.getDate());
+           productEntity.setEditedDate(LocalDateTime.now());
+           productEntity.setSeller(productEntity.getSeller());
+           productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
+           StateId state = StateId.RASCUNHO;
+           productEntity.setState(state.intFromStateId(productDto.getState()));
+           productEntity.setUrlImage(productDto.getUrlImage());
+           productEntity.setExcluded(productDto.isExcluded());
+            return true;
+       }catch(Exception e){
+           logger.error("Error updating product {}", productDto.getId());
+           //logger.error(e);
+           return false;
+       }
+    }
 
 
     //Converts
