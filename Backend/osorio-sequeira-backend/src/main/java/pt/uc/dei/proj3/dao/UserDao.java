@@ -6,6 +6,9 @@ import pt.uc.dei.proj3.entity.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
+import java.util.Set;
+
 @Stateless
 public class UserDao extends AbstractDao<UserEntity> {
     private static final Logger logger = LogManager.getLogger(UserDao.class);
@@ -96,6 +99,13 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
-
-
+    public List<UserEntity> getAllUsers() {
+        try{
+            return em.createNamedQuery("User.getAllUsers").getResultList();
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.getAllUsers", e.getMessage());
+            return null;
+        }
+    }
 }
