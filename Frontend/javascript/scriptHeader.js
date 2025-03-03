@@ -1,15 +1,11 @@
+import { fetchRequest, baseUrl } from "./funcoesGerais.js";
 
 export async function carregarHeader() {
   fetch("header.html")
     .then((response) => response.text())
     .then(async (data) => {
       document.getElementById("header-placeholder").innerHTML = data;
-
-      //Verifica se existe utilizador logged, caso contrário, cria no sessionStorage um valor logged - fale
-      if (!sessionStorage.getItem("logged")) {
-        sessionStorage.setItem("logged", "false");
-      }
-      preencheWelcomeMessage();
+      await preencheWelcomeMessage();
       inicializarBotoesHeader();
     });
 }
@@ -61,18 +57,40 @@ export function inicializarBotoesHeader() {
   hamburger.addEventListener("click", abrirFecharAside);
 }
 
-export function preencheWelcomeMessage() {
+export async function preencheWelcomeMessage() {
   const welcomeMessage = document.getElementById("mensagem_boasVindas");
-  const storedUsername = sessionStorage.getItem("username");
-  if (storedUsername) {
-    let firstName = sessionStorage.getItem("firstName");
-    welcomeMessage.textContent = `Olá, ${firstName}!`;
-    document.getElementById("loginPhoto").src = sessionStorage.getItem("photo"); //para implementar
-  }
-  //Caso não exista um utilizador logged, apresenta o botão de login
-  if (sessionStorage.getItem("logged") === "false") {
+  if (checkIfLogged()) {
+    try {
+      const endpoint = "/user/user";
+      const userInfo = await fetchRequest(endpoint, "GET");
+
+      if (userInfo && userInfo.firstName) {
+        welcomeMessage.textContent = `Olá, ${userInfo.firstName}!`;
+
+        if (userInfo.url) {
+          document.getElementById("loginPhoto").src = userInfo.url;
+        }
+      }
+
+      const login = document.getElementById("loginButton");
+      login.style.visibility = "hidden";
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility = "visible";
+    } catch (error) {
+      console.error("Failed to fetch user information:", error);
+
+      welcomeMessage.textContent = "Olá, visitante!";
+      const login = document.getElementById("loginButton");
+      login.style.visibility = "visible";
+
+      const loginMessage = document.getElementById("loginMessage");
+      loginMessage.style.visibility = "hidden";
+    }
+  } else {
+    welcomeMessage.textContent = "Olá, visitante!";
     const login = document.getElementById("loginButton");
     login.style.visibility = "visible";
+
     const loginMessage = document.getElementById("loginMessage");
     loginMessage.style.visibility = "hidden";
   }
@@ -80,10 +98,10 @@ export function preencheWelcomeMessage() {
 
 // Função para verificar se existe um utilizador logged
 export function checkIfLogged() {
-  const logged = sessionStorage.getItem("logged");
-  if (logged == "true") {
+  const logged = sessionStorage.getItem("token");
+  if (logged) {
     return true;
-  } else if (logged == "false" || logged == null) {
+  } else {
     return false;
   }
 }
@@ -108,9 +126,11 @@ export async function login(username, password) {
 
     console.log("Status da resposta:", response.status);
     const text = await response.text();
-
+    console.log("Texto da resposta:", text);
     if (response.ok) {
-      handleSuccessfulLogin(username, password);
+   console.log("Login bem-sucedido");
+   sessionStorage.setItem("token", text);
+    window.location.reload();
     } else {
       handleFailedLogin(text);
     }
@@ -122,58 +142,9 @@ export async function login(username, password) {
   }
 }
 
-//possivelmente alterar esta função
-export async function handleSuccessfulLogin(username, password) {
-  await loadUserInfo(username, password);
-  addDetailsUserInSessionStorage(username, password);
-  let firstName = sessionStorage.getItem("firstName");
-  const welcomeMessage = document.getElementById("mensagem_boasVindas");
-  welcomeMessage.textContent = `Olá, ${firstName}!`;
-  document.getElementById("loginPhoto").src = sessionStorage.getItem("photo"); ///para implementar
-  document.getElementById("loginMessage").style.visibility = "visible";
-  document.getElementById("loginButton").style.visibility = "hidden";
-  window.location.reload();
-}
-
 export function handleFailedLogin(message) {
   alert(message || "Login falhou. Por favor, tente novamente.");
   console.log("Login falhou:", message);
-}
-
-export async function loadUserInfo(loggedUser, password) {
-  const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
-
-  const loadUserInfoHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: loggedUser,
-  });
-
-  try {
-    const response = await fetch(getUserInfoUrl, {
-      method: "GET",
-      headers: loadUserInfoHeaders,
-      // credentials: "include" // Inclui as credenciais de sessão
-    });
-    console.log("Status da resposta:", response.status);
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erro na resposta: ${errorMessage}`);
-    }
-
-    const responseData = await response.json();
-
-    if (responseData) {
-      sessionStorage.setItem("photo", responseData.url);
-      sessionStorage.setItem("firstName", responseData.firstName);
-    } else {
-      console.log("Not a user logged");
-    }
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Ocorreu um erro: " + error.message);
-  }
 }
 
 export function addDetailsUserInSessionStorage(username, password) {
@@ -317,8 +288,6 @@ export function checkIfNumeric(string) {
 }
 
 export async function addProduct(username, password, product) {
-
-
   const addProductURL = `http://localhost:8080/osorio-sequeira-proj3/rest/user/${username}/add`;
 
   const addProductHeaders = new Headers({
