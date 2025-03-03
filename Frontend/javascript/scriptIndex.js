@@ -5,7 +5,7 @@ import { fetchRequest ,baseUrl} from './funcoesGerais.js';
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
-  //await carregarAsideNormal();
+  await carregarAsideNormal();
   await carregarCategorias();
   await carregarFooter();
   await getAvailableProducts();
@@ -36,24 +36,19 @@ function displayProduct(product, index) {
 }
 
 async function getAvailableProducts() {
-  const getAvaiableProductsUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/products";
-  fetch(getAvaiableProductsUrl, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((response) => response.text())
-    .then((text) => {
-      const products = JSON.parse(text);
-      products.forEach((product) => {
-        displayProduct(product, product.id);
-      });
-      setupCategoryFiltering();
-    })
-    .catch((error) => {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
+  const endpoint = "/products/active";
+
+  try {
+    const products = await fetchRequest(endpoint, "GET");
+    products.forEach((product) => {
+      displayProduct(product, product.id);
     });
+
+    setupCategoryFiltering();
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Ocorreu um erro: " + error.message);
+  }
 }
 
 function setupCategoryFiltering() {
