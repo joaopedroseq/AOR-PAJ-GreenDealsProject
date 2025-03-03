@@ -1,7 +1,6 @@
 package pt.uc.dei.proj3.dao;
 
 import jakarta.ejb.Stateless;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.NoResultException;
 import pt.uc.dei.proj3.entity.CategoryEntity;
@@ -12,10 +11,9 @@ import pt.uc.dei.proj3.entity.UserEntity;
 import java.util.List;
 import java.util.Set;
 
-import pt.uc.dei.proj3.entity.CategoryEntity;
 
 @Stateless
-public class CategoryDao extends AbstractDao<CategoryEntity> {
+public class CategoryDao extends AbstractDao<CategoryEntity>{
     private static final Logger logger = LogManager.getLogger(CategoryDao.class);
     private static final long serialVersionUID = 1L;
 

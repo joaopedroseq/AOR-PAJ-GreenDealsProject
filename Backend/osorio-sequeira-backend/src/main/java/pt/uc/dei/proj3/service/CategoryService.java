@@ -39,8 +39,6 @@ public class CategoryService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
-        logger.info("Registering new category");
-        System.out.println(categoryDto);
         if (token == null || token.trim().isEmpty()) {
             logger.error("Invalid token(null) - adding new category - {}", categoryDto.getName());
             return Response.status(401).entity("Invalid token").build();
@@ -62,7 +60,7 @@ public class CategoryService {
                         return Response.status(409).entity("Conflict - category already exists").build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
-                        return Response.status(200).entity("Added product").build();
+                        return Response.status(200).entity("Added new catergory " + categoryDto.getName()).build();
                     }
                 }
             }

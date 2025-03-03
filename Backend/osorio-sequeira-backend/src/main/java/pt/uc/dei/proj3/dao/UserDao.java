@@ -31,9 +31,68 @@ public class UserDao extends AbstractDao<UserEntity> {
                     .getSingleResult();
 
         } catch (NoResultException e) {
-            System.out.println("Exception");
-            System.out.println(e.getMessage());
+            logger.error("Exception {} in UserDao.findUserByUsername", e.getMessage());
             return null;
+        }
+    }
+
+    public boolean findIfTokenExists(String token) {
+        try{
+            if (em.createNamedQuery("User.findIfTokenExists").setParameter("token", token).getResultList().isEmpty()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findIfTokenExists", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean findIfUserExists(String username) {
+        try{
+            if (em.createNamedQuery("User.findIfUserExists").setParameter("username", username).getResultList().isEmpty()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findIfUserExists", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteUser(String username) {
+        try{
+            if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.deleteUser", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean excludeUser(String username) {
+        try{
+            if (em.createNamedQuery("User.excludeUser").setParameter("username", username).executeUpdate() > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.excludeUser", e.getMessage());
+            return false;
         }
     }
 

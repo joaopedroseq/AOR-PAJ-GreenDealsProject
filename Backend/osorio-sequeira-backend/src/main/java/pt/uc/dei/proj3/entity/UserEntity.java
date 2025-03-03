@@ -10,9 +10,17 @@ import java.util.Set;
 @Entity
 @Table(name="userpojo")
 //to find if username is avaiable
-@NamedQuery(name = "User.findUserByUsername", query = "SELECT u FROM UserEntity u WHERE u.username = :username")
+@NamedQuery(name = "User.findUserByUsername", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.username = :username")
 //to login
 @NamedQuery(name = "User.findUserByToken", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.token = :token")
+//to find if token exists
+@NamedQuery(name = "User.findIfTokenExists", query = "SELECT token FROM UserEntity WHERE token = :token")
+//to find if user exists
+@NamedQuery(name = "User.findIfUserExists", query = "SELECT username FROM UserEntity WHERE username = :username")
+//delete user
+@NamedQuery(name="User.deleteUser", query = "DELETE FROM UserEntity WHERE username = :username")
+//exclude user
+@NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET excluded = true username = :username")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
