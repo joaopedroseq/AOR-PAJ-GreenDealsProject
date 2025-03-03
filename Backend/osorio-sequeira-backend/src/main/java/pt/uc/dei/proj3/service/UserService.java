@@ -382,7 +382,7 @@ public class UserService {
     public Response updateProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId, ProductDto productDto) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
-            logger.error("Invalid token - updateProduct to {}", pathUsername);
+            logger.error("Invalid token - updateProduct");
             return Response.status(401).entity("Invalid token").build();
         } else if (!productDto.isValid()) {
             logger.error("Invalid data - user {} updateProduct to {}", user.getUsername(), pathUsername);
@@ -491,6 +491,7 @@ public class UserService {
         }
     }
 
+    //Deleting products
     @DELETE
     @Path("/{username}/products/{ProductId}")
     public Response deleteProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId){
