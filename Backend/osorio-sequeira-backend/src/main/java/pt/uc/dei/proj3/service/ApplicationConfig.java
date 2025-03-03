@@ -3,6 +3,7 @@ package pt.uc.dei.proj3.service;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import pt.uc.dei.proj3.beans.ApplicationBean;
+import pt.uc.dei.proj3.beans.CategoryBean;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,8 +16,8 @@ public class ApplicationConfig extends Application {
         resources.add(CorsFilter.class);
         resources.add(ApplicationBean.class);
         resources.add(UserService.class);
-        resources.add(CategoryService.class);
         resources.add(ProductService.class);
+        resources.add(CategoryService.class);
         return resources;
     }
 }

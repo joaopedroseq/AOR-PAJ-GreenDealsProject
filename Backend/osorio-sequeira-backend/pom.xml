@@ -58,7 +58,7 @@
             <version>6.6.7.Final</version>
         </dependency>
         <dependency>
-            <groupId>org.postgresql </groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.5</version>
         </dependency>
