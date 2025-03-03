@@ -25,4 +25,12 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             return null;
         }
     }
+
+    public ProductEntity getProductById(int id) {
+        try{
+            return (ProductEntity) em.createNamedQuery("Product.getProductById").setParameter("id", id).getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }

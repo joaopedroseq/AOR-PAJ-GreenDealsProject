@@ -42,7 +42,7 @@ public class CategoryService {
         logger.info("Registering new category");
         System.out.println(categoryDto);
         if (token == null || token.trim().isEmpty()) {
-            logger.error("Invalid token - adding new category - {}", categoryDto.getName());
+            logger.error("Invalid token(null) - adding new category - {}", categoryDto.getName());
             return Response.status(401).entity("Invalid token").build();
         } else if (!categoryDto.isValid()) {
             logger.error("Invalid data - register new category");
@@ -50,7 +50,7 @@ public class CategoryService {
         } else {
             UserDto user = userbean.verifyToken(token);
             if (user == null) {
-                logger.error("Invalid token for user {}- adding new category - {}", user.getUsername(), categoryDto.getName());
+                logger.error("Invalid token - adding new category - {}", categoryDto.getName());
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 if (!user.getAdmin()) {

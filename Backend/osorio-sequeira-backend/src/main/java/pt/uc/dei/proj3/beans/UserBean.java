@@ -30,6 +30,9 @@ public class UserBean implements Serializable {
     @Inject
     ApplicationBean applicationBean;
 
+    @Inject
+    ProductBean productBean;
+
     @EJB
     UserDao userDao;
 
@@ -106,7 +109,6 @@ public class UserBean implements Serializable {
             return false;
         }
     }
-
 
 
     public UserDto getUserLogged(String token){

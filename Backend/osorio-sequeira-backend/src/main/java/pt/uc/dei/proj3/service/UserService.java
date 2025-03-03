@@ -1,6 +1,7 @@
 package pt.uc.dei.proj3.service;
 
 import pt.uc.dei.proj3.beans.ApplicationBean;
+import pt.uc.dei.proj3.beans.ProductBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.*;
 import jakarta.inject.Inject;
@@ -27,12 +28,15 @@ public class UserService {
     UserBean userbean;
 
     @Inject
+    ProductBean productbean;
+
+    @Inject
     ApplicationBean applicationBean;
 
     @Context
     private HttpServletRequest request;
 
-
+    //Regular user register
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -51,6 +55,7 @@ public class UserService {
         }
     }
 
+    //Admin user register
     @POST
     @Path("/registerAdmin")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -65,6 +70,7 @@ public class UserService {
         }
     }
 
+    //User login
     @POST
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -81,6 +87,7 @@ public class UserService {
         }
     }
 
+    //User logout
     @POST
     @Path("/logout")
     public Response logout(@HeaderParam("token") String token) {
@@ -293,12 +300,12 @@ public class UserService {
     }
 */
 
+    //Add product to user
     @POST
     @Path("/{username}/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
         UserDto user = userbean.verifyToken(token);
-        System.out.println(user);
         if(user == null){
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
@@ -316,7 +323,9 @@ public class UserService {
             }
         }
     }
-/*
+
+    /*
+    //Update product info from user
     @POST
     @Path("/{username}/products/{ProductId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -343,24 +352,37 @@ public class UserService {
             } else {
                 return Response.status(400).entity("Product not updated!").build();
             }
-        } else {
-            return Response.status(403).entity("Forbidden").build();
-        }
-    }
 
+        }
+
+
+    }
+*/
 
     @GET
     @Path("/products/{ProductId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getProduct(@PathParam("ProductId") int id) {
-        ProductDto existingProduct = applicationBean.getProduct(id);
-        if (existingProduct == null) {
-            return Response.status(404).entity("Product not found!").build();
-        } else {
-            return Response.status(200).entity(existingProduct).build();
+    public Response getProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+        UserDto user = userbean.verifyToken(token);
+        if(user == null){
+            logger.error("Invalid token - getting product with id: {}", pathProductId);
+            return Response.status(401).entity("Invalid token").build();
+        } else{
+            ProductDto product = productbean.findProductById(pathProductId);
+            if(product == null){
+                logger.error("Product with id {} not found", pathProductId);
+                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
+            }else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())){
+                logger.error("Permission denied - {} getting product with id: {}",user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied").build();
+            }else{
+                logger.info("Product with id {} found by {}", pathProductId,user.getUsername());
+                return Response.status(200).entity(product).build();
+            }
         }
     }
 
+/*
     @POST
     @Path("/products/buy/{ProductId}")
     @Produces(MediaType.APPLICATION_JSON)
