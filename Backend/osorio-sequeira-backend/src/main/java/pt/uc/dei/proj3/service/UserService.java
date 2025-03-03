@@ -141,6 +141,46 @@ public class UserService {
         }
     }
 
+    @PATCH
+    @Path("/exclude")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response excludeUser(@HeaderParam("token") String token, String usernameUserExclude) {
+        usernameUserExclude = usernameUserExclude.trim();
+        if (usernameUserExclude.trim().equals("")) {
+            logger.error("Invalid data - missing params - Excluding user");
+            return Response.status(400).entity("Invalid data").build();
+        } else {
+            if (!userbean.checkIfTokenValid(token)) {
+                logger.error("Invalid token when trying to exclude user {}", usernameUserExclude);
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                UserDto user = userbean.verifyToken(token);
+                if (user == null) {
+                    logger.error("Invalid token when trying to exclude user {}", usernameUserExclude);
+                    return Response.status(401).entity("Invalid token").build();
+                } else {
+                    if (!user.getAdmin()) {
+                        logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), usernameUserExclude);
+                        return Response.status(403).entity("User does not have admin permission to exclude other users").build();
+                    } else {
+                        if (!userbean.checkIfUserExists(usernameUserExclude)) {
+                            logger.error("User {} tried to exclude a user - {} - not found", user.getUsername(), usernameUserExclude);
+                            return Response.status(404).entity("User " + usernameUserExclude +" to exclude not found").build();
+                        } else {
+                            if (userbean.excludeUser(usernameUserExclude)) {
+                                logger.info("User {} excluded {} successfully", user.getUsername(), usernameUserExclude);
+                                return Response.status(200).entity("Excluded user " + usernameUserExclude + " successfully").build();
+                            } else {
+                                logger.error("User {} not excluded due to exception", usernameUserExclude);
+                                return Response.status(500).entity("User " + usernameUserExclude + " not excluded").build();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @DELETE
     @Path("/delete")
     @Consumes(MediaType.TEXT_PLAIN)
@@ -165,7 +205,7 @@ public class UserService {
                         usernameUserDelete = usernameUserDelete.trim();
                         if (!userbean.checkIfUserExists(usernameUserDelete)) {
                             logger.error("User {} tried to delete a user - {} - not found", user.getUsername(), usernameUserDelete);
-                            return Response.status(404).entity("User " + user.getUsername() +" to delete not found").build();
+                            return Response.status(404).entity("User " + usernameUserDelete +" to delete not found").build();
                         } else {
                             if (userbean.deleteUser(usernameUserDelete)) {
                                 logger.info("User {} deleted {} successfully", user.getUsername(), usernameUserDelete);

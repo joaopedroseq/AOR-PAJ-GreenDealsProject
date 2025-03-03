@@ -17,8 +17,10 @@ import java.util.Set;
 @NamedQuery(name = "User.findIfTokenExists", query = "SELECT token FROM UserEntity WHERE token = :token")
 //to find if user exists
 @NamedQuery(name = "User.findIfUserExists", query = "SELECT username FROM UserEntity WHERE username = :username")
-//delete userinformation
+//delete user
 @NamedQuery(name="User.deleteUser", query = "DELETE FROM UserEntity WHERE username = :username")
+//exclude user
+@NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET excluded = true WHERE username = :username")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

@@ -81,6 +81,21 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public boolean excludeUser(String username) {
+        try{
+            if (em.createNamedQuery("User.excludeUser").setParameter("username", username).executeUpdate() > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.excludeUser", e.getMessage());
+            return false;
+        }
+    }
+
 
 
 }

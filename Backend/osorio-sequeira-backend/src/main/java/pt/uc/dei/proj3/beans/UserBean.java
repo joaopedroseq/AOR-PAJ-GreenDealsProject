@@ -139,6 +139,18 @@ public class UserBean implements Serializable {
         }
     }
 
+    public boolean excludeUser(String username) {
+        try {
+            if (userDao.excludeUser(username)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
