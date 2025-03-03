@@ -33,6 +33,7 @@ public class CategoryBean implements Serializable {
     }
 
     public boolean registerNewCategory(CategoryDto category) {
+        category.setName(category.getName().toLowerCase());
         if(checkIfCategoryAlreadyExists(category)) {
             return false;
         }
@@ -74,5 +75,17 @@ public class CategoryBean implements Serializable {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setNome(categoryDto.getName());
         return categoryEntity;
+    }
+
+    public Set<CategoryDto> getAllCategories() {
+        try {
+            List<CategoryEntity> categories = categoryDao.getAllCategories();
+            Set<CategoryEntity> catedorySet = new HashSet<>(categories);
+            return convertGroupCategoryEntityToGroupCategoryDto(catedorySet);
+        } catch (Exception e) {
+            logger.error("Error while getting all categories");
+            logger.error(e);
+            return null;
+        }
     }
 }

@@ -3,14 +3,11 @@ package pt.uc.dei.proj3.beans;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 //import java.util.logging.Logger;
-import jakarta.ejb.Local;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
@@ -191,17 +188,28 @@ public class UserBean implements Serializable {
             return true;
         } catch (Exception e) {
             logger.error("Error updating product {}", productDto.getId());
-            //logger.error(e);
+            logger.error(e);
             return false;
         }
     }
 
     public boolean excludeProduct(int productId) {
-        try{
+        try {
             productDao.excludeProduct(productId);
             return true;
         } catch (Exception e) {
             logger.error("Error while excluding product {}", productId);
+            logger.error(e);
+            return false;
+        }
+    }
+
+    public boolean deleteProduct(int productId) {
+        try {
+            productDao.deleteProduct(productId);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error while deleting product {}", productId);
             logger.error(e);
             return false;
         }
@@ -237,6 +245,44 @@ public class UserBean implements Serializable {
         //userDto.setEvaluationsReceived(user.getEvaluationsReceived());
         return userDto;
     }
+
+    public Set<ProductDto> getActiveProducts() {
+        try {
+            List<ProductEntity> products = productDao.getActiveProducts();
+            Set<ProductEntity> productSet = new HashSet<>(products);
+            return convertGroupProductEntityToGroupProductDto(productSet);
+        } catch (Exception e) {
+            logger.error("Error while getting active products");
+            logger.error(e);
+            return null;
+        }
+    }
+
+
+    public Set<ProductDto> getAllProducts() {
+        try {
+            List<ProductEntity> products = productDao.getAllProducts();
+            Set<ProductEntity> productSet = new HashSet<>(products);
+            return convertGroupProductEntityToGroupProductDto(productSet);
+        } catch (Exception e) {
+            logger.error("Error while getting active products");
+            logger.error(e);
+            return null;
+        }
+    }
+
+    public Set<ProductDto> getEditedProducts() {
+        try {
+            List<ProductEntity> products = productDao.getEditedProducts();
+            Set<ProductEntity> productSet = new HashSet<>(products);
+            return convertGroupProductEntityToGroupProductDto(productSet);
+        } catch (Exception e) {
+            logger.error("Error while getting active products");
+            logger.error(e);
+            return null;
+        }
+    }
+
 
     public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
         Set<ProductDto> productDtos = new HashSet<>();
@@ -288,6 +334,8 @@ public class UserBean implements Serializable {
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());
+        produto.setEdited(productEntity.getEditedDate());
+        produto.setExcluded(productEntity.getExcluded());
         return produto;
     }
 

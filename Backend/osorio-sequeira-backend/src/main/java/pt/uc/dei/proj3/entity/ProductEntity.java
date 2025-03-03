@@ -10,6 +10,10 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.getAllProducts", query = "SELECT p FROM ProductEntity p")
 
+@NamedQuery(name = "Product.getActiveProducts", query = "SELECT p FROM ProductEntity p WHERE excluded = false")
+
+@NamedQuery(name = "Product.getEditedProducts", query = "SELECT p FROM ProductEntity p WHERE editedDate != date")
+
 @NamedQuery(name = "Product.getProductById", query = "SELECT p FROM ProductEntity p WHERE p.id = :id")
 
 @NamedQuery(name = "Product.setProductsOfUserToExcluded", query = "UPDATE ProductEntity p SET excluded = true WHERE p.seller = :seller")
@@ -17,6 +21,8 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 4 WHERE id = :id")
 
 @NamedQuery(name = "Product.excludeProduct", query = "UPDATE ProductEntity SET excluded = true WHERE id = :id")
+
+@NamedQuery(name = "Product.deleteProduct", query = "DELETE FROM ProductEntity WHERE id = :id AND excluded = true")
 
 public class ProductEntity implements Serializable {
 

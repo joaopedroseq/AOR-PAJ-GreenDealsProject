@@ -7,6 +7,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj3.entity.UserEntity;
 
+import java.util.List;
+import java.util.Set;
+
 @Stateless
 public class ProductDao extends AbstractDao<ProductEntity> {
     private static final Logger logger = LogManager.getLogger(ProductDao.class);
@@ -17,10 +20,9 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         super(ProductEntity.class);
     }
 
-    public ProductEntity getAllProducts() {
+    public List<ProductEntity> getAllProducts() {
         try {
-            return (ProductEntity) em.createNamedQuery("Product.getAllProducts")
-                    .getResultList();
+            return (List<ProductEntity>) em.createNamedQuery("Product.getAllProducts").getResultList();
 
         } catch (NoResultException e) {
             return null;
@@ -46,9 +48,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     public void excludeProduct(int id) {
         try{
-            System.out.println("Excluding product product dao. id: " + id);
             em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
-            System.out.println("Excluding product product dao");
         }catch(NoResultException e){
             logger.error("Error excluding product in product dao");
             //logger.error(e);
@@ -62,4 +62,32 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             logger.error("Exception {} in ProductDao.setProductsOfUserToExcluded", e.getMessage());
         }
     }
+
+    public void deleteProduct(int id) {
+        try{
+            em.createNamedQuery("Product.deleteProduct").setParameter("id", id).executeUpdate();
+        }catch(NoResultException e){
+            logger.error("Error deleting product in product dao");
+            //logger.error(e);
+        }
+    }
+
+    public List<ProductEntity> getActiveProducts() {
+        try {
+            return (List<ProductEntity>) em.createNamedQuery("Product.getActiveProducts").getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    public List<ProductEntity> getEditedProducts() {
+        try {
+            return (List<ProductEntity>) em.createNamedQuery("Product.getEditedProducts").getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

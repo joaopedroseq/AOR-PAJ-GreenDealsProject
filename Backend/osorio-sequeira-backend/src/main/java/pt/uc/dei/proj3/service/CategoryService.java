@@ -2,10 +2,7 @@ package pt.uc.dei.proj3.service;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -16,8 +13,11 @@ import pt.uc.dei.proj3.beans.CategoryBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dao.CategoryDao;
 import pt.uc.dei.proj3.dto.CategoryDto;
+import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.UserDto;
 import pt.uc.dei.proj3.entity.UserEntity;
+
+import java.util.Set;
 
 @Path("/category")
 public class CategoryService {
@@ -60,10 +60,24 @@ public class CategoryService {
                         return Response.status(409).entity("Conflict - category already exists").build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
-                        return Response.status(200).entity("Added new catergory " + categoryDto.getName()).build();
+                        return Response.status(200).entity("Added new category " + categoryDto.getName()).build();
                     }
                 }
             }
+        }
+    }
+
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCategories() {
+        Set<CategoryDto> categories = categoryBean.getAllCategories();
+        if(categories != null) {
+            logger.info(" {} categories found", categories.size());
+            return Response.status(200).entity(categories).build();
+        }else{
+            logger.error("Error getting categories");
+            return Response.status(400).entity("Error getting categories").build();
         }
     }
 }

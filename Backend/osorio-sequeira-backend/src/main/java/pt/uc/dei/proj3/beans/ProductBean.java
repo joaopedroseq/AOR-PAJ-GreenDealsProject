@@ -11,6 +11,9 @@ import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.StateId;
 import pt.uc.dei.proj3.entity.ProductEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Stateless
 public class ProductBean {
     private static final Logger logger = LogManager.getLogger(ProductBean.class);
@@ -36,6 +39,17 @@ public class ProductBean {
         }
     }
 
+    public boolean buyProduct(ProductDto productDto) {
+        try {
+            productDao.buyProduct(productDto.getId());
+            return true;
+        } catch (Exception e) {
+            logger.error("Erro ao comprar produto {}", productDto.getId());
+            //logger.error(e);
+            return false;
+        }
+    }
+
     public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
         ProductDto produto = new ProductDto();
         produto.setId(productEntity.getId());
@@ -53,14 +67,5 @@ public class ProductBean {
         return produto;
     }
 
-    public boolean buyProduct(ProductDto productDto) {
-        try {
-            productDao.buyProduct(productDto.getId());
-            return true;
-        } catch (Exception e) {
-            logger.error("Erro ao comprar produto {}", productDto.getId());
-            //logger.error(e);
-            return false;
-        }
-    }
+
 }
