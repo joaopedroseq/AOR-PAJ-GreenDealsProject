@@ -269,6 +269,18 @@ public class UserBean implements Serializable {
         }
     }
 
+    public Set<ProductDto> getEditedProducts() {
+        try {
+            List<ProductEntity> products = productDao.getEditedProducts();
+            Set<ProductEntity> productSet = new HashSet<>(products);
+            return convertGroupProductEntityToGroupProductDto(productSet);
+        } catch (Exception e) {
+            logger.error("Error while getting active products");
+            logger.error(e);
+            return null;
+        }
+    }
+
 
     public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
         Set<ProductDto> productDtos = new HashSet<>();

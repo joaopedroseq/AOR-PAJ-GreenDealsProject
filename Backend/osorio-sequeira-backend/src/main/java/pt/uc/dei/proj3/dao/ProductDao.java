@@ -71,4 +71,14 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             return null;
         }
     }
+
+    public List<ProductEntity> getEditedProducts() {
+        try {
+            return (List<ProductEntity>) em.createNamedQuery("Product.getEditedProducts").getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
 }

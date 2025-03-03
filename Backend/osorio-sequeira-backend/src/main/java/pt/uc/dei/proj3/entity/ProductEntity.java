@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.getActiveProducts", query = "SELECT p FROM ProductEntity p WHERE excluded = false")
 
+@NamedQuery(name = "Product.getEditedProducts", query = "SELECT p FROM ProductEntity p WHERE editedDate != date")
+
 @NamedQuery(name = "Product.getProductById", query = "SELECT p FROM ProductEntity p WHERE p.id = :id")
 
 @NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 4 WHERE id = :id")

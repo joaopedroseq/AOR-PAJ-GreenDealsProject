@@ -28,7 +28,7 @@ public class ProductService {
     UserBean userbean;
 
     @GET
-    @Path("/products")
+    @Path("/active")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getActiveProducts() {
         Set<ProductDto> produtos = userbean.getActiveProducts();
@@ -40,12 +40,12 @@ public class ProductService {
     }
 
     @GET
-    @Path("/products/excluded")
+    @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllProducts(@HeaderParam("token") String token) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
-            logger.error("Invalid token - updateProduct");
+            logger.error("Invalid token - GettingExcludedProduct");
             return Response.status(401).entity("Invalid token").build();
         } else if(!user.getAdmin()) {
             logger.error("Permision denied - {} getting all products",user.getUsername());
@@ -60,6 +60,24 @@ public class ProductService {
         }
     }
 
-
-    //todo get all edited Products
+    @GET
+    @Path("/edited")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getEditedProducts(@HeaderParam("token") String token) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - getting edited products");
+            return Response.status(401).entity("Invalid token").build();
+        } else if(!user.getAdmin()) {
+            logger.error("Permision denied - {} getting edited products",user.getUsername());
+            return Response.status(403).entity("Permission denied").build();
+        }else{
+            Set<ProductDto> produtos = userbean.getEditedProducts();
+            if (produtos != null) {
+                return Response.status(200).entity(produtos).build();
+            } else {
+                return Response.status(400).entity("Error getting edited products").build();
+            }
+        }
+    }
 }
