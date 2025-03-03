@@ -2,10 +2,7 @@ package pt.uc.dei.proj3.service;
 
 import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.UserBean;
-import pt.uc.dei.proj3.dto.LoginDto;
-import pt.uc.dei.proj3.dto.ProductDto;
-import pt.uc.dei.proj3.dto.Evaluation;
-import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.dto.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -300,7 +297,9 @@ public class UserService {
     @Path("/{username}/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
+        logger.info("Adding product " + newProductDto);
         UserDto user = userbean.verifyToken(token);
+        System.out.println("user verified: " + user);
         if(user == null){
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();

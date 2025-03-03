@@ -2,7 +2,6 @@ package pt.uc.dei.proj3.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
-import pt.uc.dei.proj3.entity.ProductEntity;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,6 +18,8 @@ public class ProductDto implements Serializable{
     private String urlImage;
     private StateId state;
     private LocalDateTime date;
+    private boolean excluded;
+    private LocalDateTime edited;
 
     public ProductDto() {
     }
@@ -59,6 +60,8 @@ public class ProductDto implements Serializable{
         this.state = StateId.RASCUNHO;
         this.date = LocalDateTime.now();
         this.id = generateHash(seller,name,description,price,category,location,urlImage,date);
+        this.excluded = false;
+        this.edited = date;
 
     }
 
@@ -150,6 +153,18 @@ public class ProductDto implements Serializable{
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
+    public boolean isExcluded() {
+        return excluded;
+    }
+    public void setExcluded(boolean excluded) {
+        this.excluded = excluded;
+    }
+    public LocalDateTime getEdited() {
+        return edited;
+    }
+    public void setEdited(LocalDateTime edited) {
+        this.edited = edited;
+    }
 
     private Integer generateHash(String seller, String name, String description, double price, String category, String location, String urlImage, LocalDateTime date) {
         int hash = 0;
@@ -184,5 +199,20 @@ public class ProductDto implements Serializable{
                 && this.date != null;
     }
 
+    @Override
+    public String toString() {
+        return "ProductDto{" +
+                "id=" + id +
+                ", seller='" + seller + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", category='" + category + '\'' +
+                ", location='" + location + '\'' +
+                ", urlImage='" + urlImage + '\'' +
+                ", state=" + state +
+                ", date=" + date +
+                '}';
+    }
 }
 

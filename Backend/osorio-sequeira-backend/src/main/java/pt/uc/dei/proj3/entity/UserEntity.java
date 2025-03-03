@@ -175,6 +175,25 @@ public class UserEntity implements Serializable {
     public void setProducts(Set<ProductEntity> products) {
         this.products = products;
     }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", url='" + url + '\'' +
+                ", token='" + token + '\'' +
+                ", admin=" + admin +
+                ", excluded=" + excluded +
+                ", products=" + products +
+                ", evaluationsWritten=" + evaluationsWritten +
+                ", evaluationsReceived=" + evaluationsReceived +
+                '}';
+    }
 }
 
 

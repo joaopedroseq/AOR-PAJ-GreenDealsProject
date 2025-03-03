@@ -160,4 +160,22 @@ public class ProductEntity implements Serializable {
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
+
+    @Override
+    public String toString() {
+        return "ProductEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", location='" + location + '\'' +
+                ", state=" + state +
+                ", date=" + date +
+                ", editedDate=" + editedDate +
+                ", urlImage='" + urlImage + '\'' +
+                ", excluded=" + excluded +
+                ", seller=" + seller +
+                ", category=" + category +
+                '}';
+    }
 }

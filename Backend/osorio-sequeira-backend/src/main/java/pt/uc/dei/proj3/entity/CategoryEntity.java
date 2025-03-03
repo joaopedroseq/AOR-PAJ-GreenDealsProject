@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-//to get all categories
-@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c")
 @Entity
 @Table(name="category")
 
-@NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
+//to get all categories
+@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c")
 
+// to get a category by name
+@NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
 
 public class CategoryEntity implements Serializable {
     @Id
@@ -19,7 +21,7 @@ public class CategoryEntity implements Serializable {
     private String nome;
 
     @OneToMany(mappedBy = "category")
-    private ArrayList<ProductEntity> product;
+    private List<ProductEntity> product;
 
     //Constructors
     public CategoryEntity() {
