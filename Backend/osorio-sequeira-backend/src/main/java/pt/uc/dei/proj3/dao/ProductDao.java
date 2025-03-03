@@ -5,6 +5,7 @@ import jakarta.persistence.NoResultException;
 import pt.uc.dei.proj3.entity.ProductEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
     public ProductEntity getProductById(int id) {
-        try{
+        try {
             return (ProductEntity) em.createNamedQuery("Product.getProductById").setParameter("id", id).getSingleResult();
         } catch (NoResultException e) {
             return null;
@@ -37,27 +38,47 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
     public void buyProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.buyProduct").setParameter("id", id);
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error buying product");
             //logger.error(e);
         }
     }
 
     public void excludeProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error excluding product in product dao");
             //logger.error(e);
         }
     }
 
+    public void setProductsOfUserToExcluded(String username) {
+        try {
+            UserEntity userEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();
+            em.createNamedQuery("Product.setProductsOfUserToExcluded").setParameter("seller", userEntity).executeUpdate();
+        } catch (Exception e) {
+            logger.error("Exception {} in ProductDao.setProductsOfUserToExcluded", e.getMessage());
+        }
+    }
+
+    public void setProductsOfUserToAnonymous(String username) {
+        try {
+            UserEntity userEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();
+            UserEntity anonymous = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", "anonymous").getSingleResult();
+            em.createNamedQuery("Product.setProductsOfUserToAnonymous").setParameter("anonymous", anonymous).setParameter("seller", userEntity).executeUpdate();
+        } catch (Exception e) {
+            logger.error("Exception {} in ProductDao.setProductsOfUserToAnonymous", e.getMessage());
+        }
+    }
+
+
     public void deleteProduct(int id) {
-        try{
+        try {
             em.createNamedQuery("Product.deleteProduct").setParameter("id", id).executeUpdate();
-        }catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error deleting product in product dao");
             //logger.error(e);
         }

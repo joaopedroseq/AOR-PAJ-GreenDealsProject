@@ -131,6 +131,7 @@ public class UserBean implements Serializable {
 
     public boolean deleteUser(String username) {
         try {
+            productDao.setProductsOfUserToAnonymous(username);
             if (userDao.deleteUser(username)) {
                 return true;
             } else {
@@ -144,11 +145,13 @@ public class UserBean implements Serializable {
     public boolean excludeUser(String username) {
         try {
             if (userDao.excludeUser(username)) {
+                productDao.setProductsOfUserToExcluded(username);
                 return true;
             } else {
                 return false;
             }
         } catch (Exception e) {
+            logger.error("Error in UserBean.excludeUser - error {}", e.getMessage());
             return false;
         }
     }
