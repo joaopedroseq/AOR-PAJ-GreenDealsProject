@@ -114,7 +114,7 @@ public class UserService {
         System.out.println(userbean.checkIfTokenValid(token));
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
-            logger.error("Invalid token from user {}", user.getUsername());
+            logger.error("Invalid token from user");
             return Response.status(401).entity("Invalid token").build();
         } else {
             logger.info("User information retrieved from user {}", user.getUsername());
