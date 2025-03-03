@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.getProductById", query = "SELECT p FROM ProductEntity p WHERE p.id = :id")
 
+@NamedQuery(name = "Product.setProductsOfUserToExcluded", query = "UPDATE ProductEntity p SET excluded = true WHERE p.seller = :seller")
+
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

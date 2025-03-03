@@ -16,7 +16,6 @@ public class UserDao extends AbstractDao<UserEntity> {
     }
 
     public UserEntity findUserByToken(String token) {
-        System.out.println("a iniciar find user");
         try {
             return (UserEntity) em.createNamedQuery("User.findUserByToken").setParameter("token", token)
                     .getSingleResult();
@@ -91,7 +90,7 @@ public class UserDao extends AbstractDao<UserEntity> {
                 return false;
             }
         }
-        catch(NoResultException e){
+        catch(Exception e){
             logger.error("Exception {} in UserDao.excludeUser", e.getMessage());
             return false;
         }

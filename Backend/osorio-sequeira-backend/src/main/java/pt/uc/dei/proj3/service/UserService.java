@@ -147,9 +147,8 @@ public class UserService {
     }
 
     @PATCH
-    @Path("/exclude")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response excludeUser(@HeaderParam("token") String token, String usernameUserExclude) {
+    @Path("/{username}/exclude")
+    public Response excludeUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserExclude) {
         usernameUserExclude = usernameUserExclude.trim();
         if (usernameUserExclude.trim().equals("")) {
             logger.error("Invalid data - missing params - Excluding user");
@@ -187,9 +186,8 @@ public class UserService {
     }
 
     @DELETE
-    @Path("/delete")
-    @Consumes(MediaType.TEXT_PLAIN)
-    public Response deleteUser(@HeaderParam("token") String token, String usernameUserDelete) {
+    @Path("/{username}/delete")
+    public Response deleteUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDelete) {
         if (usernameUserDelete.trim().equals("")) {
             logger.error("Invalid data - missing params - Deleting user");
             return Response.status(400).entity("Invalid data").build();
