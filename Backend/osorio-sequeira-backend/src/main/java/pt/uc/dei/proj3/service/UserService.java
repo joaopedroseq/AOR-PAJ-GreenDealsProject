@@ -3,10 +3,7 @@ package pt.uc.dei.proj3.service;
 import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.ProductBean;
 import pt.uc.dei.proj3.beans.UserBean;
-import pt.uc.dei.proj3.dto.LoginDto;
-import pt.uc.dei.proj3.dto.ProductDto;
-import pt.uc.dei.proj3.dto.Evaluation;
-import pt.uc.dei.proj3.dto.UserDto;
+import pt.uc.dei.proj3.dto.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -371,10 +368,12 @@ public class UserService {
             } else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())) {
                 logger.error("Permission denied - {} adding new product to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            } else {
-                userbean.addProduct(user, newProductDto);
+            } else if( userbean.addProduct(user, newProductDto)){
                 logger.info("Added new product to {}", pathUsername);
                 return Response.status(200).entity("Added product").build();
+            }else{
+                logger.info("Error : Product not added by {}", user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
         }
     }
@@ -394,61 +393,76 @@ public class UserService {
             return Response.status(400).entity("Invalid data").build();
         } else {
             ProductDto product = productbean.findProductById(pathProductId);
-            if(product == null) {
+            if (product == null) {
+                logger.error("Updating product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if ( productDto.isExcluded() || (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller()) ))) {
+            } else if (productDto.isExcluded() || (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller())))) {
                 logger.error("Permission denied - {} updateProduct to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            }else {
-                userbean.updateProduct(productDto);
+            } else if(userbean.updateProduct(productDto)){
                 logger.info("{} updated product {}", user.getUsername(), pathProductId);
                 return Response.status(200).entity("Updated product").build();
+            }else{
+                logger.info("Error : Product with id {} not updated by {}", pathProductId, user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
         }
     }
 
 
-@GET
-@Path("/products/{ProductId}")
-@Produces(MediaType.APPLICATION_JSON)
-public Response getProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
-    UserDto user = userbean.verifyToken(token);
-    if (user == null) {
-        logger.error("Invalid token - getting product with id: {}", pathProductId);
-        return Response.status(401).entity("Invalid token").build();
-    } else {
-        ProductDto product = productbean.findProductById(pathProductId);
-        if (product == null) {
-            logger.error("Product with id {} not found", pathProductId);
-            return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
-        } else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())) {
-            logger.error("Permission denied - {} getting product with id: {}", user.getUsername(), pathProductId);
-            return Response.status(403).entity("Permission denied").build();
+    @GET
+    @Path("/products/{ProductId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - getting product with id: {}", pathProductId);
+            return Response.status(401).entity("Invalid token").build();
         } else {
-            logger.info("Product with id {} found by {}", pathProductId, user.getUsername());
-            return Response.status(200).entity(product).build();
+            ProductDto product = productbean.findProductById(pathProductId);
+            if (product == null) {
+                logger.error("Getting product - Product with id {} not found", pathProductId);
+                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
+            } else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())) {
+                logger.error("Permission denied - {} getting product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied").build();
+            } else {
+                logger.info("Product with id {} found by {}", pathProductId, user.getUsername());
+                return Response.status(200).entity(product).build();
+            }
         }
     }
-}
 
-/*
-    @POST
+
+    @PATCH
     @Path("/products/buy/{ProductId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buyProduct(@HeaderParam("username") String username, @HeaderParam("password") String password,@PathParam("ProductId") int id) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
+    public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - buying product with id: {}", pathProductId);
+            return Response.status(401).entity("Invalid token").build();
         } else {
-            if (applicationBean.buyProduct(id)) {
-                return Response.status(200).entity("Product sold!").build();
-            } else {
-                return Response.status(400).entity("Request Failed").build();
+            ProductDto product = productbean.findProductById(pathProductId);
+            if (product == null) {
+                logger.error("Buying product - Product with id {} not found", pathProductId);
+                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
+            } else if (product.getSeller().equals(user.getUsername())) {
+                logger.error("Permission denied - {} buying own product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - buying own product").build();
+            } else if (product.getState().equals(StateId.COMPRADO)) {
+                logger.error("Permission denied - {} buying already bought product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - buying already bought product").build();
+            }  else if(productbean.buyProduct(product)){
+                logger.info("Product with id {} bought by {}", pathProductId, user.getUsername());
+                return Response.status(200).entity(product).build();
+            }else{
+                logger.info("Error : Product with id {} not bought by {}", pathProductId, user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
         }
     }
-
+/*
     @DELETE
     @Path("/{username}/products/{ProductId}")
     public Response deleteProduct(@HeaderParam("username") String username, @HeaderParam("password") String password, @PathParam("ProductId") int id) {
@@ -462,5 +476,7 @@ public Response getProduct(@HeaderParam("token") String token, @PathParam("Produ
             }
             return Response.status(400).entity("Product not found!").build();
         }
-    }*/
+    }
+    */
+
 }

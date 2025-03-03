@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.Set;
+
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 //import java.util.logging.Logger;
@@ -170,27 +171,27 @@ public class UserBean implements Serializable {
     }
 
     public boolean updateProduct(ProductDto productDto) {
-       try{
-           System.out.println("updating product.\nproduct: " +productDto);
-           ProductEntity productEntity = productDao.getProductById(productDto.getId());
-           productEntity.setName(productDto.getName());
-           productEntity.setDescription(productDto.getDescription());
-           productEntity.setPrice(productDto.getPrice());
-           productEntity.setLocation(productDto.getLocation());
-           productEntity.setDate(productDto.getDate());
-           productEntity.setEditedDate(LocalDateTime.now());
-           productEntity.setSeller(productEntity.getSeller());
-           productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
-           StateId state = StateId.RASCUNHO;
-           productEntity.setState(state.intFromStateId(productDto.getState()));
-           productEntity.setUrlImage(productDto.getUrlImage());
-           productEntity.setExcluded(productDto.isExcluded());
+        try {
+            System.out.println("updating product.\nproduct: " + productDto);
+            ProductEntity productEntity = productDao.getProductById(productDto.getId());
+            productEntity.setName(productDto.getName());
+            productEntity.setDescription(productDto.getDescription());
+            productEntity.setPrice(productDto.getPrice());
+            productEntity.setLocation(productDto.getLocation());
+            productEntity.setDate(productDto.getDate());
+            productEntity.setEditedDate(LocalDateTime.now());
+            productEntity.setSeller(productEntity.getSeller());
+            productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
+            StateId state = StateId.RASCUNHO;
+            productEntity.setState(state.intFromStateId(productDto.getState()));
+            productEntity.setUrlImage(productDto.getUrlImage());
+            productEntity.setExcluded(productDto.isExcluded());
             return true;
-       }catch(Exception e){
-           logger.error("Error updating product {}", productDto.getId());
-           //logger.error(e);
-           return false;
-       }
+        } catch (Exception e) {
+            logger.error("Error updating product {}", productDto.getId());
+            //logger.error(e);
+            return false;
+        }
     }
 
 
@@ -255,7 +256,7 @@ public class UserBean implements Serializable {
         product.setLocation(productDto.getLocation());
         StateId state = StateId.RASCUNHO;
         int stateInt = state.intFromStateId(productDto.getState());
-        product.setState( stateInt);
+        product.setState(stateInt);
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
         product.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
         product.setUrlImage(productDto.getUrlImage());
@@ -271,7 +272,7 @@ public class UserBean implements Serializable {
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
         StateId state = StateId.RASCUNHO;
-        produto.setState( state.stateIdFromInt(productEntity.getState()));
+        produto.setState(state.stateIdFromInt(productEntity.getState()));
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());

@@ -36,19 +36,31 @@ public class ProductBean {
         }
     }
 
-        public ProductDto convertSingleProductEntitytoProductDto (ProductEntity productEntity){
-            ProductDto produto = new ProductDto();
-            produto.setId(productEntity.getId());
-            produto.setDescription(productEntity.getDescription());
-            produto.setPrice(productEntity.getPrice());
-            produto.setName(productEntity.getName());
-            produto.setDate(productEntity.getDate());
-            produto.setLocation(productEntity.getLocation());
-            StateId state = StateId.RASCUNHO;
-            produto.setState(state.stateIdFromInt(productEntity.getState()));
-            produto.setSeller(productEntity.getSeller().getUsername());
-            produto.setCategory(productEntity.getCategory().getNome());
-            produto.setUrlImage(productEntity.getUrlImage());
-            return produto;
+    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
+        ProductDto produto = new ProductDto();
+        produto.setId(productEntity.getId());
+        produto.setDescription(productEntity.getDescription());
+        produto.setPrice(productEntity.getPrice());
+        produto.setName(productEntity.getName());
+        produto.setDate(productEntity.getDate());
+        produto.setLocation(productEntity.getLocation());
+        StateId state = StateId.RASCUNHO;
+        produto.setState(state.stateIdFromInt(productEntity.getState()));
+        produto.setSeller(productEntity.getSeller().getUsername());
+        produto.setCategory(productEntity.getCategory().getNome());
+        produto.setUrlImage(productEntity.getUrlImage());
+        return produto;
+    }
+
+    public boolean buyProduct(ProductDto productDto) {
+        try {
+            ProductEntity productEntity = productDao.getProductById(productDto.getId());
+            productEntity.setState(4);
+            return true;
+        } catch (Exception e) {
+            logger.error("Erro ao comprar produto {}", productDto.getId());
+            //logger.error(e);
+            return false;
         }
     }
+}
