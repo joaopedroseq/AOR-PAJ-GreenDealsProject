@@ -54,8 +54,7 @@ public class ProductBean {
 
     public boolean buyProduct(ProductDto productDto) {
         try {
-            ProductEntity productEntity = productDao.getProductById(productDto.getId());
-            productEntity.setState(4);
+            productDao.buyProduct(productDto.getId());
             return true;
         } catch (Exception e) {
             logger.error("Erro ao comprar produto {}", productDto.getId());

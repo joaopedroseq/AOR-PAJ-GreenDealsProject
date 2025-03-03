@@ -111,7 +111,7 @@ public class UserService {
     public Response getUserLogged(@HeaderParam("token") String token) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
-            logger.error("Invalid token from user {}", user.getUsername());
+            logger.error("Invalid token");
             return Response.status(401).entity("Invalid token").build();
         } else {
             logger.info("User information retrieved from user {}", user.getUsername());
@@ -455,7 +455,7 @@ public class UserService {
                 return Response.status(403).entity("Permission denied - buying already bought product").build();
             }  else if(productbean.buyProduct(product)){
                 logger.info("Product with id {} bought by {}", pathProductId, user.getUsername());
-                return Response.status(200).entity(product).build();
+                return Response.status(200).entity("produto comprado com sucesso").build();
             }else{
                 logger.info("Error : Product with id {} not bought by {}", pathProductId, user.getUsername());
                 return Response.status(400).entity("Error").build();
