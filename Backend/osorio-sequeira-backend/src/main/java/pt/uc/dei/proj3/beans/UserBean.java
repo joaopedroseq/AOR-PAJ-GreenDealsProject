@@ -205,6 +205,17 @@ public class UserBean implements Serializable {
         }
     }
 
+    public boolean deleteProduct(int productId) {
+        try{
+            productDao.deleteProduct(productId);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error while deleting product {}", productId);
+            logger.error(e);
+            return false;
+        }
+    }
+
     //Converts
     private UserEntity convertUserDtotoUserEntity(UserDto user) {
         UserEntity userEntity = new UserEntity();
