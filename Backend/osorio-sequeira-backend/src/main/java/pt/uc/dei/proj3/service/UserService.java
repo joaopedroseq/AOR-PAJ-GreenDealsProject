@@ -108,15 +108,15 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserLogged(@HeaderParam("token") String token) {
         UserDto user = userbean.verifyToken(token);
-        if(user == null) {
+        if (user == null) {
             logger.error("Invalid token from user {}", user.getUsername());
             return Response.status(401).entity("Invalid token").build();
-        }
-        else {
+        } else {
             logger.info("User information retrieved from user {}", user.getUsername());
             return Response.status(200).entity(user).build();
         }
     }
+
     @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -125,18 +125,15 @@ public class UserService {
         if (!userDto.isValid()) {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
-        }
-        else{
-            if(!userbean.checkIfTokenValid(token)) {
+        } else {
+            if (!userbean.checkIfTokenValid(token)) {
                 logger.error("Invalid token from user {}", userDto.getUsername());
                 return Response.status(401).entity("Invalid token").build();
-            }
-            else {
-                if(userbean.updateUser(token, userDto)){
+            } else {
+                if (userbean.updateUser(token, userDto)) {
                     logger.info("User {} updated successful", userDto.getUsername());
                     return Response.status(200).entity("Updated user " + userDto.getUsername() + " successfully").build();
-                }
-                else {
+                } else {
                     logger.error("User {} not updated", userDto.getUsername());
                     return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
                 }
@@ -144,25 +141,48 @@ public class UserService {
         }
     }
 
-
-/*
-    @GET
-    @Path("/infoPessoal/{username}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getInfoPessoalLoged(@HeaderParam("username") String username, @HeaderParam("password") String password) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
+    @DELETE
+    @Path("/delete")
+    @Consumes(MediaType.TEXT_PLAIN)
+    public Response deleteUser(@HeaderParam("token") String token, String usernameUserDelete) {
+        if (usernameUserDelete.trim().equals("")) {
+            logger.error("Invalid data - missing params - Deleting user");
+            return Response.status(400).entity("Invalid data").build();
         } else {
-            UserDto toGetUserInfo = applicationBean.getUserDto(username);
-            if (toGetUserInfo != null) {
-                return Response.status(200).entity(toGetUserInfo).build();
+            if (!userbean.checkIfTokenValid(token)) {
+                logger.error("Invalid token when trying to delete user {}", usernameUserDelete);
+                return Response.status(401).entity("Invalid token").build();
             } else {
-                return Response.status(400).entity("Request Failed").build();
+                UserDto user = userbean.verifyToken(token);
+                if (user == null) {
+                    logger.error("Invalid token when trying to delete user {}", usernameUserDelete);
+                    return Response.status(401).entity("Invalid token").build();
+                } else {
+                    if (!user.getAdmin()) {
+                        logger.error("User {} tried to delete {} without admin permissions", user.getUsername(), usernameUserDelete);
+                        return Response.status(403).entity("User does not have admin permission to delete other users").build();
+                    } else {
+                        usernameUserDelete = usernameUserDelete.trim();
+                        if (!userbean.checkIfUserExists(usernameUserDelete)) {
+                            logger.error("User {} tried to delete a user - {} - not found", user.getUsername(), usernameUserDelete);
+                            return Response.status(404).entity("User " + user.getUsername() +" to delete not found").build();
+                        } else {
+                            if (userbean.deleteUser(usernameUserDelete)) {
+                                logger.info("User {} deleted {} successfully", user.getUsername(), usernameUserDelete);
+                                return Response.status(200).entity("Deleted user " + usernameUserDelete + " successfully").build();
+                            } else {
+                                logger.error("User {} not deleted due to exception", usernameUserDelete);
+                                return Response.status(500).entity("User " + usernameUserDelete + " not deleted").build();
+                            }
+                        }
+                    }
+                }
             }
         }
     }
+
+
+/*
 
 
     //para debug - a ser removido
@@ -171,37 +191,6 @@ public class UserService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<UserPojo> getUser() {
         return userbean.getUsersAplicationBean();
-    }
-
-
-    @POST
-    @Path("update/{username}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(@HeaderParam("username") String username, @HeaderParam("password") String password, UserDto userDto) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
-        } else {
-            UserDto existingUser = userbean.getUserDto(username);
-            if (existingUser == null) {
-                return Response.status(404).entity("User not found!").build();
-            }
-            existingUser.setFirstName(userDto.getFirstName());
-            existingUser.setLastName(userDto.getLastName());
-            existingUser.setEmail(userDto.getEmail());
-            existingUser.setPhoneNumber(userDto.getPhoneNumber());
-            existingUser.setUrl(userDto.getUrl());
-            existingUser.setPassword(userDto.getPassword());
-
-            boolean updateSuccessful = userbean.updateUser(username, existingUser);
-            if (updateSuccessful) {
-                return Response.status(200).entity("User updated!").build();
-            } else {
-                return Response.status(400).entity("User not updated!").build();
-            }
-        }
     }
 
 
@@ -326,17 +315,17 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
         UserDto user = userbean.verifyToken(token);
-        if(user == null){
+        if (user == null) {
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
         } else {
-            if (!newProductDto.newProductIsValid()){
+            if (!newProductDto.newProductIsValid()) {
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();
-            }else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())){
-                logger.error("Permission denied - {} adding new product to {}",user.getUsername(), pathUsername);
+            } else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())) {
+                logger.error("Permission denied - {} adding new product to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            }else{
+            } else {
                 userbean.addProduct(user, newProductDto);
                 logger.info("Added new product to {}", pathUsername);
                 return Response.status(200).entity("Added product").build();

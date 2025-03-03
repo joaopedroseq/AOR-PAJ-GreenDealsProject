@@ -38,7 +38,37 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public boolean findIfTokenExists(String token) {
         try{
-            if ((String) em.createNamedQuery("User.findToken").setParameter("token", token).getSingleResult() != null) {
+            if (em.createNamedQuery("User.findIfTokenExists").setParameter("token", token).getResultList().isEmpty()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findIfTokenExists", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean findIfUserExists(String username) {
+        try{
+            if (em.createNamedQuery("User.findIfUserExists").setParameter("username", username).getResultList().isEmpty()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findIfUserExists", e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean deleteUser(String username) {
+        try{
+            if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {
                 return true;
             }
             else{
@@ -46,7 +76,7 @@ public class UserDao extends AbstractDao<UserEntity> {
             }
         }
         catch(NoResultException e){
-            logger.error("Exception {} in UserDao.findToken", e.getMessage());
+            logger.error("Exception {} in UserDao.deleteUser", e.getMessage());
             return false;
         }
     }
