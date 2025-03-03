@@ -88,7 +88,6 @@ public class UserBean implements Serializable {
 
     public UserDto verifyToken(String token) {
         try {
-            System.out.println("Verifying token");
             return convertUserEntitytoUserDto(userDao.findUserByToken(token));
         }catch (Exception e){
             logger.error(e);
@@ -98,12 +97,8 @@ public class UserBean implements Serializable {
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
-            System.out.println("Adding new product");
             ProductDto completeProductDto = new ProductDto(newProductDto);
-            System.out.println("newProductDto: " + newProductDto);
-            System.out.println("completeProductDto: " + completeProductDto);
             ProductEntity product = convertSingleProductDtotoProductEntity(completeProductDto);
-            System.out.println("productEntity: " + product);
             productDao.persist(product);
             return true;
         }catch (Exception e){
@@ -179,14 +174,9 @@ public class UserBean implements Serializable {
         StateId state = StateId.RASCUNHO;
         int stateInt = state.intFromStateId(productDto.getState());
         product.setState( stateInt);
-        System.out.println("convertPEntity from pdto");
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
-        System.out.println("seller da base de dados: "+product.getSeller());
-
         product.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
-        System.out.println("category da base de dados: "+product.getCategory());
         product.setUrlImage(productDto.getUrlImage());
-        System.out.println("productEntity: " + product);
         return product;
     }
 

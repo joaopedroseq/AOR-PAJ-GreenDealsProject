@@ -297,9 +297,7 @@ public class UserService {
     @Path("/{username}/add")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
-        logger.info("Adding product " + newProductDto);
         UserDto user = userbean.verifyToken(token);
-        System.out.println("user verified: " + user);
         if(user == null){
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
