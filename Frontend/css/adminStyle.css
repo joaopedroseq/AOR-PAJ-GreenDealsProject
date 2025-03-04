@@ -97,6 +97,24 @@ aside {
     border: none;
 }
 
+.product-section{
+  display: block;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.product-section h3{
+  color: var(--darkGreen);
+    font-family: 'Playfair Display';
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 0.5rem;
+}
+
 .produtos {
   display: none; /*de outra forma apresentar em - contents*/
 }
@@ -131,6 +149,37 @@ aside {
     justify-self: center;
 }
 
+/* Create the X shape using pseudo-elements */
+.excluded-overlay::before, .excluded-overlay::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;  /* Make the X larger than the container */
+  height: 40px;  /* Thickness of the X lines */
+  background: var(--green);  /* Full transparency */
+  border-radius: 10px;  /* Rounded corners */
+}
+
+.excluded-overlay::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.excluded-overlay::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.excluded-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(211, 211, 211, 0.6);  /* Light grey with 60% opacity */
+  z-index: 0;
+  pointer-events: none;
+}
+
 .grid-item .text-overlay {
     position: absolute;
     bottom: 0;
@@ -157,6 +206,19 @@ aside {
     opacity: 1; /* Exibe o texto */
 }
 
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 0, 0, 0.3);  /* Red with 30% opacity */
+  z-index: 1;
+  pointer-events: none; /* Make sure the overlay does not block mouse clicks */
+}
+
+
+
 /* Estilo para a categoria ativa no main */
 .categoria-ativa {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
@@ -172,6 +234,15 @@ aside {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   margin-bottom: 20px;
+}
+
+.profile-section h3{
+    color: var(--darkGreen);
+    font-family: 'Playfair Display';
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 0.5rem;
 }
 
 .active-section {
@@ -215,6 +286,15 @@ aside {
   margin-bottom: 20px;
 }
 
+.category-section h3{
+    color: var(--darkGreen);
+    font-family: 'Playfair Display';
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--green);
+    padding-bottom: 0.5rem;
+}
+
 .active-section {
   display: block;
 }
@@ -237,11 +317,91 @@ aside {
   gap: 20px;
 }
 
-/* Review styles matching detail page */
-.user-review-item {
-  background-color: #f4f4f4;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  border-radius: 5px;
-  position: relative;
+.user-info-container {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 90%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+}
+
+.user-photo {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    margin-right: 20px;
+}
+
+.user-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.user-info p {
+    margin: 0 10px;
+    flex: 1;
+}
+
+.username {
+    font-weight: bold;
+    color: #333;
+}
+
+.name,
+.email {
+    color: #666;
+}
+
+/*Category Container*/
+
+.category-container {
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.category-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 90%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.category-info {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.category-info p {
+  margin: 0 10px;
+  flex: 1;
+}
+
+.category-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.category-numberOfProducts {
+  color: #666;
 }

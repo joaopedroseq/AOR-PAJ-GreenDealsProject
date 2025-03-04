@@ -404,6 +404,7 @@ export function showPassword() {
 }
 
 export function abrirFecharAside() {
+  console.log("correu abrir fechar aside");
   const asideMenu = document.getElementById("aside-menu");
   const aside = document.getElementById("aside-placeholder");
   const asideGestaoPessoal = document.getElementById(
@@ -429,5 +430,5 @@ export function abrirFecharAside() {
       asideGestaoPessoal.style.display = "none";
       aside.style.display = "none";
     }
-  }
+  }  
 }
