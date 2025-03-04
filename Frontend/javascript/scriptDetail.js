@@ -28,7 +28,7 @@ async function getProductInformation() {
 
   try {
     const product = await fetchRequest(endpoint, "GET");
-      
+
     if (product) {
       // Formatar a data no formato 'dd/mm/aaaa'
       const dia = `0${product.date[2]}`.slice(-2); // Adiciona o zero à esquerda e pega os últimos 2 caracteres
@@ -132,49 +132,22 @@ async function buyProduct(productId) {
 
 // Função para excluir um produto
 async function deleteProduct() {
-  const storedUsername = sessionStorage
-    .getItem("username")
-    .trim()
-    .toLowerCase();
-  const password = sessionStorage.getItem("password").trim().toLowerCase();
+  const response = await fetchRequest("/user/user", "GET");
+  const usernameLoggedUser = response.username;
   const productId = new URLSearchParams(window.location.search).get("index");
   var userConfirm = window.confirm(
     "Tem a certeza que pretende eliminar este produto?"
   );
-
   if (userConfirm) {
-    const deleteProductHeader = new Headers({
-      "Content-Type": "application/json",
-      password: password,
-      username: storedUsername,
-    });
-    // Fazer a requisição DELETE para o backend
-    fetch(
-      `http://localhost:8080/osorio-sequeira-proj3/rest/user/${storedUsername}/products/${productId}`,
-      {
-        method: "DELETE",
-        headers: deleteProductHeader,
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          // Produto deletado com sucesso
-          alert("Produto eliminado com sucesso!");
-          // Atualizar a lista local de produtos
-          let products = JSON.parse(localStorage.getItem("products") || "[]");
-          products = products.filter((p) => p.id !== productId);
-          localStorage.setItem("products", JSON.stringify(products));
-          // Voltar para a página anterior
-          history.back();
-        } else {
-          // Erro ao deletar o produto
-          alert("Erro ao eliminar o produto. Por favor, tente novamente.");
-        }
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-        alert("Ocorreu um erro ao tentar eliminar o produto.");
-      });
+    const endpoint = `/user/${usernameLoggedUser}/products/${productId}`;
+    try {
+      await fetchRequest(endpoint, "PATCH");
+      alert("Produto eliminado com sucesso!");
+      window.location.href = "index.html";
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Falha ao eliminar o produto");
+    }
   }
 }
 
@@ -269,7 +242,6 @@ async function saveEditedProduct(product) {
   } else if (document.getElementById("edit-categoria").value === "") {
     alert("Produto sem categoria");
   } else {
-
     product.name = document.getElementById("edit-nome").value;
     product.description = document.getElementById("edit-descricao").value;
     product.price = parseFloat(document.getElementById("edit-preco").value);
