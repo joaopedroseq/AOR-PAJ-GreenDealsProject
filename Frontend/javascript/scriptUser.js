@@ -1,5 +1,6 @@
 import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
+import { fetchRequest, baseUrl } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
@@ -10,6 +11,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   //botao editar informaçoes
   const editFormButton = document.getElementById("toggleEditForm");
   editFormButton.addEventListener("click", toggleEditForm);
+  //botao de guardar informações de utilizador
+  const guardarAlteracoesUserBtn = document.getElementById("guardarAlteracoesUserBtn");
+  guardarAlteracoesUserBtn.addEventListener("click", saveUserInfo);
 });
 
 async function carregarAsideUser() {
@@ -41,79 +45,40 @@ function inicializarBotoesAsideUser() {
   });
 }
 
-async function loadUserInfo() {
-  const loggedUser = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-  const getUserInfoUrl = `http://localhost:8080/osorio-sequeira-proj3/rest/user/infoPessoal/${loggedUser}`;
-
-  const loadUserInfoHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: loggedUser,
-  });
-
-  try {
-    const response = await fetch(getUserInfoUrl, {
-      method: "GET",
-      headers: loadUserInfoHeaders,
-      credentials: "include", // Inclui as credenciais de sessão
-    });
-
-    console.log("Status da resposta:", response.status);
-
-    if (!response.ok) {
-      const errorMessage = await response.text();
-      throw new Error(`Erro na resposta: ${errorMessage}`);
-    }
-
-    const userInfo = await response.json();
-
-    if (userInfo) {
-      fillUserInfo(userInfo);
-    } else {
-      console.log("User info is empty");
-    }
-  } catch (error) {
-    console.error("Erro:", error);
-    alert("Ocorreu um erro: " + error.message);
-  }
-}
-
 // User info functionality
-function fillUserInfo(currentUser) {
+async function loadUserInfo() {
+  const userInfo = await fetchRequest('/user/user', "GET");
   const infoContainer = document.getElementById("user-info-container");
   infoContainer.innerHTML = `
                 <table class="user-info-table">
-                    <tr><td>Nome:</td><td>${currentUser.firstName} ${currentUser.lastName}</td></tr>
-                    <tr><td>Email:</td><td>${currentUser.email}</td></tr>
-                    <tr><td>Telefone:</td><td>${currentUser.phoneNumber}</td></tr>
+                    <tr><td>Nome:</td><td>${userInfo.firstName} ${userInfo.lastName}</td></tr>
+                    <tr><td>Email:</td><td>${userInfo.email}</td></tr>
+                    <tr><td>Telefone:</td><td>${userInfo.phoneNumber}</td></tr>
                 </table>
             `;
-
   const formContainer = document.getElementById("edit-form-container");
-
   // Cria o formulário de edição com os campos preenchidos
   formContainer.innerHTML = `
                 <form class="edit-form" id="edit-form">
                     <div>
                         <label>Primeiro Nome:</label>
-                        <input type="text" id="edit-firstname" value="${currentUser.firstName}" required>
+                        <input type="text" id="edit-firstname" value="${userInfo.firstName}" required>
                     </div>
                     <div>
                         <label>Último Nome:</label>
-                        <input type="text" id="edit-lastname" value="${currentUser.lastName}" required>
+                        <input type="text" id="edit-lastname" value="${userInfo.lastName}" required>
                     </div>
                     <div>
                         <label>Email:</label>
-                        <input type="email" id="edit-email" value="${currentUser.email}" required>
+                        <input type="email" id="edit-email" value="${userInfo.email}" required>
                     </div>
                     <div>
                         <label>Telefone:</label>
-                        <input type="tel" id="edit-phone" value="${currentUser.phoneNumber}">
+                        <input type="tel" id="edit-phone" value="${userInfo.phoneNumber}">
                     </div>
                     <div>
                         <label>Foto url:</label>
-                        <input type="text" id="edit-photoUrl" value="${currentUser.url}">
+                        <input type="text" id="edit-photoUrl" value="${userInfo.url}">
                     </div>
                     <div>
                         <label>Nova Password:</label>
@@ -126,10 +91,6 @@ function fillUserInfo(currentUser) {
                     <button type="button" id="guardarAlteracoesUserBtn">Guardar Alterações</button>
                 </form>
             `;
-  const guardarAlteracoesUserBtn = document.getElementById(
-    "guardarAlteracoesUserBtn"
-  );
-  guardarAlteracoesUserBtn.addEventListener("click", saveUserInfo);
 }
 
 // função para alternar a visibilidade do formulário de edição de informações

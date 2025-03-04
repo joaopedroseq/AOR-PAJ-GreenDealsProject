@@ -256,7 +256,7 @@ export async function addProductFromForm() {
     // Se o utilizador confirmar, guarda o produto no local storage
     if (confirm) {
       try {
-        const result = await addProduct(seller, product);
+        const result = await addProduct(seller, "POST", product);
         console.log("Produto adicionado com sucesso:", result);
         var modalAddProduct = document.getElementById("modal-addProduct");
         modalAddProduct.style.display = "none";
