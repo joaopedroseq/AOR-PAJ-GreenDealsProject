@@ -128,9 +128,9 @@ export async function login(username, password) {
     const text = await response.text();
     console.log("Texto da resposta:", text);
     if (response.ok) {
-   console.log("Login bem-sucedido");
-   sessionStorage.setItem("token", text);
-    window.location.reload();
+      console.log("Login bem-sucedido");
+      sessionStorage.setItem("token", text);
+      window.location.reload();
     } else {
       handleFailedLogin(text);
     }
@@ -152,7 +152,7 @@ export async function logout() {
   try {
     const endpoint = "/user/logout";
     await fetchRequest(endpoint, "POST");
-    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
     console.log("Logout bem-sucedido");
     window.location.href = "index.html";
   } catch (error) {
@@ -175,7 +175,30 @@ export function openAddProductModal() {
     alert("Tem que estar Logged in para vender um Produto!");
   } else {
     var modalAddProduct = document.getElementById("modal-addProduct");
+    loadCategories();
     modalAddProduct.style.display = "flex";
+  }
+}
+
+async function loadCategories() {
+  const endpoint = "/category/all";
+
+  try {
+    const categories = await fetchRequest(endpoint, "GET");
+
+    const categorySelect = document.getElementById("add-categoria");
+
+    // Clear existing options (optional, if needed)
+    categorySelect.innerHTML = "";
+
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.name;
+      option.textContent = category.name;
+      categorySelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error loading categories:", error);
   }
 }
 
@@ -192,7 +215,11 @@ export async function addProductFromForm() {
   const category = document.getElementById("add-categoria").value;
   const location = document.getElementById("add-localidade").value;
   const urlImage = document.getElementById("add-imagem").value;
-  const seller = sessionStorage.getItem("username");
+  const response = await fetchRequest("/user/user", "GET");
+  const seller = response.username;
+  console.log("Response:", response);
+  console.log("Vendedor:", seller);
+ 
 
   // Validações dos campos do formulário
   if (name.trim() === "") {
@@ -229,11 +256,7 @@ export async function addProductFromForm() {
     // Se o utilizador confirmar, guarda o produto no local storage
     if (confirm) {
       try {
-        const result = await addProduct(
-          sessionStorage.getItem("username"),
-          sessionStorage.getItem("password"),
-          product
-        );
+        const result = await addProduct(seller, product);
         console.log("Produto adicionado com sucesso:", result);
         var modalAddProduct = document.getElementById("modal-addProduct");
         modalAddProduct.style.display = "none";
@@ -247,6 +270,7 @@ export async function addProductFromForm() {
     }
   }
 }
+
 // Função para verificar se uma string é um número
 export function checkIfNumeric(string) {
   return (
@@ -255,32 +279,15 @@ export function checkIfNumeric(string) {
   ); // Garante que strings de espaços em branco falhem
 }
 
-export async function addProduct(username, password, product) {
-  const addProductURL = `http://localhost:8080/osorio-sequeira-proj3/rest/user/${username}/add`;
+export async function addProduct(seller, product) {
+  const endpoint = `/user/${seller}/add`;
 
-  const addProductHeaders = new Headers({
-    "Content-Type": "application/json",
-    username: username,
-    password: password,
-  });
   try {
-    const response = await fetch(addProductURL, {
-      method: "POST",
-      headers: addProductHeaders,
-      body: JSON.stringify(product),
-    });
-
-    console.log("Status da resposta:", response.status);
-    const text = await response.text();
-    console.log("Texto da resposta:", text);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    const response = await fetchRequest(endpoint, "POST", product);
     alert(
       "O seu produto foi adicionado como RASCUNHO\nPara alterar edite o produto na sua página pessoal"
     );
-    return { status: response.status, text: text };
+    return response;
   } catch (error) {
     console.error("Erro detalhado:", error);
     if (error.name === "TypeError") {
@@ -289,6 +296,7 @@ export async function addProduct(username, password, product) {
     throw error;
   }
 }
+
 //Abrir a janela modal de registo de novo utilizador
 export function openRegistry() {
   const modalRegister = document.getElementById("modal-register");

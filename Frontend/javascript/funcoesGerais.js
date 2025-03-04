@@ -34,3 +34,5 @@ export async function fetchRequest(endpoint, requestType, body = null) {
         throw error;
     }
 }
+
+
