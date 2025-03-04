@@ -14,6 +14,8 @@ import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Set;
+
 
 @Path("/user")
 public class UserService {
@@ -132,7 +134,6 @@ public class UserService {
                     return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
                 }
             }
-
     }
 
     @PATCH
@@ -213,19 +214,34 @@ public class UserService {
         }
     }
 
-
-/*
-
-
-    //para debug - a ser removido
+    //Get All Regular Users
     @GET
-    @Path("/all")
+    @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<UserPojo> getUser() {
-        return userbean.getUsersAplicationBean();
+    public Response getAllUsers(@HeaderParam("token") String token) {
+        if (!userbean.checkIfTokenValid(token)) {
+            logger.error("Invalid token when trying to get all users");
+            return Response.status(401).entity("Invalid token").build();
+        } else {
+            UserDto user = userbean.verifyToken(token);
+            if (user == null) {
+                logger.error("Invalid token when trying to get all users {}", user.getUsername());
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                if (!user.getAdmin()) {
+                    logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
+                    return Response.status(403).entity("User does not have admin permission to views other user's information").build();
+                }
+                else {
+                    Set<UserDto> users = userbean.getAllUsers();
+                    logger.info("User {} accessed to get all user's information", user.getUsername());
+                    return Response.status(200).entity(users).build();
+                }
+            }
+        }
     }
 
-
+/*
     //Evaluations
 
     @GET

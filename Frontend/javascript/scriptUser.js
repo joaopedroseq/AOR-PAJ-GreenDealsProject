@@ -38,10 +38,12 @@ async function addAdministratorOptions() {
     myAdminOptionsBtn.type = "button";
     myAdminOptionsBtn.id = "myAdminBtn";
     myAdminOptionsBtn.value = "Página de Administrador";
-
     const form = asideMenu.querySelector("form");
     if (form) {
       form.appendChild(myAdminOptionsBtn);
+      myAdminBtn.addEventListener("click", () => {
+        window.location.href = "../html/admin.html";
+      })
     } else {
       console.error("Form not found in the aside menu!");
     }
@@ -65,15 +67,7 @@ function inicializarBotoesAsideUser() {
   myInfoBtn.addEventListener("click", function () {
     document.getElementById("produtos").style.display = "none";
     showSection("informacoes");
-  });
-
-  if (document.getElementById("myAdminBtn")) {
-    const myAdminBtn = document.getElementById("myAdminBtn");
-    myAdminBtn.addEventListener("click", () => {
-      window.location.href = "../html/admin.html";
-    });
-  }
-  
+  });  
 }
 
 // User info functionality
