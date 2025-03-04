@@ -13,4 +13,7 @@ node_modules
 .vscode/*
 /Frontend/.vscode
 /Frontend/.vscode/*
+/Frontend/testes2.0/node_modules
+/Frontend/testes2.0/node_modules/
+/Frontend/testes2.0/node_modules/*
 
