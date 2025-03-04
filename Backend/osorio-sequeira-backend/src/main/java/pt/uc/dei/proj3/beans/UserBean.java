@@ -7,7 +7,6 @@ import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
-//import java.util.logging.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
@@ -113,13 +112,27 @@ public class UserBean implements Serializable {
         } else {
             try {
                 //não é feito set de username, admin ou excluded
-                userToUpdate.setPassword(userDto.getPassword());
-                userToUpdate.setFirstName(userDto.getFirstName());
-                userToUpdate.setLastName(userDto.getLastName());
-                userToUpdate.setEmail(userDto.getEmail());
-                userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
-                userToUpdate.setUrl(userToUpdate.getUrl());
-                userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
+                if (userDto.getPassword() != null) {
+                    userToUpdate.setPassword(userDto.getPassword());
+                }
+                if (userDto.getFirstName() != null) {
+                    userToUpdate.setFirstName(userDto.getFirstName());
+                }
+                if (userDto.getLastName() != null) {
+                    userToUpdate.setLastName(userDto.getLastName());
+                }
+                if (userDto.getEmail() != null) {
+                    userToUpdate.setEmail(userDto.getEmail());
+                }
+                if (userDto.getPhoneNumber() != null) {
+                    userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
+                }
+                if (userDto.getUrl() != null) {
+                    userToUpdate.setUrl(userDto.getUrl());
+                }
+                if (userDto.getProducts() != null) {
+                    userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
+                }
                 //adicionar evaluations
                 return true;
             } catch (Exception e) {

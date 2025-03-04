@@ -116,29 +116,29 @@ public class UserService {
         }
     }
 
-    @POST
+    @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
-        if (!userDto.isValid()) {
+        //Como o service mudou para PUT, não faz sentido chamar isValid() porque dará sempre falso
+        /*if (!userDto.isValid()) {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
-        } else {
+        } else {*/
             if (!userbean.checkIfTokenValid(token)) {
                 logger.error("Invalid token from user {}", userDto.getUsername());
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 if (userbean.updateUser(token, userDto)) {
                     logger.info("User {} updated successful", userDto.getUsername());
-                    return Response.status(200).entity("Updated user " + userDto.getUsername() + " successfully").build();
+                    return Response.status(200).entity("Updated user successfully").build();
                 } else {
                     logger.error("User {} not updated", userDto.getUsername());
-                    return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
+                    return Response.status(500).entity("User not updated").build();
                 }
             }
         }
-    }
+    //}
 
     @PATCH
     @Path("/{username}/exclude")
@@ -329,22 +329,6 @@ public class UserService {
     }
 
     //Produtos
-    @GET
-    @Path("/{username}/products")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getProductsOfUser(@HeaderParam("username") String username, @HeaderParam("password") String password) {
-        if (password.trim().equals("") || username.trim().equals("")) {
-            return Response.status(401).entity("Parameters missing").build();
-        } else if (!userbean.checkPassword(username, password)) {
-            return Response.status(403).entity("Forbidden").build();
-        } else {
-            if (applicationBean.isUserExist(username)) {
-                return Response.status(200).entity(applicationBean.getProductsUser(username)).build();
-            } else {
-                return Response.status(400).entity("User not found!").build();
-            }
-        }
-    }
 */
 
     //Add product to user

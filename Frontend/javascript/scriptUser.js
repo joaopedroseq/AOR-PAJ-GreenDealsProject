@@ -3,11 +3,12 @@ import { carregarFooter } from "./scriptFooter.js";
 import { fetchRequest, baseUrl } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
+  const userInfo = await fetchRequest('/user/user', "GET");
   await carregarHeader();
   await carregarAsideUser();
   await carregarFooter();
-  await loadUserInfo();
-  await getUserProducts();
+  await loadUserInfo(userInfo);
+  await getUserProducts(userInfo);
   //botao editar informaçoes
   const editFormButton = document.getElementById("toggleEditForm");
   editFormButton.addEventListener("click", toggleEditForm);
@@ -46,8 +47,7 @@ function inicializarBotoesAsideUser() {
 }
 
 // User info functionality
-async function loadUserInfo() {
-  const userInfo = await fetchRequest('/user/user', "GET");
+async function loadUserInfo(userInfo) {
   const infoContainer = document.getElementById("user-info-container");
   infoContainer.innerHTML = `
                 <table class="user-info-table">
@@ -105,6 +105,14 @@ function toggleEditForm() {
             console.log(currentUser);*/
 }
 
+// Função para os productos do backend e exibi-los na página de utilizador
+async function getUserProducts(userInfo) {
+  const userProducts = userInfo.products;
+  userProducts.forEach((product) => {
+    displayProduct(product, product.id);
+});
+}
+
 // Função para exibir os produtos na página
 function displayProduct(product, index) {
   // Obtém o container dos produtos
@@ -125,44 +133,7 @@ function displayProduct(product, index) {
   gridContainer.insertAdjacentHTML("beforeend", productHTML);
 }
 
-// Função para os productos do backend e exibi-los na página de utilizador
-async function getUserProducts() {
-  const loggedUser = sessionStorage.getItem("username");
-  const password = sessionStorage.getItem("password");
-  const getAvaiableProductsUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/" +
-    loggedUser +
-    "/products";
-  const getUserProductstHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: loggedUser,
-  });
-  fetch(getAvaiableProductsUrl, {
-    method: "GET",
-    headers: getUserProductstHeaders,
-  })
-    .then((response) => {
-      console.log("Status da resposta:", response.status);
-      return response
-        .text()
-        .then((text) => ({ status: response.status, text: text }));
-    })
-    .then((data) => {
-      if (data) {
-        const products = JSON.parse(data.text); // Converter a string JSON para um array
-        products.forEach((product) => {
-          displayProduct(product, product.id);
-        });
-      } else {
-        console.log("No products to load");
-      }
-    })
-    .catch((error) => {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
-    });
-}
+
 
 function showSection(sectionId) {
   // Hide all sections
@@ -188,10 +159,7 @@ function showSection(sectionId) {
 
   // Load content if needed
   if (sectionId === "avaliacoes") loadUserReviews();
-  if (sectionId === "informacoes") {
-    const loggedUser = sessionStorage.getItem("username");
-    loadUserInfo(loggedUser);
-  }
+
 }
 
 // Função para guardar as alterações das informações do utilizador
@@ -215,7 +183,7 @@ function saveUserInfo(event) {
     return;
   } else {
     // Atualiza os dados do utilizador
-    const updatedUser = {
+    const updatedUserInformation = {
       firstName: document.getElementById("edit-firstname").value,
       lastName: document.getElementById("edit-lastname").value,
       email: document.getElementById("edit-email").value,
@@ -224,58 +192,18 @@ function saveUserInfo(event) {
       password: document.getElementById("edit-password").value,
     };
     if (confirm("Pretende alterar as suas informações?")) {
-      let loggedUser = sessionStorage.getItem("username");
-      let password = sessionStorage.getItem("password");
-      updateUser(loggedUser, password, updatedUser);
-      updateWithNewInformation(updatedUser);
+      updateUser(updatedUserInformation);
     }
   }
-}
-
-//função para guarda novos dados na sessionStorage
-function updateWithNewInformation(updatedUser) {
-  sessionStorage.setItem("password", updatedUser.password);
-  sessionStorage.setItem("firstName", updatedUser.firstName);
-  sessionStorage.setItem("photo", updatedUser.url);
 }
 
 //função alterar no backend
-async function updateUser(loggedUser, password, updatedUser) {
-  const updateUserURL = `http://localhost:8080/osorio-sequeira-proj3/rest/user/update/${username}`;
-  const updateUserHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: loggedUser,
-  });
-
-  try {
-    const response = await fetch(updateUserURL, {
-      method: "POST",
-      headers: updateUserHeaders,
-      body: JSON.stringify(updatedUser),
-    });
-
-    console.log("Status da resposta:", response.status);
-    const text = await response.text();
-    console.log("Texto da resposta:", text);
-    alert("Informações atualizadas");
-    window.location.reload();
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return {
-      status: response.status,
-      text: text,
-    };
-  } catch (error) {
-    console.error("Erro detalhado:", error);
-    if (error.name === "TypeError") {
-      console.error("Possível erro de rede ou CORS");
-    }
-    throw error;
+async function updateUser(updatedUserInformation) {
+  console.log(updatedUserInformation);
+  const response = await fetchRequest('/user/update', 'PUT', updatedUserInformation);
+  alert("Informações atualizadas");
+  window.location.reload();
   }
-}
 
 async function loadUserReviews() {
   const container = document.getElementById("user-reviews-container");

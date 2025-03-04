@@ -158,7 +158,5 @@ public class UserDto implements Serializable {
                 && this.phoneNumber != null && !this.phoneNumber.isEmpty()
                 && this.email != null && !this.email.isEmpty()
                 && this.url != null && !this.url.isEmpty();
-
-
     }
 }

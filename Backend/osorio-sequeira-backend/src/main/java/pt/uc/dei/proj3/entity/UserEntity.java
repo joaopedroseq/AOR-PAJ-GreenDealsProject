@@ -152,6 +152,7 @@ public class UserEntity implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+        System.out.println("URL" + url);
     }
 
     public String getUsername() {
