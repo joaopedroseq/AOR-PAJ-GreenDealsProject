@@ -1,6 +1,5 @@
 package pt.uc.dei.proj3.dto;
 
-import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -31,7 +30,7 @@ public class LoginDto implements Serializable {
         this.username = username;
     }
 
-    public boolean isValid() {
+    public boolean hasValidValues() {
         return this.username != null && !this.username.isEmpty()
                 && this.password != null && !this.password.isEmpty();
     }

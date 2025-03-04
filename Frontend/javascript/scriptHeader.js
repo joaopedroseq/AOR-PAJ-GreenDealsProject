@@ -1,4 +1,4 @@
-import { fetchRequest, baseUrl } from "./funcoesGerais.js";
+import { fetchRequest } from "./funcoesGerais.js";
 
 export async function carregarHeader() {
   fetch("header.html")
@@ -126,7 +126,6 @@ export async function login(username, password) {
 
     console.log("Status da resposta:", response.status);
     const text = await response.text();
-    console.log("Texto da resposta:", text);
     if (response.ok) {
       console.log("Login bem-sucedido");
       sessionStorage.setItem("token", text);
@@ -217,8 +216,6 @@ export async function addProductFromForm() {
   const urlImage = document.getElementById("add-imagem").value;
   const response = await fetchRequest("/user/user", "GET");
   const seller = response.username;
-  console.log("Response:", response);
-  console.log("Vendedor:", seller);
  
 
   // Validações dos campos do formulário

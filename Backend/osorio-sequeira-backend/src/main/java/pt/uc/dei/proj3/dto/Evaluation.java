@@ -11,7 +11,6 @@ public class Evaluation {
     private int evaluationId;
 
 
-
     //Construtor para carregamento do ficheiro
     public Evaluation(int starNumber, String comment, String userName, String seller, LocalDateTime date, int evaluationId) {
         this.starNumber = starNumber;

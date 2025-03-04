@@ -37,7 +37,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
         logger.info("Registering user: " + userDto);
-        if (!userDto.isValid()) {
+        if (!userDto.hasValidValues()) {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
         }
@@ -55,7 +55,7 @@ public class UserService {
     @Path("/registerAdmin")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAdmin(UserDto userDto) {
-        if (!userDto.isValid()) {
+        if (!userDto.hasValidValues()) {
             logger.error("Invalid data - registering new admin {}", userDto.getUsername());
             return Response.status(400).entity("Invalid Data").build();
         }
@@ -74,7 +74,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto user) {
-        if (!user.isValid()) {
+        if (!user.hasValidValues()) {
             logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
@@ -120,25 +120,20 @@ public class UserService {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
-        //Como o service mudou para PUT, não faz sentido chamar isValid() porque dará sempre falso
-        /*if (!userDto.isValid()) {
-            logger.error("Invalid data - missing params - Registering user");
-            return Response.status(400).entity("Invalid data").build();
-        } else {*/
-            if (!userbean.checkIfTokenValid(token)) {
+         if (!userbean.checkIfTokenValid(token)) {
                 logger.error("Invalid token from user {}", userDto.getUsername());
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 if (userbean.updateUser(token, userDto)) {
                     logger.info("User {} updated successful", userDto.getUsername());
-                    return Response.status(200).entity("Updated user successfully").build();
+                    return Response.status(200).entity("Updated user " + userDto.getUsername() + " successfully").build();
                 } else {
                     logger.error("User {} not updated", userDto.getUsername());
-                    return Response.status(500).entity("User not updated").build();
+                    return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
                 }
             }
-        }
-    //}
+
+    }
 
     @PATCH
     @Path("/{username}/exclude")
@@ -366,7 +361,7 @@ public class UserService {
         if (user == null) {
             logger.error("Invalid token - updateProduct");
             return Response.status(401).entity("Invalid token").build();
-        } else if (!productDto.isValid()) {
+        } else if (!productDto.hasValidValues()) {
             logger.error("Invalid data - user {} updateProduct to {}", user.getUsername(), pathUsername);
             return Response.status(400).entity("Invalid data").build();
         } else {
@@ -404,9 +399,6 @@ public class UserService {
             }else if(product.isExcluded() && !user.getAdmin()) {
                 logger.error("Permission denied - {} getting excluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied").build();
-            } else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())) {
-                logger.error("Permission denied - {} getting product with id: {}", user.getUsername(), pathProductId);
-                return Response.status(403).entity("Permission denied").build();
             } else {
                 logger.info("Product with id {} found by {}", pathProductId, user.getUsername());
                 return Response.status(200).entity(product).build();
@@ -417,7 +409,6 @@ public class UserService {
     //buying product
     @PATCH
     @Path("/products/buy/{ProductId}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {

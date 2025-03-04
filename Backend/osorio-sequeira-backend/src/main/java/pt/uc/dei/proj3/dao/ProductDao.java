@@ -40,7 +40,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     public void buyProduct(int id) {
         try {
-            em.createNamedQuery("Product.buyProduct").setParameter("id", id);
+            em.createNamedQuery("Product.buyProduct").setParameter("id", id).executeUpdate();
         } catch (NoResultException e) {
             logger.error("Error buying product");
             //logger.error(e);

@@ -4,7 +4,6 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Set;
 
 @XmlRootElement
@@ -150,7 +149,7 @@ public class UserDto implements Serializable {
         this.excluded = excluded;
     }
 
-    public boolean isValid() {
+    public boolean hasValidValues() {
         return this.firstName != null && !this.firstName.isEmpty()
                 && this.lastName != null && !this.lastName.isEmpty()
                 && this.username != null && !this.username.isEmpty()
