@@ -28,7 +28,7 @@ async function getProductInformation() {
 
   try {
     const product = await fetchRequest(endpoint, "GET");
-
+      
     if (product) {
       // Formatar a data no formato 'dd/mm/aaaa'
       const dia = `0${product.date[2]}`.slice(-2); // Adiciona o zero à esquerda e pega os últimos 2 caracteres
@@ -180,13 +180,9 @@ async function deleteProduct() {
 
 // Exibir o formulário de edição ao clicar no botão "Editar informações"
 function showEditForm(product) {
-  const storedUsername = sessionStorage
-    .getItem("username")
-    .trim()
-    .toLowerCase();
-  const password = sessionStorage.getItem("password").trim().toLowerCase();
   const formularioEditarProduto = document.getElementById("edit-product-form");
   const modalDetail = document.getElementById("modal-detail");
+  loadCategories();
   formularioEditarProduto.style.display = "block";
   modalDetail.style.display = "flex";
 
@@ -197,15 +193,53 @@ function showEditForm(product) {
   document.getElementById("edit-categoria").value = product.category;
   document.getElementById("edit-localidade").value = product.location;
   document.getElementById("edit-imagem").value = product.urlImage;
-  document.getElementById("edit-state").value = product.state;
+  loadStateOptions(product.state);
 
   // Adicionar event listener para o botão de salvar
   const saveProductBtn = document.getElementById("save-product");
   saveProductBtn.addEventListener("click", async () => {
-    await saveEditedProduct(product.id, storedUsername, password);
+    await saveEditedProduct(product);
   });
   const closeModalBtn = document.getElementsByClassName("close-detail")[0];
   closeModalBtn.addEventListener("click", fecharModalEditarProduto);
+}
+
+function loadStateOptions(productState) {
+  const stateTransitions = {
+    RASCUNHO: ["RASCUNHO", "DISPONIVEL", "RESERVADO"],
+    DISPONIVEL: ["DISPONIVEL", "RESERVADO"],
+    RESERVADO: ["RESERVADO", "DISPONIVEL"],
+    COMPRADO: ["COMPRADO"],
+  };
+  const allowedStates = stateTransitions[productState] || [];
+
+  const stateSelect = document.getElementById("edit-state");
+  stateSelect.innerHTML = "";
+  allowedStates.forEach((state) => {
+    const option = document.createElement("option");
+    option.value = state;
+    option.textContent = state.charAt(0) + state.slice(1).toLowerCase();
+    stateSelect.appendChild(option);
+  });
+}
+
+async function loadCategories() {
+  const endpoint = "/category/all";
+  try {
+    const categories = await fetchRequest(endpoint, "GET");
+
+    const categorySelect = document.getElementById("edit-categoria");
+    // Clear existing options (optional, if needed)
+    categorySelect.innerHTML = "";
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category.name;
+      option.textContent = category.name;
+      categorySelect.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Error loading categories:", error);
+  }
 }
 
 function fecharModalEditarProduto() {
@@ -215,8 +249,7 @@ function fecharModalEditarProduto() {
   formularioEditarProduto.style.display = "none";
 }
 
-async function saveEditedProduct(productId, storedUsername, password) {
-  // Validações dos campos do formulário
+async function saveEditedProduct(product) {
   if (document.getElementById("edit-nome").value.trim() === "") {
     alert("O nome do produto é de preenchimento obrigatório");
   } else if (document.getElementById("edit-descricao").value === "") {
@@ -236,46 +269,26 @@ async function saveEditedProduct(productId, storedUsername, password) {
   } else if (document.getElementById("edit-categoria").value === "") {
     alert("Produto sem categoria");
   } else {
-    const editedProduct = {
-      name: document.getElementById("edit-nome").value,
-      description: document.getElementById("edit-descricao").value,
-      price: parseFloat(document.getElementById("edit-preco").value),
-      category: document.getElementById("edit-categoria").value,
-      location: document.getElementById("edit-localidade").value,
-      urlImage: document.getElementById("edit-imagem").value,
-      state: document.getElementById("edit-state").value,
-    };
 
-    const editProductHeader = new Headers({
-      "Content-Type": "application/json",
-      password: password,
-      username: storedUsername,
-    });
+    product.name = document.getElementById("edit-nome").value;
+    product.description = document.getElementById("edit-descricao").value;
+    product.price = parseFloat(document.getElementById("edit-preco").value);
+    product.category = document.getElementById("edit-categoria").value;
+    product.location = document.getElementById("edit-localidade").value;
+    product.urlImage = document.getElementById("edit-imagem").value;
+    product.state = document.getElementById("edit-state").value;
 
-    await fetch(
-      `http://localhost:8080/osorio-sequeira-proj3/rest/user/${storedUsername}/products/${productId}`,
-      {
-        method: "POST",
-        headers: editProductHeader,
-        body: JSON.stringify(editedProduct),
-      }
-    )
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        } else {
-          console.log(response.text());
-          throw new Error("Falha ao atualizar o produto");
-        }
-      })
-      .then((data) => {
-        alert(data);
-        window.location.reload();
-      })
-      .catch((error) => {
-        console.error("Erro:", error);
-        alert("Erro ao atualizar o produto");
-      });
+    const response = await fetchRequest("/user/user", "GET");
+    const usernameLoggedUser = response.username;
+    const endpoint = `/user/${usernameLoggedUser}/products/${product.id}`;
+    try {
+      await fetchRequest(endpoint, "PUT", product);
+      alert("Produto editado com sucesso!");
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Falha ao editar o produto");
+    }
   }
 }
 

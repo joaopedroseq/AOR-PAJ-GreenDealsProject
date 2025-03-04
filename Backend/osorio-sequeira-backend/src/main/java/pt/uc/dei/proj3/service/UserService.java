@@ -37,7 +37,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerUser(UserDto userDto) {
         logger.info("Registering user: " + userDto);
-        if (!userDto.isValid()) {
+        if (!userDto.hasValidValues()) {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
         }
@@ -55,7 +55,7 @@ public class UserService {
     @Path("/registerAdmin")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerAdmin(UserDto userDto) {
-        if (!userDto.isValid()) {
+        if (!userDto.hasValidValues()) {
             logger.error("Invalid data - registering new admin {}", userDto.getUsername());
             return Response.status(400).entity("Invalid Data").build();
         }
@@ -74,7 +74,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response login(LoginDto user) {
-        if (!user.isValid()) {
+        if (!user.hasValidValues()) {
             logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
@@ -121,7 +121,7 @@ public class UserService {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
-        if (!userDto.isValid()) {
+        if (!userDto.hasValidValues()) {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
         } else {
@@ -382,7 +382,7 @@ public class UserService {
         if (user == null) {
             logger.error("Invalid token - updateProduct");
             return Response.status(401).entity("Invalid token").build();
-        } else if (!productDto.isValid()) {
+        } else if (!productDto.hasValidValues()) {
             logger.error("Invalid data - user {} updateProduct to {}", user.getUsername(), pathUsername);
             return Response.status(400).entity("Invalid data").build();
         } else {

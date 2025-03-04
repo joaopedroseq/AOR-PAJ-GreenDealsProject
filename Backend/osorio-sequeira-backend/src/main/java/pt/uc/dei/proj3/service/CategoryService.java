@@ -11,11 +11,8 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.CategoryBean;
 import pt.uc.dei.proj3.beans.UserBean;
-import pt.uc.dei.proj3.dao.CategoryDao;
 import pt.uc.dei.proj3.dto.CategoryDto;
-import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.UserDto;
-import pt.uc.dei.proj3.entity.UserEntity;
 
 import java.util.Set;
 
@@ -42,7 +39,7 @@ public class CategoryService {
         if (token == null || token.trim().isEmpty()) {
             logger.error("Invalid token(null) - adding new category - {}", categoryDto.getName());
             return Response.status(401).entity("Invalid token").build();
-        } else if (!categoryDto.isValid()) {
+        } else if (!categoryDto.hasValidValues()) {
             logger.error("Invalid data - register new category");
             return Response.status(400).entity("Invalid data").build();
         } else {

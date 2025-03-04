@@ -1,7 +1,6 @@
 package pt.uc.dei.proj3.dto;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 public class CategoryDto implements Serializable {
@@ -25,7 +24,7 @@ public class CategoryDto implements Serializable {
         this.name = name;
     }
 
-    public boolean isValid() {
+    public boolean hasValidValues() {
         return this.name != null && !this.name.isEmpty();
     }
 

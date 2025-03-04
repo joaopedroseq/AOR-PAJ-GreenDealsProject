@@ -186,7 +186,8 @@ public class ProductDto implements Serializable{
                 && this.urlImage != null && !this.urlImage.isEmpty();
 
     }
-    public boolean isValid(){
+
+    public boolean hasValidValues(){
         return this.id != null && this.id != null
                 && this.seller != null && !this.seller.isEmpty()
                 && this.name != null && !this.name.isEmpty()
