@@ -1,10 +1,7 @@
 package pt.uc.dei.proj3.service;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +36,29 @@ public class ProductService {
             return Response.status(400).entity("Error getting active products").build();
         }
     }
+
+    //Active products - Non excluded products, all states, of a single user
+    @GET
+    @Path("/active/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveProductsByUser(@HeaderParam("token")String token, @PathParam("username") String pathUsername) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - Getting active products by user");
+            return Response.status(401).entity("Invalid token").build();
+        } else if(!user.getUsername().equals(pathUsername) && !user.getAdmin()) {
+            logger.error("Permision denied - {} getting active products of {}",user.getUsername(), pathUsername);
+            return Response.status(403).entity("Permission denied").build();
+        }else{
+            Set<ProductDto> produtos = userbean.getActiveProductsByUser(pathUsername);
+            if (produtos != null) {
+                return Response.status(200).entity(produtos).build();
+            } else {
+                return Response.status(400).entity("Error getting all products").build();
+            }
+        }
+    }
+
 
     //All products - Excluded products, all states
     @GET
