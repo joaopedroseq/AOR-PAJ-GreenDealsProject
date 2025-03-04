@@ -29,7 +29,7 @@ export function exibirSobreNos() {
   var line1 = document.getElementById("phrase1");
   var line2 = document.getElementById("phrase2");
   aboutHeader.textContent = "Desenvolvimento Web & Design Gráfico";
-  line1.textContent = "Criado e desenvolvido por João Sequeira João Osório";
+  line1.textContent = "Criado e desenvolvido por João Sequeira e João Osório";
   line2.textContent = "Programação Avançada em Java - Acertar o Rumo 2024/25";
   var modal = document.getElementById("modal");
   modal.style.display = "block";

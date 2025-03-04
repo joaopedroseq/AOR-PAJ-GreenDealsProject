@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="utf-8">
     <title>GreenDeals</title>
@@ -9,94 +10,97 @@
     <link rel="stylesheet" href="../css/headerStyle.css">
     <link rel="stylesheet" href="../css/mainStyle.css">
 </head>
+
 <body>
-    <!--Header externo-->
+
     <!--<div w3-include-html="header.html"></div> -->
-    <!--Conteudo total--> 
+    <!--Conteudo total-->
     <header id="header-placeholder"></header>
 
-        <!--Menu aside para registo e aceder ao registo-->
-        <!--<div w3-include-html="aside.html"></div>-->
-        <aside id="aside-placeholder"></aside>
-        <main class="main-content-index">
-            
-            <div class="main-title">
-                <img src="../images/leaf.png" style="rotate: 45deg;">
-                <h4>GreenDeals</h4>
-            </div>
-            <div class="mission-statement">
-                <p>Na <em>GreenDeals</em> acreditamos que a sustentabilidade começa com pequenas ações 
-                    que fazem uma grande diferença. <br>
-                    Oferecemos um ambiente virtual onde você pode vender itens que já não utiliza e 
-                    encontrar produtos usados de qualidade a preços acessíveis. <br>
-                    Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.</p>
-            </div>
-            <!--Banners do site-->
-                
-                <span>
-                    <div class="grid-container"></div>
-                </span>
-                <span class="sustentabilityBannerSpan">
-                        <img class="sustentabilityBanner" id="sustentabilityBanner" src='../images/banner.png' alt="barra de produtos sustentaveis">
-                    </a>
-                </span>
-            </main>
+    <!--Menu aside para registo e aceder ao registo-->
+    <!--<div w3-include-html="aside.html"></div>-->
+    <aside id="aside-placeholder"></aside>
+    <main class="main-content-index">
 
-        <!-- Janela modal de registo -->
-        <div id="modal-register" class="modal-register">
-            <div class="modal-content-id">
-                <!-- Header do modal -->
-                <div class="modal-header-id" id="modal-header-id">
-                    <p class="modal-header-id-title">Criar novo registo</p>
-                    <p class="close-id" id="close-id">&times;</p>
-                </div>
-                <!-- Body do modal -->
-                <div class="modal-body-id">
-                    <form class="edit-id-form" id="edit-id-form">
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-nome">Primeiro Nome:</label>
-                            <input type="text" id="new-name" name="new-name">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-ultimoNome">Último Nome:</label>
-                            <input type="text" id="new-lastname" name="new-lastname">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-username">Username:</label>
-                            <input type="text" id="new-username" name="new-username">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-password">Password:</label>
-                            <input type="password" id="new-password" name="new-password">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-product-form-field">
-                            <label for="edit-passwordConfirm">Confirmar Password:</label>
-                            <input type="password" id="new-passwordConfirm" name="new-passwordConfirm">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-email">Email:</label>
-                            <input type="text" id="new-email" name="new-email">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-phone">Número de Telefone:</label>
-                            <input type="text" id="new-phone" name="new-phone">
-                        </div>
-                        <div class="edit-id-form-field" id="edit-id-form-field">
-                            <label for="edit-photo">Fotografia de Perfil (URL):</label>
-                            <input type="url" id="new-photo" name="new-photo" placeholder="URL da imagem">
-                        </div>
-                        <input type="button" id="registerBtn" class="registerBtn" value="Register">                
-                    </form>
-                </div>
+        <div class="main-title">
+            <img src="../images/leaf.png" style="rotate: 45deg;">
+            <h4>GreenDeals</h4>
+        </div>
+        <div class="mission-statement">
+            <p>Na <em>GreenDeals</em> acreditamos que a sustentabilidade começa com pequenas ações
+                que fazem uma grande diferença. <br>
+                Oferecemos um ambiente virtual onde você pode vender itens que já não utiliza e
+                encontrar produtos usados de qualidade a preços acessíveis. <br>
+                Ao reutilizar bens, contribuímos para a redução do desperdício e promovemos um consumo mais consciente.
+            </p>
+        </div>
+        <!--Banners do site-->
+
+        <span>
+            <div class="grid-container"></div>
+        </span>
+        <span class="sustentabilityBannerSpan">
+            <img class="sustentabilityBanner" id="sustentabilityBanner" src='../images/banner.png'
+                alt="barra de produtos sustentaveis">
+            </a>
+        </span>
+    </main>
+
+    <!-- Janela modal de registo -->
+    <div id="modal-register" class="modal-register">
+        <div class="modal-content-id">
+            <!-- Header do modal -->
+            <div class="modal-header-id" id="modal-header-id">
+                <p class="modal-header-id-title">Criar novo registo</p>
+                <p class="close-id" id="close-id">&times;</p>
             </div>
-        </div>  
-        
-    <!--Footer externo-->
+            <!-- Body do modal -->
+            <div class="modal-body-id">
+                <form class="edit-id-form" id="edit-id-form">
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-nome">Primeiro Nome:</label>
+                        <input type="text" id="new-name" name="new-name">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-ultimoNome">Último Nome:</label>
+                        <input type="text" id="new-lastname" name="new-lastname">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-username">Username:</label>
+                        <input type="text" id="new-username" name="new-username">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-password">Password:</label>
+                        <input type="password" id="new-password" name="new-password">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-product-form-field">
+                        <label for="edit-passwordConfirm">Confirmar Password:</label>
+                        <input type="password" id="new-passwordConfirm" name="new-passwordConfirm">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-email">Email:</label>
+                        <input type="text" id="new-email" name="new-email">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-phone">Número de Telefone:</label>
+                        <input type="text" id="new-phone" name="new-phone">
+                    </div>
+                    <div class="edit-id-form-field" id="edit-id-form-field">
+                        <label for="edit-photo">Fotografia de Perfil (URL):</label>
+                        <input type="url" id="new-photo" name="new-photo" placeholder="URL da imagem">
+                    </div>
+                    <input type="button" id="registerBtn" class="registerBtn" value="Register">
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <div id="footer-placeholder"></div>
 </body>
-    <script type="module" src="../javascript/scriptIndex.js"></script>
-    <script type="module" src="../javascript/scriptHeader.js"></script>
-    <script type="module" src="../javascript/scriptFooter.js"></script>
-    <script type="module" src="../javascript/funcoesGerais.js"></script>
-    
+<script type="module" src="../javascript/scriptIndex.js"></script>
+<script type="module" src="../javascript/scriptHeader.js"></script>
+<script type="module" src="../javascript/scriptFooter.js"></script>
+<script type="module" src="../javascript/funcoesGerais.js"></script>
+
 </html>

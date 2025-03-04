@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="utf-8">
     <title>GreenDeals</title>
     <link rel="icon" href="../images/logo.png" type="image/x-icon">
-<link rel="stylesheet" href="../css/detailStyle.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/detailStyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
-    <!--Header externo-->
+
     <header id="header-placeholder"></header>
     <aside id="aside-placeholder"></aside>
 
@@ -18,7 +20,7 @@
             <h2 id="product-category">Categoria: a, b, c</h2>
             <!--Informações do produto-->
             <div class="product-details">
-                <img class="table-img" id="product-image" src='../images/produtos/cabide.jpg' alt="Isto é um item"/>
+                <img class="table-img" id="product-image" src='../images/produtos/cabide.jpg' alt="Isto é um item" />
                 <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
                 <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
                 <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
@@ -32,9 +34,9 @@
                 <input type="button" id="delete-product" value="Eliminar produto"><br>
             </form>
 
-            
+
             <button id="buy-button" style="display: none;">Comprar</button>
-            
+
 
             <!--Butão de contacto-->
             <button id="contact-btn">Contatar o Anunciante</button>
@@ -83,8 +85,8 @@
                             <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-imagem">url de imagem:</label>
                                 <input type="text" id="edit-imagem" name="edit-imagem">
-                             </div>
-                             <div class="edit-product-form-field" id="edit-product-form-field">
+                            </div>
+                            <div class="edit-product-form-field" id="edit-product-form-field">
                                 <label for="edit-categoria">Estado do artigo:</label>
                                 <select id="edit-state" name="edit-state">
                                     <option value="RASCUNHO">Rascunho</option>
@@ -93,7 +95,7 @@
                                     <option value="COMPRADO">Comprado</option>
                                 </select>
                             </div>
-                             <input type="button" class="save-product" id="save-product" value="Guardar Alterações">                    
+                            <input type="button" class="save-product" id="save-product" value="Guardar Alterações">
                         </div>
                     </div>
                 </div>
@@ -118,13 +120,13 @@
                     <span id="rating-text"></span>
                 </div>
                 <input type="hidden" id="nota" name="nota">
-<br>
+                <br>
                 <button type="submit">Enviar Avaliação</button>
             </form>
         </section>
 
         <h2>Estatísticas de Avaliações</h2>
-        
+
         <div id="rating-summary">
             <div id="average-rating"></div>
             <div id="total-ratings"></div>
@@ -137,13 +139,13 @@
             <div id="avaliacoes-container"></div>
         </section>
     </div>
-    
-     <!--Footer externo-->
-     <div id="footer-placeholder"></div>
-    </body>
-        <script type ="module" src="../javascript/scriptDetail.js"></script>   
-        <script type ="module" src="../javascript/scriptFooter.js"></script>
-        <script type ="module" src="../javascript/scriptHeader.js"></script>
-      <!--  <script type ="module" src="../javascript/Avaliacoes.js"></script> -->
-    
+
+
+    <div id="footer-placeholder"></div>
+</body>
+<script type="module" src="../javascript/scriptDetail.js"></script>
+<script type="module" src="../javascript/scriptFooter.js"></script>
+<script type="module" src="../javascript/scriptHeader.js"></script>
+<!--  <script type ="module" src="../javascript/Avaliacoes.js"></script> -->
+
 </html>

@@ -3,7 +3,7 @@ import { carregarFooter } from "./scriptFooter.js";
 import { fetchRequest, baseUrl } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
-  const userInfo = await fetchRequest('/user/user', "GET");
+  const userInfo = await fetchRequest("/user/user", "GET");
   await carregarHeader();
   await carregarAsideUser();
   await carregarFooter();
@@ -13,7 +13,9 @@ document.addEventListener("DOMContentLoaded", async function () {
   const editFormButton = document.getElementById("toggleEditForm");
   editFormButton.addEventListener("click", toggleEditForm);
   //botao de guardar informações de utilizador
-  const guardarAlteracoesUserBtn = document.getElementById("guardarAlteracoesUserBtn");
+  const guardarAlteracoesUserBtn = document.getElementById(
+    "guardarAlteracoesUserBtn"
+  );
   guardarAlteracoesUserBtn.addEventListener("click", saveUserInfo);
 });
 
@@ -22,8 +24,28 @@ async function carregarAsideUser() {
     .then((response) => response.text())
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
+      addAdministratorOptions();
       inicializarBotoesAsideUser();
     });
+}
+
+async function addAdministratorOptions() {
+  const loggedUser = await fetchRequest("/user/user", "GET");
+
+  if (loggedUser.admin) {
+    const asideMenu = document.getElementById("aside-menu-gestao-pessoal");
+    const myAdminOptionsBtn = document.createElement("input");
+    myAdminOptionsBtn.type = "button";
+    myAdminOptionsBtn.id = "myAdminBtn";
+    myAdminOptionsBtn.value = "Página de Administrador";
+
+    const form = asideMenu.querySelector("form");
+    if (form) {
+      form.appendChild(myAdminOptionsBtn);
+    } else {
+      console.error("Form not found in the aside menu!");
+    }
+  }
 }
 
 function inicializarBotoesAsideUser() {
@@ -44,6 +66,14 @@ function inicializarBotoesAsideUser() {
     document.getElementById("produtos").style.display = "none";
     showSection("informacoes");
   });
+
+  if (document.getElementById("myAdminBtn")) {
+    const myAdminBtn = document.getElementById("myAdminBtn");
+    myAdminBtn.addEventListener("click", () => {
+      window.location.href = "../html/admin.html";
+    });
+  }
+  
 }
 
 // User info functionality
@@ -107,10 +137,13 @@ function toggleEditForm() {
 
 // Função para os productos do backend e exibi-los na página de utilizador
 async function getUserProducts(username) {
-  const userActiveProducts = await fetchRequest(`/products/active/${username}`, 'GET')
+  const userActiveProducts = await fetchRequest(
+    `/products/active/${username}`,
+    "GET"
+  );
   userActiveProducts.forEach((product) => {
     displayProduct(product, product.id);
-});
+  });
 }
 
 // Função para exibir os produtos na página
@@ -132,8 +165,6 @@ function displayProduct(product, index) {
   // Insere o produto no container
   gridContainer.insertAdjacentHTML("beforeend", productHTML);
 }
-
-
 
 function showSection(sectionId) {
   // Hide all sections
@@ -159,7 +190,6 @@ function showSection(sectionId) {
 
   // Load content if needed
   if (sectionId === "avaliacoes") loadUserReviews();
-
 }
 
 // Função para guardar as alterações das informações do utilizador
@@ -200,10 +230,14 @@ function saveUserInfo(event) {
 //função alterar no backend
 async function updateUser(updatedUserInformation) {
   console.log(updatedUserInformation);
-  const response = await fetchRequest('/user/update', 'PUT', updatedUserInformation);
+  const response = await fetchRequest(
+    "/user/update",
+    "PUT",
+    updatedUserInformation
+  );
   alert("Informações atualizadas");
   window.location.reload();
-  }
+}
 
 async function loadUserReviews() {
   const container = document.getElementById("user-reviews-container");
