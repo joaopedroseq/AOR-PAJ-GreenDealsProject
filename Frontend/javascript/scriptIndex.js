@@ -36,7 +36,7 @@ function displayProduct(product, index) {
 }
 
 async function getAvailableProducts() {
-  const endpoint = "/products/active";
+  const endpoint = "/products/available";
 
   try {
     const products = await fetchRequest(endpoint, "GET");

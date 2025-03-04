@@ -80,4 +80,18 @@ public class ProductService {
             }
         }
     }
+    @GET
+    @Path("/available")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAvailableProducts() {
+        Set<ProductDto> produtos = userbean.getAvailableProducts();
+        if (produtos != null) {
+            return Response.status(200).entity(produtos).build();
+        } else {
+            return Response.status(400).entity("Error getting available products").build();
+        }
+    }
+
+
+
 }
