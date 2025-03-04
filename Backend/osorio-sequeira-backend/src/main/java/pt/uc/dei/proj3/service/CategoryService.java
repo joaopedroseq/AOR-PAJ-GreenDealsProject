@@ -67,15 +67,50 @@ public class CategoryService {
         }
     }
 
+    @DELETE
+    @Path("/delete")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
+        if (!userbean.checkIfTokenValid(token)) {
+            logger.error("Invalid token(null) - deleting category - {}", categoryDto.getName());
+            return Response.status(401).entity("Invalid token").build();
+        } else {
+            UserDto user = userbean.verifyToken(token);
+            if (user == null) {
+                logger.error("Invalid token when trying to delete category {}", categoryDto.getName());
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                if (!user.getAdmin()) {
+                    logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), categoryDto.getName());
+                    return Response.status(403).entity("User does not have admin permission to delete categories").build();
+                } else {
+                    categoryDto.setName(categoryDto.getName().toLowerCase().trim());
+                    if (!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
+                        logger.info("User {} tried to delete category {} non-existant", categoryDto.getName(), user.getUsername());
+                        return Response.status(404).entity("Category " + categoryDto.getName() + " doesn't exist").build();
+                    } else {
+                        if (categoryBean.deleteCategory(categoryDto)) {
+                            logger.info("Deleted category - {} - by {}", categoryDto.getName(), user.getUsername());
+                            return Response.status(200).entity("Deleted category " + categoryDto.getName()).build();
+                        } else {
+                            logger.error("Failed to delete {} by {}", categoryDto.getName(), user.getUsername());
+                            return Response.status(404).entity("Failed to delete " + categoryDto.getName()).build();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCategories() {
         Set<CategoryDto> categories = categoryBean.getAllCategories();
-        if(categories != null) {
+        if (categories != null) {
             logger.info(" {} categories found", categories.size());
             return Response.status(200).entity(categories).build();
-        }else{
+        } else {
             logger.error("Error getting categories");
             return Response.status(400).entity("Error getting categories").build();
         }

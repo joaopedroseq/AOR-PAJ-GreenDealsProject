@@ -2,6 +2,7 @@ package pt.uc.dei.proj3.dao;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import pt.uc.dei.proj3.entity.CategoryEntity;
 import pt.uc.dei.proj3.entity.ProductEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,6 +100,15 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    public void setAllProductsCategoryToEmpty(CategoryEntity empty, CategoryEntity categoryEntity){
+        try{
+            em.createNamedQuery("Product.setAllProductsCategoryToEmpty").setParameter("empty", empty).setParameter("category", categoryEntity).executeUpdate();
+        }
+        catch(NoResultException e){
+            logger.error("Error setting all products category to empty in ProductDao.setAllProductsCategoryToEmpty");
         }
     }
 

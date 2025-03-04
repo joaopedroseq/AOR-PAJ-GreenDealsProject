@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.deleteProduct", query = "DELETE FROM ProductEntity WHERE id = :id AND excluded = true")
 
+@NamedQuery(name = "Product.setAllProductsCategoryToEmpty", query = "UPDATE ProductEntity SET category = :empty WHERE category = :category")
+
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

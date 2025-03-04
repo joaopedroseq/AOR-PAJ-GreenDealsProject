@@ -40,5 +40,14 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
         }
     }
 
+    public void deleteCategory(CategoryEntity category) {
+        try {
+            em.createNamedQuery("Category.deleteCategory").setParameter("nome", category.getNome()).executeUpdate();
+        }
+        catch (Exception e) {
+            logger.error("Error in deleting category {} in CategoryDao.deleteCategory", category.getNome());
+        }
+    }
+
 
 }

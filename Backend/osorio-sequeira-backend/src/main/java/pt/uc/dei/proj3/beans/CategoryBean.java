@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj3.dao.CategoryDao;
+import pt.uc.dei.proj3.dao.ProductDao;
 import pt.uc.dei.proj3.dto.CategoryDto;
 import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.entity.CategoryEntity;
@@ -26,11 +27,16 @@ public class CategoryBean implements Serializable {
     @Inject
     UserBean userBean;
 
+    @Inject
+    ProductDao productDao;
+
     @EJB
     CategoryDao categoryDao;
 
     public CategoryBean() {
     }
+
+
 
     public boolean registerNewCategory(CategoryDto category) {
         category.setName(category.getName().toLowerCase());
@@ -43,7 +49,20 @@ public class CategoryBean implements Serializable {
         }
     }
 
-    private boolean checkIfCategoryAlreadyExists(CategoryDto category) {
+    public boolean deleteCategory(CategoryDto category) {
+        try {
+            CategoryEntity empty = categoryDao.findCategoryByName("empty");
+            CategoryEntity categoryEntity = convertCategoryDtoToCategoryEntity(category);
+            productDao.setAllProductsCategoryToEmpty(empty, categoryEntity);
+            categoryDao.deleteCategory(categoryEntity);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error deleting category {} in CategoryBean.deleteCategory", category.getName());
+            return false;
+        }
+    }
+
+    public boolean checkIfCategoryAlreadyExists(CategoryDto category) {
         List<CategoryEntity> categoryEntities = categoryDao.getAllCategories();
         for(CategoryEntity categoryEntity : categoryEntities) {
             if(categoryEntity.getNome().equals(category.getName())){
@@ -51,7 +70,6 @@ public class CategoryBean implements Serializable {
             }
         }
         return false;
-
     }
 
 

@@ -15,6 +15,9 @@ import java.util.List;
 // to get a category by name
 @NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
 
+// to delete a category by name
+@NamedQuery(name = "Category.deleteCategory", query = "DELETE FROM CategoryEntity c WHERE c.nome = :nome")
+
 public class CategoryEntity implements Serializable {
     @Id
     @Column(name="nome", nullable=false, unique = true, updatable = false)
