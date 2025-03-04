@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   await carregarAsideUser();
   await carregarFooter();
   await loadUserInfo(userInfo);
-  await getUserProducts(userInfo);
+  await getUserProducts(userInfo.username);
   //botao editar informaçoes
   const editFormButton = document.getElementById("toggleEditForm");
   editFormButton.addEventListener("click", toggleEditForm);
@@ -106,9 +106,9 @@ function toggleEditForm() {
 }
 
 // Função para os productos do backend e exibi-los na página de utilizador
-async function getUserProducts(userInfo) {
-  const userProducts = userInfo.products;
-  userProducts.forEach((product) => {
+async function getUserProducts(username) {
+  const userActiveProducts = await fetchRequest(`/active/${username}`, 'GET')
+  userActiveProducts.forEach((product) => {
     displayProduct(product, product.id);
 });
 }
