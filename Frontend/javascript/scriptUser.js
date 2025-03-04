@@ -1,6 +1,6 @@
 import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest, baseUrl } from "./funcoesGerais.js";
+import { fetchRequest } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const userInfo = await fetchRequest("/user/user", "GET");
@@ -36,12 +36,15 @@ async function addAdministratorOptions() {
     const asideMenu = document.getElementById("aside-menu-gestao-pessoal");
     const myAdminOptionsBtn = document.createElement("input");
     myAdminOptionsBtn.type = "button";
-    myAdminOptionsBtn.id = "myAdminBtn";
+    myAdminOptionsBtn.id = "myAdminOptionsBtn";
     myAdminOptionsBtn.value = "Página de Administrador";
 
     const form = asideMenu.querySelector("form");
     if (form) {
       form.appendChild(myAdminOptionsBtn);
+      myAdminOptionsBtn.addEventListener("click", () => {
+        window.location.href = "admin.html";
+      });
     } else {
       console.error("Form not found in the aside menu!");
     }
@@ -67,13 +70,6 @@ function inicializarBotoesAsideUser() {
     showSection("informacoes");
   });
 
-  if (document.getElementById("myAdminBtn")) {
-    const myAdminBtn = document.getElementById("myAdminBtn");
-    myAdminBtn.addEventListener("click", () => {
-      window.location.href = "../html/admin.html";
-    });
-  }
-  
 }
 
 // User info functionality
