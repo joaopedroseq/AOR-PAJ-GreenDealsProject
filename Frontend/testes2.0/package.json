@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-jsdom"
+  },
+  "devDependencies": {
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}

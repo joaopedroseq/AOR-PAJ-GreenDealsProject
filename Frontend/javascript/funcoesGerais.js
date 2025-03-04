@@ -1,6 +1,6 @@
-export const baseUrl = "http://localhost:8080/osorio-sequeira-proj3/rest";
 
 export async function fetchRequest(endpoint, requestType, body = null) {
+  const baseUrl = "http://localhost:8080/osorio-sequeira-proj3/rest";
   const url = `${baseUrl}${endpoint}`;
   const token = sessionStorage.getItem("token");
   let headers = {};

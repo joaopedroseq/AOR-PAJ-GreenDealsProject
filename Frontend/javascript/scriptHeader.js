@@ -170,7 +170,7 @@ export function openUserArea() {
 }
 
 export function openAddProductModal() {
-  if (sessionStorage.getItem("logged") === "false") {
+  if (!sessionStorage.getItem("token")) {
     alert("Tem que estar Logged in para vender um Produto!");
   } else {
     var modalAddProduct = document.getElementById("modal-addProduct");
@@ -216,7 +216,6 @@ export async function addProductFromForm() {
   const urlImage = document.getElementById("add-imagem").value;
   const response = await fetchRequest("/user/user", "GET");
   const seller = response.username;
- 
 
   // Validações dos campos do formulário
   if (name.trim() === "") {
