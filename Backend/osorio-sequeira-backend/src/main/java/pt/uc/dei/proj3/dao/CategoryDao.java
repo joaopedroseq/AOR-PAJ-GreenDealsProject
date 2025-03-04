@@ -23,7 +23,7 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
 
     public List<CategoryEntity> getAllCategories() {
         try {
-            return (List<CategoryEntity>) em.createNamedQuery("Category.getAllCategories").getResultList();
+            return (List<CategoryEntity>) em.createNamedQuery("Category.getAllCategories").setParameter("empty", "empty").getResultList();
 
         } catch (NoResultException e) {
             return null;

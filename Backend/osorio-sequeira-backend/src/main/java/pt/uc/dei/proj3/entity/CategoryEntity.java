@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name="category")
 
 //to get all categories
-@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c")
+@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c WHERE c.nome != :empty")
 
 // to get a category by name
 @NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
