@@ -1,5 +1,6 @@
 import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
+import { fetchRequest } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
@@ -23,91 +24,66 @@ async function carregarAsideNormal() {
 
 async function getProductInformation() {
   const productId = new URLSearchParams(window.location.search).get("index");
-  const getProductInformationUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/products/" +
-    productId;
-  await fetch(getProductInformationUrl, {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((response) => {
-      console.log("Status da resposta:", response.status);
-      return response
-        .text()
-        .then((text) => ({ status: response.status, text: text }));
-    })
-    .then((product) => {
-      if (product) {
-        product = JSON.parse(product.text);
-        // Pega a data original do produto
-        const dataCompleta = new Date(product.date);
+  const endpoint = `/user/products/${productId}`;
 
-        // Formatar a data no formato 'dd/mm/aaaa'
-        /*padStart utilizado para preencher uma string até que ela tenha um comprimento
-      especificado, O comprimento final da string depois que os caracteres forem adicionados*/
+  try {
+    const product = await fetchRequest(endpoint, "GET");
 
-        const dia = dataCompleta.getDate().toString().padStart(2, "0"); // Adiciona o zero à esquerda se necessário
-        const mes = (dataCompleta.getMonth() + 1).toString().padStart(2, "0"); // Meses começam do 0, então soma-se 1
-        const ano = dataCompleta.getFullYear(); //p
+    if (product) {
+      // Formatar a data no formato 'dd/mm/aaaa'
+      const dia = `0${product.date[2]}`.slice(-2); // Adiciona o zero à esquerda e pega os últimos 2 caracteres
+      const mes = `0${product.date[1]}`.slice(-2); // Meses começam do 0, então soma-se 1
+      const ano = `${product.date[0]}`; // Ano já está completo
 
-        // Formatar a hora no formato 'hh:mm'
-        const horas = dataCompleta.getHours().toString().padStart(2, "0");
-        const minutos = dataCompleta.getMinutes().toString().padStart(2, "0");
+      // Combinar data e hora
+      const dataFormatada = `${dia}/${mes}/${ano}`;
 
-        // Combinar data e hora
-        const dataFormatada = `${dia}/${mes}/${ano} ${horas}:${minutos}`;
+      // Atualizar os dados do produto na página
+      document.getElementById(
+        "product-name"
+      ).innerHTML = `<strong>Nome do Produto:</strong> ${product.name}`;
+      document.getElementById(
+        "product-description"
+      ).innerHTML = `<strong>Descrição:</strong> ${product.description}`;
+      document.getElementById(
+        "product-price"
+      ).innerHTML = `<strong>Preço:</strong> €${product.price}`;
+      document.getElementById(
+        "product-category"
+      ).innerHTML = `<strong>Categoria:</strong> ${product.category}`;
+      document.getElementById(
+        "product-seller"
+      ).innerHTML = `<strong>Nome do Anunciante:</strong> ${product.seller}`;
+      document.getElementById(
+        "product-location"
+      ).innerHTML = `<strong>Localização:</strong> ${product.location}`;
+      document
+        .getElementById("product-image")
+        .setAttribute("src", product.urlImage);
+      document.getElementById(
+        "product-date"
+      ).innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
 
-        // Atualizar os dados do produto na página
-        document.getElementById(
-          "product-name"
-        ).innerHTML = `<strong>Nome do Produto:</strong> ${product.name}`;
-        document.getElementById(
-          "product-description"
-        ).innerHTML = `<strong>Descrição:</strong> ${product.description}`;
-        document.getElementById(
-          "product-price"
-        ).innerHTML = `<strong>Preço:</strong> €${product.price}`;
-        document.getElementById(
-          "product-category"
-        ).innerHTML = `<strong>Categoria:</strong> ${product.category}`;
-        document.getElementById(
-          "product-seller"
-        ).innerHTML = `<strong>Nome do Anunciante:</strong> ${product.seller}`;
-        document.getElementById(
-          "product-location"
-        ).innerHTML = `<strong>Localização:</strong> ${product.location}`;
-        document
-          .getElementById("product-image")
-          .setAttribute("src", product.urlImage);
-        document.getElementById(
-          "product-date"
-        ).innerHTML = `<strong>Data de Publicação:</strong> ${dataFormatada}`;
-
-        adicionarBotoesEditarApagar(product);
-        checkAndDisplayBuyButton(product);
-      } else {
-        console.log("Produto vazio");
-      }
-    })
-    .catch((error) => {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
-    });
+      adicionarBotoesEditarApagar(product);
+      checkAndDisplayBuyButton(product);
+    } else {
+      console.log("Produto vazio");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Ocorreu um erro: " + error.message);
+  }
 }
 
-function adicionarBotoesEditarApagar(product) {
-  if (sessionStorage.getItem("logged") == "true") {
-    const storedUsername = sessionStorage
-      .getItem("username")
-      .trim()
-      .toLowerCase();
-    if (sessionStorage.getItem("logged") == "true") {
-      if (product && storedUsername == product.seller.trim().toLowerCase()) {
-        inicializarBotoesEditarApagarProduto(product);
-      }
-    } else {
-      return;
+async function adicionarBotoesEditarApagar(product) {
+  if (sessionStorage.getItem("token")) {
+    const response = await fetchRequest("/user/user", "GET");
+    const usernameLoggedUser = response.username;
+    if (usernameLoggedUser == product.seller.trim().toLowerCase()) {
+      inicializarBotoesEditarApagarProduto(product);
     }
+  } else {
+    return;
   }
 }
 
@@ -122,51 +98,36 @@ function inicializarBotoesEditarApagarProduto(product) {
   });
 }
 
-function checkAndDisplayBuyButton(product) {
-  const storedUsername = sessionStorage.getItem("username").trim().toLowerCase();
-  const buyButton = document.getElementById("buy-button");
-  if (product && storedUsername !== product.seller.trim().toLowerCase()) {
-    buyButton.style.display = "block";
-    buyButton.addEventListener("click", confirmAndBuyProduct);
-  } else {
-    buyButton.style.display = "none";
-  }
-}
-
-function confirmAndBuyProduct(productId, storedUsername, password) {
-  if (confirm("Tem certeza que deseja comprar este produto?")) {
-    buyProduct(productId, storedUsername, password);
-  }
-}
-
-function buyProduct(productId, storedUsername, password) {
-  const buyProductHeaders = new Headers({
-    "Content-Type": "application/json",
-    password: password,
-    username: storedUsername,
-  });
-
-  fetch(
-    `http://localhost:8080/osorio-sequeira-proj3/rest/user/products/buy/${productId}`,
-    {
-      method: "POST",
-      headers: buyProductHeaders,
+async function checkAndDisplayBuyButton(product) {
+  if (sessionStorage.getItem("token")) {
+    const response = await fetchRequest("/user/user", "GET");
+    const usernameLoggedUser = response.username;
+    const buyButton = document.getElementById("buy-button");
+    if (usernameLoggedUser !== product.seller.trim().toLowerCase()) {
+      buyButton.style.display = "block";
+      buyButton.addEventListener("click", confirmAndBuyProduct);
+    } else {
+      buyButton.style.display = "none";
     }
-  )
-    .then((response) => {
-      if (response.ok) {
-        return response.text();
-      }
-      throw new Error("Falha na requisição");
-    })
-    .then((data) => {
-      alert(data); // Mostra a mensagem de sucesso
-      window.location.href = "index.html";
-    })
-    .catch((error) => {
-      console.error("Erro:", error);
-      alert("Falha ao comprar o produto");
-    });
+  }
+}
+
+function confirmAndBuyProduct() {
+  const productId = new URLSearchParams(window.location.search).get("index");
+  if (confirm("Tem certeza que deseja comprar este produto?")) {
+    buyProduct(productId);
+  }
+}
+
+async function buyProduct(productId) {
+  const endpoint = `/user/products/buy/${productId}`;
+  try {
+    const response = await fetchRequest(endpoint, "PATCH");
+    window.location.href = "index.html";
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Falha ao comprar o produto");
+  }
 }
 
 // Função para excluir um produto

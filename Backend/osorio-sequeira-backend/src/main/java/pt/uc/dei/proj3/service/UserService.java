@@ -420,9 +420,6 @@ public class UserService {
             }else if(product.isExcluded() && !user.getAdmin()) {
                 logger.error("Permission denied - {} getting excluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied").build();
-            } else if (!user.getAdmin() && !product.getSeller().equals(user.getUsername())) {
-                logger.error("Permission denied - {} getting product with id: {}", user.getUsername(), pathProductId);
-                return Response.status(403).entity("Permission denied").build();
             } else {
                 logger.info("Product with id {} found by {}", pathProductId, user.getUsername());
                 return Response.status(200).entity(product).build();
@@ -433,7 +430,6 @@ public class UserService {
     //buying product
     @PATCH
     @Path("/products/buy/{ProductId}")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {

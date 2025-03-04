@@ -1,6 +1,6 @@
 import { carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest ,baseUrl} from './funcoesGerais.js';
+import { fetchRequest } from './funcoesGerais.js';
 
 
 document.addEventListener("DOMContentLoaded", async function () {

@@ -27,6 +27,7 @@ public class ProductService {
     @Inject
     UserBean userbean;
 
+    //Active products - Non excluded products, all states
     @GET
     @Path("/active")
     @Produces(MediaType.APPLICATION_JSON)
@@ -39,6 +40,7 @@ public class ProductService {
         }
     }
 
+    //All products - Excluded products, all states
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,6 +62,7 @@ public class ProductService {
         }
     }
 
+    //Edited products - Excluded products, all states
     @GET
     @Path("/edited")
     @Produces(MediaType.APPLICATION_JSON)
@@ -80,6 +83,8 @@ public class ProductService {
             }
         }
     }
+
+    //Available products - Non excluded products, state 2 (DISPONIVEL)
     @GET
     @Path("/available")
     @Produces(MediaType.APPLICATION_JSON)
