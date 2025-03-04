@@ -107,7 +107,7 @@ function toggleEditForm() {
 
 // Função para os productos do backend e exibi-los na página de utilizador
 async function getUserProducts(username) {
-  const userActiveProducts = await fetchRequest(`/active/${username}`, 'GET')
+  const userActiveProducts = await fetchRequest(`/products/active/${username}`, 'GET')
   userActiveProducts.forEach((product) => {
     displayProduct(product, product.id);
 });

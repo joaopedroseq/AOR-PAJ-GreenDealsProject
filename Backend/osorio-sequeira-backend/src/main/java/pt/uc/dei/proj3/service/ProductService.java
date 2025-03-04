@@ -46,7 +46,7 @@ public class ProductService {
         if (user == null) {
             logger.error("Invalid token - Getting active products by user");
             return Response.status(401).entity("Invalid token").build();
-        } else if(!user.getUsername().equals(pathUsername) || !user.getAdmin()) {
+        } else if(!user.getUsername().equals(pathUsername) && !user.getAdmin()) {
             logger.error("Permision denied - {} getting active products of {}",user.getUsername(), pathUsername);
             return Response.status(403).entity("Permission denied").build();
         }else{
