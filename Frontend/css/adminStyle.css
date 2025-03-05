@@ -299,23 +299,7 @@ aside {
   display: block;
 }
 
-/* Personal info styles */
-.user-info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 20px 0;
-}
-
-.user-info-table td {
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-}
-
-.edit-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+/* Gestão de utilizadores */
 
 .user-info-container {
   display: flex;
@@ -365,18 +349,13 @@ aside {
     color: #666;
 }
 
-.user-info img{
+.user-info img {
   height: 50px;
   cursor: pointer;
+  margin: 0 5px;
 }
 
-
-
-.user-info img:first-of-type {
-  margin-right: 10px; /* Adjust the value as needed */
-}
-
-/*Category Container*/
+/*Gestão de categorias*/
 
 .category-container {
   display: flex;
