@@ -1,31 +1,12 @@
 import { carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from "./funcoesGerais.js";
+import { fetchRequest, checkIfAdmin } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
   await carregarAsideNormal();
   await carregarFooter();
   await getAvailableProducts();
-  if (sessionStorage.getItem("token")) {
-    try {
-      const userLogged = await fetchRequest("/user/user", "GET");
-      if (userLogged.admin === true) {
-        const asideMenu = document.getElementById("aside-menu");
-        const listCategories = asideMenu.querySelector("ul");
-        const editedProductsHTML = `
-            <h3 class="check-edited-products" id="check-edited-products">Ver produtos editados</h3>
-            `;
-        listCategories.insertAdjacentHTML("afterend", editedProductsHTML);
-        document
-          .getElementById("check-edited-products")
-          .addEventListener("click", showEditedProducts);
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
-    }
-  }
 });
 
 async function carregarAsideNormal() {
@@ -34,9 +15,10 @@ async function carregarAsideNormal() {
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
       await carregarCategorias();
-      //setupCategoryFiltering();
-      //todo if user is admin, load users
-      await carregarUsers();
+      if ( await checkIfAdmin()) {
+        await carregarUsers();
+        await carregarEditedProductsBtn();
+      }
     });
 }
 
@@ -166,6 +148,18 @@ async function carregarUsers() {
   }
 }
 
+async function carregarEditedProductsBtn() {
+  const asideMenu = document.getElementById("aside-menu");
+  const listCategories = asideMenu.querySelector("ul");
+  const editedProductsHTML = `
+      <h3 class="check-edited-products" id="check-edited-products">Ver produtos editados</h3>
+      `;
+  listCategories.insertAdjacentHTML("afterend", editedProductsHTML);
+  document
+    .getElementById("check-edited-products")
+    .addEventListener("click", showEditedProducts);
+}
+
 async function loadProductsByCategory(event) {
   const selectedCategory = event.target.name.toLowerCase();
   if (selectedCategory === "todos") {
@@ -195,7 +189,7 @@ async function loadProductsByCategory(event) {
 
 async function loadProductsByUser(event) {
   const selectedUser = event.target.name;
-  const endpoint = `/products/user/${selectedUser}`;
+  const endpoint = `/products/all/${selectedUser}`;
   const products = await fetchRequest(endpoint, "GET");
   const gridContainer = document.getElementById("grid-container");
   gridContainer.innerHTML = "";

@@ -1,4 +1,3 @@
-
 export async function fetchRequest(endpoint, requestType, body = null) {
   const baseUrl = "http://localhost:8080/osorio-sequeira-proj3/rest";
   const url = `${baseUrl}${endpoint}`;
@@ -31,7 +30,10 @@ export async function fetchRequest(endpoint, requestType, body = null) {
       const data = await response.json();
       if (!response.ok) {
         // Throw an error with the JSON response
-        throw { status: response.status, message: data.message || response.statusText };
+        throw {
+          status: response.status,
+          message: data.message || response.statusText,
+        };
       }
       return data;
     } else {
@@ -44,10 +46,28 @@ export async function fetchRequest(endpoint, requestType, body = null) {
   }
 }
 
-
 export function redirectIfNotLogged() {
   if (!sessionStorage.getItem("token")) {
     alert("Para aceder a esta página, necessita de estar autenticado.");
     window.location.href = "index.html";
+  }
+}
+
+export async function checkIfAdmin() {
+  if (!sessionStorage.getItem("token")) {
+    return false;
+  } else {
+    console.log("checkIfAdmin");
+    try {
+      const userLogged = await fetchRequest("/user/user", "GET");
+      if (userLogged.admin === true) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("Erro:", error);
+      alert("Ocorreu um erro: " + error.message);
+    }
   }
 }
