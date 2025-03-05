@@ -8,6 +8,8 @@ node_modules
 /Backend/osorio-sequeira-backend/.mvn/*
 /Backend/osorio-sequeira-backend/src/main/resources/META-INF/persistence.xml
 /Backend/osorio-sequeira-backend/src/main/resources/META-INF/*
+/Backend/osorio-sequeira-backend/logging-proj3.log
+
 
 .vscode
 .vscode/*
