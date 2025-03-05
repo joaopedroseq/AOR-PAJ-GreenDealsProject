@@ -7,12 +7,17 @@ document.addEventListener("DOMContentLoaded", async function () {
   await carregarAsideNormal();
   await carregarFooter();
   await getAvailableProducts();
-  if(localStorage.getItem('token')){
+  if(sessionStorage.getItem('token')){
     try{
-          const userLogged = fetchRequest('/user/user', 'GET');
-          if(userLogged.admin){
-            document.getElementById("categoryList").appendChild
-
+          const userLogged = await fetchRequest('/user/user', 'GET');
+          if(userLogged.admin === true){
+            const asideMenu = document.getElementById("aside-menu");
+            const listCategories = asideMenu.querySelector("ul");
+            const editedProductsHTML = `
+            <h3 class="check-edited-products" id="check-edited-products">Ver produtos editados</h3>
+            `
+            listCategories.insertAdjacentHTML("afterend", editedProductsHTML);
+            document.getElementById("check-edited-products").addEventListener("click", showEditedProducts);
           }
     }
     catch(error){
@@ -65,10 +70,15 @@ async function getAvailableProducts() {
   }
 }
 
-async function getEditedProducts(){
+async function showEditedProducts(){
+  const productsGrid = document.getElementById("grid-container");
+  productsGrid.innerHTML = "";
   const editedProducts = await fetchRequest('/products/edited');
-  console.log(editedProducts);
-}
+  editedProducts.forEach((editedProduct) => {
+    const indexOfEditedProduct = editedProduct.id;
+    displayProduct(editedProduct, indexOfEditedProduct);
+  });
+ }
 
 
 function setupCategoryFiltering() {
@@ -76,7 +86,7 @@ function setupCategoryFiltering() {
   aside.addEventListener("click", displayByCategory);
 }
 
-/*
+
 function displayByCategory(event) {
   if (event.target.tagName === "LI") {
     const selectedCategory = event.target.name.toLowerCase();
@@ -94,7 +104,7 @@ function displayByCategory(event) {
     });
   }
 }
-*/
+
 
 async function carregarCategorias() {
   try {
