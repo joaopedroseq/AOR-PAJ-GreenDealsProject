@@ -118,6 +118,42 @@ public class UserService {
         }
     }
 
+    @GET
+    @Path("/{username}/userInformation")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInformationOfUser(@HeaderParam("token") String token, @PathParam("username") String userToGetInformation) {
+        if (userToGetInformation.trim().equals("")) {
+            logger.error("Invalid data - missing params - Getting another user information");
+            return Response.status(400).entity("Invalid data").build();
+        } else {
+            if (!userbean.checkIfTokenValid(token)) {
+                logger.error("Invalid token when trying to get user {} information", userToGetInformation);
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                UserDto user = userbean.verifyToken(token);
+                if (user == null) {
+                    logger.error("Invalid token when trying to get user {} information", userToGetInformation);
+                    return Response.status(401).entity("Invalid token").build();
+                } else {
+                    if (!user.getAdmin()) {
+                        logger.error("User {} tried to get user {} information without admin permissions", user.getUsername(), userToGetInformation);
+                        return Response.status(403).entity("User does not have admin permission to delete other users").build();
+                    } else {
+                        userToGetInformation = userToGetInformation.trim();
+                        if (!userbean.checkIfUserExists(userToGetInformation)) {
+                            logger.error("User {} does not exist", userToGetInformation);
+                            return Response.status(400).entity("Invalid data").build();
+                        } else {
+                            UserDto userDto = userbean.getUserInformation(userToGetInformation);
+                            logger.info("User {} got user {} information", user.getUsername(), userDto.getUsername());
+                            return Response.status(200).entity(userDto).build();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @PUT
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)

@@ -45,6 +45,51 @@
         </main>
     </div>
     </div>
+
+    <!-- Janela modal de registo -->
+    <div id="modal-checkUserProfile" class="modal-checkUserProfile">
+        <div class="modal-content-id">
+            <!-- Header do modal -->
+            <div class="modal-header-id" id="modal-header-id">
+                <p class="modal-header-id-title">Perfil de Utilizador</p>
+                <p class="close-checkUserProfile" id="close-checkUserProfile">&times;</p>
+            </div>
+            <!-- Body do modal -->
+            <div class="modal-body-id">
+                <form class="id-form" id="id-form">
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="nome">Primeiro Nome:</label>
+                        <input type="text" id="firstname" name="name" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="ultimoNome">Último Nome:</label>
+                        <input type="text" id="lastname" name="lastname" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="username">Username:</label>
+                        <input type="text" id="usernameText" name="username" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="phone">Número de Telefone:</label>
+                        <input type="text" id="phone" name="phone" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="photo">Fotografia de Perfil (URL):</label>
+                        <input type="url" id="photo" name="photo" readonly>
+                    </div>
+                    <div class="id-form-field" id="id-form-field">
+                        <label for="state">Estado:</label>
+                        <input type="text" id="state" name="state" readonly>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div id="footer-placeholder"></div>
 </body>
 <script type="module" src="../javascript/scriptHeader.js"></script>

@@ -97,6 +97,15 @@ public class UserBean implements Serializable {
         }
     }
 
+    public UserDto getUserInformation(String username) {
+        try {
+            return convertUserEntitytoUserDto(userDao.findUserByUsername(username));
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+    }
+
     public boolean checkIfTokenValid(String token) {
         return userDao.findIfTokenExists(token);
     }

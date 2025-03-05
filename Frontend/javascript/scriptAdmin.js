@@ -21,7 +21,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   //Método para adicionar eventListener aos butões de exluir e remover utilizadores
   // Event delegation for removing categories
   document.getElementById("user-info-container").addEventListener("click", function (event) {
-    console.log("Clicked element:", event.target);
+    if (event.target.classList.contains("user-photo")) {
+      const userName = event.target.getAttribute("data-username");
+      checkUserProfile(userName);
+    }
 
     if (event.target.classList.contains("deleteProductsUserBtn")) {
       const userName = event.target.getAttribute("data-username");
@@ -81,6 +84,12 @@ function inicializarBotoesAsideAdmin() {
     document.getElementById("produtos").style.display = "none";
     showSection("categorias");
   });  
+
+  //Botao para fechar o modal de registo utilizador
+  const closeCheckUserProfileBtn = document.getElementById("close-checkUserProfile");
+    if (closeCheckUserProfileBtn) {
+      closeCheckUserProfileBtn.addEventListener("click", closeUserProfile);
+    }
 }
 
 // Função para os productos do backend e exibi-los na página de utilizador
@@ -130,6 +139,24 @@ async function loadAllUsers() {
 
 }
 
+async function checkUserProfile(userToCheck){
+  const modalCheckUserProfile = document.getElementById("modal-checkUserProfile");
+  const user = await fetchRequest(`/user/${userToCheck}/userInformation`);
+  document.getElementById("firstname").value = user.firstName;
+  document.getElementById("lastname").value = user.lastName;
+  document.getElementById("usernameText").value = user.username;
+  document.getElementById("email").value = user.email;
+  document.getElementById("phone").value = user.phonenumber;
+  document.getElementById("photo").value = user.url;
+  if(user.excluded === true){
+    document.getElementById("state").value = "Excluído";
+  }
+  else {
+    document.getElementById("state").value = "Ativo";
+  }
+  modalCheckUserProfile.style.display = "flex";
+}
+
 //Função para colocar as informações dos utilizadores na secção users
 function displayUser(user){
   // Obtém o container dos produtos
@@ -145,10 +172,10 @@ function displayUser(user){
   // Cria o HTML do utilizador
   const userHTML = `
   <div class="user-card">
-    <img src="${user.url}" alt="Foto do Utilizador" class="user-photo">
+    <img src="${user.url}" alt="Foto do Utilizador" class="user-photo" data-username="${user.username}">
     ${user.excluded ? '<div class="excludedUser-overlay"></div>' : ''}
     <div class="user-info">
-        <p class="username">${user.username}</p>
+        <p class="username ${user.excluded ? 'excluded-username' : ''}">${user.username}
         <p class="name">${user.firstName} ${user.lastName}</p>
         <p class="email">${user.email}</p>
         <img src="../images/deleteProducts.png" alt="exclude user" class="deleteProductsUserBtn" data-numberOfProducts="${numberOfProducts}" data-username="${user.username}">
@@ -309,4 +336,17 @@ function showSection(sectionId) {
     });
     selectedSection.classList.add("active-section");
   }
+}
+
+
+//Abrir a janela modal de registo de novo utilizador
+function openRegistry() {
+  const modalUserProfile = document.getElementById("modal-register");
+  modalUserProfile.style.display = "flex";
+}
+
+//Função para fechar o modal window
+function closeUserProfile() {
+  const modalUserProfile = document.getElementById("modal-checkUserProfile");
+  modalUserProfile.style.display = "none";
 }
