@@ -5,6 +5,7 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @XmlRootElement
 public class ProductDto implements Serializable{
@@ -214,6 +215,24 @@ public class ProductDto implements Serializable{
                 ", state=" + state +
                 ", date=" + date +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Check if both references are the same object
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProductDto that = (ProductDto) o; // Cast o to ProductDto
+        return id == that.id &&
+                Double.compare(that.price, price) == 0 && //
+                // Objects.equals(seller, that.seller) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+             //   Objects.equals(category, that.category) &&
+                Objects.equals(location, that.location) &&
+                Objects.equals(urlImage, that.urlImage) &&
+                Objects.equals(state, that.state) &&
+                Objects.equals(date, that.date);
     }
 }
 

@@ -30,6 +30,10 @@ public class ProductBean {
     public ProductBean() {
     }
 
+    public ProductBean (ProductDao productDao) {
+        this.productDao = productDao;
+    }
+
     public ProductDto findProductById(int id) {
         try {
             ProductDto productDto = convertSingleProductEntitytoProductDto(productDao.getProductById(id));
