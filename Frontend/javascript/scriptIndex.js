@@ -1,12 +1,10 @@
 import { carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from './funcoesGerais.js';
-
+import { fetchRequest } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
   await carregarAsideNormal();
-  await carregarCategorias();
   await carregarFooter();
   await getAvailableProducts();
   if(localStorage.getItem('token')){
@@ -29,8 +27,10 @@ async function carregarAsideNormal() {
     .then((response) => response.text())
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
-      carregarCategorias();
+      await carregarCategorias();
       setupCategoryFiltering();
+      //todo if user is admin, load users
+      await carregarUsers();
     });
 }
 
@@ -73,9 +73,10 @@ async function getEditedProducts(){
 
 function setupCategoryFiltering() {
   const aside = document.querySelector("aside");
-  aside.addEventListener("click", displayByCategory); 
+  aside.addEventListener("click", displayByCategory);
 }
 
+/*
 function displayByCategory(event) {
   if (event.target.tagName === "LI") {
     const selectedCategory = event.target.name.toLowerCase();
@@ -85,7 +86,7 @@ function displayByCategory(event) {
 
     articles.forEach((article) => {
       const articleCategory = article.getAttribute("data-category");
-        console.log(articleCategory);
+      console.log(articleCategory);
       article.style.display =
         articleCategory === selectedCategory || selectedCategory === "todos"
           ? "block"
@@ -93,26 +94,73 @@ function displayByCategory(event) {
     });
   }
 }
+*/
 
 async function carregarCategorias() {
-    try {
-        const categorias = await fetchRequest("/category/all", "GET");
-        const asideMenu = document.getElementById("aside-menu");
-        const ul = asideMenu.querySelector("ul");
+  try {
+    const categorias = await fetchRequest("/category/all", "GET");
+    const asideMenu = document.getElementById("aside-menu");
+    const ul = asideMenu.querySelector("ul");
 
-        ul.innerHTML = '<h3>Categorias</h3>';
-        const li = document.createElement('li');
-        li.name = 'todos';
-        li.textContent = 'Todos os Produtos';
-        ul.appendChild(li);
+    ul.innerHTML = "<h3>Categorias</h3>";
+    const li = document.createElement("li");
+    li.name = "todos";
+    li.textContent = "Todos os Produtos";
+    ul.appendChild(li);
 
-        categorias.forEach((categoria) => {
-            const li = document.createElement('li');
-            li.name = categoria.name; 
-            li.textContent = categoria.name;
-            ul.appendChild(li);
-        });
-    } catch (error) {
-        console.error('Failed to load categories:', error);
-    }
+    categorias.forEach((categoria) => {
+      const li = document.createElement("li");
+      li.name = categoria.name;
+      li.textContent = categoria.name;
+      ul.appendChild(li);
+    });
+    ul.id = "category-list";
+    ul.addEventListener("click", loadProductsByCategory);
+
+  } catch (error) {
+    console.error("Failed to load categories:", error);
+  }
+}
+
+async function carregarUsers() {
+  const endpoint = "/user/users";
+  try {
+    const users = await fetchRequest(endpoint, "GET");
+    console.log(users);
+    const asideMenu = document.getElementById("aside-menu");
+    const newUl = document.createElement("ul");
+    newUl.innerHTML = "<h3>Utilizadores</h3>";
+    asideMenu.appendChild(newUl);
+    users.forEach((user) => {
+      const li = document.createElement("li");
+      li.name = user.username;
+      li.textContent = user.username;
+      newUl.appendChild(li);
+    });
+    newUl.id = "user-list";
+
+    newUl.addEventListener("click", loadProductsByUser);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Ocorreu um erro: " + error.message);
+  }
+}
+
+// Function to handle category clicks
+function loadProductsByCategory(event) {
+  if (event.target.tagName === "LI") {
+    const selectedCategory = event.target.name.toLowerCase();
+    console.log("Category clicked:", selectedCategory);
+    // Add your logic to handle category clicks here
+  }
+}
+
+// Function to handle user clicks
+function loadProductsByUser(event) {
+  if (event.target.tagName === "LI") {
+    const selectedUser = event.target.name.toLowerCase();
+    console.log("User clicked:", selectedUser);
+    // Add your logic to handle user clicks here
+  }
 }
