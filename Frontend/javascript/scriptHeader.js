@@ -228,8 +228,10 @@ export async function addProductFromForm() {
     alert(
       "Preço inserido inválido. Apenas poderá escrever dígitos e sem quaisquer símbolos"
     );
+  } else if (category.trim() === "" || category === null) {
+    alert("A categoria do produto é de preenchimento obrigatório");
   } else if (location.trim() === "") {
-    alert("A sua morada é preenchimento obrigatório");
+    alert("A localização é de preenchimento obrigatório");
   } else if (urlImage.trim() === "") {
     alert(
       "Terá de colocar um URL válido da imagem do produto que pretende anunciar"
@@ -249,10 +251,9 @@ export async function addProductFromForm() {
       "Tem a certeza que pretende adicionar o produto " + name + "?"
     );
 
-    // Se o utilizador confirmar, guarda o produto no local storage
     if (confirm) {
       try {
-        const result = await addProduct(seller, "POST", product);
+        const result = await addProduct(seller, product);
         console.log("Produto adicionado com sucesso:", result);
         var modalAddProduct = document.getElementById("modal-addProduct");
         modalAddProduct.style.display = "none";
@@ -277,7 +278,7 @@ export function checkIfNumeric(string) {
 
 export async function addProduct(seller, product) {
   const endpoint = `/user/${seller}/add`;
-
+  console.log(product);
   try {
     const response = await fetchRequest(endpoint, "POST", product);
     alert(
