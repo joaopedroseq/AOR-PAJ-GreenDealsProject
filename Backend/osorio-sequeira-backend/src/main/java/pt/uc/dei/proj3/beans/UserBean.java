@@ -338,7 +338,7 @@ public class UserBean implements Serializable {
             Set<ProductEntity> productSet = new HashSet<>(products);
             return convertGroupProductEntityToGroupProductDto(productSet);
         } catch (Exception e) {
-            logger.error("Error while getting active products");
+            logger.error("Error while getting products by user");
             logger.error(e);
             return null;
         }

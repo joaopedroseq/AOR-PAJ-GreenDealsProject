@@ -6,11 +6,14 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pt.uc.dei.proj3.beans.CategoryBean;
 import pt.uc.dei.proj3.beans.ProductBean;
 import pt.uc.dei.proj3.beans.UserBean;
+import pt.uc.dei.proj3.dto.CategoryDto;
 import pt.uc.dei.proj3.dto.ProductDto;
 import pt.uc.dei.proj3.dto.UserDto;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -23,6 +26,9 @@ public class ProductService {
 
     @Inject
     UserBean userbean;
+
+    @Inject
+    CategoryBean categoryBean;
 
     //Active products - Non excluded products, all states
     @GET
@@ -116,6 +122,29 @@ public class ProductService {
         }
     }
 
-
+    @GET
+    @Path("/{category}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getProductByCategory(@HeaderParam("token") String token, @PathParam("category") String category) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - Getting product by category");
+            return Response.status(401).entity("Invalid token").build();
+        } else if(!user.getAdmin()) {
+            logger.error("Permision denied - {} getting product by category {} ",user.getUsername(),category);
+            return Response.status(403).entity("Permission denied").build();
+        } else {
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setName(category);
+            if(!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
+                logger.error("{} getting products by category {} that doesn't exist", user.getUsername(), category);
+                return Response.status(404).entity("Error getting product by category").build();
+            }else{
+                Set<ProductDto> products = categoryBean.getProductsByCategory(category);
+                logger.info("{} getting products by category {} ", user.getUsername(), category);
+                return Response.status(200).entity(products).build();
+            }
+        }
+    }
 
 }

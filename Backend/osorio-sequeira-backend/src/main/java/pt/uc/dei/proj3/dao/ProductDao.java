@@ -129,6 +129,15 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
     }
 
+    public List<ProductEntity> getProductsByCategory(String category) {
+        try {
+            return (List<ProductEntity>) em.createNamedQuery("Product.getProductsByCategory").setParameter("category",category).getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     public void setAllProductsCategoryToEmpty(CategoryEntity empty, CategoryEntity categoryEntity){
         try{
             em.createNamedQuery("Product.setAllProductsCategoryToEmpty").setParameter("empty", empty).setParameter("category", categoryEntity).executeUpdate();

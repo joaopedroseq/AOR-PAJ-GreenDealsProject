@@ -9,6 +9,7 @@ import pt.uc.dei.proj3.dao.CategoryDao;
 import pt.uc.dei.proj3.dao.ProductDao;
 import pt.uc.dei.proj3.dto.CategoryDto;
 import pt.uc.dei.proj3.dto.ProductDto;
+import pt.uc.dei.proj3.dto.StateId;
 import pt.uc.dei.proj3.entity.CategoryEntity;
 import pt.uc.dei.proj3.entity.ProductEntity;
 
@@ -40,8 +41,6 @@ public class CategoryBean implements Serializable {
         this.productDao = productDao;
         this.categoryDao = categoryDao;
     }
-
-
 
     public boolean registerNewCategory(CategoryDto category) {
         category.setName(category.getName().toLowerCase());
@@ -77,6 +76,18 @@ public class CategoryBean implements Serializable {
         return false;
     }
 
+    public Set<ProductDto> getProductsByCategory(String category) {
+        try {
+            List<ProductEntity> products = productDao.getProductsByCategory(category);
+            Set<ProductEntity> productSet = new HashSet<>(products);
+            return convertGroupProductEntityToGroupProductDto(productSet);
+        } catch (Exception e) {
+            logger.error("Error while getting active products");
+            logger.error(e);
+            return null;
+        }
+    }
+
 
     //Converters
     private Set<CategoryDto> convertGroupCategoryEntityToGroupCategoryDto(Set<CategoryEntity> categories) {
@@ -99,6 +110,33 @@ public class CategoryBean implements Serializable {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setNome(categoryDto.getName());
         return categoryEntity;
+    }
+
+    public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
+        Set<ProductDto> productDtos = new HashSet<>();
+        for (ProductEntity productEntity : products) {
+            ProductDto produto = convertSingleProductEntitytoProductDto(productEntity);
+            productDtos.add(produto);
+        }
+        return productDtos;
+    }
+
+    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
+        ProductDto produto = new ProductDto();
+        produto.setId(productEntity.getId());
+        produto.setDescription(productEntity.getDescription());
+        produto.setPrice(productEntity.getPrice());
+        produto.setName(productEntity.getName());
+        produto.setDate(productEntity.getDate());
+        produto.setLocation(productEntity.getLocation());
+        StateId state = StateId.RASCUNHO;
+        produto.setState(state.stateIdFromInt(productEntity.getState()));
+        produto.setSeller(productEntity.getSeller().getUsername());
+        produto.setCategory(productEntity.getCategory().getNome());
+        produto.setUrlImage(productEntity.getUrlImage());
+        produto.setEdited(productEntity.getEditedDate());
+        produto.setExcluded(productEntity.getExcluded());
+        return produto;
     }
 
     public Set<CategoryDto> getAllCategories() {
