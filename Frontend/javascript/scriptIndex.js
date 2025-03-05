@@ -17,6 +17,7 @@ async function carregarAsideNormal() {
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
       carregarCategorias();
+      setupCategoryFiltering();
     });
 }
 
@@ -44,7 +45,7 @@ async function getAvailableProducts() {
       displayProduct(product, product.id);
     });
 
-    setupCategoryFiltering();
+    //setupCategoryFiltering();
   } catch (error) {
     console.error("Erro:", error);
     alert("Ocorreu um erro: " + error.message);
@@ -53,27 +54,27 @@ async function getAvailableProducts() {
 
 function setupCategoryFiltering() {
   const aside = document.querySelector("aside");
-  aside.addEventListener("click", function (event) {
-    if (event.target.tagName === "LI") {
-      const categories = aside.querySelectorAll("ul li");
-      categories.forEach((cat) => cat.classList.remove("categoria-ativa"));
-      event.target.classList.add("categoria-ativa");
+  aside.addEventListener("click", displayByCategory); 
+}
 
-      const selectedCategory = event.target.id.toLowerCase();
-      const articles = document.querySelectorAll(".grid-item");
+function displayByCategory(event) {
+  if (event.target.tagName === "LI") {
+    const selectedCategory = event.target.name.toLowerCase();
+    const articles = document.querySelectorAll(".grid-item");
 
-      articles.forEach((article) => {
-        const articleCategory = article
-          .querySelector(".text-overlay p:nth-child(3)")
-          .textContent.split(": ")[1]
-          .toLowerCase();
-        article.style.display =
-          articleCategory === selectedCategory || selectedCategory === "todos"
-            ? "block"
-            : "none";
-      });
-    }
-  });
+    console.log(selectedCategory);
+    articles.forEach((article) => {
+      const articleCategory = article
+        .querySelector(".text-overlay p:nth-child(3)")
+        .textContent.split(": ")[1]
+        .toLowerCase();
+        console.log(articleCategory);
+      article.style.display =
+        articleCategory === selectedCategory || selectedCategory === "todos"
+          ? "block"
+          : "none";
+    });
+  }
 }
 
 async function carregarCategorias() {

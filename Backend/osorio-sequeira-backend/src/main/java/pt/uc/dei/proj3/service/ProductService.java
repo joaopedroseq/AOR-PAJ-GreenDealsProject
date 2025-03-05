@@ -59,7 +59,6 @@ public class ProductService {
         }
     }
 
-
     //All products - Excluded products, all states
     @GET
     @Path("/all")
