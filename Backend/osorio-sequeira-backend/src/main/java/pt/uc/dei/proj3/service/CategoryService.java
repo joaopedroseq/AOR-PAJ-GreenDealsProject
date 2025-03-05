@@ -58,7 +58,7 @@ public class CategoryService {
                         return Response.status(409).entity("{\"message\": \"Conflict - category already exists\"}").type(MediaType.APPLICATION_JSON).build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
-                        return Response.status(200).entity("Added new category " + categoryDto.getName()).build();
+                        return Response.status(200).entity("{\"message\": \"Added new category " + categoryDto.getName() +  "\"}").type(MediaType.APPLICATION_JSON).build();
                     }
                 }
             }
