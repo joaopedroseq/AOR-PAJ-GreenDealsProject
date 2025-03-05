@@ -47,15 +47,15 @@ public class ProductService {
     @GET
     @Path("/active/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getActiveProductsByUser(@HeaderParam("token")String token, @PathParam("username") String pathUsername) {
+    public Response getActiveProductsByUser(@HeaderParam("token") String token, @PathParam("username") String pathUsername) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
             logger.error("Invalid token - Getting active products by user");
             return Response.status(401).entity("Invalid token").build();
-        } else if(!user.getUsername().equals(pathUsername) && !user.getAdmin()) {
-            logger.error("Permision denied - {} getting active products of {}",user.getUsername(), pathUsername);
+        } else if (!user.getUsername().equals(pathUsername) && !user.getAdmin()) {
+            logger.error("Permision denied - {} getting active products of {}", user.getUsername(), pathUsername);
             return Response.status(403).entity("Permission denied").build();
-        }else{
+        } else {
             Set<ProductDto> produtos = userbean.getActiveProductsByUser(pathUsername);
             if (produtos != null) {
                 return Response.status(200).entity(produtos).build();
@@ -74,10 +74,10 @@ public class ProductService {
         if (user == null) {
             logger.error("Invalid token - GettingExcludedProduct");
             return Response.status(401).entity("Invalid token").build();
-        } else if(!user.getAdmin()) {
-            logger.error("Permision denied - {} getting all products",user.getUsername());
+        } else if (!user.getAdmin()) {
+            logger.error("Permision denied - {} getting all products", user.getUsername());
             return Response.status(403).entity("Permission denied").build();
-        }else{
+        } else {
             Set<ProductDto> produtos = userbean.getAllProducts();
             if (produtos != null) {
                 return Response.status(200).entity(produtos).build();
@@ -96,10 +96,10 @@ public class ProductService {
         if (user == null) {
             logger.error("Invalid token - getting edited products");
             return Response.status(401).entity("Invalid token").build();
-        } else if(!user.getAdmin()) {
-            logger.error("Permision denied - {} getting edited products",user.getUsername());
+        } else if (!user.getAdmin()) {
+            logger.error("Permision denied - {} getting edited products", user.getUsername());
             return Response.status(403).entity("Permission denied").build();
-        }else{
+        } else {
             Set<ProductDto> produtos = userbean.getEditedProducts();
             if (produtos != null) {
                 return Response.status(200).entity(produtos).build();
@@ -130,21 +130,25 @@ public class ProductService {
         if (user == null) {
             logger.error("Invalid token - Getting product by category");
             return Response.status(401).entity("Invalid token").build();
-        } else if(!user.getAdmin()) {
-            logger.error("Permision denied - {} getting product by category {} ",user.getUsername(),category);
+        } else if (!user.getAdmin()) {
+            logger.error("Permision denied - {} getting product by category {} ", user.getUsername(), category);
             return Response.status(403).entity("Permission denied").build();
         } else {
             CategoryDto categoryDto = new CategoryDto();
             categoryDto.setName(category);
-            if(!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
+            if (!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
                 logger.error("{} getting products by category {} that doesn't exist", user.getUsername(), category);
-                return Response.status(404).entity("Error getting product by category").build();
-            }else{
+                return Response.status(404).entity("Error getting product by inexistent category").build();
+            } else {
                 Set<ProductDto> products = categoryBean.getProductsByCategory(category);
-                logger.info("{} getting products by category {} ", user.getUsername(), category);
-                return Response.status(200).entity(products).build();
+                if (products != null) {
+                    logger.info("{} getting products by category {} ", user.getUsername(), category);
+                    return Response.status(200).entity(products).build();
+                } else {
+                    logger.info("Error - {} getting products by category {} ", user.getUsername(), category);
+                    return Response.status(404).entity("Error getting product by category").build();
+                }
             }
         }
     }
-
 }
