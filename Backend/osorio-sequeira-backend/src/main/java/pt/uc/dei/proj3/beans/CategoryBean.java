@@ -21,6 +21,7 @@ import java.util.Set;
 @Stateless
 public class CategoryBean implements Serializable {
     private static final Logger logger = LogManager.getLogger(UserBean.class);
+
     @Inject
     ApplicationBean applicationBean;
 
@@ -34,6 +35,10 @@ public class CategoryBean implements Serializable {
     CategoryDao categoryDao;
 
     public CategoryBean() {
+    }
+    public CategoryBean(ProductDao productDao, CategoryDao categoryDao) {
+        this.productDao = productDao;
+        this.categoryDao = categoryDao;
     }
 
 

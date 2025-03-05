@@ -30,7 +30,6 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
         }
     }
 
-
     public CategoryEntity findCategoryByName(String categoryName) {
         try {
             return (CategoryEntity) em.createNamedQuery("Category.findCategoryByName").setParameter("nome", categoryName).getSingleResult();
