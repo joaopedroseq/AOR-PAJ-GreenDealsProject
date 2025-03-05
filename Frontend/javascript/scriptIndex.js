@@ -52,6 +52,7 @@ async function getAvailableProducts() {
   }
 }
 
+
 function setupCategoryFiltering() {
   const aside = document.querySelector("aside");
   aside.addEventListener("click", displayByCategory); 
