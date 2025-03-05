@@ -122,6 +122,7 @@ public class ProductService {
         }
     }
 
+    //All products by category - Excluded, all states
     @GET
     @Path("/{category}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -151,4 +152,31 @@ public class ProductService {
             }
         }
     }
+
+    @GET
+    @Path("/all/{username}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllproductsByUser(@HeaderParam("token") String token, @PathParam("username") String username) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - Getting product by category");
+            return Response.status(401).entity("Invalid token").build();
+        } else if (!user.getAdmin()) {
+            logger.error("Permision denied - {} getting all products of user {} ", user.getUsername(), username);
+            return Response.status(403).entity("Permission denied").build();
+        } else if (!userbean.checkIfUserExists(username)) {
+            logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), user);
+            return Response.status(404).entity("Error getting all products of inexistent user").build();
+        } else {
+            Set<ProductDto> products = userbean.getAllProductsByUser(username);
+            if (products != null) {
+                logger.info("{} getting all products of user {} ", user.getUsername(), username);
+                return Response.status(200).entity(products).build();
+            } else {
+                logger.info("Error - {} getting all products of user {} ", user.getUsername(), username);
+                return Response.status(404).entity("Error getting product by category").build();
+            }
+        }
+    }
 }
+

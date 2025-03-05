@@ -166,7 +166,6 @@ async function carregarUsers() {
   }
 }
 
-// Function to handle category clicks
 async function loadProductsByCategory(event) {
   const selectedCategory = event.target.name.toLowerCase();
   if (selectedCategory === "todos") {
@@ -194,11 +193,25 @@ async function loadProductsByCategory(event) {
   }
 }
 
-// Function to handle user clicks
-function loadProductsByUser(event) {
-  if (event.target.tagName === "LI") {
-    const selectedUser = event.target.name.toLowerCase();
-    console.log("User clicked:", selectedUser);
-    // Add your logic to handle user clicks here
+async function loadProductsByUser(event) {
+  const selectedUser = event.target.name;
+  const endpoint = `/products/user/${selectedUser}`;
+  const products = await fetchRequest(endpoint, "GET");
+  const gridContainer = document.getElementById("grid-container");
+  gridContainer.innerHTML = "";
+  products.forEach((product) => {
+    const productId = product.id;
+    displayProduct(product, productId);
+  });
+  if (products.length === 0) {
+    const noProductsHTML = `
+        <div class="grid-item no-products">
+          <div class="text-overlay">
+            <h2 style="background-color: transparent;">No Products Available</h2>
+            <p style="background-color: transparent;">Please check back later.</p>
+          </div>
+        </div>
+      `;
+    gridContainer.insertAdjacentHTML("beforeend", noProductsHTML);
   }
 }
