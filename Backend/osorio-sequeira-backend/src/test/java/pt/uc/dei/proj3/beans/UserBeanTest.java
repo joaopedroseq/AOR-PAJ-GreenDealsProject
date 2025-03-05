@@ -264,8 +264,6 @@ class UserBeanTest {
         verify(userDao, times(1)).findUserByToken(token);  // Verify that userDao.findUserByToken() was called
     }
 
-    //Erro ao tentar fazer mock de métod privado
-    /*
     @Test
     void testVerifyToken_Success() {
         // Arrange
@@ -276,17 +274,13 @@ class UserBeanTest {
         // Mock userDao to return a user for the provided token
         when(userDao.findUserByToken(token)).thenReturn(userEntity);
 
-        // Mock the conversion method
-        when(userBean.convertUserEntitytoUserDto(userEntity)).thenReturn(expectedUserDto);
-
         // Act
         UserDto result = userBean.verifyToken(token);
 
         // Assert
-        assertEquals(expectedUserDto, result);  // Ensure the converted UserDto is returned
+        assertEquals(expectedUserDto.getUsername(), result.getUsername());  // Ensure the converted UserDto is returned
         verify(userDao, times(1)).findUserByToken(token);  // Verify that userDao.findUserByToken() was called
     }
-*/
 
     @Test
     void testVerifyToken_UserNotFound() {

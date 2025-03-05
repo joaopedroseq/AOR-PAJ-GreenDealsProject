@@ -308,7 +308,6 @@ public class UserBean implements Serializable {
         }
     }
 
-
     public Set<ProductDto> getAllProducts() {
         try {
             List<ProductEntity> products = productDao.getAllProducts();

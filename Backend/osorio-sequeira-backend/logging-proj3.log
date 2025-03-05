@@ -56,3 +56,11 @@
 05/03/2025 14:22:27.791 [[31mERROR[m] UserBean.excludeProduct:234 - Error while excluding product 1
 05/03/2025 14:22:27.792 [[31mERROR[m] UserBean.excludeProduct:235 - java.lang.RuntimeException: Error
 05/03/2025 14:22:28.295 [[31mERROR[m] UserBean.getAllUsers:186 - Error in UserBean.getAllUsers - error Error
+05/03/2025 17:08:22.228 [[31mERROR[m] UserBean.deleteProduct:254 - Error while deleting product 1
+05/03/2025 17:08:22.257 [[31mERROR[m] UserBean.deleteProduct:255 - java.lang.RuntimeException: Error
+05/03/2025 17:08:22.779 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 17:08:22.862 [[31mERROR[m] UserBean.updateProduct:232 - Error updating product 1
+05/03/2025 17:08:22.862 [[31mERROR[m] UserBean.updateProduct:233 - java.lang.RuntimeException: Error
+05/03/2025 17:08:23.462 [[31mERROR[m] UserBean.excludeProduct:243 - Error while excluding product 1
+05/03/2025 17:08:23.463 [[31mERROR[m] UserBean.excludeProduct:244 - java.lang.RuntimeException: Error
+05/03/2025 17:08:24.224 [[31mERROR[m] UserBean.getAllUsers:195 - Error in UserBean.getAllUsers - error Error
