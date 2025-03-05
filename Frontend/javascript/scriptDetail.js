@@ -82,6 +82,12 @@ async function adicionarBotoesEditarApagar(product) {
     if (usernameLoggedUser == product.seller.trim().toLowerCase()) {
       inicializarBotoesEditarApagarProduto(product);
     }
+    if (response.admin === true) {
+      inicializarBotoesEditarApagarProduto(product);
+      const excludeProductBtn = document.getElementById("exclude-product-button");
+      excludeProductBtn.style.display = "inline-block";
+      excludeProductBtn.addEventListener("click", excludeProduct(product));
+    }
   } else {
     return;
   }
@@ -148,6 +154,13 @@ async function deleteProduct() {
       console.error("Erro:", error);
       alert("Falha ao eliminar o produto");
     }
+  }
+}
+
+async function excludeProduct(product){
+  const confirmExclude = confirm(`Pretende excluir o product ${product.name}`);
+  if(confirmExclude){
+    fetchRequest(`/user/${product.seller}/products/exclude`)
   }
 }
 

@@ -281,7 +281,7 @@ aside h3, aside ul {
 
 
 /* Estilo para os botões de Eliminar e Editar Produto no aside*/
-#edit-product, #delete-product, #buy-button {
+#edit-product, #delete-product, #buy-button, #exclude-product-button{
     background-color: var(--green); /* Cor verde */
     color: white; /* Cor do texto */
     padding: 10px 20px;
@@ -294,11 +294,7 @@ aside h3, aside ul {
     transition: background-color 0.3s ease;
 }
 
-/* Efeito de cor ao passar o rato sobre os botões */
-#edit-product:hover, #delete-product:hover, #buy-button:hover {
-    background-color: var(--beige); /* Cor verde mais escura */
-    color: var(--darkGreen);
-}
+
 
 /* Para estilizar o botão de contatar o anunciante */
 #contact-btn {

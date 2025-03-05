@@ -3,6 +3,10 @@ import { carregarFooter } from "./scriptFooter.js";
 import { fetchRequest } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
+  if(!sessionStorage.getItem('token')){
+    alert('Não está logado para aceder a esta página');
+    window.location.href = "../html/index.html";
+  }
   const userInfo = await fetchRequest("/user/user", "GET");
   if(userInfo.admin == false){
     alert('Sem permissão para aceder a esta página');
