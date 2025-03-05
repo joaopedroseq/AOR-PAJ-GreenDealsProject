@@ -40,3 +40,19 @@
 05/03/2025 14:08:18.701 [[31mERROR[m] UserBean.excludeProduct:225 - Error while excluding product 1
 05/03/2025 14:08:18.701 [[31mERROR[m] UserBean.excludeProduct:226 - java.lang.RuntimeException: Error
 05/03/2025 14:08:19.204 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error
+05/03/2025 14:22:11.292 [[31mERROR[m] UserBean.deleteProduct:245 - Error while deleting product 1
+05/03/2025 14:22:11.298 [[31mERROR[m] UserBean.deleteProduct:246 - java.lang.RuntimeException: Error
+05/03/2025 14:22:11.701 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 14:22:11.779 [[31mERROR[m] UserBean.updateProduct:223 - Error updating product 1
+05/03/2025 14:22:11.779 [[31mERROR[m] UserBean.updateProduct:224 - java.lang.RuntimeException: Error
+05/03/2025 14:22:12.288 [[31mERROR[m] UserBean.excludeProduct:234 - Error while excluding product 1
+05/03/2025 14:22:12.288 [[31mERROR[m] UserBean.excludeProduct:235 - java.lang.RuntimeException: Error
+05/03/2025 14:22:12.787 [[31mERROR[m] UserBean.getAllUsers:186 - Error in UserBean.getAllUsers - error Error
+05/03/2025 14:22:26.752 [[31mERROR[m] UserBean.deleteProduct:245 - Error while deleting product 1
+05/03/2025 14:22:26.760 [[31mERROR[m] UserBean.deleteProduct:246 - java.lang.RuntimeException: Error
+05/03/2025 14:22:27.192 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 14:22:27.273 [[31mERROR[m] UserBean.updateProduct:223 - Error updating product 1
+05/03/2025 14:22:27.274 [[31mERROR[m] UserBean.updateProduct:224 - java.lang.RuntimeException: Error
+05/03/2025 14:22:27.791 [[31mERROR[m] UserBean.excludeProduct:234 - Error while excluding product 1
+05/03/2025 14:22:27.792 [[31mERROR[m] UserBean.excludeProduct:235 - java.lang.RuntimeException: Error
+05/03/2025 14:22:28.295 [[31mERROR[m] UserBean.getAllUsers:186 - Error in UserBean.getAllUsers - error Error

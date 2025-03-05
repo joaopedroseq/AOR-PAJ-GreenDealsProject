@@ -605,5 +605,4 @@ class UserBeanTest {
         assertFalse(result);  // Assert that deleting the product failed
     }
 
-
 }
