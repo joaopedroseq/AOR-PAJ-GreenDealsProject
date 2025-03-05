@@ -1,6 +1,8 @@
 import { abrirFecharAside, carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from "./funcoesGerais.js";
+import { fetchRequest, redirectIfNotLogged } from "./funcoesGerais.js";
+
+document.addEventListener("onload", redirectIfNotLogged());
 
 document.addEventListener("DOMContentLoaded", async function () {
   if(!sessionStorage.getItem('token')){

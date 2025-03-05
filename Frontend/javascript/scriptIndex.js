@@ -24,12 +24,12 @@ async function carregarAsideNormal() {
 function displayProduct(product, index) {
   const gridContainer = document.querySelector(".grid-container");
   const productHTML = `
-            <div class="grid-item" onclick="window.location.href='detail.html?index=${index}'"> 
+            <div class="grid-item" data-category = "${product.category}" onclick="window.location.href='detail.html?index=${index}'"> 
                 <img src='${product.urlImage}' alt="${product.name}"/>
                 <div class="text-overlay">
                     <h2 style="background-color: transparent;">${product.name}</h2>
                     <p style="background-color: transparent;">Preço: €${product.price}</p>
-                    <p style="background-color: transparent;">Categoria: ${product.category}</p>
+                    <p style="background-color: transparent;" >Categoria: ${product.category}</p>
                 </div>
             </div>
         `;
@@ -62,13 +62,11 @@ function displayByCategory(event) {
   if (event.target.tagName === "LI") {
     const selectedCategory = event.target.name.toLowerCase();
     const articles = document.querySelectorAll(".grid-item");
-
+    console.log(articles);
     console.log(selectedCategory);
+
     articles.forEach((article) => {
-      const articleCategory = article
-        .querySelector(".text-overlay p:nth-child(3)")
-        .textContent.split(": ")[1]
-        .toLowerCase();
+      const articleCategory = article.getAttribute("data-category");
         console.log(articleCategory);
       article.style.display =
         articleCategory === selectedCategory || selectedCategory === "todos"
@@ -85,6 +83,10 @@ async function carregarCategorias() {
         const ul = asideMenu.querySelector("ul");
 
         ul.innerHTML = '<h3>Categorias</h3>';
+        const li = document.createElement('li');
+        li.name = 'todos';
+        li.textContent = 'Todos os Produtos';
+        ul.appendChild(li);
 
         categorias.forEach((categoria) => {
             const li = document.createElement('li');
@@ -96,4 +98,6 @@ async function carregarCategorias() {
         console.error('Failed to load categories:', error);
     }
 }
+
+async function carregarUsers()
 
