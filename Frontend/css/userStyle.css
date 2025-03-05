@@ -55,6 +55,7 @@ aside {
     left: 0;
     top: 80px;
     padding: 10px;
+    color:var(--darkGreen);
     background-color: #f1f3ebaa; /* Cor verde com transparência */
     border: 1px solid #d3d3d3;
     border-radius: 5px;

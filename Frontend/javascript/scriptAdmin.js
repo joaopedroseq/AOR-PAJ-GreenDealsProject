@@ -280,7 +280,7 @@ async function loadCategories() {
       <div class="newCategoryName" id="newCategoryName" style="display: none;">
         <label>nome da categoria:</label>
         <input type="text" class="newCategoryNameBox" id="newCategoryNameBox" required>
-        <button class="addCategory" id="addCategory">Adicionar</button>
+        <img src="../images/add.png" alt="add category" class="addCategory" id="addCategory">
       </div>  
     </div>
   </div>`;
@@ -309,7 +309,7 @@ function displayCategory(category) {
     <div class="category-info">
       <p class="category-name">${category.name}</p>
       <p class="category-numberOfProducts" >Nº produtos: ${numberOfProducts}</p>
-      <button class="remove-category-button" data-category-numberOfProducts=${numberOfProducts} data-category-name="${category.name}">Remover</button>
+      <img src="../images/exclude.png" alt="exclude category" class="remove-category-button" data-category-numberOfProducts=${numberOfProducts} data-category-name="${category.name}">
     </div>
   </div>
   `;
@@ -342,7 +342,7 @@ async function removeCategory(categoryName, numberOfProducts, button) {
 function showOrHideAddCategory() {
   const newCategoryName = document.getElementById("newCategoryName");
   if (newCategoryName.style.display == "none") {
-    newCategoryName.style.display = "block";
+    newCategoryName.style.display = "flex";
   } else {
     newCategoryName.style.display = "none";
   }
