@@ -1,0 +1,42 @@
+05/03/2025 11:27:54.288 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 11:42:53.337 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 11:44:11.960 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 11:48:57.431 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 11:49:55.979 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 12:01:33.967 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 12:01:34.641 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Cannot invoke "String.toCharArray()" because "password" is null
+05/03/2025 12:01:34.942 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error
+05/03/2025 13:46:39.051 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 13:46:39.772 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Cannot invoke "String.toCharArray()" because "password" is null
+05/03/2025 13:46:40.004 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error
+05/03/2025 13:47:11.320 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Cannot invoke "String.toCharArray()" because "password" is null
+05/03/2025 14:01:31.143 [[31mERROR[m] UserBean.deleteProduct:236 - Error while deleting product 1
+05/03/2025 14:01:31.149 [[31mERROR[m] UserBean.deleteProduct:237 - java.lang.RuntimeException: Error
+05/03/2025 14:01:31.358 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 111
+05/03/2025 14:01:31.359 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.ProductEntity.setName(String)" because "productEntity" is null
+05/03/2025 14:01:31.676 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 14:01:31.775 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 1
+05/03/2025 14:01:31.776 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.RuntimeException: Error
+05/03/2025 14:01:32.344 [[31mERROR[m] UserBean.excludeProduct:225 - Error while excluding product 1
+05/03/2025 14:01:32.345 [[31mERROR[m] UserBean.excludeProduct:226 - java.lang.RuntimeException: Error
+05/03/2025 14:01:32.855 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error
+05/03/2025 14:02:05.781 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 111
+05/03/2025 14:02:05.786 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.ProductEntity.setName(String)" because "productEntity" is null
+05/03/2025 14:04:20.300 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 111
+05/03/2025 14:04:20.308 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.ProductEntity.setName(String)" because "productEntity" is null
+05/03/2025 14:07:38.090 [[31mERROR[m] UserBean.deleteProduct:236 - Error while deleting product 1
+05/03/2025 14:07:38.097 [[31mERROR[m] UserBean.deleteProduct:237 - java.lang.RuntimeException: Error
+05/03/2025 14:07:38.597 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 14:07:38.672 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 1
+05/03/2025 14:07:38.672 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.RuntimeException: Error
+05/03/2025 14:07:39.198 [[31mERROR[m] UserBean.excludeProduct:225 - Error while excluding product 1
+05/03/2025 14:07:39.199 [[31mERROR[m] UserBean.excludeProduct:226 - java.lang.RuntimeException: Error
+05/03/2025 14:07:39.699 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error
+05/03/2025 14:08:17.664 [[31mERROR[m] UserBean.deleteProduct:236 - Error while deleting product 1
+05/03/2025 14:08:17.669 [[31mERROR[m] UserBean.deleteProduct:237 - java.lang.RuntimeException: Error
+05/03/2025 14:08:18.106 [[31mERROR[m] UserBean.verifyToken:94 - java.lang.NullPointerException: Cannot invoke "pt.uc.dei.proj3.entity.UserEntity.getUsername()" because "user" is null
+05/03/2025 14:08:18.189 [[31mERROR[m] UserBean.updateProduct:214 - Error updating product 1
+05/03/2025 14:08:18.189 [[31mERROR[m] UserBean.updateProduct:215 - java.lang.RuntimeException: Error
+05/03/2025 14:08:18.701 [[31mERROR[m] UserBean.excludeProduct:225 - Error while excluding product 1
+05/03/2025 14:08:18.701 [[31mERROR[m] UserBean.excludeProduct:226 - java.lang.RuntimeException: Error
+05/03/2025 14:08:19.204 [[31mERROR[m] UserBean.getAllUsers:177 - Error in UserBean.getAllUsers - error Error

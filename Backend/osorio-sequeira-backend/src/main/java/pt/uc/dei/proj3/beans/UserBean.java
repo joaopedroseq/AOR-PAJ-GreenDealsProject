@@ -65,7 +65,6 @@ public class UserBean implements Serializable {
             return false;
     }
 
-
     public String login(LoginDto user) {
         UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
         if (userEntity != null) {
