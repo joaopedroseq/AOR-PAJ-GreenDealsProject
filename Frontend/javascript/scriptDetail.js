@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 });
 
-
 async function getProductInformation() {
   const productId = new URLSearchParams(window.location.search).get("index");
   const endpoint = `/user/products/${productId}`;
@@ -78,12 +77,16 @@ async function adicionarBotoesEditarApagar(product) {
     }
     if (response.admin === true) {
       inicializarBotoesEditarApagarProduto(product);
-      const excludeProductBtn = document.getElementById("exclude-product-button");
+      const excludeProductBtn = document.getElementById(
+        "exclude-product-button"
+      );
       excludeProductBtn.style.display = "inline-block";
-      excludeProductBtn.addEventListener("click", excludeProduct(product));
+      excludeProductBtn.addEventListener("click", () => {
+        excludeProduct(product);
+      });
+    } else {
+      return;
     }
-  } else {
-    return;
   }
 }
 
@@ -130,7 +133,7 @@ async function buyProduct(productId) {
   }
 }
 
-// Função para excluir um produto
+// Função para apagar um produto
 async function deleteProduct() {
   const response = await fetchRequest("/user/user", "GET");
   const usernameLoggedUser = response.username;
@@ -151,10 +154,13 @@ async function deleteProduct() {
   }
 }
 
-async function excludeProduct(product){
+//Função para excluir um produto
+async function excludeProduct(product) {
   const confirmExclude = confirm(`Pretende excluir o product ${product.name}`);
-  if(confirmExclude){
-    fetchRequest(`/user/${product.seller}/products/exclude`)
+  if (confirmExclude) {
+    fetchRequest(`/user/${product.seller}/products/${product.id}`, "PATCH");
+    alert("Produto excluído com sucesso");
+    window.location.href = "index.html";
   }
 }
 
