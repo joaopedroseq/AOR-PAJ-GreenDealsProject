@@ -86,6 +86,7 @@ public class CategoryBean implements Serializable {
     private CategoryDto convertCategoryEntityToCategoryDto(CategoryEntity categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(categoryEntity.getNome());
+        categoryDto.setProducts(userBean.convertGroupProductEntityToGroupProductDto(categoryEntity.getProduct()));
         return categoryDto;
     }
 

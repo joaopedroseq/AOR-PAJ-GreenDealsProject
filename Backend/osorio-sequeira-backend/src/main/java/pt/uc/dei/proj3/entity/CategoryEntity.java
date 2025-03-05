@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="category")
@@ -24,7 +25,7 @@ public class CategoryEntity implements Serializable {
     private String nome;
 
     @OneToMany(mappedBy = "category")
-    private List<ProductEntity> product;
+    private Set<ProductEntity> products;
 
     //Constructors
     public CategoryEntity() {
@@ -37,5 +38,13 @@ public class CategoryEntity implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Set<ProductEntity> getProduct() {
+        return products;
+    }
+
+    public void setProduct(Set<ProductEntity> products) {
+        this.products = products;
     }
 }

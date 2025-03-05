@@ -31,19 +31,20 @@
                 <div class="category-container" id="category-container">
                       <div class="category-card">
                         <div class="category-info">
-                          <button id="addCategory" onclick="addCategory('teste', this)">Adicionar</button>
+                          <button class="showAddCategory" id="showAddCategory">Criar nova categoria</button>
+                            <div class="newCategoryName" id="newCategoryName" style="display: none;">
+                                <label>nome da categoria:</label>
+                                <input type="text" class="newCategoryNameBox" id="newCategoryNameBox" required>
+                                <button class="addCategory" id="addCategory">Adicionar</button>
+                            </div>
+                            
                         </div>
                     </div>
-                    
-
-
                 </div>
             </div>
         </main>
     </div>
     </div>
-
-
     <div id="footer-placeholder"></div>
 </body>
 <script type="module" src="../javascript/scriptHeader.js"></script>

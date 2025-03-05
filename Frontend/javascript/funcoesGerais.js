@@ -28,7 +28,12 @@ export async function fetchRequest(endpoint, requestType, body = null) {
 
     const contentType = response.headers.get("Content-Type");
     if (contentType && contentType.includes("application/json")) {
-      return await response.json();
+      const data = await response.json();
+      if (!response.ok) {
+        // Throw an error with the JSON response
+        throw { status: response.status, message: data.message || response.statusText };
+      }
+      return data;
     } else {
       // No JSON body; return an empty object or response text (optional)
       return null;

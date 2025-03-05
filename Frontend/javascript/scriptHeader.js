@@ -403,7 +403,6 @@ export function showPassword() {
 }
 
 export function abrirFecharAside() {
-  console.log("correu abrir fechar aside");
   const asideMenu = document.getElementById("aside-menu");
   const aside = document.getElementById("aside-placeholder");
   const asideGestaoPessoal = document.getElementById(

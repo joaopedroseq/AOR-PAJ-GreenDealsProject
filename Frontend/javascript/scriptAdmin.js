@@ -14,8 +14,39 @@ document.addEventListener("DOMContentLoaded", async function () {
   await carregarFooter();
   await loadAllProducts();
   await loadAllUsers();
-  await loadCategories();
+  await loadCategories(); 
   inicializarBotoesAsideAdmin();
+  console.log(document.getElementById("user-info-container"));
+
+  //Método para adicionar eventListener aos butões de exluir e remover utilizadores
+  // Event delegation for removing categories
+  document.getElementById("user-info-container").addEventListener("click", function (event) {
+    console.log("Clicked element:", event.target);
+    
+    if (event.target.classList.contains("excludeUserBtn")) {
+        console.log("excludeUserBtn clicked");
+        const userName = event.target.getAttribute("data-username");
+        excludeUser(userName, event.target);
+    }
+    if (event.target.classList.contains("deleteUserBtn")) {
+        console.log("deleteUserBtn clicked");
+        const userName = event.target.getAttribute("data-username");
+        deleteUser(userName, event.target);
+    }
+});
+
+  //Método para adicionar eventListener aos butões de remoção de categorias
+  // Event delegation for removing categories
+  document.getElementById("category-container").addEventListener("click", function (event) {
+    if (event.target.classList.contains("remove-category-button")) {
+      const categoryName = event.target.getAttribute("data-category-name");
+      const numberOfProducts = event.target.getAttribute("data-category-numberOfProducts");
+      removeCategory(categoryName, numberOfProducts, event.target);
+    }
+  });
+
+  document.getElementById("showAddCategory").addEventListener("click", showOrHideAddCategory);
+  document.getElementById("addCategory").addEventListener("click", addCategory);
   }
 });
 
@@ -103,15 +134,44 @@ function displayUser(user){
   const userHTML = `
   <div class="user-card">
     <img src="${user.url}" alt="Foto do Utilizador" class="user-photo">
-      <div class="user-info">
+    <div class="user-info">
         <p class="username">${user.username}</p>
         <p class="name">${user.firstName} ${user.lastName}</p>
         <p class="email">${user.email}</p>
-      </div>
-  </div>
+        <img src="../images/exclude.png" alt="exclude user" class="excludeUserBtn" data-username="${user.username}">
+        <img src="../images/delete.png" alt="delete user" class="deleteUserBtn" data-username="${user.username}">
+    </div>
+</div>
   `
   // Insere o produto no container
   userContainer.insertAdjacentHTML("beforeend", userHTML);
+}
+
+async function excludeUser(userName, button){
+  let confirmExclude = confirm(`Tem a certeza que a pretende excluir o utilizador ${userName}?\n
+  Irá também exluir todos os seus produtos`);
+  if(confirmExclude){
+    const response = await fetchRequest(`/user/${userName}/exclude`, 'PATCH');
+    console.log(response);
+    const userCard = button.closest(".user-card");
+    /*
+    if (userCard) {
+      userCard.remove();
+    }*/
+  }
+}
+
+async function deleteUser(userName, button){
+  let confirmDelete = confirm(`Tem a certeza que a pretende apagar o utilizador ${userName}?\n
+  Todos os seus produtos passaram para utilizador anónimo`);
+  if(confirmDelete){
+    const response = await fetchRequest(`/user/${userName}/delete`, 'DELETE');
+    console.log(response);
+    const userCard = button.closest(".user-card");
+    if (userCard) {
+      userCard.remove();
+    }
+  }
 }
 
 //carregar todos os utilizadores
@@ -136,29 +196,71 @@ function displayCategory(category){
   else {
     numberOfProducts = 0;
   }
-  console.log(numberOfProducts);
 
   // Cria o HTML do utilizador
   const categoryHTML = `
   <div class="category-card">
     <div class="category-info">
       <p class="category-name">${category.name}</p>
-      <p class="category-numberOfProducts">Nº produtos: ${numberOfProducts}</p>
-      <button id="removerCategory" onclick="removeCategory(${category.name}, this)">Remover</button>
+      <p class="category-numberOfProducts" >Nº produtos: ${numberOfProducts}</p>
+      <button class="remove-category-button" data-category-numberOfProducts=${numberOfProducts} data-category-name="${category.name}">Remover</button>
     </div>
   </div>
   `
   // Insere o produto no container
-  categoryContainer.insertAdjacentHTML("afterbegin", categoryHTML);
+  categoryContainer.insertAdjacentHTML("afterbegin", categoryHTML);  
 }
 
-function removeCategory(category, button){
-  console.log("correu");
+// Função para remover a categoria
+async function removeCategory(categoryName, numberOfProducts, button) {
+  let confirmRemovalText;
+  if(numberOfProducts == 0){
+    confirmRemovalText = `Tem a certeza que a pretende remover a categoria ${categoryName}?`;
+  }
+  else {
+    confirmRemovalText = `A categoria ${categoryName} está associada a ${numberOfProducts} produto(s) que ficarão com a categoria "empty".\nTem a certeza que a pretende remover?`;
+  }
+  const confirmRemoval = confirm(confirmRemovalText);
+  if(confirmRemoval){
+    const category = {
+      name: categoryName
+    }
+    const response = await fetchRequest('/category/delete', 'DELETE', category);
+    console.log(response);
+    const categoryCard = button.closest(".category-card");
+    if (categoryCard) {
+      categoryCard.remove();
+    }
+  }
+  
 }
 
+function showOrHideAddCategory(){
+  const newCategoryName = document.getElementById("newCategoryName");
+  if(newCategoryName.style.display == 'none'){
+    newCategoryName.style.display = 'block';
+  }
+  else{
+    newCategoryName.style.display = 'none';
+  }
+}
 
-
-
+async function addCategory(){
+  const newCategoryName = document.getElementById("newCategoryNameBox").value.trim();
+  if(newCategoryName.trim() == '' || newCategoryName === null){
+    alert("Terá de preencher o campo do nome da nova categoria para a adicionar");
+  }
+  else{
+    const confirmNewCategory = confirm(`Pretende adicionar ${newCategoryName} como nova categoria?`)
+    if(confirmNewCategory){
+      const newCategory = {
+        name: newCategoryName
+      }
+        await fetchRequest('/category/register', 'POST', newCategory);
+        window.location.reload();
+      }
+    }
+  }
 
 function showSection(sectionId) {
   // Hide all sections

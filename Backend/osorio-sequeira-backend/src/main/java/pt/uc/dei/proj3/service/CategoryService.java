@@ -35,6 +35,7 @@ public class CategoryService {
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
         if (token == null || token.trim().isEmpty()) {
             logger.error("Invalid token(null) - adding new category - {}", categoryDto.getName());
@@ -54,7 +55,7 @@ public class CategoryService {
                 } else {
                     if (!categoryBean.registerNewCategory(categoryDto)) {
                         logger.error("Conflict - category {} already exists - {}", user.getUsername(), categoryDto.getName());
-                        return Response.status(409).entity("Conflict - category already exists").build();
+                        return Response.status(409).entity("{\"message\": \"Conflict - category already exists\"}").type(MediaType.APPLICATION_JSON).build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
                         return Response.status(200).entity("Added new category " + categoryDto.getName()).build();
