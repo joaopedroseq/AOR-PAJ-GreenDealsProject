@@ -22,14 +22,18 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Event delegation for removing categories
   document.getElementById("user-info-container").addEventListener("click", function (event) {
     console.log("Clicked element:", event.target);
+
+    if (event.target.classList.contains("deleteProductsUserBtn")) {
+      const userName = event.target.getAttribute("data-username");
+      const numberOfProducts = event.target.getAttribute("data-numberOfProducts");
+      deleteProductsOfUser(userName, numberOfProducts,event.target);
+  }
     
     if (event.target.classList.contains("excludeUserBtn")) {
-        console.log("excludeUserBtn clicked");
         const userName = event.target.getAttribute("data-username");
         excludeUser(userName, event.target);
     }
     if (event.target.classList.contains("deleteUserBtn")) {
-        console.log("deleteUserBtn clicked");
         const userName = event.target.getAttribute("data-username");
         deleteUser(userName, event.target);
     }
@@ -119,6 +123,7 @@ async function loadAllUsers() {
   const allUsers = await fetchRequest(`/user/users`,
     "GET"
   );
+  allUsers.sort((a, b) => a.username.localeCompare(b.username));
   allUsers.forEach((user) => {
     displayUser(user);
   })
@@ -129,15 +134,24 @@ async function loadAllUsers() {
 function displayUser(user){
   // Obtém o container dos produtos
   let userContainer = document.getElementById("user-info-container");
+  let numberOfProducts;
+  if(user.products != null){
+    numberOfProducts = user.products.length;
+  }
+  else {
+    numberOfProducts = 0;
+  }
 
   // Cria o HTML do utilizador
   const userHTML = `
   <div class="user-card">
     <img src="${user.url}" alt="Foto do Utilizador" class="user-photo">
+    ${user.excluded ? '<div class="excludedUser-overlay"></div>' : ''}
     <div class="user-info">
         <p class="username">${user.username}</p>
         <p class="name">${user.firstName} ${user.lastName}</p>
         <p class="email">${user.email}</p>
+        <img src="../images/deleteProducts.png" alt="exclude user" class="deleteProductsUserBtn" data-numberOfProducts="${numberOfProducts}" data-username="${user.username}">
         <img src="../images/exclude.png" alt="exclude user" class="excludeUserBtn" data-username="${user.username}">
         <img src="../images/delete.png" alt="delete user" class="deleteUserBtn" data-username="${user.username}">
     </div>
@@ -163,7 +177,7 @@ async function excludeUser(userName, button){
 
 async function deleteUser(userName, button){
   let confirmDelete = confirm(`Tem a certeza que a pretende apagar o utilizador ${userName}?\n
-  Todos os seus produtos passaram para utilizador anónimo`);
+  Todos os seus produtos passarão para utilizador anónimo`);
   if(confirmDelete){
     const response = await fetchRequest(`/user/${userName}/delete`, 'DELETE');
     console.log(response);
@@ -174,15 +188,26 @@ async function deleteUser(userName, button){
   }
 }
 
+async function deleteProductsOfUser(userName, numberOfProducts, button){
+  let confirmDeleteProducts = confirm(`Tem a certeza que a pretende apagar todos os ${numberOfProducts} produtos de ${userName}?`);
+  if(confirmDeleteProducts){
+    const response = await fetchRequest(`/user/${userName}/deleteProducts`, 'DELETE');
+    alert("Produtos apagados com sucesso");
+    window.location.reload();
+    }
+  }
+
+
+
 //carregar todos os utilizadores
 async function loadCategories() {
   const categories = await fetchRequest(`/category/all`,
     "GET"
   );
+  categories.sort((a, b) => b.name.localeCompare(a.name));
   categories.forEach((category) => {
     displayCategory(category);
   })
-
 }
 
 //Função para colocar as informações dos utilizadores na secção users

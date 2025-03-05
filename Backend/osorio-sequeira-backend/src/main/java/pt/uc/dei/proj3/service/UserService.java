@@ -214,6 +214,45 @@ public class UserService {
         }
     }
 
+    @DELETE
+    @Path("/{username}/deleteProducts")
+    public Response deleteProductsOfUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDeleteProducts) {
+        if (usernameUserDeleteProducts.trim().equals("")) {
+            logger.error("Invalid data - missing params - Deleting products of user");
+            return Response.status(400).entity("Invalid data").build();
+        } else {
+            if (!userbean.checkIfTokenValid(token)) {
+                logger.error("Invalid token when trying to delete products of user {}", usernameUserDeleteProducts);
+                return Response.status(401).entity("Invalid token").build();
+            } else {
+                UserDto user = userbean.verifyToken(token);
+                if (user == null) {
+                    logger.error("Invalid token when trying to delete products of user {}", usernameUserDeleteProducts);
+                    return Response.status(401).entity("Invalid token").build();
+                } else {
+                    if (!user.getAdmin()) {
+                        logger.error("User {} tried to delete products of user {} without admin permissions", user.getUsername(), usernameUserDeleteProducts);
+                        return Response.status(403).entity("User does not have admin permission to delete products of other users").build();
+                    } else {
+                        usernameUserDeleteProducts = usernameUserDeleteProducts.trim();
+                        if (!userbean.checkIfUserExists(usernameUserDeleteProducts)) {
+                            logger.error("User {} tried to delete products of user - {} - not found", user.getUsername(), usernameUserDeleteProducts);
+                            return Response.status(404).entity("User " + usernameUserDeleteProducts + " to delete products not found").build();
+                        } else {
+                            if (userbean.deleteProductsOfUser(usernameUserDeleteProducts)) {
+                                logger.info("User {} deleted products of user {} successfully", user.getUsername(), usernameUserDeleteProducts);
+                                return Response.status(200).entity("Deleted products of user " + usernameUserDeleteProducts + " successfully").build();
+                            } else {
+                                logger.error("Products of user {} not deleted due to exception", usernameUserDeleteProducts);
+                                return Response.status(500).entity("Products of user " + usernameUserDeleteProducts + " not deleted").build();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     //Get All Regular Users
     @GET
     @Path("/users")

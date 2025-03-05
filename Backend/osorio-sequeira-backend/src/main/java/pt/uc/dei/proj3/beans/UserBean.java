@@ -155,6 +155,15 @@ public class UserBean implements Serializable {
         }
     }
 
+    public boolean deleteProductsOfUser(String usernameUserToDeleteProducts) {
+        try {
+            productDao.deleteProductsOfUser(usernameUserToDeleteProducts);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public boolean excludeUser(String username) {
         try {
             if (userDao.excludeUser(username)) {

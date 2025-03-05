@@ -75,13 +75,21 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
     }
 
+    public void deleteProductsOfUser(String username) {
+        try {
+            UserEntity sellerEntity = (UserEntity) em.createNamedQuery("User.findUserByUsername").setParameter("username", username).getSingleResult();
+            em.createNamedQuery("Product.deleteProductsOfUser").setParameter("seller", sellerEntity).executeUpdate();
+        } catch (Exception e) {
+            logger.error("Exception {} in ProductDao.deleteProductsOfUser", e.getMessage());
+        }
+    }
+
 
     public void deleteProduct(int id) {
         try {
             em.createNamedQuery("Product.deleteProduct").setParameter("id", id).executeUpdate();
         } catch (NoResultException e) {
             logger.error("Error deleting product in product dao");
-            //logger.error(e);
         }
     }
 
