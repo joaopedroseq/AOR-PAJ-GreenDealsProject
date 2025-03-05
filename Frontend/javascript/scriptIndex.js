@@ -1,30 +1,12 @@
 import { carregarHeader } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from "./funcoesGerais.js";
+import { fetchRequest, checkIfAdmin } from "./funcoesGerais.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
   await carregarAsideNormal();
   await carregarFooter();
   await getAvailableProducts();
-  if(sessionStorage.getItem('token')){
-    try{
-          const userLogged = await fetchRequest('/user/user', 'GET');
-          if(userLogged.admin === true){
-            const asideMenu = document.getElementById("aside-menu");
-            const listCategories = asideMenu.querySelector("ul");
-            const editedProductsHTML = `
-            <h3 class="check-edited-products" id="check-edited-products">Ver produtos editados</h3>
-            `
-            listCategories.insertAdjacentHTML("afterend", editedProductsHTML);
-            document.getElementById("check-edited-products").addEventListener("click", showEditedProducts);
-          }
-    }
-    catch(error){
-      console.error("Erro:", error);
-      alert("Ocorreu um erro: " + error.message);
-    }
-}
 });
 
 async function carregarAsideNormal() {
@@ -33,9 +15,10 @@ async function carregarAsideNormal() {
     .then(async (data) => {
       document.getElementById("aside-placeholder").innerHTML = data;
       await carregarCategorias();
-      setupCategoryFiltering();
-      //todo if user is admin, load users
-      await carregarUsers();
+      if ( await checkIfAdmin()) {
+        await carregarUsers();
+        await carregarEditedProductsBtn();
+      }
     });
 }
 
@@ -55,38 +38,48 @@ function displayProduct(product, index) {
 }
 
 async function getAvailableProducts() {
+  const gridContainer = document.getElementById("grid-container");
+  gridContainer.innerHTML = "";
   const endpoint = "/products/available";
-
   try {
     const products = await fetchRequest(endpoint, "GET");
     products.forEach((product) => {
       displayProduct(product, product.id);
     });
-
-    //setupCategoryFiltering();
+    if (products.length === 0) {
+      const gridContainer = document.getElementById("grid-container");
+      gridContainer.innerHTML = "";
+      const noProductsHTML = `
+      <div class="grid-item no-products">
+        <div class="text-overlay">
+          <h2 style="background-color: transparent;">No Products Available</h2>
+          <p style="background-color: transparent;">Please check back later.</p>
+        </div>
+      </div>
+    `;
+      gridContainer.insertAdjacentHTML("beforeend", noProductsHTML);
+    }
   } catch (error) {
     console.error("Erro:", error);
     alert("Ocorreu um erro: " + error.message);
   }
 }
 
-async function showEditedProducts(){
+async function showEditedProducts() {
   const productsGrid = document.getElementById("grid-container");
   productsGrid.innerHTML = "";
-  const editedProducts = await fetchRequest('/products/edited');
+  const editedProducts = await fetchRequest("/products/edited");
   editedProducts.forEach((editedProduct) => {
     const indexOfEditedProduct = editedProduct.id;
     displayProduct(editedProduct, indexOfEditedProduct);
   });
- }
+}
 
-
+/*
 function setupCategoryFiltering() {
   const aside = document.querySelector("aside");
   aside.addEventListener("click", displayByCategory);
 }
-
-
 function displayByCategory(event) {
   if (event.target.tagName === "LI") {
     const selectedCategory = event.target.name.toLowerCase();
@@ -104,7 +97,7 @@ function displayByCategory(event) {
     });
   }
 }
-
+*/
 
 async function carregarCategorias() {
   try {
@@ -126,7 +119,6 @@ async function carregarCategorias() {
     });
     ul.id = "category-list";
     ul.addEventListener("click", loadProductsByCategory);
-
   } catch (error) {
     console.error("Failed to load categories:", error);
   }
@@ -150,27 +142,70 @@ async function carregarUsers() {
     newUl.id = "user-list";
 
     newUl.addEventListener("click", loadProductsByUser);
-
   } catch (error) {
     console.error("Erro:", error);
     alert("Ocorreu um erro: " + error.message);
   }
 }
 
-// Function to handle category clicks
-function loadProductsByCategory(event) {
-  if (event.target.tagName === "LI") {
-    const selectedCategory = event.target.name.toLowerCase();
-    console.log("Category clicked:", selectedCategory);
-    // Add your logic to handle category clicks here
+async function carregarEditedProductsBtn() {
+  const asideMenu = document.getElementById("aside-menu");
+  const listCategories = asideMenu.querySelector("ul");
+  const editedProductsHTML = `
+      <h3 class="check-edited-products" id="check-edited-products">Ver produtos editados</h3>
+      `;
+  listCategories.insertAdjacentHTML("afterend", editedProductsHTML);
+  document
+    .getElementById("check-edited-products")
+    .addEventListener("click", showEditedProducts);
+}
+
+async function loadProductsByCategory(event) {
+  const selectedCategory = event.target.name.toLowerCase();
+  if (selectedCategory === "todos") {
+    getAvailableProducts();
+  } else {
+    let endpoint = `/products/${selectedCategory}`;
+    const products = await fetchRequest(endpoint, "GET");
+    const gridContainer = document.getElementById("grid-container");
+    gridContainer.innerHTML = "";
+    products.forEach((product) => {
+      const productId = product.id;
+      displayProduct(product, productId);
+    });
+    if (products.length === 0) {
+      const noProductsHTML = `
+      <div class="grid-item no-products">
+        <div class="text-overlay">
+          <h2 style="background-color: transparent;">No Products Available</h2>
+          <p style="background-color: transparent;">Please check back later.</p>
+        </div>
+      </div>
+    `;
+      gridContainer.insertAdjacentHTML("beforeend", noProductsHTML);
+    }
   }
 }
 
-// Function to handle user clicks
-function loadProductsByUser(event) {
-  if (event.target.tagName === "LI") {
-    const selectedUser = event.target.name.toLowerCase();
-    console.log("User clicked:", selectedUser);
-    // Add your logic to handle user clicks here
+async function loadProductsByUser(event) {
+  const selectedUser = event.target.name;
+  const endpoint = `/products/all/${selectedUser}`;
+  const products = await fetchRequest(endpoint, "GET");
+  const gridContainer = document.getElementById("grid-container");
+  gridContainer.innerHTML = "";
+  products.forEach((product) => {
+    const productId = product.id;
+    displayProduct(product, productId);
+  });
+  if (products.length === 0) {
+    const noProductsHTML = `
+        <div class="grid-item no-products">
+          <div class="text-overlay">
+            <h2 style="background-color: transparent;">No Products Available</h2>
+            <p style="background-color: transparent;">Please check back later.</p>
+          </div>
+        </div>
+      `;
+    gridContainer.insertAdjacentHTML("beforeend", noProductsHTML);
   }
 }
