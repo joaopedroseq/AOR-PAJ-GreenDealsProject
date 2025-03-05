@@ -1,10 +1,11 @@
 import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from "./funcoesGerais.js";
+import { fetchRequest, redirectIfNotLogged } from "./funcoesGerais.js";
+
+document.addEventListener("onload", redirectIfNotLogged());
 
 document.addEventListener("DOMContentLoaded", async function () {
   await carregarHeader();
-  await carregarAsideNormal();
   await carregarFooter();
   await getProductInformation();
   const contactForm = document.getElementById("contact-form");
@@ -14,13 +15,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   });
 });
 
-async function carregarAsideNormal() {
-  fetch("aside.html")
-    .then((response) => response.text())
-    .then(async (data) => {
-      document.getElementById("aside-placeholder").innerHTML = data;
-    });
-}
 
 async function getProductInformation() {
   const productId = new URLSearchParams(window.location.search).get("index");

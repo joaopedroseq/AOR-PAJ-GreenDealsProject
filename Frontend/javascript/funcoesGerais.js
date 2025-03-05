@@ -43,3 +43,11 @@ export async function fetchRequest(endpoint, requestType, body = null) {
     throw error;
   }
 }
+
+
+export function redirectIfNotLogged() {
+  if (!sessionStorage.getItem("token")) {
+    alert("Para aceder a esta página, necessita de estar autenticado.");
+    window.location.href = "index.html";
+  }
+}

@@ -1,6 +1,8 @@
 import { carregarHeader, checkIfNumeric } from "./scriptHeader.js";
 import { carregarFooter } from "./scriptFooter.js";
-import { fetchRequest } from "./funcoesGerais.js";
+import { fetchRequest, redirectIfNotLogged } from "./funcoesGerais.js";
+
+document.addEventListener("onload", redirectIfNotLogged());
 
 document.addEventListener("DOMContentLoaded", async function () {
   const userInfo = await fetchRequest("/user/user", "GET");
