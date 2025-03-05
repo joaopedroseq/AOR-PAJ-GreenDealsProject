@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", async function () {
   await carregarCategorias();
   await carregarFooter();
   await getAvailableProducts();
+  if(localStorage.getItem('token')){
+    try{
+          const userLogged = fetchRequest('/user/user', 'GET');
+          if(userLogged.admin){
+            document.getElementById("categoryList").appendChild
+
+          }
+    }
+    catch(error){
+      console.error("Erro:", error);
+      alert("Ocorreu um erro: " + error.message);
+    }
+}
 });
 
 async function carregarAsideNormal() {
@@ -50,6 +63,11 @@ async function getAvailableProducts() {
     console.error("Erro:", error);
     alert("Ocorreu um erro: " + error.message);
   }
+}
+
+async function getEditedProducts(){
+  const editedProducts = await fetchRequest('/products/edited');
+  console.log(editedProducts);
 }
 
 
@@ -98,6 +116,3 @@ async function carregarCategorias() {
         console.error('Failed to load categories:', error);
     }
 }
-
-async function carregarUsers()
-
