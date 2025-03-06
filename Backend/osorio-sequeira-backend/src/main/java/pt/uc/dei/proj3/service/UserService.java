@@ -163,18 +163,19 @@ public class UserService {
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
-         if (!userbean.checkIfTokenValid(token)) {
-                logger.error("Invalid token from user {}", userDto.getUsername());
-                return Response.status(401).entity("Invalid token").build();
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token updating user");
+            return Response.status(401).entity("Invalid token").build();
+        } else {
+            if (userbean.updateUser(token, userDto)) {
+                logger.info("User {} updated successfully", user.getUsername());
+                return Response.status(200).entity("Updated user " + user.getUsername() + " successfully").build();
             } else {
-                if (userbean.updateUser(token, userDto)) {
-                    logger.info("User {} updated successful", userDto.getUsername());
-                    return Response.status(200).entity("Updated user " + userDto.getUsername() + " successfully").build();
-                } else {
-                    logger.error("User {} not updated", userDto.getUsername());
-                    return Response.status(500).entity("User " + userDto.getUsername() + " not updated").build();
-                }
+                logger.error("Error updating user - User {} not updated", user.getUsername());
+                return Response.status(500).entity("User " + user.getUsername() + " not updated").build();
             }
+        }
     }
 
     @PATCH
@@ -311,8 +312,7 @@ public class UserService {
                 if (!user.getAdmin()) {
                     logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
                     return Response.status(403).entity("User does not have admin permission to views other user's information").build();
-                }
-                else {
+                } else {
                     Set<UserDto> users = userbean.getAllUsers();
                     logger.info("User {} accessed to get all user's information", user.getUsername());
                     return Response.status(200).entity(users).build();
@@ -437,16 +437,16 @@ public class UserService {
             if (!newProductDto.newProductIsValid()) {
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();
-            }else if(!categorybean.checkIfCategoryAlreadyExists(category)) {
+            } else if (!categorybean.checkIfCategoryAlreadyExists(category)) {
                 logger.error("Category {} does not exist", category.getName());
                 return Response.status(404).entity("Category " + category.getName() + " does not exist").build();
             } else if (!user.getUsername().equals(pathUsername) || !user.getUsername().equals(newProductDto.getSeller())) {
                 logger.error("Permission denied - {} adding new product to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            } else if( userbean.addProduct(user, newProductDto)){
+            } else if (userbean.addProduct(user, newProductDto)) {
                 logger.info("Added new product to {}", pathUsername);
                 return Response.status(200).entity("Added product").build();
-            }else{
+            } else {
                 logger.info("Error : Product not added by {}", user.getUsername());
                 return Response.status(400).entity("Error").build();
             }
@@ -473,10 +473,10 @@ public class UserService {
             } else if (productDto.isExcluded() || (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller())))) {
                 logger.error("Permission denied - {} updateProduct to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
-            } else if(userbean.updateProduct(productDto)){
+            } else if (userbean.updateProduct(productDto)) {
                 logger.info("{} updated product {}", user.getUsername(), pathProductId);
                 return Response.status(200).entity("Updated product").build();
-            }else{
+            } else {
                 logger.info("Error : Product with id {} not updated by {}", pathProductId, user.getUsername());
                 return Response.status(400).entity("Error").build();
             }
@@ -497,7 +497,7 @@ public class UserService {
             if (product == null) {
                 logger.error("Getting product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
-            }else if(product.isExcluded() && !user.getAdmin()) {
+            } else if (product.isExcluded() && !user.getAdmin()) {
                 logger.error("Permission denied - {} getting excluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied").build();
             } else {
@@ -526,10 +526,10 @@ public class UserService {
             } else if (product.getState().equals(StateId.COMPRADO)) {
                 logger.error("Permission denied - {} buying already bought product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - buying already bought product").build();
-            }  else if(productbean.buyProduct(product)){
+            } else if (productbean.buyProduct(product)) {
                 logger.info("Product with id {} bought by {}", pathProductId, user.getUsername());
                 return Response.status(200).entity("produto comprado com sucesso").build();
-            }else{
+            } else {
                 logger.info("Error : Product with id {} not bought by {}", pathProductId, user.getUsername());
                 return Response.status(400).entity("Error").build();
             }
@@ -549,14 +549,14 @@ public class UserService {
             if (product == null) {
                 logger.error("Excluding product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if (product.isExcluded()){
+            } else if (product.isExcluded()) {
                 logger.error("Permission denied - {} excluding already excluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - excluding already excluded product").build();
             } else if (!user.getAdmin() && !(user.getUsername().equals(pathUsername) && user.getUsername().equals(product.getSeller()))) {
-                logger.error("Permission denied - {} excluding Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                logger.error("Permission denied - {} excluding Product {} belonging to {}", user.getUsername(), pathProductId, pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             } else if (userbean.excludeProduct(pathProductId)) {
-                logger.info("excluding product -  {} excluded Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                logger.info("excluding product -  {} excluded Product {} belonging to {}", user.getUsername(), pathProductId, pathUsername);
                 return Response.status(200).entity("Product excluded").build();
             } else {
                 logger.error("Error : Product with id {} not excluded by {}", pathProductId, user.getUsername());
@@ -568,7 +568,7 @@ public class UserService {
     //Deleting products
     @DELETE
     @Path("/{username}/products/{ProductId}")
-    public Response deleteProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId){
+    public Response deleteProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, @PathParam("ProductId") int pathProductId) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
             logger.error("Invalid token - deleteProduct");
@@ -578,14 +578,14 @@ public class UserService {
             if (product == null) {
                 logger.error("Deleting product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if (!product.isExcluded()){
+            } else if (!product.isExcluded()) {
                 logger.error("Permission denied - {} deleting unexcluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - deleting unexcluded product").build();
             } else if (!user.getAdmin()) {
-                logger.error("Permission denied - {} deleting product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                logger.error("Permission denied - {} deleting product {} belonging to {}", user.getUsername(), pathProductId, pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             } else if (userbean.deleteProduct(pathProductId)) {
-                logger.info("deleting product -  {} deleted Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
+                logger.info("deleting product -  {} deleted Product {} belonging to {}", user.getUsername(), pathProductId, pathUsername);
                 return Response.status(200).entity("Product deleted").build();
             } else {
                 logger.error("Error : Product with id {} not deleted by {}", pathProductId, user.getUsername());
