@@ -578,9 +578,6 @@ public class UserService {
             if (product == null) {
                 logger.error("Deleting product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if (!product.isExcluded()) {
-                logger.error("Permission denied - {} deleting unexcluded product with id: {}", user.getUsername(), pathProductId);
-                return Response.status(403).entity("Permission denied - deleting unexcluded product").build();
             } else if (!user.getAdmin()) {
                 logger.error("Permission denied - {} deleting product {} belonging to {}", user.getUsername(), pathProductId, pathUsername);
                 return Response.status(403).entity("Permission denied").build();
