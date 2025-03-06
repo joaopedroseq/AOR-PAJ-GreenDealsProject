@@ -58,8 +58,12 @@ public class CategoryBean implements Serializable {
             CategoryEntity empty = categoryDao.findCategoryByName("empty");
             CategoryEntity categoryEntity = convertCategoryDtoToCategoryEntity(category);
             productDao.setAllProductsCategoryToEmpty(empty, categoryEntity);
-            categoryDao.deleteCategory(categoryEntity);
-            return true;
+            if(categoryDao.deleteCategory(categoryEntity)){
+                return true;
+            }
+            else{
+                return false;
+            }
         } catch (Exception e) {
             logger.error("Error deleting category {} in CategoryBean.deleteCategory", category.getName());
             return false;
