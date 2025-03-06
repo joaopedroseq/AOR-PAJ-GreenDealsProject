@@ -91,10 +91,10 @@ async function adicionarBotoesEditarApagar(product) {
 }
 
 function inicializarBotoesEditarApagarProduto(product) {
-  console.log(true);
   const editDeleteButtons = document.getElementById("edit-delete-buttons");
   editDeleteButtons.style.display = "inline-block";
   const deleteProductBtn = document.getElementById("delete-product");
+  
   deleteProductBtn.addEventListener("click", () => deleteProduct());
   const editProductBtn = document.getElementById("edit-product");
   editProductBtn.addEventListener("click", () => {
