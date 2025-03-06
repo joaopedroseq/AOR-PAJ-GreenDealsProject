@@ -260,7 +260,7 @@ async function deleteProductsOfUser(userName, numberOfProducts, button) {
   );
   if (confirmDeleteProducts) {
     const response = await fetchRequest(
-      `/user/${userName}/deleteProducts`,
+      `/user/${userName}/products/delete`,
       "DELETE"
     );
     alert("Produtos apagados com sucesso");
@@ -279,7 +279,7 @@ async function loadCategories() {
       <button class="showAddCategory" id="showAddCategory">Criar nova categoria</button>
       <div class="newCategoryName" id="newCategoryName" style="display: none;">
         <label>nome da categoria:</label>
-        <input type="text" class="newCategoryNameBox" id="newCategoryNameBox" required>
+        <input type="text" class="newCategoryNameBox" id="newCategoryNameBox" required maxlength="20">
         <img src="../images/add.png" alt="add category" class="addCategory" id="addCategory">
       </div>  
     </div>

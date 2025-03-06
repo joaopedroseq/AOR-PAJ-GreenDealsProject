@@ -96,19 +96,19 @@ async function loadUserInfo(userInfo) {
                 <form class="edit-form" id="edit-form">
                     <div>
                         <label>Primeiro Nome:</label>
-                        <input type="text" id="edit-firstname" value="${userInfo.firstName}" required>
+                        <input type="text" id="edit-firstname" value="${userInfo.firstName}" required maxlength="20">
                     </div>
                     <div>
                         <label>Último Nome:</label>
-                        <input type="text" id="edit-lastname" value="${userInfo.lastName}" required>
+                        <input type="text" id="edit-lastname" value="${userInfo.lastName}" required maxlength="20">
                     </div>
                     <div>
                         <label>Email:</label>
-                        <input type="email" id="edit-email" value="${userInfo.email}" required>
+                        <input type="email" id="edit-email" value="${userInfo.email}" required maxlength="30">
                     </div>
                     <div>
                         <label>Telefone:</label>
-                        <input type="tel" id="edit-phone" value="${userInfo.phoneNumber}">
+                        <input type="tel" id="edit-phone" value="${userInfo.phoneNumber}" maxlength="20">
                     </div>
                     <div>
                         <label>Foto url:</label>
@@ -116,11 +116,11 @@ async function loadUserInfo(userInfo) {
                     </div>
                     <div>
                         <label>Nova Password:</label>
-                        <input type="password" id="edit-password">
+                        <input type="password" id="edit-password" maxlength="30">
                     </div>
                     <div>
                         <label>Confirmar Password:</label>
-                        <input type="password" id="edit-password-confirm">
+                        <input type="password" id="edit-password-confirm" maxlength="30">
                     </div>
                     <button type="button" id="guardarAlteracoesUserBtn">Guardar Alterações</button>
                 </form>

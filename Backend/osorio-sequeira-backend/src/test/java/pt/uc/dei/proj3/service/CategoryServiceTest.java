@@ -42,8 +42,9 @@ class CategoryServiceTest {
     public void setUp() {
         // Preparation
         MockitoAnnotations.openMocks(this);
-        //categoryBean = mock(CategoryBean.class);
-        //userBean = mock(UserBean.class);
+        // Mock UserBean and CategoryBean behaviors
+        when(userBean.verifyToken("validToken")).thenReturn(adminUser);
+        when(categoryBean.registerNewCategory(validCategory)).thenReturn(true);
 
         //Admin
         adminUser = new UserDto();
@@ -76,7 +77,6 @@ class CategoryServiceTest {
 
     @Test
     void registerNewCategorySuccess() {
-        when(userBean.verifyToken("validToken")).thenReturn(adminUser);
         Response response = categoryService.registerNewCategory("validToken", validCategory);
         assertEquals(200, response.getStatus(), "Expected status code 200 but found " + response.getStatus());
     }

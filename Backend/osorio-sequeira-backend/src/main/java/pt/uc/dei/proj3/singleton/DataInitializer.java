@@ -1,5 +1,6 @@
 package pt.uc.dei.proj3.singleton;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
@@ -18,7 +19,9 @@ public class DataInitializer {
         if (!userDao.findIfUserExists("admin")) {
             UserEntity admin = new UserEntity();
             admin.setUsername("admin");
-            admin.setPassword("admin");
+            String password = "admin";
+            password = BCrypt.withDefaults().hashToString(10, password.toCharArray());
+            admin.setPassword(password);
             admin.setFirstName("admin");
             admin.setLastName("admin");
             admin.setEmail("admin@admin.com");

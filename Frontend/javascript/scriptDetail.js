@@ -72,7 +72,7 @@ async function adicionarBotoesEditarApagar(product) {
   if (sessionStorage.getItem("token")) {
     const response = await fetchRequest("/user/user", "GET");
     const usernameLoggedUser = response.username;
-    if (usernameLoggedUser == product.seller.trim().toLowerCase()) {
+    if (usernameLoggedUser == product.seller) {
       inicializarBotoesEditarApagarProduto(product);
     }
     if (response.admin === true) {
@@ -91,6 +91,7 @@ async function adicionarBotoesEditarApagar(product) {
 }
 
 function inicializarBotoesEditarApagarProduto(product) {
+  console.log(true);
   const editDeleteButtons = document.getElementById("edit-delete-buttons");
   editDeleteButtons.style.display = "inline-block";
   const deleteProductBtn = document.getElementById("delete-product");
