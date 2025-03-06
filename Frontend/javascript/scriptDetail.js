@@ -159,7 +159,7 @@ async function deleteProduct() {
 async function excludeProduct(product) {
   const confirmExclude = confirm(`Pretende excluir o product ${product.name}`);
   if (confirmExclude) {
-    fetchRequest(`/user/${product.seller}/products/${product.id}`, "PATCH");
+    fetchRequest(`/user/${product.seller}/products/${product.id}`, "DELETE");
     alert("Produto excluído com sucesso");
     window.location.href = "index.html";
   }
