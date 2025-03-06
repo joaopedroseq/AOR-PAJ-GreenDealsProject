@@ -69,6 +69,22 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
+    public boolean findIfAnonymousExists(){
+        try{
+            if (em.createNamedQuery("User.findIfAnonymousExists").setParameter("anonymous", "anonymous").getResultList().isEmpty()) {
+                return false;
+            }
+            else{
+                return true;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.findIfAnonymousExists", e.getMessage());
+            return false;
+        }
+    }
+
+
     public boolean deleteUser(String username) {
         try{
             if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {

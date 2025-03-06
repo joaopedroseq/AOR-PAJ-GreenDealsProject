@@ -152,6 +152,19 @@ public class UserBean implements Serializable {
 
     public boolean deleteUser(String username) {
         try {
+            if(!userDao.findIfAnonymousExists()){
+                UserEntity anonymous = new UserEntity();
+                anonymous.setUsername("anonymous");
+                anonymous.setPassword("admin");
+                anonymous.setAdmin(true);
+                anonymous.setEmail("-");
+                anonymous.setExcluded(false);
+                anonymous.setFirstName("anonymous");
+                anonymous.setLastName("-");
+                anonymous.setPhoneNumber("-1");
+                anonymous.setUrl("-");
+                userDao.persist(anonymous);
+            }
             productDao.setProductsOfUserToAnonymous(username);
             if (userDao.deleteUser(username)) {
                 return true;

@@ -17,6 +17,10 @@ import java.util.Set;
 @NamedQuery(name = "User.findIfTokenExists", query = "SELECT token FROM UserEntity WHERE token = :token")
 //to find if user exists
 @NamedQuery(name = "User.findIfUserExists", query = "SELECT username FROM UserEntity WHERE username = :username")
+
+//find if anonymous exists
+@NamedQuery(name = "User.findIfAnonymousExists", query = "SELECT username FROM UserEntity WHERE username = :anonymous")
+
 //delete user
 @NamedQuery(name="User.deleteUser", query = "DELETE FROM UserEntity WHERE username = :username")
 //exclude user
