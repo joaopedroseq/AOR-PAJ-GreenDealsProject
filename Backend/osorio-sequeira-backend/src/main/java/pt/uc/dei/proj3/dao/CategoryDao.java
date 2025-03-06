@@ -21,6 +21,10 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
         super(CategoryEntity.class);
     }
 
+    public void flush() {
+        em.flush();
+    }
+
     public List<CategoryEntity> getAllCategories() {
         try {
             return (List<CategoryEntity>) em.createNamedQuery("Category.getAllCategories").setParameter("empty", "empty").getResultList();
@@ -36,6 +40,19 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
 
         } catch (NoResultException e) {
             return null;
+        }
+    }
+
+    public boolean findIfCategoryEmptyExists() {
+        try {
+            if(em.createNamedQuery("Category.findCategoryByName").setParameter("nome", "empty").getSingleResult() == null) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        } catch (NoResultException e) {
+            return false;
         }
     }
 

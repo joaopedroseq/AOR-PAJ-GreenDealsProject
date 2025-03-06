@@ -23,8 +23,6 @@ import java.util.Set;
 public class CategoryBean implements Serializable {
     private static final Logger logger = LogManager.getLogger(UserBean.class);
 
-    @Inject
-    ApplicationBean applicationBean;
 
     @Inject
     UserBean userBean;
@@ -55,7 +53,13 @@ public class CategoryBean implements Serializable {
 
     public boolean deleteCategory(CategoryDto category) {
         try {
-            CategoryEntity empty = categoryDao.findCategoryByName("empty");
+            CategoryEntity empty;
+            if(!categoryDao.findIfCategoryEmptyExists()){
+                empty = createEmptyCategory();
+            }
+            else {
+                empty = categoryDao.findCategoryByName("empty");
+            }
             CategoryEntity categoryEntity = convertCategoryDtoToCategoryEntity(category);
             productDao.setAllProductsCategoryToEmpty(empty, categoryEntity);
             if(categoryDao.deleteCategory(categoryEntity)){
@@ -78,6 +82,15 @@ public class CategoryBean implements Serializable {
             }
         }
         return false;
+    }
+
+    private CategoryEntity createEmptyCategory() {
+        CategoryEntity empty;
+        empty = new CategoryEntity();
+        empty.setNome("empty");
+        categoryDao.persist(empty);
+        categoryDao.flush();
+        return empty;
     }
 
     public Set<ProductDto> getProductsByCategory(String category) {

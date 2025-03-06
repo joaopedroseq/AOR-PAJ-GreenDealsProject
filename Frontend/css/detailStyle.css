@@ -139,6 +139,8 @@ aside h3, aside ul {
 }
 
 
+
+
 /*---------------The Modal (background)-----------------------*/
 .modal-detail {
     max-height:calc(100vh - 100px);
@@ -293,7 +295,6 @@ aside h3, aside ul {
     margin-top: 20px;
     transition: background-color 0.3s ease;
 }
-
 
 
 /* Para estilizar o botão de contatar o anunciante */

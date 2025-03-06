@@ -8,7 +8,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.CategoryBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.CategoryDto;
@@ -78,7 +77,7 @@ public class CategoryService {
                 } else {
                     categoryDto.setName(categoryDto.getName().toLowerCase().trim());
                     if (!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
-                        logger.info("User {} tried to delete category {} non-existant", categoryDto.getName(), user.getUsername());
+                        logger.info("User {} tried to delete category {} non-existent", categoryDto.getName(), user.getUsername());
                         return Response.status(404).entity("Category " + categoryDto.getName() + " doesn't exist").build();
                     } else {
                         if (categoryBean.deleteCategory(categoryDto)) {

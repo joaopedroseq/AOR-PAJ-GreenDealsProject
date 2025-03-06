@@ -1,6 +1,5 @@
 package pt.uc.dei.proj3.service;
 
-import pt.uc.dei.proj3.beans.ApplicationBean;
 import pt.uc.dei.proj3.beans.ProductBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.*;
@@ -27,11 +26,6 @@ public class UserService {
     @Inject
     ProductBean productbean;
 
-    @Inject
-    ApplicationBean applicationBean;
-
-    @Context
-    private HttpServletRequest request;
 
     //Regular user register
     @POST

@@ -26,11 +26,6 @@ import pt.uc.dei.proj3.entity.UserEntity;
 public class UserBean implements Serializable {
 
     private static final Logger logger = LogManager.getLogger(UserBean.class);
-    @Inject
-    ApplicationBean applicationBean;
-
-    @Inject
-    ProductBean productBean;
 
     @EJB
     UserDao userDao;
