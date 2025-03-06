@@ -333,6 +333,8 @@ export function register() {
     alert("O último nome é obrigatório.");
   } else if (username.trim() === "") {
     alert("O username é de preenchimento obrigatório");
+  } else if (!checkIfUsernameValid(username)){
+    alert("O username não pode conter espaços");
   } else if (password.trim() === "") {
     alert("A password é de preenchimento obrigatório");
   } else if (passwordConfirm.trim() === "") {
@@ -430,4 +432,13 @@ export function abrirFecharAside() {
       aside.style.display = "none";
     }
   }  
+}
+
+function checkIfUsernameValid(username){
+  for(let character of username){
+    if(character == " "){
+      return false;
+    }
+  }
+  return true;
 }

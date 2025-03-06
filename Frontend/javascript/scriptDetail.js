@@ -139,7 +139,7 @@ async function deleteProduct() {
   const response = await fetchRequest("/user/user", "GET");
   const usernameLoggedUser = response.username;
   const productId = new URLSearchParams(window.location.search).get("index");
-  var userConfirm = window.confirm(
+  var userConfirm = confirm(
     "Tem a certeza que pretende eliminar este produto?"
   );
   if (userConfirm) {
@@ -157,10 +157,10 @@ async function deleteProduct() {
 
 //Função para excluir um produto
 async function excludeProduct(product) {
-  const confirmExclude = confirm(`Pretende excluir o product ${product.name}`);
+  const confirmExclude = confirm(`Pretende eliminar permanentemente o product ${product.name}`);
   if (confirmExclude) {
     fetchRequest(`/user/${product.seller}/products/${product.id}`, "DELETE");
-    alert("Produto excluído com sucesso");
+    alert("Produto eliminado com sucesso");
     window.location.href = "index.html";
   }
 }
