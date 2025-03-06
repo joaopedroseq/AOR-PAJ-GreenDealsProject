@@ -257,7 +257,7 @@ public class UserService {
     }
 
     @DELETE
-    @Path("/{username}/deleteProducts")
+    @Path("/{username}/products/delete/")
     public Response deleteProductsOfUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDeleteProducts) {
         if (usernameUserDeleteProducts.trim().equals("")) {
             logger.error("Invalid data - missing params - Deleting products of user");

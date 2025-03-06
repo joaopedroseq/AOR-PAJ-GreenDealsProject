@@ -1,0 +1,1986 @@
+{
+	"info": {
+		"_postman_id": "c139a672-0caa-4709-b708-05ced2d057cb",
+		"name": "RequestsBackend-Sequeira",
+		"description": "Requests a Backend - proj3\n\nLista de acessos a backend, tentando cobrir a maior parte das possibilidades de retorno dos endpoints.\n\nNota: Estão criadas variáveis de token para administrador e para utilizadores regulares, definidas ao nível da collection, para facilitar o uso.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "41850627",
+		"_collection_link": "https://winter-crater-594434.postman.co/workspace/d9e05d17-1fc4-44ff-842b-12a65a8df551/collection/41850627-c139a672-0caa-4709-b708-05ced2d057cb?action=share&source=collection_link&creator=41850627"
+	},
+	"item": [
+		{
+			"name": "Register",
+			"item": [
+				{
+					"name": "200 Register Regular User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mpina\",\r\n  \"password\": \"123\",\r\n  \"firstName\": \"Marlene\",\r\n  \"lastName\": \"Pina\",\r\n  \"email\": \"MarlenaPina@uouou.br\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"url\": \"https://www.iol.pt/multimedia/oratvi/multimedia/imagem/id/13309731/400.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Register Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"anonymous\",\r\n  \"password\": \"admin\",\r\n  \"firstName\": \"anonymous\",\r\n  \"lastName\": \"anonymous\",\r\n  \"email\": \"admin@admin.com\",\r\n  \"phoneNumber\": \"-1\",\r\n  \"url\": \"-\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/registerAdmin"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Register Regular User (missing fields)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mpina\",\r\n  //\"password\": \"123\",\r\n  \"firstName\": \"Marlene\",\r\n  \"lastName\": \"Pina\",\r\n  \"email\": \"MarlenaPina@uouou.br\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"url\": \"https://www.iol.pt/multimedia/oratvi/multimedia/imagem/id/13309731/400.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Register Regular User (extra fields)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mpina\",\r\n  \"password\": \"123\",\r\n  \"firstName\": \"Marlene\",\r\n  \"lastName\": \"Pina\",\r\n  \"email\": \"MarlenaPina@uouou.br\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"url\": \"https://www.iol.pt/multimedia/oratvi/multimedia/imagem/id/13309731/400.jpg\",\r\n  \"clube\" : \"F.C.Porto\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/register"
+					},
+					"response": []
+				},
+				{
+					"name": "409 Register Regular User (existing username)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mpina\",\r\n  \"password\": \"123\",\r\n  \"firstName\": \"Marlene\",\r\n  \"lastName\": \"Pina\",\r\n  \"email\": \"MarlenaPina@uouou.br\",\r\n  \"phoneNumber\": \"123456789\",\r\n  \"url\": \"https://www.iol.pt/multimedia/oratvi/multimedia/imagem/id/13309731/400.jpg\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/register"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login/Logout",
+			"item": [
+				{
+					"name": "200 Login-admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"admin\",\r\n  \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Login (missing fields)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  //\"username\": \"admin\",\r\n  \"password\": \"admin\"\r\n}\r\n\r\n//missing fields",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Login (empty fileds)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"\",\r\n  \"password\": \"admin\"\r\n}\r\n\r\n//empty fields",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Login (wrong credentials)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"administrador\",\r\n  \"password\": \"admin\"\r\n}\r\n\r\n// Wrong username or password",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Login (data on wrong format)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": 585,\r\n  \"password\": \"admin\"\r\n}\r\n\r\n// username passed as int instead of string",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Login-regular user (mpina)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mpina\",\r\n  \"password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Login-regular user (jpsequeira)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"jpsequeira\",\r\n  \"password\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "i53vG0i3zMY-Bmb-YECUgW1wSC1yhEEW",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/logout"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Logout (no token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "i53vG0i3zMY-Bmb-YECUgW1wSC1yhEEW",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// Request without token / invalid token",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/logout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "200 AddCategory",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"tecnologia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "401 AddCategory (no token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "400 AddCategory (missing fields)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    //\"name\": \"teste\"\r\n}\r\n\r\n//missing required field",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "400 AddCategory (empty fields)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\"\r\n}\r\n\r\n// Required field empty",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "400 AddCategory (extra fields)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\",\r\n    \"primeironome\": \"luis\",\r\n    \"produto\": \"microondas\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "403 AddCategory (non admin user)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "o_BaC5iXIrfsPV2pp2i1Z3n31bMrb1bi",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"comida\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "401 AddCategory (no token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "409 AddCategory (already exists)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\"\r\n}\r\n\r\n//Code for conflict when category exists",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}}category/register"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get all categories (with admin token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/all"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get all categories (with regular token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/all"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get all categories (no token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "xcYsQgEAzF3gqP_G9HoklLyrrkv5KhAZ",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/all"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Delete category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"papelaria\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete category (no admin user)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"vestuário\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Delete category (invalid token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}444",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"vestuário\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "404 Delete category (inexistent category)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"comida\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}category/delete"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User - Get Requests",
+			"item": [
+				{
+					"name": "200 Get Self Information (admin token)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/user"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get Self Information (regular user token)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/user"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Get Self Information (invalid token)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}444",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/user"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get Others Information",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/userInformation"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Get Others Information (no token)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "{{baseurl}}user/mpina/userInformation"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Get Others Information (no admin user)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/userInformation"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Get All Regular Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/users"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Get All Regular Users (no admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/users"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Get All Regular Users (no token)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": "{{baseurl}}user/users"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User - Put/Patch/Del Requests",
+			"item": [
+				{
+					"name": "200 Update User (admin token self)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/update"
+					},
+					"response": []
+				},
+				{
+					"name": "400 Update User (invalid fields)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clube futebol\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD-O8jqkWovbIYJksABCKxrN-BazDIGWpI4w&s\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/update"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Update User (invalid token)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"url\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD-O8jqkWovbIYJksABCKxrN-BazDIGWpI4w&s\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/update"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Delete User (invalidToken)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete User (Regular Token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "404 Delete User (inexistent pathUser)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/hardoGay/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Exclude User (regular token)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/jpsequeira/exclude"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Exclude User (admin token)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/teste/exclude"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Exclude User (regular token) Copy 2",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/jpsequeira/exclude"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products- Get Requests",
+			"item": [
+				{
+					"name": "Get product by id",
+					"item": [
+						{
+							"name": "200 Get P. By ID (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}user/products/-1901985835"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get P. By ID (Regular token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}user/products/-1901985835"
+							},
+							"response": []
+						},
+						{
+							"name": "401 Get P. By ID (no token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": "{{baseurl}}user/products/-1901985835"
+							},
+							"response": []
+						},
+						{
+							"name": "404 Get P. By ID (inexistent ID)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}user/products/-190"
+							},
+							"response": []
+						},
+						{
+							"name": "403 Get P. By ID (regular Token excluded product)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}user/products/-2023553808"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Active products - All/ By user",
+					"item": [
+						{
+							"name": "200 Get Active Products (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/active"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Active Products (no token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": "{{baseurl}}products/active"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Active Products By User (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/active/jpsequeira"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Active Products By User (Regular token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/active/mpina"
+							},
+							"response": []
+						},
+						{
+							"name": "401 Get Active Products By User (invalid token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}44",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/active/jpsequeira"
+							},
+							"response": []
+						},
+						{
+							"name": "403 Get Active Products By User (regular user getting others products)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/active/jpsequeira"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get All Products - All/ By user",
+					"item": [
+						{
+							"name": "200 Get All Products By User(admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all/jpsequeira"
+							},
+							"response": []
+						},
+						{
+							"name": "401 Get All Products By User(invalid token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}444",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all/jpsequeira"
+							},
+							"response": []
+						},
+						{
+							"name": "403 Get All Products By User(Regular token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all/mpina"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get All Products (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get All Products (Regular token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get All Products (invalid token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}444",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/all"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Available/Edited/By Category",
+					"item": [
+						{
+							"name": "200 Get Available Products (no token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": "{{baseurl}}products/available"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Edited Products (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/edited"
+							},
+							"response": []
+						},
+						{
+							"name": "401 Get Edited Products (invalid token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}444",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/edited"
+							},
+							"response": []
+						},
+						{
+							"name": "403 Get Edited Products (Regular token) Copy",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/edited"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Products By Category (admin token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenAdmin}}",
+										"type": "text"
+									}
+								],
+								"url": "{{baseurl}}products/vestuario"
+							},
+							"response": []
+						},
+						{
+							"name": "200 Get Products By Category (no token)",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "{{tokenRegularUser}}",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": "{{baseurl}}products/vestuario"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Products - Post/Put/Patch Requests",
+			"item": [
+				{
+					"name": "200 AddProduct (token self)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seller\" : \"mpina\",\n    \"name\" : \"nokia-3310\",\n    \"description\" : \"telemóvel nokia 3310 com marcas de uso no ecrã7\",\n    \"price\" : 2.50,\n    \"category\" : \"tecnologia\",\n    \"location\" : \"coimbra\",\n    \"urlImage\" : \"https://r.iservices.pt/common/posts/15338275390.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/add"
+					},
+					"response": []
+				},
+				{
+					"name": "404 AddProduct (invalid category)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seller\" : \"mpina\",\n    \"name\" : \"nokia-3310\",\n    \"description\" : \"telemóvel nokia 3310 com marcas de uso no ecrã5\",\n    \"price\" : 2.50,\n    \"category\" : \"tea\",\n    \"location\" : \"coimbra\",\n    \"urlImage\" : \"https://r.iservices.pt/common/posts/15338275390.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/add"
+					},
+					"response": []
+				},
+				{
+					"name": "401 AddProduct (invalid token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seller\" : \"mpina\",\n    \"name\" : \"nokia-3310\",\n    \"description\" : \"telemóvel nokia 3310 com marcas de uso no ecrã3\",\n    \"price\" : 2.50,\n    \"category\" : \"tecnologia\",\n    \"location\" : \"coimbra\",\n    \"urlImage\" : \"https://r.iservices.pt/common/posts/15338275390.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/add"
+					},
+					"response": []
+				},
+				{
+					"name": "403 AddProduct (admin token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seller\" : \"mpina\",\n    \"name\" : \"nokia-3310\",\n    \"description\" : \"telemóvel nokia 3310 com marcas de uso no ecrã3\",\n    \"price\" : 2.50,\n    \"category\" : \"tecnologia\",\n    \"location\" : \"coimbra\",\n    \"urlImage\" : \"https://r.iservices.pt/common/posts/15338275390.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/add"
+					},
+					"response": []
+				},
+				{
+					"name": "403 AddProduct (Regular token)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"seller\" : \"mpina\",\n    \"name\" : \"nokia-3310\",\n    \"description\" : \"telemóvel nokia 3310 com marcas de uso no ecrã4\",\n    \"price\" : 2.50,\n    \"category\" : \"tacnologia\",\n    \"location\" : \"coimbra\",\n    \"urlImage\" : \"https://r.iservices.pt/common/posts/15338275390.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/jpsequeira/add"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Update Product (Regular token self)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -1901985835,\n    \"seller\": \"jpsequeira\",\n    \"name\": \"alicateNovo\",\n    \"description\": \"alicate velho e com ferrugem e com descricao atualizada por um admin e não pelo dono do produto\",\n    \"price\": 15.5,\n    \"category\": \"ferramentas\",\n    \"location\": \"aveiro\",\n    \"urlImage\": \"https://img.lojadomecanico.com.br/IMAGENS/2/468/105111/Alicate-Universal-Black-Nickel-6-Pol-Niq-mtx-1697891.JPG\",\n    \"state\": \"DISPONIVEL\",\n    \"date\": [\n        2025,\n        3,\n        3,\n        10,\n        56,\n        34,\n        173706000\n    ],\n    \"excluded\": false,\n    \"edited\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/products/-1901985835"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Update Product (Admin token other user)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -1901985835,\n    \"seller\": \"jpsequeira\",\n    \"name\": \"alicateNovo\",\n    \"description\": \"alicate velho e com ferrugem e com descricao atualizada por um admin e não pelo dono do produto\",\n    \"price\": 15.5,\n    \"category\": \"ferramentas\",\n    \"location\": \"aveiro\",\n    \"urlImage\": \"https://img.lojadomecanico.com.br/IMAGENS/2/468/105111/Alicate-Universal-Black-Nickel-6-Pol-Niq-mtx-1697891.JPG\",\n    \"state\": \"DISPONIVEL\",\n    \"date\": [\n        2025,\n        3,\n        3,\n        10,\n        56,\n        34,\n        173706000\n    ],\n    \"excluded\": false,\n    \"edited\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/products/-1901985835"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Update Product (invalid token)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -1901985835,\n    \"seller\": \"jpsequeira\",\n    \"name\": \"alicateNovo\",\n    \"description\": \"alicate velho e com ferrugem e com descricao atualizada por um admin e não pelo dono do produto\",\n    \"price\": 15.5,\n    \"category\": \"ferramentas\",\n    \"location\": \"aveiro\",\n    \"urlImage\": \"https://img.lojadomecanico.com.br/IMAGENS/2/468/105111/Alicate-Universal-Black-Nickel-6-Pol-Niq-mtx-1697891.JPG\",\n    \"state\": \"DISPONIVEL\",\n    \"date\": [\n        2025,\n        3,\n        3,\n        10,\n        56,\n        34,\n        173706000\n    ],\n    \"excluded\": false,\n    \"edited\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/products/-1901985835"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Update Product (Regular token Other  User)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": -1901985835,\n    \"seller\": \"jpsequeira\",\n    \"name\": \"alicateNovo\",\n    \"description\": \"alicate velho e com ferrugem e com descricao atualizada por um admin e não pelo dono do produto\",\n    \"price\": 15.5,\n    \"category\": \"ferramentas\",\n    \"location\": \"aveiro\",\n    \"urlImage\": \"https://img.lojadomecanico.com.br/IMAGENS/2/468/105111/Alicate-Universal-Black-Nickel-6-Pol-Niq-mtx-1697891.JPG\",\n    \"state\": \"DISPONIVEL\",\n    \"date\": [\n        2025,\n        3,\n        3,\n        10,\n        56,\n        34,\n        173706000\n    ],\n    \"excluded\": false,\n    \"edited\": null\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/jpsequeira/products/-1901985835"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Buy Product (admin token other user)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/products/buy/2124426806"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Buy Product (regular token other user)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser - jpsequeira}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/products/buy/-2023553808"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Buy Product (invalid token)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}44",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/products/buy/2124426806"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Buy Product (own product)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/products/buy/2124426806"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Buy Product (bought product)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/products/buy/2124426806"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Exclude Product (admin token other product)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/products/-1844668692"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Exclude Product (regular token own product)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-494923055"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Exclude Product (already excluded)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/products/-494923055"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Exclude Product (invalid token)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}44",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/products/-494923055"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Exclude Product (regular token other product)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser - jpsequeira}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/jpsequeira/products/-1168887811"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products - Delete",
+			"item": [
+				{
+					"name": "200 Delete Product (admin token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-1844668692"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Delete Product (invalid token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}44",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-1844668692"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete Product (regular token own product)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-1844668692"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete Product (regular token others product)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser - jpsequeira}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-1844668692"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete Product (unexcluded Product)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"url": "{{baseurl}}user/mpina/products/-386179340"
+					},
+					"response": []
+				},
+				{
+					"name": "200 Delete User Products (admin token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/jpsequeira/products/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "401 Delete User Products (invalid token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}44",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/hardoGay/products/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "403 Delete User Products (regular token)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenRegularUser}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/mpina/products/delete"
+					},
+					"response": []
+				},
+				{
+					"name": "404 Delete User Products (inexistent Path username)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{tokenAdmin}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "text"
+								}
+							}
+						},
+						"url": "{{baseurl}}user/hardoGay/products/delete"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseurl",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "tokenAdmin",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "tokenRegularUser",
+			"value": "R15OJSv62hCY_eDt1eX6_tRcemjwSpKx",
+			"type": "string"
+		},
+		{
+			"key": "tokenRegularUser - jpsequeira",
+			"value": "3LYYdiWc9HhVWvzoHjgRLrKm6gtAwLZ-",
+			"type": "string"
+		}
+	]
+}
