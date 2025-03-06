@@ -72,11 +72,14 @@ async function adicionarBotoesEditarApagar(product) {
   if (sessionStorage.getItem("token")) {
     const response = await fetchRequest("/user/user", "GET");
     const usernameLoggedUser = response.username;
+
     if (usernameLoggedUser == product.seller) {
       inicializarBotoesEditarApagarProduto(product);
     }
     if (response.admin === true) {
-      inicializarBotoesEditarApagarProduto(product);
+      if (!product.excluded) {
+        inicializarBotoesEditarApagarProduto(product);
+      }
       const excludeProductBtn = document.getElementById(
         "exclude-product-button"
       );
@@ -94,7 +97,7 @@ function inicializarBotoesEditarApagarProduto(product) {
   const editDeleteButtons = document.getElementById("edit-delete-buttons");
   editDeleteButtons.style.display = "inline-block";
   const deleteProductBtn = document.getElementById("delete-product");
-  
+
   deleteProductBtn.addEventListener("click", () => deleteProduct());
   const editProductBtn = document.getElementById("edit-product");
   editProductBtn.addEventListener("click", () => {
