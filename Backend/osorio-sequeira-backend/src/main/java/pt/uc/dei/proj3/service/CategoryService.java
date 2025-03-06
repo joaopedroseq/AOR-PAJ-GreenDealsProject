@@ -24,13 +24,7 @@ public class CategoryService {
     CategoryBean categoryBean;
 
     @Inject
-    ApplicationBean applicationBean;
-
-    @Inject
     UserBean userbean;
-
-    @Context
-    private HttpServletRequest request;
 
     @POST
     @Path("/register")
