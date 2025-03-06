@@ -1,5 +1,7 @@
 package pt.uc.dei.proj3.service;
 
+import pt.uc.dei.proj3.beans.ApplicationBean;
+import pt.uc.dei.proj3.beans.CategoryBean;
 import pt.uc.dei.proj3.beans.ProductBean;
 import pt.uc.dei.proj3.beans.UserBean;
 import pt.uc.dei.proj3.dto.*;
@@ -26,6 +28,15 @@ public class UserService {
     @Inject
     ProductBean productbean;
 
+    @Inject
+    CategoryBean categorybean;
+
+
+    @Inject
+    ApplicationBean applicationBean;
+
+    @Context
+    private HttpServletRequest request;
 
     //Regular user register
     @POST
@@ -421,10 +432,15 @@ public class UserService {
             logger.error("Invalid token - adding new product to {}", pathUsername);
             return Response.status(401).entity("Invalid token").build();
         } else {
+            CategoryDto category = new CategoryDto();
+            category.setName(newProductDto.getCategory());
             if (!newProductDto.newProductIsValid()) {
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();
-            } else if (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(newProductDto.getSeller())) {
+            }else if(!categorybean.checkIfCategoryAlreadyExists(category)) {
+                logger.error("Category {} does not exist", category.getName());
+                return Response.status(404).entity("Category " + category.getName() + " does not exist").build();
+            } else if (!user.getUsername().equals(pathUsername) || !user.getUsername().equals(newProductDto.getSeller())) {
                 logger.error("Permission denied - {} adding new product to {}", user.getUsername(), pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             } else if( userbean.addProduct(user, newProductDto)){
@@ -536,7 +552,7 @@ public class UserService {
             } else if (product.isExcluded()){
                 logger.error("Permission denied - {} excluding already excluded product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - excluding already excluded product").build();
-            } else if (!user.getAdmin() && (!user.getUsername().equals(pathUsername) && !user.getUsername().equals(product.getSeller()))) {
+            } else if (!user.getAdmin() && !(user.getUsername().equals(pathUsername) && user.getUsername().equals(product.getSeller()))) {
                 logger.error("Permission denied - {} excluding Product {} belonging to {}", user.getUsername(),pathProductId, pathUsername);
                 return Response.status(403).entity("Permission denied").build();
             } else if (userbean.excludeProduct(pathProductId)) {
