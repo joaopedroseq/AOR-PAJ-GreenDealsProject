@@ -160,7 +160,7 @@ aside h3 {
   justify-self: center;
 }
 
-/* Create the X shape using pseudo-elements */
+/*Overlay com um X para produtos excluídos */
 .excluded-overlay::before,
 .excluded-overlay::after {
   content: "";

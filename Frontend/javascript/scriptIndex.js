@@ -27,6 +27,7 @@ function displayProduct(product, index) {
   const productHTML = `
             <div class="grid-item" data-category = "${product.category}" onclick="window.location.href='detail.html?index=${index}'"> 
                 <img src='${product.urlImage}' alt="${product.name}"/>
+                ${product.excluded ? '<div class="excluded-overlay"></div>' : ""}
                 <div class="text-overlay">
                     <h2 style="background-color: transparent;">${product.name}</h2>
                     <p style="background-color: transparent;">Preço: €${product.price}</p>

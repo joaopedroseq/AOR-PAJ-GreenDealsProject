@@ -71,3 +71,10 @@ export async function checkIfAdmin() {
     }
   }
 }
+
+//Função para verificar se um string é válido (não tem caracteres especiais nem espaços)
+export function checkIfValid(string) {
+  const pattern = /^[a-zA-Z0-9\s-_]*$/;
+  return pattern.test(string);
+}
+
