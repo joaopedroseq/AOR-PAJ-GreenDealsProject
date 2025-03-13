@@ -1,0 +1,84 @@
+import React from 'react';
+import '../styles/footer.css';
+import mobile from '../assets/contact/mobile.png'
+import email from '../assets/contact/email.png'
+import facebookIcon from '../assets/social/facebook.png'
+import instagramIcon from '../assets/social/instagram.png'
+import linkedinIcon from '../assets/social/linkedin.png'
+import twitterIcon from '../assets/social/twitter.png'
+import whatsappIcon from '../assets/social/whatsapp.png'
+import youtubeIcon from '../assets/social/youtube.png'
+
+const Footer = (props) => {
+    return (
+        <div className="footer">
+            <div className="footerContainer">
+                <div className="footerInfo">
+                    <h3>Contactos</h3>
+                        <ul className="listaContactos">
+                            <li><p>Departamento de Engenharia Informática</p></li>
+                            <li><p>Faculdade de Ciências e Tecnologia</p></li>
+                            <li><p>Universidade de Coimbra</p></li>
+                            <li><p>Pólo II - Pinhal de Marrocos</p></li>
+                            <li><p>3030-290 Coimbra</p></li>
+                            <div className="contact">
+                                <img src={mobile} height="30px" style={{padding: '5px'}}/>
+                                <p>+351 239 790 000</p>
+                            </div>
+                        <div className="contact">
+                            <img src={email} height="30px" style={{padding: '5px'}}/>
+                            <p>info@dei.uc.pt</p>
+                        </div>
+                        </ul>
+            </div>
+            <div className="footerInfo">
+                <h3>Apoio ao cliente</h3>
+                    <ul className="listaApoioCliente">
+                        <li><a >FAQ</a></li>
+                        <li><a href="#" id="privacyButton">Politica de Privacidade</a></li>
+                        <li><a >Termos de serviço</a></li> 
+                    </ul>
+            </div>
+            <div className="footerInfo">
+                <h3>Sobre nós</h3>
+                <ul className="listaEmpresa">
+                    <li><a href="#" id="aboutButton">Créditos</a></li>
+                    <li><a >Missão e valores da empresa</a></li>
+                    <li><a >Oportunidades de emprego</a></li>
+                </ul>
+            </div>
+            <div className="social">
+                <h3>Siga-nos</h3>
+                <div className="listaSocial">
+                    <a href="https://www.facebook.com" target="_blank"><img src={facebookIcon} height="40px"/></a>
+                    <a href="https://www.instagram.com" target="_blank"><img src={instagramIcon} height="40px"/></a>
+                    <a href="https://www.linkedin.com" target="_blank"><img src={linkedinIcon} height="40px"/></a>
+                    <a href="https://www.twitter.com" target="_blank"><img src={twitterIcon} height="40px"/></a>
+                    <a href="https://www.youtube.com" target="_blank"><img src={youtubeIcon} height="40px"/></a>
+                </div>
+            </div>
+        </div>
+        <div className="copyright">
+            &copy; 2025 GreenDeals. Todos os direitos reservados.
+        </div>
+        {/*The Modal*/}
+        <div id="modal" className="modal">
+            {/*Modal content*/}
+            <div className="modal-content">
+                <div className="modal-header">
+                    <span className="close">&times;</span>
+                    <h2 id="modal-header">Modal Header</h2>
+                </div>
+                <div className="modal-body">
+                    <h4 id="title1"></h4>
+                    <p id="phrase1"></p>
+                    <h4 id="title2"></h4>
+                    <p id="phrase2"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    );
+};
+
+export default Footer;

@@ -114,7 +114,7 @@ export async function submitLogin() {
 
 export async function login(username, password) {
   const loginUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/login";
+    "http://localhost:8080/sequeira-proj4/rest/user/login";
   try {
     const response = await fetch(loginUrl, {
       method: "POST",
@@ -356,7 +356,7 @@ export function register() {
       "Pretende criar um novo registo " + firstName + "?"
     );
     if (confirm) {
-      fetch("http://localhost:8080/osorio-sequeira-proj3/rest/user/register", {
+      fetch("http://localhost:8080/sequeira-proj4/rest/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

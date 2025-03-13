@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         });
 
         const response = await fetch(
-          `http://localhost:8080/osorio-sequeira-proj3/rest/user/add/evaluation/${anunciante}`,
+          `http://localhost:8080/sequeira-proj4/rest/user/add/evaluation/${anunciante}`,
           {
             method: "POST",
             headers: addEvaluationtHeader,
@@ -165,7 +165,7 @@ function clearStars() {
 
 async function getProductInformation(productIndex) {
   const getProductInformationUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/products/" +
+    "http://localhost:8080/sequeira-proj4/rest/user/products/" +
     productIndex;
 
   try {
@@ -230,7 +230,7 @@ async function getProductInformation(productIndex) {
 async function updateRatings(productIndex, anunciante) {
   try {
     const response = await fetch(
-      `http://localhost:8080/osorio-sequeira-proj3/rest/user/all/evaluations/${anunciante}`
+      `http://localhost:8080/sequeira-proj4/rest/user/all/evaluations/${anunciante}`
     );
     const evaluations = await response.json();
 
@@ -279,7 +279,7 @@ async function displayAvaliacoes(anunciante, productIndex) {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/osorio-sequeira-proj3/rest/user/all/evaluations/${anunciante}`
+      `http://localhost:8080/sequeira-proj4/rest/user/all/evaluations/${anunciante}`
     );
     const evaluations = await response.json();
     console.log("Fetched evaluations:", evaluations); // Debugging log to check fetched data
@@ -392,7 +392,7 @@ async function deleteReview(evaluationId, seller) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
+        `http://localhost:8080/sequeira-proj4/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
         {
           method: "DELETE",
           headers: deleteEvaluationHeader,
@@ -462,7 +462,7 @@ async function editReview(
 
     try {
       const response = await fetch(
-        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
+        `http://localhost:8080/sequeira-proj4/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
         {
           method: "POST",
           headers: editReviewHeader,

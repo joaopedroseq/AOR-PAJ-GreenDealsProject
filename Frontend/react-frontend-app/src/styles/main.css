@@ -1,0 +1,206 @@
+/* Estilo global */
+:root {
+  --green: #b0b9a2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
+}
+
+.montserrat-Montserrat {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.playfair-display-Playfair Display {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
+/* Estilo global do html */
+*,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilo global do body */
+body {
+  background-color: var(--beige);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.main-content {
+  padding: 100px;
+  width: 100vw;
+  margin-left: 0;
+  font-size: 25px; /* Tamanho maior */
+  line-height: 2; /* Espaçamento entre linhas */
+  margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+  text-align: center; /* Centraliza o texto */
+}
+
+/* Estilo para o aside */
+aside {
+  display: none;
+  position: fixed; /* Para o aside flutuar sobre o conteúdo */
+  left: 0;
+  top: 80px;
+  padding: 10px;
+  color:var(--darkGreen);
+  background-color: #f1f3ebaa; /* Cor verde com transparência */
+  border: 1px solid #d3d3d3;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Montserrat";
+  line-height: 2;
+  height: 100vh; /* O aside ocupará toda a altura da tela */
+  width: 250px; /* Largura do aside */
+  z-index: 1; /* Certifique-se de que o aside fique acima do conteúdo */
+}
+
+aside h3 {
+  font-family: "Verdana";
+  text-align: center;
+}
+
+
+.check-edited-products{
+  font-family: "Verdana";
+  text-align: center;
+  
+}
+
+.check-edited-products:hover{
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+
+aside ul li {
+  font-family: "Verdana";
+  list-style-type: none;
+  text-align: center;
+  cursor: pointer;
+}
+
+aside ul li:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para o botão de fechar o aside */
+.button {
+  float: right;
+  margin-top: 3%;
+  display: block;
+  border-radius: 2px;
+  text-align: center;
+  font-family: Verdana, "Times New Roman", Times, serif;
+  font-size: 16px;
+  color: rgb(0, 0, 0);
+  padding: 2px 2px;
+  background-color: #ffffff;
+  border: none;
+}
+
+/* Estilo para a grade de imagens */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(300px, 1fr)
+  ); /* Colunas flexíveis */
+  gap: 20px; /* Espaçamento entre os itens */
+  padding: 20px; /* Espaçamento interno */
+  grid-auto-rows: 300px;
+}
+
+.grid-item {
+  background-color: white;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+  transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+  cursor: pointer; /* Indica que o item é clicável */
+  align-content: center;
+}
+
+.grid-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  justify-self: center;
+}
+
+/*Overlay com um X para produtos excluídos */
+.excluded-overlay::before,
+.excluded-overlay::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%; /* Make the X larger than the container */
+  height: 40px; /* Thickness of the X lines */
+  background: whitesmoke; /* Full transparency */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.excluded-overlay::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.excluded-overlay::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.excluded-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(211, 211, 211, 0.6); /* Light grey with 60% opacity */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.grid-item .text-overlay {
+  position: absolute;
+  bottom: 0;
+  background: #b0b9a27e; /* Fundo semi-transparente */
+  color: white;
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  font-size: 14px; /* Tamanho menor do texto */
+}
+
+.text-overlay h2,
+p {
+  font-family: "Montserrat";
+  color: var(--darkGreen);
+}
+
+.grid-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
+.grid-item:hover .text-overlay {
+  opacity: 1; /* Exibe o texto */
+}
+
+/* Estilo para a categoria ativa no main */
+.categoria-ativa {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
+  background-color: #f0f0f0; /* Cor de fundo para destaque */
+  transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
+}

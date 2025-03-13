@@ -209,13 +209,13 @@ function displayUser(user) {
   }
         <p class="name">${user.firstName} ${user.lastName}</p>
         <p class="email">${user.email}</p>
-        <img src="../images/deleteProducts.png" alt="exclude user" class="deleteProductsUserBtn" data-numberOfProducts="${numberOfProducts}" data-username="${
+        <img src="../images/icons/deleteProducts.png" alt="exclude user" class="deleteProductsUserBtn" data-numberOfProducts="${numberOfProducts}" data-username="${
     user.username
   }">
-        <img src="../images/exclude.png" alt="exclude user" class="excludeUserBtn" data-username="${
+        <img src="../images/icons/exclude.png" alt="exclude user" class="excludeUserBtn" data-username="${
           user.username
         }">
-        <img src="../images/delete.png" alt="delete user" class="deleteUserBtn" data-username="${
+        <img src="../imagesicons/delete.png" alt="delete user" class="deleteUserBtn" data-username="${
           user.username
         }">
     </div>
@@ -280,7 +280,7 @@ async function loadCategories() {
       <div class="newCategoryName" id="newCategoryName" style="display: none;">
         <label>nome da categoria:</label>
         <input type="text" class="newCategoryNameBox" id="newCategoryNameBox" required maxlength="20">
-        <img src="../images/add.png" alt="add category" class="addCategory" id="addCategory">
+        <img src="../images/icons/add.png" alt="add category" class="addCategory" id="addCategory">
       </div>  
     </div>
   </div>`;
@@ -309,7 +309,7 @@ function displayCategory(category) {
     <div class="category-info">
       <p class="category-name">${category.name}</p>
       <p class="category-numberOfProducts" >Nº produtos: ${numberOfProducts}</p>
-      <img src="../images/exclude.png" alt="exclude category" class="remove-category-button" data-category-numberOfProducts=${numberOfProducts} data-category-name="${category.name}">
+      <img src="../images/icons/exclude.png" alt="exclude category" class="remove-category-button" data-category-numberOfProducts=${numberOfProducts} data-category-name="${category.name}">
     </div>
   </div>
   `;
@@ -366,7 +366,7 @@ async function addCategory() {
         name: newCategoryName,
       };
       const url =
-        "http://localhost:8080/osorio-sequeira-proj3/rest/category/register";
+        "http://localhost:8080/sequeira-proj4/rest/category/register";
 
       await fetch(url, {
         method: "POST",

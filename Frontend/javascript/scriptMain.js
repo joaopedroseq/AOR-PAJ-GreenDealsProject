@@ -16,7 +16,7 @@ function displayProduct(product, index) {
 
 function getAvaiableProducts() {
   const getAvaiableProductsUrl =
-    "http://localhost:8080/osorio-sequeira-proj3/rest/user/products";
+    "http://localhost:8080/sequeira-proj4/rest/user/products";
   fetch(getAvaiableProductsUrl, {
     method: "GET",
     headers: { "Content-Type": "application/json" },

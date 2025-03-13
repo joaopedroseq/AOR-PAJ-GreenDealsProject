@@ -1,9 +1,0 @@
-06/03/2025 00:38:01.825 [ERROR] CategoryService.registerNewCategory:51 - Conflict - category admin already exists - Categoria A
-06/03/2025 00:39:13.139 [ERROR] CategoryService.registerNewCategory:43 - Invalid token - adding new category - Categoria A
-06/03/2025 00:42:39.849 [ERROR] CategoryService.registerNewCategory:43 - Invalid token - adding new category - Categoria A
-06/03/2025 00:43:53.759 [ERROR] CategoryService.registerNewCategory:43 - Invalid token - adding new category - Categoria A
-06/03/2025 00:49:00.913 [ERROR] CategoryService.registerNewCategory:51 - Conflict - category admin already exists - Categoria A
-06/03/2025 10:37:52.729 [ERROR] CategoryService.registerNewCategory:51 - Conflict - category admin already exists - Categoria A
-06/03/2025 13:25:47.203 [ERROR] CategoryService.registerNewCategory:50 - Conflict - category admin already exists - Categoria A
-06/03/2025 13:30:14.534 [INFO] CategoryService.registerNewCategory:53 - Added new category - Categoria A - by admin
-06/03/2025 13:43:29.037 [ERROR] CategoryService.registerNewCategory:42 - Invalid token - adding new category - Categoria A

@@ -251,7 +251,7 @@ async function loadUserReviews() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/osorio-sequeira-proj3/rest/user/all/evaluations/${loggedUser}`
+      `http://localhost:8080/sequeira-proj4/rest/user/all/evaluations/${loggedUser}`
     );
     const evaluations = await response.json();
 
@@ -336,7 +336,7 @@ async function editReview(
         username: loggedUser,
       });
       const response = await fetch(
-        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
+        `http://localhost:8080/sequeira-proj4/rest/user/evaluation/edit/${evaluationId}/${seller}/${loggedUser}`,
         {
           method: "POST",
           headers: editReviewHeaders,
@@ -380,7 +380,7 @@ async function deleteReview(evaluationId, seller) {
         username: loggedUser,
       });
       const response = await fetch(
-        `http://localhost:8080/osorio-sequeira-proj3/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
+        `http://localhost:8080/sequeira-proj4/rest/user/evaluation/delete/${evaluationId}/${seller}/${loggedUser}`,
         {
           method: "DELETE",
           headers: deleteReviewHeaders,

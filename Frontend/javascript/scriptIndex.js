@@ -52,6 +52,7 @@ async function getAvailableProducts() {
       gridContainer.innerHTML = "";
       const noProductsHTML = `
       <div class="grid-item no-products">
+      <img src='../images/placeholder/item.png' alt="hangcoat image indicating no products avaiable"/>
         <div class="text-overlay">
           <h2 style="background-color: transparent;">No Products Available</h2>
           <p style="background-color: transparent;">Please check back later.</p>
@@ -177,6 +178,7 @@ async function loadProductsByCategory(event) {
     if (products.length === 0) {
       const noProductsHTML = `
       <div class="grid-item no-products">
+      <img src='../images/placeholder/item.png' alt="hangcoat image indicating no products avaiable"/>
         <div class="text-overlay">
           <h2 style="background-color: transparent;">No Products Available</h2>
           <p style="background-color: transparent;">Please check back later.</p>
@@ -201,6 +203,7 @@ async function loadProductsByUser(event) {
   if (products.length === 0) {
     const noProductsHTML = `
         <div class="grid-item no-products">
+        <img src='../images/placeholder/item.png' alt="hangcoat image indicating no products avaiable"/>
           <div class="text-overlay">
             <h2 style="background-color: transparent;">No Products Available</h2>
             <p style="background-color: transparent;">Please check back later.</p>
