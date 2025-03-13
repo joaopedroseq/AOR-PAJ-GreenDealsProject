@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const hostUrl = 'http://localhost:8080/sequeira-proj4/rest/user/';
+const userAutenticationEndpoint = `${apiBaseUrl}user/`;
 
 //Função para login
 export const login = async (username, password) => {
   try {
-    const response = await axios.post(hostUrl+'login', {
+    const response = await axios.post(`${userAutenticationEndpoint}login`, {
       username: username,
       password: password,
     }, {}, {
@@ -35,8 +36,7 @@ export const login = async (username, password) => {
 export const logout = async (token) => {
   console.log("logout token:" + token)
   try {
-    const response = await axios.post(
-      hostUrl+'logout',
+    const response = await axios.post(`${userAutenticationEndpoint}logout`,
       {},
       {
         headers: {

@@ -1,11 +1,11 @@
 import axios from "axios";
+import { apiBaseUrl } from "../config";
 
-const hostUrl = 'http://localhost:8080/sequeira-proj4/rest/user/';
+const userEndpoint = `${apiBaseUrl}user/`;
 
 export const getUserInformation = async (token) => {
   try {
-    const response = await axios.get(
-      hostUrl+'user',
+    const response = await axios.get(`${userEndpoint}user`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -22,5 +22,29 @@ export const getUserInformation = async (token) => {
     }
   } catch (error) {
     throw new Error("Login failed");
+  }
+};
+
+export const registerUser = async (user) => {
+  try{
+    const response = await axios.post(`${userEndpoint}user`,
+      {user},
+      {
+        headers: {"Content-Type": "application/json"}
+      }
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+    if (response.status === 400) {
+      alert("Registo falhado por falta de informações");
+      throw new Error("Register failed" + response.status);
+    }
+    if (response.status === 409) {
+      alert("Registo falhado. Esse nome de utilizador já existe");
+      throw new Error("Register failed" + response.status);
+    }
+  } catch (error) {
+    throw new Error("Register failed");
   }
 };

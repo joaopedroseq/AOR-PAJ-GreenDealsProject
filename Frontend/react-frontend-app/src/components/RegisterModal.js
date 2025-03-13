@@ -2,7 +2,7 @@ import React from 'react';
 import "../styles/registerModal.css";
 
 function RegisterModal({ toggleModal, isModalVisible }) {
-    console.log("RegisterModal isModalVisible:", isModalVisible);
+    
   return (
     <div
       id="modal-register"
