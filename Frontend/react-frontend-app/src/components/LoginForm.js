@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import useLogin from "../hooks/useLogin";
 import "../styles/header.css";
+import RegisterModal from "./RegisterModal";
 
-function LoginForm() {
+function LoginForm({ toggleRegisterModal }) {
   const {
     username,
     password,
@@ -17,7 +18,7 @@ function LoginForm() {
     <div className="dropdownLogin">
       <form id="login-form" className="login-form" onSubmit={handleLogin}>
         <label htmlFor="login-form">Log In</label>
-        <br></br>
+        <br />
         <label htmlFor="login-form">Username</label>
         <input
           type="text"
@@ -27,7 +28,7 @@ function LoginForm() {
           maxLength="30"
           value={username}
           onChange={(usernameBox) => setUsername(usernameBox.target.value)}
-        ></input>
+        />
         <label htmlFor="login-form">Password</label>
         <input
           type="password"
@@ -36,9 +37,9 @@ function LoginForm() {
           maxLength="30"
           value={password}
           onChange={(passwordBox) => setPassword(passwordBox.target.value)}
-        ></input>
+        />
         <div>
-          <input type="checkbox" id="showPasswordBtn"></input>
+          <input type="checkbox" id="showPasswordBtn" />
           <label htmlFor="checkbox">mostrar password</label>
           <input
             type="submit"
@@ -46,7 +47,7 @@ function LoginForm() {
             id="loginSubmit"
             value="submit"
             size="12px"
-          ></input>
+          />
         </div>
       </form>
       <div className="buttons">
@@ -56,7 +57,8 @@ function LoginForm() {
           id="newAccountBtn"
           value="register"
           size="12px"
-        ></input>
+          onClick={toggleRegisterModal}
+        />
       </div>
     </div>
   );

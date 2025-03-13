@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../styles/header.css';
 import hambuguer from '../assets/icons/hamburger.png'
 import logo from '../assets/logo/logo.png'
 import loginPhoto from '../assets/icons/login.png'
 import LoginForm from './LoginForm';
 import useLogin from '../hooks/useLogin';
+import RegisterModal from "../components/RegisterModal";
 
 
 const Header = (props) => {
     const {
-        usernameLogged,
+        firstName,
         isAuthenticated,
         urlPhoto,
         handleLogout
       } = useLogin();
 
+       // Register modal - toggle its visibility
+        const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
+      
+        const toggleRegisterModal = () => {
+        setIsRegisterModalVisible(!isRegisterModalVisible);
+        console.log("Modal visibility state changed to:", !isRegisterModalVisible);
+        };
+
     return (
     <div className='Header'>
+
         {/*Botão hamburger para mostrar aside*/}
         <div className="category-bar" id="category-bar">
             <img src={hambuguer} alt='hamburguer' className="hamburger" id="hamburger"/>
@@ -40,14 +50,14 @@ const Header = (props) => {
 
         {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
         <div className="loginMessageDiv" id="loginMessage">
-            <h2 className="loginMessage" id="mensagem_boasVindas">Bem vindo { usernameLogged }</h2>
+            <h4 className="loginMessage" id="mensagem_boasVindas">bem-vindo {firstName}</h4>
 
             <form id="logout-form" className="logout-form" onSubmit={handleLogout}>
                 <input type="submit" className="buttonSubmit" id="logoutButton" value="logout" size="12px" ></input>
             </form>
 
             <a href="#">
-                <img id="loginPhoto" className="loginPhoto" src={loginPhoto} alt='loginPhoto'/>
+                <img id="loginPhoto" className="loginPhoto" src={urlPhoto} alt='loginPhoto'/>
             </a>
         </div>
         
@@ -58,7 +68,8 @@ const Header = (props) => {
         <div className="login" id="loginButton">
             <img src={loginPhoto}  height="50px"></img>
             <div className="buttons"></div>  
-        <LoginForm/>
+        <LoginForm toggleRegisterModal={toggleRegisterModal}/>
+        <RegisterModal toggleModal={toggleRegisterModal} isModalVisible={isRegisterModalVisible} />
         </div>
         </>)
     }

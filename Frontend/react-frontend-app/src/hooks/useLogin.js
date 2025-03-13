@@ -14,7 +14,7 @@ const useLogin = () => {
   const updateFirstName = userStore((state) => state.updateFirstName);
 
   const isAuthenticated = userStore((state) => state.isAuthenticated);
-  const usernameLogged = userStore((state) => state.username);
+  const firstName = userStore((state) => state.firstName);
   const urlPhoto = userStore((state) => state.urlPhoto);
   const token = userStore((state) => state.token);
 
@@ -81,6 +81,8 @@ const useLogin = () => {
     handleLogin,
     handleLogout,
     isAuthenticated,
+    firstName,
+    urlPhoto
   };
 };
 
