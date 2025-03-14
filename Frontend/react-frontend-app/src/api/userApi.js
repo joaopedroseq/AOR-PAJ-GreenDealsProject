@@ -26,7 +26,7 @@ export const getUserInformation = async (token) => {
 };
 
 export const registerUser = async (user) => {
-  try{
+  try {
     const response = await axios.post(`${userEndpoint}register`,
       user,
       {
@@ -36,15 +36,16 @@ export const registerUser = async (user) => {
     if (response.status === 200) {
       return response;
     }
-    if (response.status === 400) {
-      alert("Registo falhado por falta de informações");
-      return null;
-    }
-    if (response.status === 409) {
-      alert("Registo falhado. Esse nome de utilizador já existe");
-      return null;
-    }
   } catch (error) {
+    if (error.response) {
+      if (error.response.status === 400) {
+        alert("Registo falhado. Falta de parâmetros para criação de novo registo")
+        throw new Error("Bad Request: Missing parameters.");
+      } else if (error.response.status === 409) {
+        alert("Registo falhou. Esse nome de utilizador já existe.")
+        throw new Error("Conflict: User already exists.");
+      }
+    }
     throw new Error("Register failed");
   }
 };

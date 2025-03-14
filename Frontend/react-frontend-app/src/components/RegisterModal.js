@@ -1,86 +1,21 @@
 import React, { useState } from "react";
 import "../styles/registerModal.css";
-import { checkIfValid } from "../utils";
-import { registerUser } from "../services/userService";
-import { login } from "../services/authenticationService";
-import { getUserInformation } from "../services/userService";
+import useRegister from '../hooks/useRegister';
 
 function RegisterModal({ toggleModal, isModalVisible }) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [newUsername, setUsername] = useState("");
-  const [newPassword, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [url, setUrl] = useState("");
+  const {
+    setFirstName,
+    setLastName,
+    setNewUsername,
+    setNewPassword,
+    setPasswordConfirm,
+    setEmail,
+    setPhoneNumber,
+    setUrl,
+    handleRegister
+  } = useRegister();
 
-  const handleRegister = async (event) => {
-    event.preventDefault();
-    if (firstName.trim() === "") {
-      alert("O primeiro nome é um campo de preenchimento obrigatório");
-    } else if (lastName.trim() === "") {
-      alert("O apelido é obrigatório.");
-    } else if (newUsername.trim() === "") {
-      alert("O username é de preenchimento obrigatório");
-    } else if (!checkIfValid(newUsername)) {
-      alert("O username não pode conter espaços nem caractéres especiais");
-    } else if (newPassword.trim() === "") {
-      alert("A password é de preenchimento obrigatório");
-    } else if (passwordConfirm.trim() === "") {
-      alert("A confirmação da sua password é obrigatória");
-    } else if (newPassword !== passwordConfirm) {
-      alert("As passwords não correspondem");
-    } else if (email.trim() === "") {
-      alert("O email é de preenchimento obrigatório");
-    } else if (!email.includes("@")) {
-      alert("O Email deve conter '@'.");
-    } else if (phoneNumber.trim() === "") {
-      alert("O número de telefone é obrigatório");
-    } else if (!/^\d{9}$/.test(phoneNumber)) {
-      alert("O número de telefone deve ter 9 dígitos.");
-    } else if (url.trim() === "") {
-      alert("A fotografia de perfil é obrigatória");
-    } else {
-      var confirm = window.confirm(
-        "Pretende criar um novo registo " + firstName + "?"
-      );
-      if (confirm) {
-        const user = {
-          username: newUsername,
-          password: newPassword,
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          phoneNumber: phoneNumber,
-          url: url,
-        };
-        console.log(user);
-        try {
-          const response = await registerUser(user);
-          if (response != null) {
-            try {
-              const token = await login(user.username, user.password);
-              if (token !== null) {
-                try {
-                  await getUserInformation(token);
-                } catch (error) {
-                  alert("Algo falhou");
-                  console.error("Log user information failed:", error);
-                }
-              }
-            } catch (error) {
-              alert("Login falhou");
-              console.error("Login failed:", error);
-            }
-          }
-        } catch (error) {
-          alert("Registo falhou");
-          console.error("Registering failed:", error);
-        }
-      }
-    }
-  };
+
 
   return (
     <div
@@ -130,7 +65,7 @@ function RegisterModal({ toggleModal, isModalVisible }) {
                 id="new-username"
                 name="new-username"
                 maxLength="30"
-                onChange={(username) => setUsername(username.target.value)}
+                onChange={(username) => setNewUsername(username.target.value)}
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
@@ -140,7 +75,7 @@ function RegisterModal({ toggleModal, isModalVisible }) {
                 id="new-password"
                 name="new-password"
                 maxLength="30"
-                onChange={(password) => setPassword(password.target.value)}
+                onChange={(password) => setNewPassword(password.target.value)}
               />
             </div>
             <div className="edit-id-form-field" id="edit-product-form-field">

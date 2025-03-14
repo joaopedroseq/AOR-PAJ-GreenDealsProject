@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import useLogin from "../hooks/useLogin";
 import "../styles/header.css";
-import RegisterModal from "./RegisterModal";
 
 function LoginForm({ toggleRegisterModal }) {
   const {

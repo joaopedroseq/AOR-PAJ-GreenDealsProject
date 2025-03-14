@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { userStore } from "../stores/userStore";
-import { login, logout } from "../services/authenticationService";
-import { getUserInformation } from "../services/userService";
+import { login, logout } from "../api/authenticationApi";
+import { getUserInformation } from "../api/userApi";
 
 const useLogin = () => {
   const [username, setUsername] = useState("");
@@ -81,6 +81,7 @@ const useLogin = () => {
     setPassword,
     handleLogin,
     handleLogout,
+    logUserInformation,
     isAuthenticated,
     firstName,
     urlPhoto

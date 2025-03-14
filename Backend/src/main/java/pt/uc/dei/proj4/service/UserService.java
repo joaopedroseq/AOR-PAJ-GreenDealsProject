@@ -91,7 +91,6 @@ public class UserService {
         } else {
             logger.info("Login from {} successful", user.getUsername());
             return Response.status(200).entity(token).build();
-
         }
     }
 
