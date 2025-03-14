@@ -27,22 +27,22 @@ export const getUserInformation = async (token) => {
 
 export const registerUser = async (user) => {
   try{
-    const response = await axios.post(`${userEndpoint}user`,
-      {user},
+    const response = await axios.post(`${userEndpoint}register`,
+      user,
       {
         headers: {"Content-Type": "application/json"}
       }
     );
     if (response.status === 200) {
-      return response.data;
+      return response;
     }
     if (response.status === 400) {
       alert("Registo falhado por falta de informações");
-      throw new Error("Register failed" + response.status);
+      return null;
     }
     if (response.status === 409) {
       alert("Registo falhado. Esse nome de utilizador já existe");
-      throw new Error("Register failed" + response.status);
+      return null;
     }
   } catch (error) {
     throw new Error("Register failed");

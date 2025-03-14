@@ -37,6 +37,7 @@ const useLogin = () => {
     }
   };
 
+
   const logUserInformation = async (token) => {
     console.log(token);
     try {
