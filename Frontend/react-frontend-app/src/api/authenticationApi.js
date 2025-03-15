@@ -60,14 +60,22 @@ export const logout = async (token) => {
         },
       }
     );
-    if (response.status === 200) {
-      return true;
-    }
-    if (response.status === 401) {
-      alert("Token inválido");
-      return false;
-    }
+    return true;
   } catch (error) {
-    throw new Error("Logout failed");
+    console.log(error.response);
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+    }
+  if (error.request) {
+    console.error("No response from server:", error.request);
+    throw new Error("network_error");
   }
+  console.log(error.response);
+  throw new Error("unexpected_error");
+}
 };

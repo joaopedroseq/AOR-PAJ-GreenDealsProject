@@ -1,5 +1,15 @@
-export function checkIfValid(string) {
-  const pattern = /^[a-zA-Z0-9\s-_]*$/;
+export function checkIfValidName(string) {
+  const pattern = /^[\p{L}]*$/u
+  return pattern.test(string);
+};
+
+export function checkIfValidUsername(string) {
+  const pattern = /^[a-zA-Z0-9-_]*$/;
+  return pattern.test(string);
+};
+
+export function checkIfValidPassword(string) {
+  const pattern = /^[a-zA-Z0-9-_+*~^]*$/;
   return pattern.test(string);
 };
 

@@ -35,26 +35,37 @@ export const getUserInformation = async (token) => {
 };
 
 export const registerUser = async (user) => {
+  console.log(user)
   try {
-    const response = await axios.post(`${userEndpoint}register`,
+    await axios.post(`${userEndpoint}register`,
       user,
       {
         headers: {"Content-Type": "application/json"}
       }
     );
-    if (response.status === 200) {
-      return response;
+      return true;
     }
-  } catch (error) {
+  catch (error) {
+    console.log(error.response);
     if (error.response) {
-      if (error.response.status === 400) {
-        alert("Registo falhado. Falta de parâmetros para criação de novo registo")
-        throw new Error("Bad Request: Missing parameters.");
-      } else if (error.response.status === 409) {
-        alert("Registo falhou. Esse nome de utilizador já existe.")
-        throw new Error("Conflict: User already exists.");
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.log('Invalid data - registering user');
+        throw new Error('invalid_data')
       }
+      if (status === 409) {
+        console.log('username already exists');
+        throw new Error('same_username')
+      }
+      console.log('register failed ' + status)
+      throw new Error('failed')
     }
-    throw new Error("Register failed");
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
   }
 };

@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { showSuccessToast, showErrorToast } from '../../Utils/ToastConfig/toastConfig';
-import { login } from "../../api/authenticationApi";
-import { getUserInformation } from "../../api/userApi";
-import { userStore } from "../../stores/userStore";
+import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
+import { handleLogin } from '../../hooks/handleLogin';
+import userStore from '../../stores/userStore';
 
 const LoginForm = ({ toggleRegisterModal }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
+
   const updateUsername = userStore((state) => state.updateUsername);
   const updateToken = userStore((state) => state.updateToken);
   const updateIsAuthenticated = userStore((state) => state.updateIsAuthenticated);
@@ -14,49 +14,20 @@ const LoginForm = ({ toggleRegisterModal }) => {
   const updateUrlPhoto = userStore((state) => state.updateUrlPhoto);
   const updateFirstName = userStore((state) => state.updateFirstName);
 
-  const onSubmit = async (loginData) => {
-    if (loginData.username.trim() === "" || loginData.password.trim() === "") {
-      showErrorToast('Os campos de utilizador e password têm de ser preenchidos');
-    } else {
-      try {
-        const token = await login(loginData.username, loginData.password);
-        if (token !== null) {
-          await logUserInformation(token);
-        }
-      } catch (error) {
-        if(error.message === 'invalid_data'){
-          showErrorToast('dados inválidos');
-        }
-        if(error.message === 'wrong_password'){
-          showErrorToast('O email ou palavra-passe que introduziu não estão corretos.');
-        }
-        if(error.message === 'unexpected_error'){
-          showErrorToast('Login failed');
-        }
-      }
-    }
+  const userStoreUpdates = {
+    updateUsername,
+    updateToken,
+    updateIsAuthenticated,
+    updateIsAdmin,
+    updateUrlPhoto,
+    updateFirstName,
   };
 
-  const logUserInformation = async(token) => {
-     try {
-          const userInformation = await getUserInformation(token);
-          updateUsername(userInformation.username);
-          updateToken(token);
-          updateIsAuthenticated();
-          updateIsAdmin(userInformation.admin);
-          updateUrlPhoto(userInformation.url);
-          updateFirstName(userInformation.firstName);
-          showSuccessToast('Bem vindo de volta ' + userInformation.firstName);
-        } catch (error) {
-          if(error.message === 'invalid_token'){
-            showErrorToast('Token inválido - faça logout de todas as sessões e tente novamente');
-          }
-          if(error.message === 'unexpected_error'){
-            showErrorToast('Falha inesperada');
-          }
-        }
-    };
 
+
+  const onSubmit = async (loginData) => {
+    await handleLogin(loginData, userStoreUpdates);
+  };
 
    // Handle validation errors
    const onError = (errors) => {
