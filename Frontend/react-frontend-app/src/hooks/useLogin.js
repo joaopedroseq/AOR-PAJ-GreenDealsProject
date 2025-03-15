@@ -19,22 +19,7 @@ const useLogin = () => {
   const token = userStore((state) => state.token);
 
   const handleLogin = async (event) => {
-    event.preventDefault();
-    if (username.trim() === "" || password.trim() === "") {
-      alert(
-        "Para fazer login terá de preencher os campos de utilizador bem como a password"
-      );
-    } else {
-      try {
-        const token = await login(username, password);
-        if (token !== null) {
-          await logUserInformation(token);
-        }
-      } catch (error) {
-        alert("Login falhou");
-        console.error("Login failed:", error);
-      }
-    }
+    
   };
 
 

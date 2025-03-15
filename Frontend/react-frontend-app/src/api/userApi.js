@@ -13,15 +13,24 @@ export const getUserInformation = async (token) => {
         }
       }
     );
-    if (response.status === 200) {
-      return response.data;
-    }
-    if (response.status === 401) {
-      alert("Token inválido");
-      throw new Error("Get user information" + response.status);
-    }
+    return response.data;
   } catch (error) {
-    throw new Error("Login failed");
+    console.log(error.response);
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
   }
 };
 

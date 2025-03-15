@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import "../styles/registerModal.css";
-import useRegister from '../hooks/useRegister';
+import "./registerModal.css";
+import useRegister from '../../hooks/useRegister';
+
 
 function RegisterModal({ toggleModal, isModalVisible }) {
   const {

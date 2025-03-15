@@ -3,8 +3,7 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 //store de utilizador
 export const userStore = create(
-  persist(
-    (set) => ({
+  persist((set) => ({
       username: null,
       token: null,
       isAuthenticated: false,

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import useLogin from "../hooks/useLogin";
-import { checkIfValid } from "../utils";
+import { checkIfValid } from "../Utils/utilityFunctions";
 import { registerUser } from "../api/userApi";
+import toggleRegisterModal from '../components/Header/Header';
 
 const useRegister = () => {
   const { setUsername, setPassword, handleLogin } = useLogin();
@@ -62,6 +63,7 @@ const useRegister = () => {
             setUsername(newUser.username);
             setPassword(newUser.password);
             await handleLogin(event);
+            toggleRegisterModal();
           }
         } catch (error) {
           alert("Registo falhou");

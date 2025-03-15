@@ -1,13 +1,13 @@
 import React from 'react';
-import '../styles/footer.css';
-import mobile from '../assets/contact/mobile.png'
-import email from '../assets/contact/email.png'
-import facebookIcon from '../assets/social/facebook.png'
-import instagramIcon from '../assets/social/instagram.png'
-import linkedinIcon from '../assets/social/linkedin.png'
-import twitterIcon from '../assets/social/twitter.png'
-import whatsappIcon from '../assets/social/whatsapp.png'
-import youtubeIcon from '../assets/social/youtube.png'
+import './footer.css';
+import mobile from '../../assets/contact/mobile.png'
+import email from '../../assets/contact/email.png'
+import facebookIcon from '../../assets/social/facebook.png'
+import instagramIcon from '../../assets/social/instagram.png'
+import linkedinIcon from '../../assets/social/linkedin.png'
+import twitterIcon from '../../assets/social/twitter.png'
+import whatsappIcon from '../../assets/social/whatsapp.png'
+import youtubeIcon from '../../assets/social/youtube.png'
 
 const Footer = (props) => {
     return (

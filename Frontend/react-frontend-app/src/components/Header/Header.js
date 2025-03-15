@@ -1,28 +1,31 @@
 import React, { useState } from 'react';
-import '../styles/header.css';
-import hambuguer from '../assets/icons/hamburger.png'
-import logo from '../assets/logo/logo.png'
-import loginPhoto from '../assets/icons/login.png'
-import LoginForm from './LoginForm';
-import useLogin from '../hooks/useLogin';
-import RegisterModal from "../components/RegisterModal";
+import './header.css';
+import hambuguer from '../../assets/icons/hamburger.png'
+import logo from '../../assets/logo/logo.png'
+import loginPhoto from '../../assets/icons/login.png'
+import LoginForm from '../LoginForm/LoginForm';
+import useLogin from '../../hooks/useLogin';
+import RegisterModal from "../RegisterModal/RegisterModal";
+import { userStore } from "../../stores/userStore";
 
 
 const Header = (props) => {
+    const isAuthenticated = userStore((state) => state.isAuthenticated);
     const {
         firstName,
-        isAuthenticated,
         urlPhoto,
         handleLogout
       } = useLogin();
+      console.log(userStore.getState());
 
-       // Register modal - toggle its visibility
-        const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
+
+    // Register modal - toggle its visibility
+    const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
       
-        const toggleRegisterModal = () => {
+    const toggleRegisterModal = () => {
         setIsRegisterModalVisible(!isRegisterModalVisible);
         console.log("Modal visibility state changed to:", !isRegisterModalVisible);
-        };
+    };
 
     return (
     <div className='Header'>
@@ -65,9 +68,10 @@ const Header = (props) => {
         ) : (
         <>
         {/*Botão de login- não apresentado se o utilizado fizer login*/}
+        
         <div className="login" id="loginButton">
             <img src={loginPhoto}  height="50px"></img>
-            <div className="buttons"></div>  
+            <div className="buttons"></div>    
         <LoginForm toggleRegisterModal={toggleRegisterModal}/>
         <RegisterModal toggleModal={toggleRegisterModal} isModalVisible={isRegisterModalVisible} />
         </div>

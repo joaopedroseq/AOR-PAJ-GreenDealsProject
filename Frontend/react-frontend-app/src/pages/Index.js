@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/index.css';
+import './index.css';
 import leaf from '../assets/icons/leaf.png'
 import sustentabilityBanner from '../assets/banners/banner.png'
 

@@ -20,22 +20,29 @@ export const login = async (username, password) => {
         },
       }
     );
-    if (response.status === 200) {
-      return response.data;
-    }
+    return response.data;
   } catch (error) {
+    console.log(error.response);
     if (error.response) {
-      if (error.response.status === 400) {
-        alert("Falha no login por falta de dados");
-        throw new Error("Bad Request: Missing parameters.");
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.log('Invalid data - login from user');
+        throw new Error('invalid_data')
       }
-      if (error.response.status === 401) {
-        alert("Nome de utilizador ou palavra-passe incorretos. Por favor, verifique os seus dados e tente novamente."
-        );
-        throw new Error("Unathorized: username - password mismatch");
+      if (status === 401) {
+        console.log('wrong username/password');
+        throw new Error('wrong_password')
       }
+      console.log('login failed ' + status)
+      throw new Error('failed')
     }
-    throw new Error("Login failed");
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
   }
 };
 
