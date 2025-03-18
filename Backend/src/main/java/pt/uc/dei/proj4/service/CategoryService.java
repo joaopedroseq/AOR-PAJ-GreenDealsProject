@@ -13,7 +13,7 @@ import pt.uc.dei.proj4.dto.UserDto;
 
 import java.util.Set;
 
-@Path("/category")
+@Path("/categories")
 public class CategoryService {
     private final Logger logger = LogManager.getLogger(CategoryService.class);
 
@@ -92,7 +92,7 @@ public class CategoryService {
     }
 
     @GET
-    @Path("/all")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCategories() {
         Set<CategoryDto> categories = categoryBean.getAllCategories();

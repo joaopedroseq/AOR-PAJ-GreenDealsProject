@@ -1,19 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./header.css";
 import hambuguer from "../../assets/icons/hamburger.png";
 import logo from "../../assets/logo/logo.png";
 import loginPhoto from "../../assets/icons/login.png";
 import LoginForm from "../LoginForm/LoginForm";
 import { logout } from "../../api/authenticationApi";
-import { showSuccessToast, showErrorToast } from "../../Utils/ToastConfig/toastConfig";
+import {
+  showSuccessToast,
+  showErrorToast,
+} from "../../Utils/ToastConfig/toastConfig";
 import RegisterModal from "../RegisterModal/RegisterModal";
+import ProductModal from "../ProductModal/ProductModal";
 import { userStore } from "../../stores/userStore";
+import { fetchCategories } from "../../api/categoryApi";
+import { Link } from "react-router-dom";
+import { getUserInformation } from "../../api/userApi";
 
 const Header = (props) => {
   const isAuthenticated = userStore((state) => state.isAuthenticated);
-  const firstName = userStore((state) => state.firstName);
   const token = userStore((state) => state.token);
-  const urlPhoto = userStore((state) => state.urlPhoto);
+
+  const [firstName, setFirstName] = useState(null);
+  const [urlPhoto, setUrlPhoto ] = useState(null);
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getAllCategories = async () => {
+      try {
+        const allCategories = await fetchCategories();
+        setCategories(allCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    };
+    getAllCategories();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const getUserInfo = async () => {
+        try {
+          const userInfo = await getUserInformation(token);
+          setFirstName(userInfo.firstName);
+          setUrlPhoto(userInfo.url);
+        } catch (error) {
+          console.error("Failed to get user information:", error);
+        }
+      };
+      getUserInfo();
+    }
+  }, [isAuthenticated, token]);
 
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -45,6 +82,13 @@ const Header = (props) => {
     setIsRegisterModalVisible(!isRegisterModalVisible);
   };
 
+  // Product modal - toggle its visibility
+  const [isProductModalVisible, setIsProductModalVisible] = useState(false);
+
+  const toggleProductModal = () => {
+    setIsProductModalVisible(!isProductModalVisible);
+  };
+
   return (
     <div className="Header">
       {/*Botão hamburger para mostrar aside*/}
@@ -57,10 +101,13 @@ const Header = (props) => {
         />
       </div>
       {/*Logo GreenDeals*/}
+
       <div className="logo">
-        <a href="index.html">
-          <img className="logo-img" src={logo} alt="logo" />
-        </a>
+        <nav>
+          <Link to="/">
+            <img className="logo-img" src={logo} alt="logo" />
+          </Link>
+        </nav>
       </div>
 
       {/*Verifica se há um utilizador autenticado para renderizar estes botões, caso contrário não os renderiza*/}
@@ -72,6 +119,7 @@ const Header = (props) => {
               className="buttonSubmit"
               id="add-product-btn"
               value="Vender um produto"
+              onClick={toggleProductModal}
             ></input>
           </div>
           <div className="user-page">
@@ -103,22 +151,26 @@ const Header = (props) => {
               ></input>
             </form>
 
-            <a href="#">
               <img
                 id="loginPhoto"
                 className="loginPhoto"
                 src={urlPhoto}
                 alt="loginPhoto"
               />
-            </a>
           </div>
+          <ProductModal
+            categories={categories}
+            toggleProductModal={toggleProductModal}
+            isProductModalVisible={isProductModalVisible}
+            token={token}
+          />
         </>
       ) : (
         <>
           {/*Botão de login- não apresentado se o utilizado fizer login*/}
 
           <div className="login" id="loginButton">
-            <img src={loginPhoto} height="50px"></img>
+            <img src={loginPhoto} height="50px" alt='user logged'></img>
             <div className="buttons"></div>
             <LoginForm toggleRegisterModal={toggleRegisterModal} />
             <RegisterModal
@@ -128,104 +180,6 @@ const Header = (props) => {
           </div>
         </>
       )}
-
-      {/*Modal para adicionar produto - provavelmente mover para assets ou outro component*/}
-      <div
-        id="modal-addProduct"
-        className="modal-addProduct"
-        style={{ display: "none" }}
-      >
-        {/*Modal content*/}
-        <div className="modal-content-addProduct">
-          <div className="modal-header-addProduct" id="modal-header-addProduct">
-            <p className="modal-header-addProduct-title">
-              Definir informação do produto
-            </p>
-            <p className="close-addProduct" id="close-addProduct">
-              &times;
-            </p>
-          </div>
-          <div className="modal-body-addProduct">
-            <form className="add-product-form" id="add-product-form">
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-nome">Nome do Produto:</label>
-                <input
-                  type="text"
-                  id="add-nome"
-                  name="add-nome"
-                  maxLength="30"
-                ></input>
-              </div>
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-descricao">Descrição:</label>
-                <input
-                  type="text"
-                  id="add-descricao"
-                  name="add-descricao"
-                  maxLength="30"
-                ></input>
-              </div>
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-preco">Preço do Produto:</label>
-                <input
-                  type="text"
-                  id="add-preco"
-                  name="add-preco"
-                  maxLength="10"
-                ></input>
-              </div>
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-categoria">Categoria do Produto:</label>
-                <select id="add-categoria" name="add-categoria">
-                  <option value="vestuario">Vestuário</option>
-                  <option value="calcado">Calçado</option>
-                  <option value="brinquedos">Brinquedos</option>
-                  <option value="viagens">Viagens</option>
-                  <option value="papelaria">Papelaria</option>
-                </select>
-              </div>
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-localidade">Localização:</label>
-                <input
-                  type="text"
-                  id="add-localidade"
-                  name="add-localidade"
-                  maxLength="30"
-                ></input>
-              </div>
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-imagem">url de imagem:</label>
-                <input type="text" id="add-imagem" name="add-imagem"></input>
-              </div>
-              <input
-                type="button"
-                className="save-addProduct"
-                id="save-addProduct"
-                value="Guardar Alterações"
-              ></input>
-            </form>
-          </div>
-        </div>
-      </div>
-      {/*Fim do Modal*/}
     </div>
   );
 };

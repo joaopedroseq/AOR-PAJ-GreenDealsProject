@@ -1,26 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../hooks/handleLogin';
 import userStore from '../../stores/userStore';
 
 const LoginForm = ({ toggleRegisterModal }) => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
-
-  const updateUsername = userStore((state) => state.updateUsername);
+  const { register, handleSubmit } = useForm();
   const updateToken = userStore((state) => state.updateToken);
   const updateIsAuthenticated = userStore((state) => state.updateIsAuthenticated);
-  const updateIsAdmin = userStore((state) => state.updateIsAdmin);
-  const updateUrlPhoto = userStore((state) => state.updateUrlPhoto);
-  const updateFirstName = userStore((state) => state.updateFirstName);
 
   const userStoreUpdates = {
-    updateUsername,
     updateToken,
-    updateIsAuthenticated,
-    updateIsAdmin,
-    updateUrlPhoto,
-    updateFirstName,
+    updateIsAuthenticated
   };
 
 

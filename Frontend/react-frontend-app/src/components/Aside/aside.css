@@ -1,0 +1,47 @@
+/* Estilo para o aside */
+aside {
+    display: none; /* mudar para blocked para aparecer
+    position: fixed; /* Para o aside flutuar sobre o conteúdo */
+    left: 0;
+    top: 80px;
+    padding: 10px;
+    color:var(--darkGreen);
+    background-color: #f1f3ebaa; /* Cor verde com transparência */
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: "Montserrat";
+    line-height: 2;
+    height: 100vh; /* O aside ocupará toda a altura da tela */
+    width: 250px; /* Largura do aside */
+    z-index: 1; /* Certifique-se de que o aside fique acima do conteúdo */
+  }
+  
+  aside h3 {
+    font-family: "Verdana";
+    text-align: center;
+  }
+  
+  
+  .check-edited-products{
+    font-family: "Verdana";
+    text-align: center;
+    
+  }
+  
+  .check-edited-products:hover{
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  
+  aside ul li {
+    font-family: "Verdana";
+    list-style-type: none;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  aside ul li:hover {
+    text-decoration: underline;
+  }

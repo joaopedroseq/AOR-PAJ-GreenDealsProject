@@ -4,7 +4,6 @@ import {
   showSuccessToast,
   showErrorToast,
 } from "../Utils/ToastConfig/toastConfig";
-import { userStore } from "../stores/userStore";
 
 export const handleLogin = async (loginData, userStoreUpdates) => {
   if (loginData.username.trim() === "" || loginData.password.trim() === "") {
@@ -13,7 +12,6 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
   }
   try {
     const token = await login(loginData.username, loginData.password);
-    console.log(token);
     if (token !== null) {
       await logUserInformation(token, userStoreUpdates);
     }
@@ -35,22 +33,13 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
 const logUserInformation = async (token, userStoreUpdates) => {
   
   const {
-    updateUsername,
     updateToken,
-    updateIsAuthenticated,
-    updateIsAdmin,
-    updateUrlPhoto,
-    updateFirstName,
+    updateIsAuthenticated
   } = userStoreUpdates;
   try {
-    console.log("updateUsername function:", updateUsername);
     const userInformation = await getUserInformation(token);
-    updateUsername(userInformation.username);
     updateToken(token);
     updateIsAuthenticated();
-    updateIsAdmin(userInformation.admin);
-    updateUrlPhoto(userInformation.url);
-    updateFirstName(userInformation.firstName);
     showSuccessToast("Bem vindo de volta " + userInformation.firstName);
   } catch (error) {
     if (error.message === "invalid_token") {

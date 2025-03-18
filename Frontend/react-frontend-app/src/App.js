@@ -1,20 +1,33 @@
 import './App.css';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header/Header';
-import Index from './pages/Index';
+import Homepage from './pages/Homepage/Homepage';
 import Footer from './components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { categoriesStore } from './stores/categoriesStore';
 
 function App() {
+  /*const fetchCategories = categoriesStore((state) => state.fetchCategories);
+
+  useEffect(() => {
+    fetchCategories(); // Fetch categories when the app initializes
+  }, [fetchCategories]);*/
   return (
-    //<Routes />
+    
+
+    <BrowserRouter>
     <div className="GreenDealsApp">
       <Header/>
-      <Index/>
+      <Routes>
+      <Route path="/" element={<Homepage />} />
+      {/*<Route path="/detail" element={<DetailPage />} />*/}
+      {/*<Route path="/user" element={<UserPage />} />*/}
+      </Routes>
       <Footer/>
       <ToastContainer limit={3}/>
     </div>
+    </BrowserRouter>
   );
 }
 

@@ -18,7 +18,7 @@ import pt.uc.dei.proj4.dto.*;
 import java.util.Set;
 
 
-@Path("/user")
+@Path("/users")
 public class UserService {
     private final Logger logger = LogManager.getLogger(UserService.class);
 
@@ -423,7 +423,7 @@ public class UserService {
 
     //Add product to user
     @POST
-    @Path("/{username}/add")
+    @Path("/{username}/products")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String token, @PathParam("username") String pathUsername, ProductDto newProductDto) {
         UserDto user = userbean.verifyToken(token);

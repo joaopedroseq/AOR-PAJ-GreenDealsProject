@@ -102,7 +102,7 @@ public class ProductService {
 
     //Available products - Non excluded products, state 2 (DISPONIVEL)
     @GET
-    @Path("/available")
+    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAvailableProducts() {
         Set<ProductDto> produtos = userbean.getAvailableProducts();

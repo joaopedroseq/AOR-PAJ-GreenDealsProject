@@ -41,7 +41,7 @@ function displayProduct(product, index) {
 async function getAvailableProducts() {
   const gridContainer = document.getElementById("grid-container");
   gridContainer.innerHTML = "";
-  const endpoint = "/products/available";
+  const endpoint = "/products/";
   try {
     const products = await fetchRequest(endpoint, "GET");
     products.forEach((product) => {
@@ -103,7 +103,7 @@ function displayByCategory(event) {
 
 async function carregarCategorias() {
   try {
-    const categorias = await fetchRequest("/category/all", "GET");
+    const categorias = await fetchRequest("/categories/", "GET");
     const asideMenu = document.getElementById("aside-menu");
     const ul = asideMenu.querySelector("ul");
 

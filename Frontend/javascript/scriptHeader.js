@@ -61,7 +61,7 @@ export async function preencheWelcomeMessage() {
   const welcomeMessage = document.getElementById("mensagem_boasVindas");
   if (checkIfLogged()) {
     try {
-      const endpoint = "/user/user";
+      const endpoint = "/user/users";
       const userInfo = await fetchRequest(endpoint, "GET");
 
       if (userInfo && userInfo.firstName) {
@@ -114,7 +114,7 @@ export async function submitLogin() {
 
 export async function login(username, password) {
   const loginUrl =
-    "http://localhost:8080/sequeira-proj4/rest/user/login";
+    "http://localhost:8080/sequeira-proj4/rest/users/login";
   try {
     const response = await fetch(loginUrl, {
       method: "POST",
@@ -180,7 +180,7 @@ export function openAddProductModal() {
 }
 
 async function loadCategories() {
-  const endpoint = "/category/all";
+  const endpoint = "/categories";
 
   try {
     const categories = await fetchRequest(endpoint, "GET");

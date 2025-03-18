@@ -12,34 +12,36 @@ import {
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { handleLogin } from "../../hooks/handleLogin";
-import userStore from '../../stores/userStore';
-import toggleRegisterModal from '../../components/Header/Header';
+import userStore from "../../stores/userStore";
 
-function RegisterModal({ toggleModal, isModalVisible }) {
+const RegisterModal = ({ toggleModal, isModalVisible }) => {
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
 
   const updateUsername = userStore((state) => state.updateUsername);
-    const updateToken = userStore((state) => state.updateToken);
-    const updateIsAuthenticated = userStore((state) => state.updateIsAuthenticated);
-    const updateIsAdmin = userStore((state) => state.updateIsAdmin);
-    const updateUrlPhoto = userStore((state) => state.updateUrlPhoto);
-    const updateFirstName = userStore((state) => state.updateFirstName);
-  
-    const userStoreUpdates = {
-      updateUsername,
-      updateToken,
-      updateIsAuthenticated,
-      updateIsAdmin,
-      updateUrlPhoto,
-      updateFirstName,
-    };
+  const updateToken = userStore((state) => state.updateToken);
+  const updateIsAuthenticated = userStore(
+    (state) => state.updateIsAuthenticated
+  );
+  const updateIsAdmin = userStore((state) => state.updateIsAdmin);
+  const updateUrlPhoto = userStore((state) => state.updateUrlPhoto);
+  const updateFirstName = userStore((state) => state.updateFirstName);
 
-  const onSubmit = async(registerData) => {
+  const userStoreUpdates = {
+    updateUsername,
+    updateToken,
+    updateIsAuthenticated,
+    updateIsAdmin,
+    updateUrlPhoto,
+    updateFirstName,
+  };
+
+  const onSubmit = async (registerData) => {
     const newUser = {
       username: registerData.username,
       password: registerData.password,
@@ -50,30 +52,34 @@ function RegisterModal({ toggleModal, isModalVisible }) {
       url: registerData.urlPhoto,
     };
     try {
-      if(await registerUser(newUser)){
-        showSuccessToast('Novo registo com sucesso. Ben-vindo ' + newUser.firstName)
+      if (await registerUser(newUser)) {
+        showSuccessToast(
+          "Novo registo com sucesso. Ben-vindo " + newUser.firstName
+        );
         try {
           await handleLogin(newUser, userStoreUpdates);
+          reset();
           toggleModal();
         } catch (error) {
-          showErrorToast("Falha no login automático após registo. Tente fazer login manualmente.");
+          showErrorToast(
+            "Falha no login automático após registo. Tente fazer login manualmente."
+          );
           return;
         }
       }
-    }
-    catch (error) {
-      if(error.message === 'invalid_data'){
-        showErrorToast('dados inválidos');
+    } catch (error) {
+      if (error.message === "invalid_data") {
+        showErrorToast("dados inválidos");
         return;
       }
-      if(error.message === 'same_username'){
-        showErrorToast('Já existe um usuário com este nome de utilizador.');
+      if (error.message === "same_username") {
+        showErrorToast("Já existe um usuário com este nome de utilizador.");
         return;
       }
-      showErrorToast('Registo falhou. Tente novamente');
+      showErrorToast("Registo falhou. Tente novamente");
       return;
     }
-}
+  };
 
   // Handle validation errors
   const onError = (errors) => {
@@ -232,7 +238,7 @@ function RegisterModal({ toggleModal, isModalVisible }) {
                   required:
                     "Para se registar terá de preencher o seu contacto telefónico",
                   validate: (value) =>
-                    (/^\d{9}$/.test(value)) ||
+                    /^\d{9}$/.test(value) ||
                     "O seu número de telefone tem de conter pelo menos 9 digitos",
                 })}
               />
@@ -261,6 +267,6 @@ function RegisterModal({ toggleModal, isModalVisible }) {
       </div>
     </div>
   );
-}
+};
 
 export default RegisterModal;

@@ -2,7 +2,7 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const userAutenticationEndpoint = `${apiBaseUrl}user/`;
+const userAutenticationEndpoint = `${apiBaseUrl}users/`;
 
 //Função para login
 export const login = async (username, password) => {
