@@ -13,6 +13,7 @@ import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.entity.ProductEntity;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,11 +41,18 @@ public class ProductBean {
     }
 
     //new fetch products
-    public Set<ProductDto> getProducts(String username, String id, String name, String state, Boolean excluded, String category) {
+    public Set<ProductDto> getProducts(String username, String id, String name, String state, Boolean excluded, String category, Boolean edited, String param, String order) {
         try{
-            List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category);
-            Set<ProductEntity> productSet = new HashSet<>(productEntities);
-            return userBean.convertGroupProductEntityToGroupProductDto(productSet);
+            List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category, edited, param, order);
+            Set<ProductDto> productSet = new LinkedHashSet<>();
+            for(ProductEntity productEntity : productEntities){
+                ProductDto productDto = convertSingleProductEntitytoProductDto(productEntity);
+                productSet.add(productDto);
+            }
+            for (ProductDto productDto : productSet) {
+                System.out.println(productDto);
+            }
+            return productSet;
         }
         catch(Exception e) {
             logger.error("Error while getting available products");

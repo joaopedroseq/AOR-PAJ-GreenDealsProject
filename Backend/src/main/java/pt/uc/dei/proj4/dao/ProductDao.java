@@ -160,7 +160,9 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
     //Criteria API query's
-    public List<ProductEntity> getFilteredProducts(String username, String id, String productName, String state, Boolean excluded, String category) {
+    public List<ProductEntity> getFilteredProducts(String username, String id, String productName,
+                                                   String state, Boolean excluded, String category,
+                                                   Boolean edited, String orderBy, String param) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ProductEntity> query = cb.createQuery(ProductEntity.class);
         Root<ProductEntity> root = query.from(ProductEntity.class);
@@ -172,15 +174,6 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         if (id != null) {
             predicates.add(cb.equal(root.get("id"), id));
         }
-        if (state != null) {
-            predicates.add(cb.equal(root.get("state"), state));
-        }
-        if (category != null) {
-            predicates.add(cb.equal(root.get("category").get("nome"), category));
-        }
-        if (excluded != null) {
-            predicates.add(cb.equal(root.get("excluded"), excluded));
-        }
         if (productName != null) {
             Predicate nameSearchPredicate = cb.or(
                     cb.like(cb.lower(root.get("name")), "%" + productName.toLowerCase() + "%"),
@@ -189,10 +182,27 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             );
             predicates.add(nameSearchPredicate);
         }
+        if (state != null) {
+            predicates.add(cb.equal(root.get("state"), state));
+        }
+        if (excluded != null) {
+            predicates.add(cb.equal(root.get("excluded"), excluded));
+        }
+        if (category != null) {
+            predicates.add(cb.equal(root.get("category").get("nome"), category));
+        }
+        if (edited) {
+            predicates.add(cb.notEqual(root.get("date"), root.get("editedDate")));
+        }
         // Combina os predicados para a query - o toArray(new Predicate[0]) transforma o arrayList num array
         query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
-        // Ordenar de mais antigos para mais recentes
-        query.orderBy(cb.asc(root.get("date")));
+        if(orderBy.equals("asc")) {
+            query.orderBy(cb.asc(root.get(param)));
+        }
+        else if(orderBy.equals("desc")) {
+            // Ordenar de mais recente para mais antigo
+            query.orderBy(cb.desc(root.get(param)));
+        }
         // executar a query
         return em.createQuery(query).getResultList();
     }

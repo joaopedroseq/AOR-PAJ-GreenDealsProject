@@ -14,12 +14,15 @@ import pt.uc.dei.proj4.dto.ProductDto;
 import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.dto.UserDto;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 
 @Path("/products")
 public class ProductService {
     private static final Logger logger = LogManager.getLogger(ProductService.class);
+    public enum Parameter {username, name, category, date};
+    public enum Order {asc, desc};
 
     @Inject
     ProductBean productBean;
@@ -165,6 +168,7 @@ public class ProductService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+
     public Response getProducts(@HeaderParam("token") String token,
                                 @QueryParam("username") String username,
                                 @QueryParam("id") String id,
@@ -172,6 +176,9 @@ public class ProductService {
                                 @QueryParam("state") String state,
                                 @QueryParam("excluded") Boolean excluded,
                                 @QueryParam("category") String category,
+                                @QueryParam("edited") @DefaultValue("false") Boolean edited,
+                                @QueryParam("parameter") @DefaultValue("date") String param,
+                                @QueryParam("order") @DefaultValue("asc") String ordering,
                                 @QueryParam("page") @DefaultValue("1") int page,
                                 @QueryParam("size") @DefaultValue("10") int size) {
         UserDto user = userbean.verifyToken(token);
@@ -207,10 +214,22 @@ public class ProductService {
         if (state != null) {
             if (!StateId.checkIfValidStateId(state)) {
                 logger.error("Error - {} getting all products of state {} because it's invalid", user.getUsername(), state);
-                return Response.status(404).entity("Invalid State Id").build();
+                return Response.status(400).entity("Invalid State Id").build();
             }
         }
-        Set<ProductDto> products = productBean.getProducts(username, id, name, state, excluded, category);
+        try {
+            Parameter parameter = Parameter.valueOf(param.toLowerCase().trim());
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameter value: {}", param);
+            return Response.status(400).entity("Invalid parameter value").build();
+        }
+        try {
+            Order order = Order.valueOf(ordering.toLowerCase().trim());
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameter value: {}", ordering);
+            return Response.status(400).entity("Invalid parameter value").build();
+        }
+        Set<ProductDto> products = productBean.getProducts(username, id, name, state, excluded, category, edited, ordering, param);
         if (products != null) {
             logger.info("{} getting all products of user {} ", user.getUsername(), username);
             return Response.status(200).entity(products).build();
