@@ -3,9 +3,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header/Header';
 import Homepage from './pages/Homepage/Homepage';
+import Detail from './pages/Detail/Detail';
 import Footer from './components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';
-import { categoriesStore } from './stores/categoriesStore';
+
 
 function App() {
   /*const fetchCategories = categoriesStore((state) => state.fetchCategories);
@@ -21,11 +22,11 @@ function App() {
       <Header/>
       <Routes>
       <Route path="/" element={<Homepage />} />
-      {/*<Route path="/detail" element={<DetailPage />} />*/}
+      <Route path="/detail" element={<Detail />} />
       {/*<Route path="/user" element={<UserPage />} />*/}
       </Routes>
       <Footer/>
-      <ToastContainer limit={3}/>
+     <ToastContainer limit={3}/>
     </div>
     </BrowserRouter>
   );

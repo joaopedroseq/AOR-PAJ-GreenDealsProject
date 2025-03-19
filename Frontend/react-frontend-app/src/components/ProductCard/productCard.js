@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   return (
+    
     <div
       className="grid-item"
       data-category={product.category}
-      onClick={() => (window.location.href = `detail.html?id=${product.id}`)}
     >
-      <Link>
+      <Link to={`/detail?id=${product.id}`}>
       <img src={product.urlImage} alt={product.name} />
       {product.excluded && <div className="excluded-overlay"></div>}
       <div className="text-overlay">
@@ -17,7 +17,7 @@ const ProductCard = ({ product }) => {
         <p>Preço: €{product.price}</p>
         <p>Categoria: {product.category}</p>
       </div>
-      </Link>
+    </Link>
     </div>
   );
 };

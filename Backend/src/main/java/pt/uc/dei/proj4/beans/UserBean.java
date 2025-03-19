@@ -376,8 +376,6 @@ public class UserBean implements Serializable {
     }
 
 
-
-
     public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
         Set<ProductDto> productDtos = new HashSet<>();
         for (ProductEntity productEntity : products) {

@@ -8,7 +8,7 @@ import ProductCard from "../../components/ProductCard/productCard";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { sortProductsByDate } from "../../Utils/utilityFunctions";
 
-const Index = (props) => {
+const Homepage = (props) => {
   const [products, setProducts] = useState([]); // State to hold the products
 
   useEffect(() => {
@@ -30,7 +30,7 @@ const Index = (props) => {
   return (
     <div className="main-content-index">
       <div className="main-title">
-        <img src={leaf} style={{ rotate: "45deg" }} />
+        <img src={leaf} style={{ rotate: "45deg" }} alt='leaf sustainability icon'/>
         <h4>GreenDeals</h4>
       </div>
       <div className="mission-statement">
@@ -74,4 +74,4 @@ const Index = (props) => {
     </div>
   );
 };
-export default Index;
+export default Homepage;

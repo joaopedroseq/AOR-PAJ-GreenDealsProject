@@ -1,10 +1,11 @@
 import React from "react"
+import './detail.css';
 
 
 export const Detail = () => {
 
     return (
-    <div classNameName="container">
+    <div className="container">
         <div className="main-content">
             {/*Título da categoria do produto*/}
             <h2 id="product-category">Categoria: a, b, c</h2>
@@ -19,15 +20,15 @@ export const Detail = () => {
                 <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
             </div>
 
-            <button id="exclude-product-button" className="exclude-product-button" style="display: none;">Eliminar permanentemente produto</button>
-            <div id="edit-delete-buttons" style="display: none">
+            <button id="exclude-product-button" className="exclude-product-button" style={{display: 'none'}}>Eliminar permanentemente produto</button>
+            <div id="edit-delete-buttons" style={{display: 'none'}}>
                 <input type="button" id="edit-product" value="Editar informações"/>
                 <input type="button" id="delete-product" value="Apagar produto"/>
             </div> 
-            <button id="buy-button" style="display: none;">Comprar</button>
+            <button id="buy-button" style={{display: 'none'}}>Comprar</button>
             {/*Butão de contacto*/}
             <button id="contact-btn">Contatar o Anunciante</button>
-                <div id="contact-form" style="display: none;">
+                <div id="contact-form" style={{display: 'none'}}>
                     <textarea id="message" placeholder="Escreva aqui a sua mensagem..."></textarea>
                     <button id="send-btn">Enviar</button>
                 </div>
@@ -45,19 +46,19 @@ export const Detail = () => {
                         {/*Formulário de edição de informações de um produto*/}
                         <div className="edit-product-form" id="edit-product-form">
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-nome">Nome do Produto:</label>
-                                <input type="text" id="edit-nome" name="edit-nome" maxlength="30"/>
+                                <label htmlFor="edit-nome">Nome do Produto:</label>
+                                <input type="text" id="edit-nome" name="edit-nome" maxLength="30"/>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-descricao">Descrição:</label>
-                                <input type="text" id="edit-descricao" name="edit-descricao" maxlength="30"/>
+                                <label htmlFor="edit-descricao">Descrição:</label>
+                                <input type="text" id="edit-descricao" name="edit-descricao" maxLength="30"/>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-preco">Preço do Produto:</label>
-                                <input type="text" id="edit-preco" name="edit-preco" maxlength="6"/>
+                                <label htmlFor="edit-preco">Preço do Produto:</label>
+                                <input type="text" id="edit-preco" name="edit-preco" maxLength="6"/>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-categoria">Categoria do Produto:</label>
+                                <label htmlFor="edit-categoria">Categoria do Produto:</label>
                                 <select id="edit-categoria" name="edit-categoria">
                                     <option value="vestuario">Vestuário</option>
                                     <option value="calcado">Calçado</option>
@@ -67,15 +68,15 @@ export const Detail = () => {
                                 </select>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-localidade">Localização:</label>
-                                <input type="text" id="edit-localidade" name="edit-localidade" maxlength="30"/>
+                                <label htmlFor="edit-localidade">Localização:</label>
+                                <input type="text" id="edit-localidade" name="edit-localidade" maxLength="30"/>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-imagem">url de imagem:</label>
+                                <label htmlFor="edit-imagem">url de imagem:</label>
                                 <input type="text" id="edit-imagem" name="edit-imagem"/>
                             </div>
                             <div className="edit-product-form-field" id="edit-product-form-field">
-                                <label for="edit-categoria">Estado do artigo:</label>
+                                <label htmlFor="edit-categoria">Estado do artigo:</label>
                                 <select id="edit-state" name="edit-state">
                                     <option value="RASCUNHO">Rascunho</option>
                                     <option value="DISPONIVEL">Disponível</option>

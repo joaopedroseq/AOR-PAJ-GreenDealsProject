@@ -2,6 +2,7 @@ package pt.uc.dei.proj4.beans;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.dao.CategoryDao;
@@ -10,6 +11,10 @@ import pt.uc.dei.proj4.dao.UserDao;
 import pt.uc.dei.proj4.dto.ProductDto;
 import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.entity.ProductEntity;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class ProductBean {
@@ -24,11 +29,28 @@ public class ProductBean {
     @EJB
     ProductDao productDao;
 
+    @Inject
+    UserBean userBean;
+
     public ProductBean() {
     }
 
     public ProductBean (ProductDao productDao) {
         this.productDao = productDao;
+    }
+
+    //new fetch products
+    public Set<ProductDto> getProducts(String username, String id, String name, String state, Boolean excluded, String category) {
+        try{
+            List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category);
+            Set<ProductEntity> productSet = new HashSet<>(productEntities);
+            return userBean.convertGroupProductEntityToGroupProductDto(productSet);
+        }
+        catch(Exception e) {
+            logger.error("Error while getting available products");
+            logger.error(e);
+            return null;
+        }
     }
 
     public ProductDto findProductById(int id) {
@@ -68,5 +90,21 @@ public class ProductBean {
         return produto;
     }
 
-
+    //Method para validar se um Id é um número válido
+    public static boolean checkIfValidId(String idString){
+        idString = idString.trim();
+        if (idString.isEmpty()) {
+            return false;
+        } else {
+            for (int i = 0; i < idString.length(); i++) {
+                if(i == 0 && ((idString.charAt(i) != '-') && (!Character.isDigit(idString.charAt(i))))) {
+                    return false;
+                }
+                if (i != 0 && !Character.isDigit(idString.charAt(i))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

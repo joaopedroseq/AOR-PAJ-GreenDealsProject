@@ -2,12 +2,17 @@ package pt.uc.dei.proj4.dao;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import pt.uc.dei.proj4.entity.CategoryEntity;
 import pt.uc.dei.proj4.entity.ProductEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.entity.UserEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -121,7 +126,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     public List<ProductEntity> getActiveProductsByUser(String username) {
         try {
-            return (List<ProductEntity>) em.createNamedQuery("Product.getActiveProductsByUser").setParameter("username",username).getResultList();
+            return (List<ProductEntity>) em.createNamedQuery("Product.getActiveProductsByUser").setParameter("username", username).getResultList();
 
         } catch (NoResultException e) {
             return null;
@@ -130,7 +135,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     public List<ProductEntity> getAllProductsByUser(String username) {
         try {
-            return (List<ProductEntity>) em.createNamedQuery("Product.getAllProductsByUser").setParameter("username",username).getResultList();
+            return (List<ProductEntity>) em.createNamedQuery("Product.getAllProductsByUser").setParameter("username", username).getResultList();
 
         } catch (NoResultException e) {
             return null;
@@ -139,20 +144,56 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     public List<ProductEntity> getProductsByCategory(String category) {
         try {
-            return (List<ProductEntity>) em.createNamedQuery("Product.getProductsByCategory").setParameter("category",category).getResultList();
+            return (List<ProductEntity>) em.createNamedQuery("Product.getProductsByCategory").setParameter("category", category).getResultList();
 
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    public void setAllProductsCategoryToEmpty(CategoryEntity empty, CategoryEntity categoryEntity){
-        try{
+    public void setAllProductsCategoryToEmpty(CategoryEntity empty, CategoryEntity categoryEntity) {
+        try {
             em.createNamedQuery("Product.setAllProductsCategoryToEmpty").setParameter("empty", empty).setParameter("category", categoryEntity).executeUpdate();
-        }
-        catch(NoResultException e){
+        } catch (NoResultException e) {
             logger.error("Error setting all products category to empty in ProductDao.setAllProductsCategoryToEmpty");
         }
     }
 
+    //Criteria API query's
+    public List<ProductEntity> getFilteredProducts(String username, String id, String productName, String state, Boolean excluded, String category) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<ProductEntity> query = cb.createQuery(ProductEntity.class);
+        Root<ProductEntity> root = query.from(ProductEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+        //Adicionar predicados à query
+        if (username != null) {
+            predicates.add(cb.equal(root.get("seller").get("username"), username));
+        }
+        if (id != null) {
+            predicates.add(cb.equal(root.get("id"), id));
+        }
+        if (state != null) {
+            predicates.add(cb.equal(root.get("state"), state));
+        }
+        if (category != null) {
+            predicates.add(cb.equal(root.get("category").get("nome"), category));
+        }
+        if (excluded != null) {
+            predicates.add(cb.equal(root.get("excluded"), excluded));
+        }
+        if (productName != null) {
+            Predicate nameSearchPredicate = cb.or(
+                    cb.like(cb.lower(root.get("name")), "%" + productName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("name")), productName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("name")), "%" + productName.toLowerCase())
+            );
+            predicates.add(nameSearchPredicate);
+        }
+        // Combina os predicados para a query - o toArray(new Predicate[0]) transforma o arrayList num array
+        query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
+        // Ordenar de mais antigos para mais recentes
+        query.orderBy(cb.asc(root.get("date")));
+        // executar a query
+        return em.createQuery(query).getResultList();
+    }
 }
