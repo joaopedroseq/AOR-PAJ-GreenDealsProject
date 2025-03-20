@@ -5,7 +5,7 @@ import {
   checkIfValidName,
   checkIfValidUsername,
   checkIfValidPassword,
-} from "../../Utils/utilityFunctions";
+} from "../../Utils/UtilityFunctions";
 import { useForm } from "react-hook-form";
 import {
   showErrorToast,

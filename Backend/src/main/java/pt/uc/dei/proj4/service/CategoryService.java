@@ -92,7 +92,6 @@ public class CategoryService {
     }
 
     @GET
-    @Path("/")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCategories() {
         Set<CategoryDto> categories = categoryBean.getAllCategories();

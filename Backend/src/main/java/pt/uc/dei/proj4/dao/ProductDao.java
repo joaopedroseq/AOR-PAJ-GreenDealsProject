@@ -6,6 +6,9 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import pt.uc.dei.proj4.dto.Order;
+import pt.uc.dei.proj4.dto.Parameter;
+import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.entity.CategoryEntity;
 import pt.uc.dei.proj4.entity.ProductEntity;
 import org.apache.logging.log4j.LogManager;
@@ -161,12 +164,14 @@ public class ProductDao extends AbstractDao<ProductEntity> {
 
     //Criteria API query's
     public List<ProductEntity> getFilteredProducts(String username, String id, String productName,
-                                                   String state, Boolean excluded, String category,
-                                                   Boolean edited, String orderBy, String param) {
+                                                   StateId stateId, Boolean excluded, String category,
+                                                   Boolean edited, Parameter paramId, Order orderId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ProductEntity> query = cb.createQuery(ProductEntity.class);
         Root<ProductEntity> root = query.from(ProductEntity.class);
         List<Predicate> predicates = new ArrayList<>();
+        String orderBy = orderId.toString();
+        String param = paramId.toString();
         //Adicionar predicados à query
         if (username != null) {
             predicates.add(cb.equal(root.get("seller").get("username"), username));
@@ -182,7 +187,8 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             );
             predicates.add(nameSearchPredicate);
         }
-        if (state != null) {
+        if (stateId != null) {
+            int state = StateId.intFromStateId(stateId);
             predicates.add(cb.equal(root.get("state"), state));
         }
         if (excluded != null) {
@@ -197,6 +203,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         // Combina os predicados para a query - o toArray(new Predicate[0]) transforma o arrayList num array
         query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
         if(orderBy.equals("asc")) {
+
             query.orderBy(cb.asc(root.get(param)));
         }
         else if(orderBy.equals("desc")) {

@@ -1,5 +1,6 @@
 package pt.uc.dei.proj4.service;
 
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -9,10 +10,7 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.beans.CategoryBean;
 import pt.uc.dei.proj4.beans.ProductBean;
 import pt.uc.dei.proj4.beans.UserBean;
-import pt.uc.dei.proj4.dto.CategoryDto;
-import pt.uc.dei.proj4.dto.ProductDto;
-import pt.uc.dei.proj4.dto.StateId;
-import pt.uc.dei.proj4.dto.UserDto;
+import pt.uc.dei.proj4.dto.*;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -21,8 +19,6 @@ import java.util.Set;
 @Path("/products")
 public class ProductService {
     private static final Logger logger = LogManager.getLogger(ProductService.class);
-    public enum Parameter {username, name, category, date};
-    public enum Order {asc, desc};
 
     @Inject
     ProductBean productBean;
@@ -168,12 +164,11 @@ public class ProductService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-
     public Response getProducts(@HeaderParam("token") String token,
                                 @QueryParam("username") String username,
                                 @QueryParam("id") String id,
                                 @QueryParam("name") String name,
-                                @QueryParam("state") String state,
+                                @QueryParam("state") @DefaultValue("DISPONIVEL") String state,
                                 @QueryParam("excluded") Boolean excluded,
                                 @QueryParam("category") String category,
                                 @QueryParam("edited") @DefaultValue("false") Boolean edited,
@@ -181,12 +176,46 @@ public class ProductService {
                                 @QueryParam("order") @DefaultValue("asc") String ordering,
                                 @QueryParam("page") @DefaultValue("1") int page,
                                 @QueryParam("size") @DefaultValue("10") int size) {
+        StateId stateId = StateId.DISPONIVEL;
+        Parameter parameter;
+        Order order;
         UserDto user = userbean.verifyToken(token);
-        if (user == null) {
+        if(!ordering.equals("asc")) {
+            try {
+                order = Order.valueOf(ordering.toLowerCase().trim());
+            } catch (IllegalArgumentException e) {
+                logger.error("Invalid parameter value: {}", ordering);
+                return Response.status(400).entity("Invalid parameter value").build();
+            }
+        }
+        else {
+            order = Order.asc;
+        }
+        if(!param.equals("date")) {
+            try {
+                parameter = Parameter.valueOf(param.toLowerCase().trim());
+            } catch (IllegalArgumentException e) {
+                logger.error("Invalid parameter value: {}", param);
+                return Response.status(400).entity("Invalid parameter value").build();
+            }
+        }
+        else {
+            parameter = Parameter.date;
+        }
+        //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
+        // apenas poderá procurar estados DISPONÍVEL, produtos não escluídos e não editados (edited == true)
+        if (user == null && (username!=null || id!=null || !state.equals("DISPONIVEL") ||excluded!=null || edited)) {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         }
-        if(id != null && !id.isEmpty()) {
+        else if(user == null) {
+            Set<ProductDto> products = productBean.getProducts(null, null, name, StateId.DISPONIVEL, false, category, false, parameter, order);
+            if (products != null) {
+                logger.info("Getting all products for unlogged user");
+                return Response.status(200).entity(products).build();
+            }
+        }
+        else if(id != null && !id.isEmpty()) {
             if(!ProductBean.checkIfValidId(id)) {
                 logger.error("Error - {} getting all products of id {} because it's invalid", user.getUsername(), id);
                 return Response.status(404).entity("Invalid Product Id").build();
@@ -212,24 +241,14 @@ public class ProductService {
             }
         }
         if (state != null) {
-            if (!StateId.checkIfValidStateId(state)) {
+            try {
+                stateId = StateId.valueOf(state);
+            } catch (IllegalArgumentException e) {
                 logger.error("Error - {} getting all products of state {} because it's invalid", user.getUsername(), state);
                 return Response.status(400).entity("Invalid State Id").build();
             }
         }
-        try {
-            Parameter parameter = Parameter.valueOf(param.toLowerCase().trim());
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid parameter value: {}", param);
-            return Response.status(400).entity("Invalid parameter value").build();
-        }
-        try {
-            Order order = Order.valueOf(ordering.toLowerCase().trim());
-        } catch (IllegalArgumentException e) {
-            logger.error("Invalid parameter value: {}", ordering);
-            return Response.status(400).entity("Invalid parameter value").build();
-        }
-        Set<ProductDto> products = productBean.getProducts(username, id, name, state, excluded, category, edited, ordering, param);
+        Set<ProductDto> products = productBean.getProducts(username, id, name, stateId, excluded, category, edited, parameter, order);
         if (products != null) {
             logger.info("{} getting all products of user {} ", user.getUsername(), username);
             return Response.status(200).entity(products).build();

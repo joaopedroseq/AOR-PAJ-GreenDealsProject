@@ -21,6 +21,28 @@ export function checkIfNumeric(string) {
   ); // Garante que strings de espaços em branco falhem
 }
 
+export function transformArrayDatetoDate(arrayDate){
+  const date = new Date(
+    arrayDate[0],
+    arrayDate[1] - 1, //ajustado pois o mês é como GregorianCalendar
+    arrayDate[2],
+    arrayDate[3],
+    arrayDate[4],
+    arrayDate[5]
+  );
+  return date;
+}
+
+//Function to receive a javascript date and return as a string in the format of DD/MM/YYYY
+export function dateToFormattedDate(date){
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const formattedDate = `${day}/${month}/${year}`;
+  return formattedDate;
+}
+
 export function sortProductsByDate(products) {
   products.sort((a, b) => {
     const dateProductA = new Date(

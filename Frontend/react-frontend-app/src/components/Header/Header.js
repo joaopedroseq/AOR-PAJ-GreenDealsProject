@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import { getUserInformation } from "../../api/userApi";
 
 const Header = (props) => {
-  console.log('header');
   const isAuthenticated = userStore((state) => state.isAuthenticated);
   const token = userStore((state) => state.token);
 

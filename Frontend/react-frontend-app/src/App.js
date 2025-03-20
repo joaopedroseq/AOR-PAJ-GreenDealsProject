@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage/Homepage';
 import Detail from './pages/Detail/Detail';
 import Footer from './components/Footer/Footer';
 import { ToastContainer } from 'react-toastify';
+import ProtectedRoute from './Utils/ProtectedRoute';
 
 
 function App() {
@@ -22,7 +23,11 @@ function App() {
       <Header/>
       <Routes>
       <Route path="/" element={<Homepage />} />
-      <Route path="/detail" element={<Detail />} />
+      <Route path="/detail" element={
+        <ProtectedRoute>
+        <Detail />
+      </ProtectedRoute>
+      }/>
       {/*<Route path="/user" element={<UserPage />} />*/}
       </Routes>
       <Footer/>

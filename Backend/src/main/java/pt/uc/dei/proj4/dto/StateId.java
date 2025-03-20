@@ -15,7 +15,7 @@ public enum StateId {
         }
     }
 
-    public int intFromStateId(StateId stateId) {
+    static public int intFromStateId(StateId stateId) {
         switch (stateId) {
             case DISPONIVEL: return 2;
             case RESERVADO: return 3;

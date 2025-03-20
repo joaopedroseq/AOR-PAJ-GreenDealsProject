@@ -2,16 +2,19 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const productsEndpoint = `${apiBaseUrl}products/`;
+const productsEndpoint = `${apiBaseUrl}products`;
 
 //Função para obter todos os produtos disponíveis
-export const getAvaibleProducts = async () => {
+export const getProducts = async (queryParams, token) => {
+  const queryString = new URLSearchParams(queryParams).toString();
+  console.log(queryString);
     try {
       const response = await axios.get(
-        `${productsEndpoint}`,
+        `${productsEndpoint}?${queryString}`,
         {
           headers: {
             "Content-Type": "application/json",
+            ...(token ? { token } : {})
           },
         }
       );

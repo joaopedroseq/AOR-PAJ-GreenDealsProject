@@ -4,12 +4,8 @@ import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   return (
-    
-    <div
-      className="grid-item"
-      data-category={product.category}
-    >
-      <Link to={`/detail?id=${product.id}`}>
+    <Link className="grid-item"
+      data-category={product.category} to={`/detail?id=${product.id}`}>
       <img src={product.urlImage} alt={product.name} />
       {product.excluded && <div className="excluded-overlay"></div>}
       <div className="text-overlay">
@@ -18,7 +14,6 @@ const ProductCard = ({ product }) => {
         <p>Categoria: {product.category}</p>
       </div>
     </Link>
-    </div>
   );
 };
 

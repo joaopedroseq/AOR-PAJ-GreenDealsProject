@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.dao.CategoryDao;
 import pt.uc.dei.proj4.dao.ProductDao;
 import pt.uc.dei.proj4.dao.UserDao;
+import pt.uc.dei.proj4.dto.Order;
+import pt.uc.dei.proj4.dto.Parameter;
 import pt.uc.dei.proj4.dto.ProductDto;
 import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.entity.ProductEntity;
@@ -40,8 +42,8 @@ public class ProductBean {
         this.productDao = productDao;
     }
 
-    //new fetch products
-    public Set<ProductDto> getProducts(String username, String id, String name, String state, Boolean excluded, String category, Boolean edited, String param, String order) {
+    //Novo fetch
+    public Set<ProductDto> getProducts(String username, String id, String name, StateId state, Boolean excluded, String category, Boolean edited, Parameter param, Order order) {
         try{
             List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category, edited, param, order);
             Set<ProductDto> productSet = new LinkedHashSet<>();

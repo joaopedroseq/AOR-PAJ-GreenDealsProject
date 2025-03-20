@@ -3,10 +3,10 @@ import "./homepage.css";
 import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
-import { getAvaibleProducts } from "../../api/productApi";
+import { getProducts } from "../../api/productApi";
 import ProductCard from "../../components/ProductCard/productCard";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
-import { sortProductsByDate } from "../../Utils/utilityFunctions";
+import { sortProductsByDate } from "../../Utils/UtilityFunctions";
 
 const Homepage = (props) => {
   const [products, setProducts] = useState([]); // State to hold the products
@@ -14,7 +14,7 @@ const Homepage = (props) => {
   useEffect(() => {
     const fetchAvailableProducts = async () => {
       try {
-        const avaiableProducts = await getAvaibleProducts();
+        const avaiableProducts = await getProducts();
         //sort por data de publicação como padrão para apresentar os produtos
         sortProductsByDate(avaiableProducts);
         setProducts(avaiableProducts);

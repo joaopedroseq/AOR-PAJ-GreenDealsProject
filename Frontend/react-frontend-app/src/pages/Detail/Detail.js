@@ -1,23 +1,57 @@
-import React from "react"
+import React, { useEffect, useState }from "react"
 import './detail.css';
+import { getProducts } from "../../api/productApi";
+import userStore from "../../stores/userStore";
+import { useLocation } from "react-router-dom";
+import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
+import { transformArrayDatetoDate, dateToFormattedDate } from "../../Utils/UtilityFunctions";
 
 
 export const Detail = () => {
+    const INDEX_OF_PRODUCT = 0;
+    const token = userStore((state) => state.token);
+    const id = new URLSearchParams(useLocation().search).get("id");
+    const [product, setProduct] = useState(null);
+    const [owner, setOwner] = useState(false);
+    
+    // Fetch product information when the component loads
+    useEffect(() => {
+    const fetchProduct = async () => {
+      if (id) {
+        const queryParam = 'id='+id;
+        try {
+        //Get all the product information
+          let productData = await getProducts(queryParam, token);
+          if(productData.length > 1){
+            throw new Error('Invalid product - non unique product Id');
+          }
+          productData=productData[INDEX_OF_PRODUCT];
+          productData.date = transformArrayDatetoDate(productData.date); //passa o array de date para um objeto date javascript
+          setProduct(productData);
+        //Get the userLogged and compare with the owner
+        } catch (error) {
+          showErrorToast("Error fetching product information");
+        }
+      }
+    };
+    fetchProduct();
+    }, [id]);
+
 
     return (
     <div className="container">
         <div className="main-content">
             {/*Título da categoria do produto*/}
-            <h2 id="product-category">Categoria: a, b, c</h2>
+            <h2 id="product-category">Categoria: {product ? product.category : 'a, b, c'}</h2>
             {/*Informações do produto*/}
             <div className="product-details">
-                <img className="table-img" id="product-image" src='../images/placeholder/item.png' alt="Isto é um item" />
-                <p id="product-name"><strong>Nome do Produto:</strong> Nome Xx Yy</p>
-                <p id="product-description"><strong>Descrição:</strong> Descrição do Produto</p>
-                <p id="product-price"><strong>Preço:</strong> XX.xx€</p>
-                <p id="product-seller"><strong>Nome do Anunciante:</strong> Nome Xx Yy</p>
-                <p id="product-location"><strong>Localização:</strong> Rua A, n.º X, Cidade, XXXX-XXX Cidade</p>
-                <p id="product-date"><strong>Data de Publicação:</strong> dd/mm/aaaa</p>
+                <img className="table-img" id="product-image" src={product ? product.urlImage :'../images/placeholder/item.png'} alt={product ? product.name :"item placeholde"} />
+                <p id="product-name"><strong>Nome do Produto: </strong>{product ? product.name :'nome'}</p>
+                <p id="product-description"><strong>Descrição: </strong> {product ? product.description :'descrição'}</p>
+                <p id="product-price"><strong>Preço: </strong>{product ? product.price :'preço'} € </p>
+                <p id="product-seller"><strong>Vendedor: </strong> {product ? product.seller :'vendedor'}</p>
+                <p id="product-location"><strong>Localização: </strong> {product ? product.location :'localização'}</p>
+                <p id="product-date"><strong>Data de Publicação:</strong> {product ? dateToFormattedDate(product.date) : 'dd/mm/aaaa'}</p>
             </div>
 
             <button id="exclude-product-button" className="exclude-product-button" style={{display: 'none'}}>Eliminar permanentemente produto</button>

@@ -7,6 +7,7 @@ export const showSuccessToast = (message) => {
     position: 'top-left',
     autoClose: 3000,
     hideProgressBar: false,
+    closeOnClick: true,
     pauseOnHover: true,
     draggable: false,
   });
@@ -18,6 +19,7 @@ export const showErrorToast = (message) => {
     position: 'top-left',
     autoClose: 3000,
     hideProgressBar: false,
+    closeOnClick: true,
     pauseOnHover: true,
     draggable: false,
   });
@@ -26,12 +28,12 @@ export const showErrorToast = (message) => {
 // Global info toast
 export const showInfoToast = (message) => {
   toast.info(message, {
-    position: toast.POSITION.TOP_CENTER,
-    autoClose: 4000,
+    position: 'top-left',
+    autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
-    draggable: true,
+    draggable: false,
   });
 };
 
