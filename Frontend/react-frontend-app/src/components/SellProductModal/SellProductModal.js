@@ -1,36 +1,30 @@
 import React from "react";
-import "./productModal.css";
+import "./sellProductModal.css";
 import { useForm } from "react-hook-form";
 import {
   showErrorToast,
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { checkIfNumeric } from "../../Utils/UtilityFunctions";
-import { addProduct } from "../../api/userApi";
-import { getUserInformation } from "../../api/userApi";
+import { addProduct } from "../../api/productApi";
+import { getUserLogged } from "../../api/userApi";
+import { useCategoriesStore } from "../../stores/useCategoriesStore";
 
-const ProductModal = ({
-  categories,
-  toggleProductModal,
-  isProductModalVisible,
-  token,
-}) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-  } = useForm();
+const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
+  const { register, handleSubmit, reset } = useForm();
 
-  const getUsername = async() => {
+  //Categories from the useCategoriesStore
+  const categories = useCategoriesStore((state) => state.categories);
+
+  const getUsername = async () => {
     try {
-      const user = await getUserInformation(token);
+      const user = await getUserLogged(token);
       return user.username;
-    }
-    catch(error){
+    } catch (error) {
       console.error("Failed to get username:", error);
       return;
     }
-  }
+  };
 
   const onSubmit = async (registerProduct) => {
     const username = await getUsername();
@@ -39,13 +33,13 @@ const ProductModal = ({
       name: registerProduct.productName,
       description: registerProduct.productDescription,
       price: registerProduct.productPrice,
-      category: registerProduct.category,
-      location: registerProduct.location,
-      urlImage: registerProduct.urlImage,
+      category: registerProduct.productCategory,
+      location: registerProduct.productLocation,
+      urlImage: registerProduct.productUrlImage,
     };
 
     try {
-      await addProduct(newProduct, username, token);
+      await addProduct(newProduct, token);
       showSuccessToast(
         "O seu produto foi adicionado como RASCUNHO\nPara alterar, edite o produto na sua página pessoal"
       );
@@ -95,13 +89,13 @@ const ProductModal = ({
       showErrorToast(errors.productPrice.message);
     }
     if (errors.category) {
-      showErrorToast(errors.category.message);
+      showErrorToast(errors.productCategory.message);
     }
     if (errors.location) {
-      showErrorToast(errors.location.message);
+      showErrorToast(errors.productLocation.message);
     }
     if (errors.urlImage) {
-      showErrorToast(errors.urlImage.message);
+      showErrorToast(errors.productUrlImage.message);
     }
   };
 
@@ -115,9 +109,7 @@ const ProductModal = ({
       {/*Modal content*/}
       <div className="modal-content-addProduct">
         <div className="modal-header-addProduct" id="modal-header-addProduct">
-          <p className="modal-header-addProduct-title">
-            Definir informação do produto
-          </p>
+          <p className="modal-header-addProduct-title">Vender um produto</p>
           <p
             className="close-addProduct"
             id="close-addProduct"
@@ -150,7 +142,7 @@ const ProductModal = ({
                 type="text"
                 id="add-descricao"
                 name="add-descricao"
-                maxLength="30"
+                maxLength="100"
                 {...register("productDescription", {
                   required: "Terá de preencher uma descrição do produto",
                 })}
@@ -176,16 +168,16 @@ const ProductModal = ({
               <select
                 id="add-categoria"
                 name="add-categoria"
-                {...register("category", {
-                  required: "Para se registar terá de escoher uma categoria",
+                {...register("productCategory", {
+                  required: "Terá de escoher uma categoria",
                 })}
               >
                 <option value="" disabled>
                   Escolha uma categoria
                 </option>
-                {categories.map((category) => (
-                  <option key={category.name} value={category.name}>
-                    {category.name}
+                {categories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
                   </option>
                 ))}
               </select>
@@ -196,10 +188,10 @@ const ProductModal = ({
                 type="text"
                 id="add-localidade"
                 name="add-localidade"
-                maxLength="30"
-                {...register("location", {
+                maxLength="100"
+                {...register("productLocation", {
                   required:
-                    "Para se registar terá de preencher a sua localidade",
+                    "Tterá de preencher uma localidade",
                 })}
               />
             </div>
@@ -209,9 +201,9 @@ const ProductModal = ({
                 type="text"
                 id="add-imagem"
                 name="add-imagem"
-                {...register("urlImage", {
+                {...register("productUrlImage", {
                   required:
-                    "Para se registar terá de preencher o url da imagem do producto",
+                    "Terá de preencher o url da imagem do producto",
                 })}
               />
             </div>

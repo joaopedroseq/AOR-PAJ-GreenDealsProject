@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import userStore from "../stores/userStore";
+import userStore from "../stores/UserStore";
 import { showInfoToast } from "./ToastConfig/toastConfig";
 
 const ProtectedRoute = ({ children }) => {

@@ -523,7 +523,7 @@ class UserBeanTest {
         when(categoryDao.findCategoryByName("tecnologia")).thenReturn(categoryEntity);  // Mock category lookup
 
         // Act
-        boolean result = userBean.updateProduct(productDto);
+        boolean result = productBean.updateProduct(productDto);
 
         // Assert
         assertTrue(result);  // Assert that product was updated successfully
@@ -540,7 +540,7 @@ class UserBeanTest {
         when(productDao.getProductById(1)).thenThrow(new RuntimeException("Error"));
 
         // Act
-        boolean result = userBean.updateProduct(productDto);
+        boolean result = productBean.updateProduct(productDto);
 
         // Assert
         assertFalse(result);  // Assert that product update failed
@@ -580,7 +580,7 @@ class UserBeanTest {
         doNothing().when(productDao).deleteProduct(productId);  // Mock productDao deleteProduct method
 
         // Act
-        boolean result = userBean.deleteProduct(productId);
+        boolean result = productBean.deleteProduct(productId);
 
         // Assert
         assertTrue(result);  // Assert that the product was deleted successfully
@@ -594,7 +594,7 @@ class UserBeanTest {
         doThrow(new RuntimeException("Error")).when(productDao).deleteProduct(productId);  // Mock failure
 
         // Act
-        boolean result = userBean.deleteProduct(productId);
+        boolean result = productBean.deleteProduct(productId);
 
         // Assert
         assertFalse(result);  // Assert that deleting the product failed

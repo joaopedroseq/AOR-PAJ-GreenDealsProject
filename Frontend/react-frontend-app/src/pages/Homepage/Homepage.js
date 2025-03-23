@@ -6,17 +6,22 @@ import sustentabilityBanner from "../../assets/banners/banner.png";
 import { getProducts } from "../../api/productApi";
 import ProductCard from "../../components/ProductCard/productCard";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
-import { sortProductsByDate } from "../../Utils/UtilityFunctions";
+import { useCategoriesStore } from "../../stores/useCategoriesStore";
 
-const Homepage = (props) => {
-  const [products, setProducts] = useState([]); // State to hold the products
+
+const Homepage = () => {
+  const [products, setProducts] = useState([]);
+  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   useEffect(() => {
     const fetchAvailableProducts = async () => {
       try {
         const avaiableProducts = await getProducts();
         //sort por data de publicação como padrão para apresentar os produtos
-        sortProductsByDate(avaiableProducts);
         setProducts(avaiableProducts);
       } catch (error) {
         showErrorToast(

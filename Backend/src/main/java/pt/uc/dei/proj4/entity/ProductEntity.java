@@ -32,7 +32,7 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.excludeProduct", query = "UPDATE ProductEntity SET excluded = true WHERE id = :id")
 
-@NamedQuery(name = "Product.deleteProduct", query = "DELETE FROM ProductEntity WHERE id = :id AND excluded = true")
+@NamedQuery(name = "Product.deleteProduct", query = "DELETE FROM ProductEntity WHERE id = :id")
 
 @NamedQuery(name = "Product.setAllProductsCategoryToEmpty", query = "UPDATE ProductEntity SET category = :empty WHERE category = :category")
 

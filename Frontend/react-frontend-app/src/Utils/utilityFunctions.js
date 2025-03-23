@@ -43,6 +43,10 @@ export function dateToFormattedDate(date){
   return formattedDate;
 }
 
+
+/**
+ * @deprecated This method is deprecated as default fetch already sorts by date.
+ */
 export function sortProductsByDate(products) {
   products.sort((a, b) => {
     const dateProductA = new Date(

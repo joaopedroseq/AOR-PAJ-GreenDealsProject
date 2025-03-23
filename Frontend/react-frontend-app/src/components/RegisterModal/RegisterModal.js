@@ -12,7 +12,7 @@ import {
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { handleLogin } from "../../hooks/handleLogin";
-import userStore from "../../stores/userStore";
+import userStore from "../../stores/UserStore";
 
 const RegisterModal = ({ toggleModal, isModalVisible }) => {
   const {

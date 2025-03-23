@@ -56,8 +56,8 @@ class CategoryBeanTest {
         categoryDto2.setName("vestuario");
 
         assertAll(
-                () -> assertTrue(categoryBean.checkIfCategoryAlreadyExists(categoryDto1)),
-                () -> assertTrue(categoryBean.checkIfCategoryAlreadyExists(categoryDto2))
+                () -> assertTrue(categoryBean.checkIfCategoryExists(categoryDto1)),
+                () -> assertTrue(categoryBean.checkIfCategoryExists(categoryDto2))
         );
     }
 
@@ -68,8 +68,8 @@ class CategoryBeanTest {
         CategoryDto categoryDto2 = new CategoryDto();
         categoryDto2.setName("arrumacao");
         assertAll(
-                () -> assertFalse(categoryBean.checkIfCategoryAlreadyExists(categoryDto1)),
-                () -> assertFalse(categoryBean.checkIfCategoryAlreadyExists(categoryDto2))
+                () -> assertFalse(categoryBean.checkIfCategoryExists(categoryDto1)),
+                () -> assertFalse(categoryBean.checkIfCategoryExists(categoryDto2))
         );
         verify(categoryDao, never()).persist(any(CategoryEntity.class));
     }

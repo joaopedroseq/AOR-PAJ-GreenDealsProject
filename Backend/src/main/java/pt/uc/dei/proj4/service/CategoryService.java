@@ -11,7 +11,7 @@ import pt.uc.dei.proj4.beans.UserBean;
 import pt.uc.dei.proj4.dto.CategoryDto;
 import pt.uc.dei.proj4.dto.UserDto;
 
-import java.util.Set;
+import java.util.List;
 
 @Path("/categories")
 public class CategoryService {
@@ -74,7 +74,7 @@ public class CategoryService {
                     return Response.status(403).entity("User does not have admin permission to delete categories").build();
                 } else {
                     categoryDto.setName(categoryDto.getName().toLowerCase().trim());
-                    if (!categoryBean.checkIfCategoryAlreadyExists(categoryDto)) {
+                    if (!categoryBean.checkIfCategoryExists(categoryDto)) {
                         logger.info("User {} tried to delete category {} non-existent", categoryDto.getName(), user.getUsername());
                         return Response.status(404).entity("Category " + categoryDto.getName() + " doesn't exist").build();
                     } else {
@@ -94,7 +94,7 @@ public class CategoryService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCategories() {
-        Set<CategoryDto> categories = categoryBean.getAllCategories();
+        List<String> categories = categoryBean.getAllCategoriesNames();
         if (categories != null) {
             logger.info(" {} categories found", categories.size());
             return Response.status(200).entity(categories).build();

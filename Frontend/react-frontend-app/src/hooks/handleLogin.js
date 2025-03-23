@@ -1,5 +1,5 @@
 import { login } from "../api/authenticationApi";
-import { getUserInformation } from "../api/userApi";
+import { getUserLogged } from "../api/userApi";
 import {
   showSuccessToast,
   showErrorToast,
@@ -30,17 +30,29 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
   }
 };
 
-const logUserInformation = async (token, userStoreUpdates) => {
-  
-  const {
-    updateToken,
-    updateIsAuthenticated
-  } = userStoreUpdates;
+export const logUserInformation = async (token, userStoreUpdates) => {
+  const { updateToken, updateIsAuthenticated } = userStoreUpdates;
   try {
-    const userInformation = await getUserInformation(token);
+    const userInformation = await getUserLogged(token);
     updateToken(token);
     updateIsAuthenticated();
     showSuccessToast("Bem vindo de volta " + userInformation.firstName);
+  } catch (error) {
+    if (error.message === "invalid_token") {
+      showErrorToast(
+        "Token inválido - faça logout de todas as sessões e tente novamente"
+      );
+    }
+    if (error.message === "unexpected_error") {
+      showErrorToast("Falha inesperada");
+    }
+  }
+};
+
+export const getUserInformation = async (token) => {
+  try {
+    const userInformation = await getUserLogged(token);
+    return userInformation;
   } catch (error) {
     if (error.message === "invalid_token") {
       showErrorToast(

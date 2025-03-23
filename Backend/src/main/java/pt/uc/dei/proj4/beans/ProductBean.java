@@ -14,6 +14,7 @@ import pt.uc.dei.proj4.dto.ProductDto;
 import pt.uc.dei.proj4.dto.StateId;
 import pt.uc.dei.proj4.entity.ProductEntity;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -34,6 +35,9 @@ public class ProductBean {
 
     @Inject
     UserBean userBean;
+
+    @Inject
+    CategoryBean categoryBean;
 
     public ProductBean() {
     }
@@ -63,6 +67,51 @@ public class ProductBean {
         }
     }
 
+    public boolean updateProduct(ProductDto productDto) {
+        try {
+            System.out.println("updating product.\nproduct: " + productDto);
+            //check if the only diference is in product state
+            ProductEntity productEntity = productDao.getProductById(productDto.getId());
+            if (checkIfOnlyStateChanges(productDto, productEntity)) {
+                productEntity.setState(StateId.intFromStateId(productDto.getState()));
+                return true;
+            } else {
+                if (productDto.getName() != null) {
+                    productEntity.setName(productDto.getName());
+                }
+                if (productDto.getDescription() != null) {
+                    productEntity.setDescription(productDto.getDescription());
+                }
+                if (productDto.getPrice() != 0) {
+                    productEntity.setPrice(productDto.getPrice());
+                }
+                if (productDto.getCategory() != null) {
+                    productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
+                }
+                if (productDto.getLocation() != null) {
+                    productEntity.setLocation(productDto.getLocation());
+                }
+                if (productDto.getUrlImage() != null) {
+                    productEntity.setUrlImage(productDto.getUrlImage());
+                }
+                if ((productDto.getState() != null)) {
+                    if(StateId.intFromStateId(productDto.getState()) != productEntity.getState()) {
+                        productEntity.setState(StateId.intFromStateId(productDto.getState()));
+                    }
+                }
+                if(productDto.isExcluded() != null) {
+                    productEntity.setExcluded(productDto.isExcluded());
+                }
+                productEntity.setEditedDate(LocalDateTime.now());
+                return true;
+            }
+        } catch (Exception e) {
+            logger.error("Error updating product {}", productDto.getId());
+            logger.error(e);
+            return false;
+        }
+    }
+
     public ProductDto findProductById(int id) {
         try {
             ProductDto productDto = convertSingleProductEntitytoProductDto(productDao.getProductById(id));
@@ -79,6 +128,17 @@ public class ProductBean {
         } catch (Exception e) {
             logger.error("Erro ao comprar produto {}", productDto.getId());
             //logger.error(e);
+            return false;
+        }
+    }
+
+    public boolean deleteProduct(int productId) {
+        try {
+            productDao.deleteProduct(productId);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error while deleting product {}", productId);
+            logger.error(e);
             return false;
         }
     }
@@ -116,5 +176,26 @@ public class ProductBean {
             }
         }
         return true;
+    }
+
+    private boolean checkIfOnlyStateChanges(ProductDto productDto, ProductEntity productEntity) {
+        if((productDto.getName() == null) || (productDto.getName().equals(productEntity.getName()))) {
+            if ((productDto.getDescription() == null) || (productDto.getDescription().equals(productEntity.getDescription()))) {
+                if ((productDto.getPrice() == 0) || ((productDto.getPrice() == productEntity.getPrice()) || (productDto.getPrice() == 0))) {
+                    if ((productDto.getCategory() == null) || (productDto.getCategory().equals(productEntity.getCategory().getNome()))) {
+                        if ((productDto.getLocation() == null) || (productDto.getLocation().equals(productEntity.getLocation()))) {
+                            if ((productDto.getUrlImage() == null) || (productDto.getUrlImage().equals(productEntity.getUrlImage()))) {
+                                if ((productDto.getState() != null)) {
+                                    if (!productDto.getState().equals(productEntity.getState())) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

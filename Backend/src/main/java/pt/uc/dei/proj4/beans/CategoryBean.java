@@ -41,7 +41,7 @@ public class CategoryBean implements Serializable {
 
     public boolean registerNewCategory(CategoryDto category) {
         category.setName(category.getName().toLowerCase());
-        if(checkIfCategoryAlreadyExists(category)) {
+        if(checkIfCategoryExists(category)) {
             return false;
         }
         else{
@@ -73,7 +73,7 @@ public class CategoryBean implements Serializable {
         }
     }
 
-    public boolean checkIfCategoryAlreadyExists(CategoryDto category) {
+    public boolean checkIfCategoryExists(CategoryDto category) {
         List<CategoryEntity> categoryEntities = categoryDao.getAllCategories();
         for(CategoryEntity categoryEntity : categoryEntities) {
             if(categoryEntity.getNome().equals(category.getName())){
@@ -115,14 +115,14 @@ public class CategoryBean implements Serializable {
         return categoryDtos;
     }
 
-    private CategoryDto convertCategoryEntityToCategoryDto(CategoryEntity categoryEntity) {
+    public CategoryDto convertCategoryEntityToCategoryDto(CategoryEntity categoryEntity) {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setName(categoryEntity.getNome());
         categoryDto.setProducts(userBean.convertGroupProductEntityToGroupProductDto(categoryEntity.getProduct()));
         return categoryDto;
     }
 
-    private CategoryEntity convertCategoryDtoToCategoryEntity(CategoryDto categoryDto) {
+    public CategoryEntity convertCategoryDtoToCategoryEntity(CategoryDto categoryDto) {
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setNome(categoryDto.getName());
         return categoryEntity;
@@ -160,6 +160,19 @@ public class CategoryBean implements Serializable {
             List<CategoryEntity> categories = categoryDao.getAllCategories();
             Set<CategoryEntity> catedorySet = new HashSet<>(categories);
             return convertGroupCategoryEntityToGroupCategoryDto(catedorySet);
+        } catch (Exception e) {
+            logger.error("Error while getting all categories");
+            logger.error(e);
+            return null;
+        }
+    }
+
+    //Method to get all categories names only
+    public List<String> getAllCategoriesNames() {
+        try {
+            return categoryDao.getAllCategoriesNamesOnly();
+            //Set<CategoryEntity> catedorySet = new HashSet<>(categories);
+            //return convertGroupCategoryEntityToGroupCategoryDto(catedorySet);
         } catch (Exception e) {
             logger.error("Error while getting all categories");
             logger.error(e);

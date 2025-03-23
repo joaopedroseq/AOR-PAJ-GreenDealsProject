@@ -19,7 +19,7 @@ public class ProductDto implements Serializable{
     private String urlImage;
     private StateId state;
     private LocalDateTime date;
-    private boolean excluded;
+    private Boolean excluded;
     private LocalDateTime edited;
 
     public ProductDto() {
@@ -61,9 +61,8 @@ public class ProductDto implements Serializable{
         this.state = StateId.RASCUNHO;
         this.date = LocalDateTime.now();
         this.id = generateHash(seller,name,description,price,category,location,urlImage,date);
-        this.excluded = false;
+        this.excluded = productDto.excluded;
         this.edited = date;
-
     }
 
 
@@ -96,7 +95,11 @@ public class ProductDto implements Serializable{
 
     @XmlElement
     public String getCategory() {
-        return category.toLowerCase();
+        try {
+            return category.toLowerCase();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void setCategory(String category) {
@@ -110,7 +113,11 @@ public class ProductDto implements Serializable{
 
     @XmlElement
     public StateId getState() {
-        return state;
+        try {
+            return state;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @XmlElement
@@ -154,11 +161,11 @@ public class ProductDto implements Serializable{
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
     }
-    public boolean isExcluded() {
+    public Boolean isExcluded() {
         return excluded;
     }
-    public void setExcluded(boolean excluded) {
-        this.excluded = excluded;
+    public void setExcluded(Boolean exclude) {
+        this.excluded = exclude;
     }
     public LocalDateTime getEdited() {
         return edited;

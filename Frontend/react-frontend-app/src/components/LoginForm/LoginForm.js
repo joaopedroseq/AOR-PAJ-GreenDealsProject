@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../hooks/handleLogin';
-import userStore from '../../stores/userStore';
+import userStore from '../../stores/UserStore';
 
 const LoginForm = ({ toggleRegisterModal }) => {
   const { register, handleSubmit } = useForm();

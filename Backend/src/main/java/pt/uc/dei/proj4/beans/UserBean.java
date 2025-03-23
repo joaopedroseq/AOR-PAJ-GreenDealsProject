@@ -218,30 +218,9 @@ public class UserBean implements Serializable {
         }
     }
 
-    public boolean updateProduct(ProductDto productDto) {
-        try {
-            System.out.println("updating product.\nproduct: " + productDto);
-            ProductEntity productEntity = productDao.getProductById(productDto.getId());
-            productEntity.setName(productDto.getName());
-            productEntity.setDescription(productDto.getDescription());
-            productEntity.setPrice(productDto.getPrice());
-            productEntity.setLocation(productDto.getLocation());
-            productEntity.setDate(productDto.getDate());
-            productEntity.setEditedDate(LocalDateTime.now());
-            productEntity.setSeller(productEntity.getSeller());
-            productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
-            StateId state = StateId.RASCUNHO;
-            productEntity.setState(state.intFromStateId(productDto.getState()));
-            productEntity.setUrlImage(productDto.getUrlImage());
-            productEntity.setExcluded(productDto.isExcluded());
-            return true;
-        } catch (Exception e) {
-            logger.error("Error updating product {}", productDto.getId());
-            logger.error(e);
-            return false;
-        }
-    }
 
+
+    //Deprecated - provavelmente para apagar
     public boolean excludeProduct(int productId) {
         try {
             productDao.excludeProduct(productId);
@@ -253,16 +232,7 @@ public class UserBean implements Serializable {
         }
     }
 
-    public boolean deleteProduct(int productId) {
-        try {
-            productDao.deleteProduct(productId);
-            return true;
-        } catch (Exception e) {
-            logger.error("Error while deleting product {}", productId);
-            logger.error(e);
-            return false;
-        }
-    }
+
 
     //Converts
     private Set<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {

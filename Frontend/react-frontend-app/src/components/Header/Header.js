@@ -10,38 +10,25 @@ import {
   showErrorToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import RegisterModal from "../RegisterModal/RegisterModal";
-import ProductModal from "../ProductModal/ProductModal";
-import { userStore } from "../../stores/userStore";
-import { fetchCategories } from "../../api/categoryApi";
+import SellProductModal from "../SellProductModal/SellProductModal";
+import { userStore } from "../../stores/UserStore";
 import { Link } from "react-router-dom";
-import { getUserInformation } from "../../api/userApi";
+import { getUserLogged } from "../../api/userApi";
 
-const Header = (props) => {
+const Header = () => {
   const isAuthenticated = userStore((state) => state.isAuthenticated);
   const token = userStore((state) => state.token);
 
   const [firstName, setFirstName] = useState(null);
   const [urlPhoto, setUrlPhoto ] = useState(null);
 
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    const getAllCategories = async () => {
-      try {
-        const allCategories = await fetchCategories();
-        setCategories(allCategories);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-    getAllCategories();
-  }, []);
+  /*Implementar getCategories para o aside*/
 
   useEffect(() => {
     if (isAuthenticated) {
       const getUserInfo = async () => {
         try {
-          const userInfo = await getUserInformation(token);
+          const userInfo = await getUserLogged(token);
           setFirstName(userInfo.firstName);
           setUrlPhoto(userInfo.url);
         } catch (error) {
@@ -158,8 +145,7 @@ const Header = (props) => {
                 alt="loginPhoto"
               />
           </div>
-          <ProductModal
-            categories={categories}
+          <SellProductModal
             toggleProductModal={toggleProductModal}
             isProductModalVisible={isProductModalVisible}
             token={token}

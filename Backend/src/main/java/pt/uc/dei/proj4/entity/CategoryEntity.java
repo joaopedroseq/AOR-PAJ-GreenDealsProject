@@ -11,6 +11,9 @@ import java.util.Set;
 //to get all categories
 @NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c WHERE c.nome != :empty")
 
+//get all categorie's names
+@NamedQuery(name = "Category.getAllCategoriesNames", query = "SELECT nome FROM CategoryEntity c WHERE c.nome != :empty ORDER BY nome")
+
 // to get a category by name
 @NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")
 

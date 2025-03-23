@@ -32,6 +32,15 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
         }
     }
 
+    public List<String> getAllCategoriesNamesOnly() {
+        try {
+            return (List<String>) em.createNamedQuery("Category.getAllCategoriesNames").setParameter("empty", "empty").getResultList();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
     public CategoryEntity findCategoryByName(String categoryName) {
         try {
             return (CategoryEntity) em.createNamedQuery("Category.findCategoryByName").setParameter("nome", categoryName).getSingleResult();

@@ -3,10 +3,10 @@ import { apiBaseUrl } from "../config";
 
 const userEndpoint = `${apiBaseUrl}users/`;
 
-//Get user information
-export const getUserInformation = async (token) => {
+//Get user logged
+export const getUserLogged = async (token) => {
   try {
-    const response = await axios.get(`${userEndpoint}user`,
+    const response = await axios.get(`${userEndpoint}me`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -16,7 +16,37 @@ export const getUserInformation = async (token) => {
     );
     return response.data;
   } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
     console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+//Get user information
+export const getUser = async (username, token) => {
+  try {
+    const response = await axios.get(`${userEndpoint}${username}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response.data;
+  } catch (error) {
     if (error.response) {
       const status = error.response.status;
       if (status === 401) {
@@ -47,7 +77,6 @@ export const registerUser = async (user) => {
       return true;
     }
   catch (error) {
-    console.log(error.response);
     if (error.response) {
       const status = error.response.status;
 
@@ -72,52 +101,3 @@ export const registerUser = async (user) => {
 };
 
 
-//Add a product to the user
-export const addProduct = async (product, username, token) => {
-  console.log(product);
-  console.log('Username' + username);
-  console.log('Token' + token);
-  try {
-    const response = await axios.post(`${userEndpoint}${username}/products`,
-      product,
-      {
-        headers: 
-        {"Content-Type": "application/json",
-        'token': token
-        }
-      }
-    );
-      return response.data;
-    }
-  catch (error) {
-    console.log(error.response);
-    if (error.response) {
-      const status = error.response.status;
-
-      if (status === 400) {
-        console.log('Invalid data - adding product');
-        throw new Error('invalid_data')
-      }
-      if (status === 401) {
-        console.log('invalid token');
-        throw new Error('invalid_token')
-      }
-      if (status === 403) {
-        console.log('permission denied');
-        throw new Error('permission_denied')
-      }
-      if (status === 404) {
-        console.log('non-existant category');
-        throw new Error('non-existant_category')
-      }
-      console.log('adding productc failed ' + status)
-      throw new Error('failed')
-    }
-    if (error.request) {
-      console.error("No response from server:", error.request);
-      throw new Error("network_error");
-    }
-    console.log(error.response);
-    throw new Error("unexpected_error");
-  }
-};
