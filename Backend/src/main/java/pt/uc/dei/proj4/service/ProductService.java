@@ -344,4 +344,35 @@ public class ProductService {
         }
     }
 
+
+    //Methods to check ordering and parameter
+    private Order resolveOrder(String ordering) {
+        if (ordering == null || ordering.equalsIgnoreCase("asc")) {
+            return Order.asc; // Default to "asc" if null
+        }
+        try {
+            return Order.valueOf(ordering.toLowerCase().trim()); // Convert valid value to enum
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameter value: {}", ordering);
+            throw new WebApplicationException(
+                    Response.status(400).entity("Invalid parameter value").build()
+            );
+        }
+    }
+
+    private Parameter resolveParameter(String param) {
+        if (param == null || param.equalsIgnoreCase("date")) {
+            return Parameter.date; // Default to "date" if null
+        }
+        try {
+            return Parameter.valueOf(param.toLowerCase().trim()); // Convert valid value to enum
+        } catch (IllegalArgumentException e) {
+            logger.error("Invalid parameter value: {}", param);
+            throw new WebApplicationException(
+                    Response.status(400).entity("Invalid parameter value").build()
+            );
+        }
+    }
+
+
 }

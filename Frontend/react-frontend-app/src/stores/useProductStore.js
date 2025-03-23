@@ -13,13 +13,20 @@ const useProductStore = create((set, get) => ({
   },
 
   setFilters: (newFilters) =>
-    set((state) => ({ filters: { ...state.filters, ...newFilters } })),
+    set((state) => {
+      const updatedFilters = { ...state.filters, ...newFilters };
+      console.log("Updated Filters:", updatedFilters);
+      return { filters: updatedFilters };
+    }),
+  
+  
 
   // Fetches products based on the current filters
   fetchProducts: async (token) => {
     const { filters } = get(); // Access the current filters from the state
 
     try {
+      console.log(filters);
       const products = await getProducts(filters, token); // Call your API function
       set({ products }); // Update the products in the store
     } catch (error) {

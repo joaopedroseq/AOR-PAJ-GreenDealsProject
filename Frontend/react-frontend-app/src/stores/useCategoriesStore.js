@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { fetchCategories } from "../api/categoryApi";
 import { showErrorToast } from '../Utils/ToastConfig/toastConfig';
+import { all } from "axios";
 
 
 export const useCategoriesStore = create((set) => ({
@@ -8,6 +9,7 @@ export const useCategoriesStore = create((set) => ({
   fetchCategories: async() => {
     try{
       const allCategories = await fetchCategories();
+      console.log(allCategories)
       set({categories: allCategories});
     }
     catch(error) {

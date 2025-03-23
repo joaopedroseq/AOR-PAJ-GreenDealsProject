@@ -13,11 +13,12 @@ import errorMessages from "../../Utils/constants/errorMessages";
 
 const Homepage = () => {
   const products = useProductStore((state) => state.products);
+  const filters = useProductStore((state) => state.filters);
   const fetchProducts = useProductStore((state) => state.fetchProducts);
 
   useEffect(() => {
     fetchProducts(); // Fetch products on component mount
-  }, [fetchProducts]);
+  }, [filters, fetchProducts]);
 
 
   return (
