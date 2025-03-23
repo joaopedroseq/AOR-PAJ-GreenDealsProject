@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import "./detail.css";
-import { getProducts, updateProduct, deleteProduct } from "../../api/productApi";
+import {
+  getProducts,
+  updateProduct,
+  deleteProduct,
+} from "../../api/productApi";
 import userStore from "../../stores/UserStore";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import { useLocation, useNavigate } from "react-router-dom";
-import { showErrorToast, showSuccessToast } from "../../Utils/ToastConfig/toastConfig";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../../Utils/ToastConfig/toastConfig";
 import {
   transformArrayDatetoDate,
   dateToFormattedDate,
@@ -13,71 +20,76 @@ import { getUserInformation } from "../../hooks/handleLogin";
 import EditProductModal from "../../components/EditProductModal/EditProductModal";
 import errorMessages from "../../Utils/constants/errorMessages";
 
-
 export const Detail = () => {
   const INDEX_OF_PRODUCT = 0;
   const navigate = useNavigate();
   const token = userStore((state) => state.token);
   const id = new URLSearchParams(useLocation().search).get("id");
   const [product, setProduct] = useState(null);
-  
+
   const [isOwner, setOwner] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
 
   //categorieStore - talvez para apagar já que o homepage já o faz
   //no entanto, o modal tem carregado sem as categorias
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
-  
-    useEffect(() => {
-      fetchCategories();
-    }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   // Edit product modal - toggle its visibility
-    const [isEditProductModalVisible, setIsEditProductModalVisible] = useState(false);
-  
-    const toggleEditProductModal = () => {
-      setIsEditProductModalVisible(!isEditProductModalVisible);
+  const [isEditProductModalVisible, setIsEditProductModalVisible] =
+    useState(false);
+
+  const toggleEditProductModal = () => {
+    setIsEditProductModalVisible(!isEditProductModalVisible);
+  };
+
+  //A way to update the detail page information if the product is edited
+  const [isProductUpdated, setIsProductUpdated] = useState(false);
+
+  const handleProductUpdate = () => {
+    setIsProductUpdated(true);
+  };
+
+  const handleExcludeProduct = async () => {
+    const exclusion = {
+      excluded: !product.excluded,
     };
-
-    //A way to update the detail page information if the product is edited
-    const [isProductUpdated, setIsProductUpdated] = useState(false);
-
-    const handleProductUpdate = () => {
-      setIsProductUpdated(true);
-    }
-
-    const handleExcludeProduct = async () => {
-      const exclusion = {
-        excluded: !product.excluded
+    try {
+      await updateProduct(exclusion, token, product.id);
+      if (!isAdmin) {
+        showSuccessToast("Produto apagado com sucesso");
+        navigate("/");
+      } else {
+        if (!product.excluded) {
+          showSuccessToast("Produto excluído com sucesso");
+        } else {
+          showSuccessToast("Produto recuperado com sucesso");
+        }
       }
-      try {
-            await updateProduct(exclusion, token, product.id);
-            if (!product.excluded) {
-              showSuccessToast("Produto excluído com sucesso");
-            } else {
-              showSuccessToast("Produto recuperado com sucesso");
-            }
-            const updatedProduct = { ...product, excluded: exclusion.excluded }; //... é spread operator: adiciona ou suplanta o excluded
-            setProduct(updatedProduct); // Update the state to reflect the changes
-            handleProductUpdate();
-          } catch (error) {
-            const toastMessage = errorMessages[error.message] || errorMessages.unexpected_error;
-            showErrorToast(toastMessage);
-          }
-        };
-      
+      const updatedProduct = { ...product, excluded: exclusion.excluded }; //... é spread operator: adiciona ou suplanta o excluded
+      setProduct(updatedProduct); // Update the state to reflect the changes
+      handleProductUpdate();
+    } catch (error) {
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
+    }
+  };
 
-    const handleDeleteProduct = async () => {
-      try {
-            await deleteProduct(token, product.id);
-            showSuccessToast("Produto apagado com sucesso");
-            navigate("/");
-          } catch (error) {
-            const toastMessage = errorMessages[error.message] || errorMessages.unexpected_error;
-            showErrorToast(toastMessage);
-          }
-        };
-      
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct(token, product.id);
+      showSuccessToast("Produto apagado com sucesso");
+      navigate("/");
+    } catch (error) {
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
+    }
+  };
 
   // Fetch product information when the component loads
   useEffect(() => {
@@ -86,7 +98,9 @@ export const Detail = () => {
         let productData;
         try {
           //Get all the product information
-          let queryParam = "id=" + id;
+          let queryParam = {
+            id: id
+          };
           productData = await getProducts(queryParam, token);
           if (productData.length > 1) {
             throw new Error("Invalid product - non unique product Id");
@@ -114,7 +128,6 @@ export const Detail = () => {
           setOwner(false);
         }
       }
-      
     };
     fetchProduct();
   }, [id, token, isProductUpdated]);
@@ -172,24 +185,28 @@ export const Detail = () => {
         {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
         {isAdmin || isOwner ? (
           <div id="edit-delete-buttons">
-            <input type="button"
-            id="edit-product"
-            value="Editar informações"
-            onClick={toggleEditProductModal}/>
-            <input type="button"
-            id="delete-product"
-            value={isAdmin && product.excluded ? "Recuperar produto" : "Apagar produto"}
-            onClick={handleExcludeProduct}/>
+            <input
+              type="button"
+              id="edit-product"
+              value="Editar informações"
+              onClick={toggleEditProductModal}
+            />
+            <input
+              type="button"
+              id="delete-product"
+              value={
+                isAdmin && product.excluded
+                  ? "Recuperar produto"
+                  : "Apagar produto"
+              }
+              onClick={handleExcludeProduct}
+            />
           </div>
         ) : null}
 
         {/*Se não for dono, não mostrar botão de comprar produto*/}
         {isOwner ? null : (
-          <input
-            type="button"
-            id="buy-button"
-            value="Comprar"
-          />
+          <input type="button" id="buy-button" value="Comprar" />
         )}
 
         {/*Butão de contacto*/}

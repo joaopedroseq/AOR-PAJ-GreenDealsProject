@@ -1,14 +1,14 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import { getProducts } from '../api/productApi';
 
 const useProductStore = create((set, get) => ({
   products: [],
   filters: {
-    excluded: false,
-    edited: false,
+    excluded: null,
+    edited: null,
     category: null,
     state: null,
-    param: null,
+    parameter: null,
     order: null
   },
 

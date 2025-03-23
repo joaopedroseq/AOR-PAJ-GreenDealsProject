@@ -1,6 +1,6 @@
 /* Estilo para o aside */
 aside {
-    display: none; /* mudar para blocked para aparecer
+    display: block; /* mudar para blocked para aparecer*/
     position: fixed; /* Para o aside flutuar sobre o conteúdo */
     left: 0;
     top: 80px;
@@ -14,7 +14,11 @@ aside {
     line-height: 2;
     height: 100vh; /* O aside ocupará toda a altura da tela */
     width: 250px; /* Largura do aside */
-    z-index: 1; /* Certifique-se de que o aside fique acima do conteúdo */
+    z-index: 1; /* Para que o aside fique acima do conteúdo */
+    -webkit-animation-name: slideFromLeft;
+    -webkit-animation-duration: 0.4s;
+    animation-name: slideFromLeft;
+    animation-duration: 0.4s
   }
   
   aside h3 {
@@ -44,4 +48,15 @@ aside {
   
   aside ul li:hover {
     text-decoration: underline;
+  }
+
+  /*Adicionar animação ao modal*/
+  @-webkit-keyframes slideFromLeft {
+    from {left:-250px; opacity:0} 
+    to {left:0; opacity:1}
+  }
+  /* Animação de 'queda' */
+  @keyframes slideFromLeft {
+    from {left:-250px; opacity:0}
+    to {left:0; opacity:1}
   }

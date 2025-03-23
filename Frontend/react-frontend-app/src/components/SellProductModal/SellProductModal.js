@@ -9,6 +9,7 @@ import { checkIfNumeric } from "../../Utils/UtilityFunctions";
 import { addProduct } from "../../api/productApi";
 import { getUserLogged } from "../../api/userApi";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
+import errorMessages from "../../Utils/constants/errorMessages";
 
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();
@@ -46,33 +47,10 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
       reset();
       toggleProductModal();
     } catch (error) {
-      if (error.message === "invalid_data") {
-        showErrorToast("dados inválidos");
-        toggleProductModal();
-        return;
-      }
-      if (error.message === "invalid_token") {
-        showErrorToast("Token inválido, por favor tente novamente");
-        toggleProductModal();
-        return;
-      }
-      if (error.message === "permission_denied") {
-        showErrorToast("Sem permissão para o fazer, por favor tente novamente");
-        toggleProductModal();
-        return;
-      }
-      if (error.message === "existant") {
-        showErrorToast("Categoria inexistente, por favor tente novamente");
-        toggleProductModal();
-        return;
-      }
-      if (error.message === "failed") {
-        showErrorToast("Adicionar producto falhou, por favor tente novamente");
-        toggleProductModal();
-        return;
-      }
-      showErrorToast("Adicionar produto falhou. Tente novamente");
-      toggleProductModal();
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
+      reset();
       return;
     }
   };

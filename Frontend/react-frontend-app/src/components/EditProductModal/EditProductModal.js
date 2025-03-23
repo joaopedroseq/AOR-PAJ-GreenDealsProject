@@ -9,6 +9,7 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { updateProduct } from "../../api/productApi";
 import { userStore } from "../../stores/UserStore";
+import errorMessages from "../../Utils/constants/errorMessages";
 
 const EditProductModal = ({
   product,
@@ -44,33 +45,9 @@ const EditProductModal = ({
       updatedProduct();
       toggleEditProductModal();
     } catch (error) {
-      if (error.message === "invalid_data") {
-        showErrorToast("Dados inválidos");
-        toggleEditProductModal();
-        return;
-      }
-      if (error.message === "invalid_token") {
-        showErrorToast("Token inválido, por favor tente novamente");
-        toggleEditProductModal();
-        return;
-      }
-      if (error.message === "permission_denied") {
-        showErrorToast("Sem permissão para o fazer, por favor tente novamente");
-        toggleEditProductModal();
-        return;
-      }
-      if (error.message === "non-existant category") {
-        showErrorToast("Categoria inexistente, por favor tente novamente");
-        toggleEditProductModal();
-        return;
-      }
-      if (error.message === "failed") {
-        showErrorToast("Adicionar producto falhou, por favor tente novamente");
-        toggleEditProductModal();
-        return;
-      }
-      showErrorToast("Adicionar produto falhou. Tente novamente");
-      toggleEditProductModal();
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
       return;
     }
   };

@@ -11,9 +11,11 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import RegisterModal from "../RegisterModal/RegisterModal";
 import SellProductModal from "../SellProductModal/SellProductModal";
+import Aside from "../Aside/Aside";
 import { userStore } from "../../stores/UserStore";
 import { Link } from "react-router-dom";
 import { getUserLogged } from "../../api/userApi";
+import errorMessages from "../../Utils/constants/errorMessages";
 
 const Header = () => {
   const isAuthenticated = userStore((state) => state.isAuthenticated);
@@ -22,7 +24,13 @@ const Header = () => {
   const [firstName, setFirstName] = useState(null);
   const [urlPhoto, setUrlPhoto ] = useState(null);
 
-  /*Implementar getCategories para o aside*/
+  // Edit product modal - toggle its visibility
+    const [isAsideVisible, setAsideVisible] =
+      useState(false);
+  
+    const toggleAside = () => {
+      setAsideVisible(!isAsideVisible);
+    };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -48,17 +56,9 @@ const Header = () => {
         userStore.getState().clearUserStore();
       }
     } catch (error) {
-      if (error.message === "invalid_data") {
-        showErrorToast("dados inválidos");
-      }
-      if (error.message === "wrong_password") {
-        showErrorToast(
-          "O email ou palavra-passe que introduziu não estão corretos."
-        );
-      }
-      if (error.message === "unexpected_error") {
-        showErrorToast("Login failed");
-      }
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
     }
   };
 
@@ -85,6 +85,7 @@ const Header = () => {
           alt="hamburguer"
           className="hamburger"
           id="hamburger"
+          onClick={toggleAside}
         />
       </div>
       {/*Logo GreenDeals*/}
@@ -166,6 +167,8 @@ const Header = () => {
           </div>
         </>
       )}
+      <Aside
+      isAsideVisible={isAsideVisible}/>
     </div>
   );
 };

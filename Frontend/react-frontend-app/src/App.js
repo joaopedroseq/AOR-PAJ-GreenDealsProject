@@ -5,16 +5,13 @@ import Header from './components/Header/Header';
 import Homepage from './pages/Homepage/Homepage';
 import Detail from './pages/Detail/Detail';
 import Footer from './components/Footer/Footer';
+import Aside from './components/Aside/Aside';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 
 
 function App() {
-  /*const fetchCategories = categoriesStore((state) => state.fetchCategories);
-
-  useEffect(() => {
-    fetchCategories(); // Fetch categories when the app initializes
-  }, [fetchCategories]);*/
+  
   return (
     
 

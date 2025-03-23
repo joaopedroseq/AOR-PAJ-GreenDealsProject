@@ -7,30 +7,18 @@ import { getProducts } from "../../api/productApi";
 import ProductCard from "../../components/ProductCard/productCard";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
+import useProductStore from "../../stores/useProductStore";
+import errorMessages from "../../Utils/constants/errorMessages";
 
 
 const Homepage = () => {
-  const [products, setProducts] = useState([]);
-  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
+  const products = useProductStore((state) => state.products);
+  const fetchProducts = useProductStore((state) => state.fetchProducts);
 
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    fetchProducts(); // Fetch products on component mount
+  }, [fetchProducts]);
 
-  useEffect(() => {
-    const fetchAvailableProducts = async () => {
-      try {
-        const avaiableProducts = await getProducts();
-        //sort por data de publicação como padrão para apresentar os produtos
-        setProducts(avaiableProducts);
-      } catch (error) {
-        showErrorToast(
-          "Falha na busca de produtos. Por favor atualize a página"
-        );
-      }
-    };
-    fetchAvailableProducts();
-  }, []);
 
   return (
     <div className="main-content-index">

@@ -13,6 +13,7 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { handleLogin } from "../../hooks/handleLogin";
 import userStore from "../../stores/UserStore";
+import errorMessages from "../../Utils/constants/errorMessages";
 
 const RegisterModal = ({ toggleModal, isModalVisible }) => {
   const {
@@ -61,22 +62,18 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
           reset();
           toggleModal();
         } catch (error) {
-          showErrorToast(
-            "Falha no login automático após registo. Tente fazer login manualmente."
-          );
+          const toastMessage =
+            errorMessages[error.message] || errorMessages.unexpected_error;
+          showErrorToast(toastMessage);
+          reset();
+          toggleModal();
           return;
         }
       }
     } catch (error) {
-      if (error.message === "invalid_data") {
-        showErrorToast("dados inválidos");
-        return;
-      }
-      if (error.message === "same_username") {
-        showErrorToast("Já existe um usuário com este nome de utilizador.");
-        return;
-      }
-      showErrorToast("Registo falhou. Tente novamente");
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
       return;
     }
   };

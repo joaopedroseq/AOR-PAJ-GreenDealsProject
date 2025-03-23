@@ -179,7 +179,7 @@ public class ProductService {
         Parameter parameter;
         Order order;
         UserDto user = userbean.verifyToken(token);
-        if (!ordering.equals("asc")) {
+        if (ordering != null && !ordering.equals("asc")) {
             try {
                 order = Order.valueOf(ordering.toLowerCase().trim());
             } catch (IllegalArgumentException e) {
@@ -189,7 +189,7 @@ public class ProductService {
         } else {
             order = Order.asc;
         }
-        if (!param.equals("date")) {
+        if (param != null && !param.equals("date")) {
             try {
                 parameter = Parameter.valueOf(param.toLowerCase().trim());
             } catch (IllegalArgumentException e) {
@@ -292,17 +292,18 @@ public class ProductService {
             return Response.status(401).entity("Invalid token").build();
         } else {
             ProductDto product = productBean.findProductById(pathProductId);
+            boolean isOwner = user.getUsername().equals(product.getSeller());
             if (product == null) {
                 logger.error("Updating product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if ((!user.getUsername().equals(product.getSeller())) && !user.getAdmin()) {
+            } else if ((!isOwner) && !user.getAdmin()) {
                 logger.error("Permission denied - {} updated  product of other user {} without admin privileges", user.getUsername(), product.getSeller());
                 return Response.status(403).entity("Permission denied - updating another user product").build();
             } else if (product.isExcluded() && (!user.getAdmin())) {
-                logger.error("Permission denied - {} update exlcuded product of {}", user.getUsername(), product.getSeller());
-                return Response.status(403).entity("Permission denied - updating excluded products").build();
-            } else if ((productDto.isExcluded() != product.isExcluded()) && (!user.getAdmin())) {
-                logger.error("Permission denied - {} changing excluding state of product of {} without admin privileges", user.getUsername(), product.getSeller());
+                logger.error("Permission denied - {} trying to recuperate product of {} without admin privileges", user.getUsername(), product.getSeller());
+                return Response.status(403).entity("Permission denied - recuperate excluded products").build();
+            } else if ((productDto.isExcluded() != product.isExcluded()) && (!isOwner && !user.getAdmin())) {
+                logger.error("Permission denied - {} changing excluding state of product of {} without admin privileges or not owner", user.getUsername(), product.getSeller());
                 return Response.status(403).entity("Permission denied").build();
             } else {
                 productDto.setId(product.getId());
