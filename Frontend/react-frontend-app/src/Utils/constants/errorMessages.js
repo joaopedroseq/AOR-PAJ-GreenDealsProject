@@ -10,7 +10,8 @@ const errorMessages = {
     non_existant_category: "Categoria inexistente, por favor tente novamente.",
     failed: "A operação falhou, por favor tente novamente.",
     non_existant_product: "Produto inexistente, por favor tente novamente.",
-    wrong_password: "O nome de utilizador ou palavra-passe estão incorretos",
+    wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
+    wrong_password: "Palavra-passe incorreta",
   
     // User-related errors
     same_username: "O nome de usuário já existe.",

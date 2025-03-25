@@ -10,10 +10,10 @@
 - implementar interceptors
 - comentar todo o frontend - decidir se ingles (parece que veio do copilot) ou se portugues;
 - comentar com javascript doc e javadoc;
+- mudar os processos de cada componente para handles
+- renomear o UserStore para useUserStore;
 
 ## Backend:
-- alterar método de fazer update a um produto de POST para PACH de forma a que o update para produto disponível/
-não altere a data de edição/
 - refazer os endpoints de acordo com as boas práticas/
 - implementar paginação de produtos/
 - tratar dos bad requests/

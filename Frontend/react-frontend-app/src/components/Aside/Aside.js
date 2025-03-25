@@ -5,10 +5,13 @@ import useProductStore from "../../stores/useProductStore";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import userStore from "../../stores/UserStore";
 import { getUserInformation } from "../../hooks/handleLogin";
+import { Link } from "react-router-dom";
+import errorMessages from "../../Utils/constants/errorMessages";
+import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 
 const Aside = ({ isAsideVisible }) => {
   const token = userStore((state) => state.token);
-  const [ isAdmin, setIsAdmin ] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const page = useLocation().pathname;
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
@@ -17,12 +20,19 @@ const Aside = ({ isAsideVisible }) => {
 
   useEffect(() => {
     const getUserInfo = async () => {
-      let userInfo = await getUserInformation(token);
-      if (userInfo.admin) {
-        setIsAdmin(true);
+      try {
+        let userInfo = await getUserInformation(token);
+        if (userInfo.admin) {
+          setIsAdmin(true);
+        }
+      } catch (error) {
+
       }
     };
-    if(page === '/user'){
+    if (page === "/user") {
+      getUserInfo();
+    }
+    if (page === "/admin") {
       getUserInfo();
     }
     fetchCategories();
@@ -82,8 +92,10 @@ const Aside = ({ isAsideVisible }) => {
               Informações
             </h2>
           )}
-          {(page === "/user" && isAdmin) && (
-            <h2>Página de Administrador</h2>
+          {page === "/user" && isAdmin && (
+            <Link to="/admin" className="link">
+              <h2>Página de Administrador</h2>
+            </Link>
           )}
         </ul>
       )}

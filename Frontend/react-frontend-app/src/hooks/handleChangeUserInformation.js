@@ -1,7 +1,7 @@
 import { checkPassword } from "../api/authenticationApi";
 import { updateUserInformation } from "../api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
-import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
+import { showErrorToast, showSuccessToast } from "../Utils/ToastConfig/toastConfig";
 
 const handleChangeUserInformation = async (
   userInfo,
@@ -24,14 +24,16 @@ const handleChangeUserInformation = async (
     if (!isPasswordValid) {
       throw new Error("Password confirmation failed.");
     } else {
-        console.log("here");
       try {
         const response = await updateUserInformation(
           token,
           userInfo.username,
           updatesToUser
         );
-        console.log(response);
+        console.log(response.status);
+        if(response.status === 200){
+          showSuccessToast("Alterações efetuadas com sucesso")
+        }
       } catch (error) {
         const toastMessage =
           errorMessages[error.message] || errorMessages.unexpected_error;

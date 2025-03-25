@@ -102,9 +102,6 @@ export const registerUser = async (user) => {
 
 //Patch user inforamtion
 export const updateUserInformation = async (token, username, userInformation) => {
-  console.log(token);
-  console.log(username);
-  console.log(userInformation);
   try {
     const response = await axios.patch(`${userEndpoint}${username}`,
       userInformation,
@@ -114,7 +111,7 @@ export const updateUserInformation = async (token, username, userInformation) =>
         }
       }
     );
-      return response.data;
+      return response;
     } catch (error) {
       console.log(error.response);
       if (error.response) {

@@ -1,3 +1,23 @@
+:root{
+  --green: #B0B9A2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
+}
+
+.montserrat-Montserrat {
+font-family: "Montserrat", serif;
+font-optical-sizing: auto;
+font-weight: 100;
+font-style: normal;
+}
+
+.playfair-display-Playfair Display {
+font-family: "Playfair Display", serif;
+font-optical-sizing: auto;
+font-weight: 100;
+font-style: normal;
+}
+
 /* Estilo para o aside */
 aside {
     display: block; /* mudar para blocked para aparecer*/
@@ -21,11 +41,20 @@ aside {
     animation-duration: 0.4s
   }
   
-  aside h3 {
-    font-family: "Verdana";
+  aside ul h3 {
     text-align: center;
+    text-decoration: none;
+  }
+
+  aside h2 {
+    text-align: center;
+    text-decoration: none;
   }
   
+  .link {
+    text-decoration: none;
+    color: var(--darkGreen)
+  }
   
   .check-edited-products{
     font-family: "Verdana";

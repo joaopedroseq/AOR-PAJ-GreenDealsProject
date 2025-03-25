@@ -34,7 +34,7 @@ export const login = async (username, password) => {
       }
       if (status === 401) {
         console.log('wrong username/password');
-        throw new Error('wrong_password')
+        throw new Error('wrong_username_password')
       }
       console.log('login failed ' + status)
       throw new Error('failed')
@@ -109,7 +109,7 @@ export const checkPassword = async (username, password) => {
         throw new Error('invalid_data')
       }
       if (status === 401) {
-        console.log('wrong username/password');
+        console.log('wrong password');
         throw new Error('wrong_password')
       }
       console.log('login failed ' + status)
