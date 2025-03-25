@@ -10,9 +10,12 @@ import { addProduct } from "../../api/productApi";
 import { getUserLogged } from "../../api/userApi";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
+import useProductStore from "../../stores/useProductStore";
 
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();
+  
+
 
   //Categories from the useCategoriesStore
   const categories = useCategoriesStore((state) => state.categories);
@@ -44,6 +47,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
       showSuccessToast(
         "O seu produto foi adicionado como RASCUNHO\nPara alterar, edite o produto na sua página pessoal"
       );
+      useProductStore.getState().setProductAddedFlag(true);
       reset();
       toggleProductModal();
     } catch (error) {

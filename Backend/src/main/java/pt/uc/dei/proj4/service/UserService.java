@@ -94,6 +94,25 @@ public class UserService {
         }
     }
 
+    //User login
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response confirmPassword(LoginDto user) {
+        if (!user.hasValidValues()) {
+            logger.error("Invalid data - login from user {}", user.getUsername());
+            return Response.status(400).entity("Invalid data").build();
+        }
+        String token = userbean.login(user);
+        if (token == null) {
+            logger.error("Login failed from {} - wrong username/password", user.getUsername());
+            return Response.status(401).entity("Wrong Username or Password !").build();
+        } else {
+            logger.info("Login from {} successful", user.getUsername());
+            return Response.status(200).entity(token).build();
+        }
+    }
+
     //User logout
     @POST
     @Path("/logout")
@@ -162,16 +181,24 @@ public class UserService {
     }
 
     //update user information
-    @PUT
-    @Path("/update")
+    @PATCH
+    @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(@HeaderParam("token") String token, UserDto userDto) {
+    public Response updateUser(@HeaderParam("token") String token, @PathParam("username") String username, UserDto userDto) {
         UserDto user = userbean.verifyToken(token);
         if (user == null) {
             logger.error("Invalid token updating user");
             return Response.status(401).entity("Invalid token").build();
         } else {
-            if (userbean.updateUser(token, userDto)) {
+            if(!user.getUsername().equals(username) && !user.getAdmin()) {
+                logger.info("Permission denied - user {} tried to update another user {} without admin privileges", user.getUsername(), username);
+                return Response.status(403).entity("Permission denied").build();
+            }
+            if(!userbean.checkIfUserExists(username)){
+                logger.info("User {} tried to update non-existant user {}", username, userDto.getUsername());
+                return Response.status(404).entity("User does not exist").build();
+            }
+            if (userbean.updateUser(username, userDto)) {
                 logger.info("User {} updated successfully", user.getUsername());
                 return Response.status(200).entity("Updated user " + user.getUsername() + " successfully").build();
             } else {
@@ -427,6 +454,7 @@ public class UserService {
 
 
 
+    //Deprecated for GET in ProductService
     //get product info
     @GET
     @Path("/products/{ProductId}")
@@ -451,6 +479,7 @@ public class UserService {
         }
     }
 
+    //Deprecated for PATCH in ProductService
     //buying product
     @PATCH
     @Path("/products/buy/{ProductId}")
@@ -480,6 +509,7 @@ public class UserService {
         }
     }
 
+    //Deprecated for PATCH in ProductService
     //Excluding product
     @PATCH
     @Path("/{username}/products/{ProductId}")

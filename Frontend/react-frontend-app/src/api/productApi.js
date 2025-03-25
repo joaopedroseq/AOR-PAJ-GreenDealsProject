@@ -6,7 +6,6 @@ const productsEndpoint = `${apiBaseUrl}products`;
 
 //Função para obter todos os produtos disponíveis
 export const getProducts = async (queryParams, token) => {
-  console.log(queryParams);
   try {
     const response = await axios.get(`${productsEndpoint}`, {
       headers: {
@@ -15,7 +14,6 @@ export const getProducts = async (queryParams, token) => {
       },
       params: queryParams,
     });
-    console.log(response.data)
     return response.data;
   } catch (error) {
     if (error.response) {
@@ -78,10 +76,7 @@ export const addProduct = async (product, token) => {
 
 //Add a product to the user
 export const updateProduct = async (editedProduct, token, productId) => {
-  console.log(editedProduct);
-  console.log(token);
-  console.log(productId);
-  try {
+    try {
     const response = await axios.patch(`${productsEndpoint}/${productId}`,
       editedProduct, {
       headers: { "Content-Type": "application/json", token: token },

@@ -5,9 +5,10 @@ import Header from './components/Header/Header';
 import Homepage from './pages/Homepage/Homepage';
 import Detail from './pages/Detail/Detail';
 import Footer from './components/Footer/Footer';
-import Aside from './components/Aside/Aside';
+import User from './pages/User/User';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
+import RouteListener from './Utils/RouteListener';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
     
 
     <BrowserRouter>
+    <RouteListener />
     <div className="GreenDealsApp">
       <Header/>
       <Routes>
@@ -25,7 +27,11 @@ function App() {
         <Detail />
       </ProtectedRoute>
       }/>
-      {/*<Route path="/user" element={<UserPage />} />*/}
+      <Route path="/user" element={
+        <ProtectedRoute>
+        <User />
+      </ProtectedRoute>
+      }/>
       </Routes>
       <Footer/>
      <ToastContainer limit={3}/>

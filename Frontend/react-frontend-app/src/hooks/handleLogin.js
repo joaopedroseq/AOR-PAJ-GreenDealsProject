@@ -4,6 +4,7 @@ import {
   showSuccessToast,
   showErrorToast,
 } from "../Utils/ToastConfig/toastConfig";
+import errorMessages from "../Utils/constants/errorMessages";
 
 export const handleLogin = async (loginData, userStoreUpdates) => {
   if (loginData.username.trim() === "" || loginData.password.trim() === "") {
@@ -16,17 +17,9 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
       await logUserInformation(token, userStoreUpdates);
     }
   } catch (error) {
-    if (error.message === "invalid_data") {
-      showErrorToast("dados inválidos");
-    }
-    if (error.message === "wrong_password") {
-      showErrorToast(
-        "O email ou palavra-passe que introduziu não estão corretos."
-      );
-    }
-    if (error.message === "unexpected_error") {
-      showErrorToast("Login failed");
-    }
+    const toastMessage =
+      errorMessages[error.message] || errorMessages.unexpected_error;
+    showErrorToast(toastMessage);
   }
 };
 
@@ -38,14 +31,9 @@ export const logUserInformation = async (token, userStoreUpdates) => {
     updateIsAuthenticated();
     showSuccessToast("Bem vindo de volta " + userInformation.firstName);
   } catch (error) {
-    if (error.message === "invalid_token") {
-      showErrorToast(
-        "Token inválido - faça logout de todas as sessões e tente novamente"
-      );
-    }
-    if (error.message === "unexpected_error") {
-      showErrorToast("Falha inesperada");
-    }
+    const toastMessage =
+      errorMessages[error.message] || errorMessages.unexpected_error;
+    showErrorToast(toastMessage);
   }
 };
 
@@ -54,13 +42,8 @@ export const getUserInformation = async (token) => {
     const userInformation = await getUserLogged(token);
     return userInformation;
   } catch (error) {
-    if (error.message === "invalid_token") {
-      showErrorToast(
-        "Token inválido - faça logout de todas as sessões e tente novamente"
-      );
-    }
-    if (error.message === "unexpected_error") {
-      showErrorToast("Falha inesperada");
-    }
+    const toastMessage =
+      errorMessages[error.message] || errorMessages.unexpected_error;
+    showErrorToast(toastMessage);
   }
 };

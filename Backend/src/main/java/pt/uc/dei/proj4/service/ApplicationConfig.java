@@ -17,6 +17,7 @@ public class ApplicationConfig extends Application {
         resources.add(UserService.class);
         resources.add(ProductService.class);
         resources.add(CategoryService.class);
+        resources.add(AuthenticationService.class);
         return resources;
     }
 }

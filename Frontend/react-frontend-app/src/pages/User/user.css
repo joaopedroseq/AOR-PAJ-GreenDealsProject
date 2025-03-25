@@ -1,0 +1,204 @@
+/* Estilo global */
+:root{
+    --green: #B0B9A2;
+    --beige: #f1f3eb;
+    --darkGreen: #132a0e;
+  }
+  
+  /* Estilo global do html */
+  *, html{
+      margin: 0;
+      padding: 0;
+  }
+  
+  .montserrat-Montserrat {
+    font-family: "Montserrat", serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+  }
+  
+  
+  .playfair-display-Playfair Display {
+    font-family: "Playfair Display", serif;
+    font-optical-sizing: auto;
+    font-weight: 100;
+    font-style: normal;
+  }
+  
+  /* Estilo global do body */
+    body{
+      background-color: var(--beige);
+    }
+  
+  .container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+  }
+  
+  
+  .user-main-content {
+      padding: 100px;
+      margin-left: 0;
+      font-size: 25px; /* Tamanho maior */
+      line-height: 2; /* Espaçamento entre linhas */
+      margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+      text-align: center; /* Centraliza o texto */
+  }
+  
+  
+    /* Estilo para o botão de fechar o aside */
+  .guardarAlteracoesUser-btn, .alterarPassword-btn{
+    background-color: var(--green); /* Cor verde */
+    color: white; /* Cor do texto */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat';
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+
+  /* Efeito de cor ao passar o rato sobre o botão */
+  #guardarAlteracoesUser-btn:hover, #alterarPassword-btn:hover {
+    color: var(--darkGreen);
+}
+  
+  .infoPhoto{
+    border-radius: 50%;
+  }
+  
+  /* Estilo para a grade de imagens */
+  .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Colunas flexíveis */
+      gap: 20px; /* Espaçamento entre os itens */
+      padding: 20px; /* Espaçamento interno */
+      grid-auto-rows: 300px;
+  }
+  
+  .grid-item {
+      background-color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+      transition: box-shadow 0.3s ease-in-out; /* Transição suave */
+      cursor: pointer; /* Indica que o item é clicável */
+      align-content: center;
+  }
+  
+  .grid-item img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      justify-self: center;
+  }
+  
+  .grid-item .text-overlay {
+      position: absolute;
+      bottom: 0;
+      background: #b0b9a27e; /* Fundo semi-transparente */
+      color: white;
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      font-size: 14px; /* Tamanho menor do texto */
+  }
+  
+  .text-overlay h2, p{
+    font-family: "Montserrat";
+    color: var(--darkGreen);
+  }
+  
+  .grid-item:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+  }
+  
+  .grid-item:hover .text-overlay {
+      opacity: 1; /* Exibe o texto */
+  }
+  
+  /* Estilo para a categoria ativa no main */
+  .categoria-ativa {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidade */
+      background-color: #f0f0f0; /* Cor de fundo para destaque */
+      transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Transição suave */
+  }
+  
+  /* Informações pessoais*/
+  .profile-section {
+    display: block;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+  }
+  
+  .active-section {
+    display: block;
+  }
+  
+  /* Personal info styles */
+  .user-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .user-info-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .edit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* Review styles matching detail page */
+  .user-review-item {
+    background-color: #f4f4f4;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+    position: relative;
+  }
+  
+  
+  .active-section {
+    display: block;
+  }
+  
+  /* Personal info styles */
+  .user-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+  }
+  
+  .user-info-table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .edit-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  /* Review styles matching detail page */
+  .user-review-item {
+    background-color: #f4f4f4;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+    position: relative;
+  }

@@ -3,18 +3,15 @@ import "./homepage.css";
 import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
-import { getProducts } from "../../api/productApi";
 import ProductCard from "../../components/ProductCard/productCard";
-import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
-import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import useProductStore from "../../stores/useProductStore";
-import errorMessages from "../../Utils/constants/errorMessages";
 
 
 const Homepage = () => {
   const products = useProductStore((state) => state.products);
   const filters = useProductStore((state) => state.filters);
   const fetchProducts = useProductStore((state) => state.fetchProducts);
+  const { setFilters, clearFilters } = useProductStore();
 
   useEffect(() => {
     fetchProducts(); // Fetch products on component mount

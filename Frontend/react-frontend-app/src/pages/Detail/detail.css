@@ -127,7 +127,7 @@
   }
   
   /* Efeito de cor ao passar o rato sobre o botão */
-  #contact-btn:hover {
+  #contact-btn:hover, #edit-product:hover, #delete-product:hover, #buy-button:hover, #exclude-product-button:hover {
       color: var(--darkGreen);
   }
   

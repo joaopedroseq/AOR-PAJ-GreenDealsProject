@@ -4,6 +4,8 @@ import { apiBaseUrl } from "../config";
 
 const userAutenticationEndpoint = `${apiBaseUrl}users/`;
 
+
+
 //Função para login
 export const login = async (username, password) => {
   try {
@@ -78,4 +80,46 @@ export const logout = async (token) => {
   console.log(error.response);
   throw new Error("unexpected_error");
 }
+};
+
+//Função para login
+export const checkPassword = async (username, password) => {
+  try {
+    const response = await axios.post(
+      `${apiBaseUrl}auth/confirm-password`,
+      {
+        username: username,
+        password: password,
+      },
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.log('Invalid data - login from user');
+        throw new Error('invalid_data')
+      }
+      if (status === 401) {
+        console.log('wrong username/password');
+        throw new Error('wrong_password')
+      }
+      console.log('login failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
 };

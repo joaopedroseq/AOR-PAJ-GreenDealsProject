@@ -9,7 +9,6 @@ export const useCategoriesStore = create((set) => ({
   fetchCategories: async() => {
     try{
       const allCategories = await fetchCategories();
-      console.log(allCategories)
       set({categories: allCategories});
     }
     catch(error) {

@@ -111,12 +111,14 @@ const Header = () => {
             ></input>
           </div>
           <div className="user-page">
+          <Link to="/user">
             <input
               type="button"
               className="buttonSubmit"
               id="userAreaBtn"
               value="Aceder à página pessoal"
-            ></input>
+            />
+          </Link>
           </div>
 
           {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}

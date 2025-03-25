@@ -72,6 +72,18 @@ public class UserBean implements Serializable {
         return null;
     }
 
+    public boolean checkPassword(LoginDto user) {
+        UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
+        if (userEntity != null) {
+            BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userEntity.getPassword());
+            if (result.verified) {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
     public boolean logout(String token) {
         UserEntity u = userDao.findUserByToken(token);
         if (u != null) {
@@ -107,8 +119,8 @@ public class UserBean implements Serializable {
         return userDao.findIfUserExists(username);
     }
 
-    public boolean updateUser(String token, UserDto userDto) {
-        UserEntity userToUpdate = userDao.findUserByToken(token);
+    public boolean updateUser(String username, UserDto userDto) {
+        UserEntity userToUpdate = userDao.findUserByUsername(username);
         if (userToUpdate == null) {
             return false;
         } else {

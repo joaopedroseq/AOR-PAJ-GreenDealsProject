@@ -100,4 +100,46 @@ export const registerUser = async (user) => {
   }
 };
 
-
+//Patch user inforamtion
+export const updateUserInformation = async (token, username, userInformation) => {
+  console.log(token);
+  console.log(username);
+  console.log(userInformation);
+  try {
+    const response = await axios.patch(`${userEndpoint}${username}`,
+      userInformation,
+      {
+        headers: {"Content-Type": "application/json",
+        "token": token
+        }
+      }
+    );
+      return response.data;
+    } catch (error) {
+      console.log(error.response);
+      if (error.response) {
+        const status = error.response.status;
+  
+        if (status === 401) {
+          console.log("invalid token");
+          throw new Error("invalid_token");
+        }
+        if (status === 403) {
+          console.log("permission denied");
+          throw new Error("permission_denied");
+        }
+        if (status === 404) {
+          console.log("non-existant user");
+          throw new Error("non-existant_user");
+        }
+        console.log("adding productc failed " + status);
+        throw new Error("failed");
+      }
+      if (error.request) {
+        console.error("No response from server:", error.request);
+        throw new Error("network_error");
+      }
+      console.log(error.response);
+      throw new Error("unexpected_error");
+    }
+  };

@@ -227,6 +227,9 @@ public class ProductService {
             logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), username);
             return Response.status(404).entity("Error getting all products of inexistent user").build();
         }
+        if(username != null && !user.getAdmin()) {
+            excluded = false;
+        }
         if (category != null) {
             CategoryDto categoryDto = new CategoryDto();
             categoryDto.setName(category);
