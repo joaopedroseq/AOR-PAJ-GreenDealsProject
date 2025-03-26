@@ -100,7 +100,7 @@ export const registerUser = async (user) => {
   }
 };
 
-//Patch user inforamtion
+//Patch user information
 export const updateUserInformation = async (token, username, userInformation) => {
   try {
     const response = await axios.patch(`${userEndpoint}${username}`,
@@ -140,3 +140,39 @@ export const updateUserInformation = async (token, username, userInformation) =>
       throw new Error("unexpected_error");
     }
   };
+
+  
+//Get all users information
+export const getAllUsers = async (token) => {
+  try {
+    const response = await axios.get(`${userEndpoint}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};

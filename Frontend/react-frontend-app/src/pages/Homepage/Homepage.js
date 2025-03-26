@@ -3,7 +3,7 @@ import "./homepage.css";
 import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
-import ProductCard from "../../components/ProductCard/productCard";
+import ProductCard from "../../components/ProductCard/ProductCard";
 import useProductStore from "../../stores/useProductStore";
 
 

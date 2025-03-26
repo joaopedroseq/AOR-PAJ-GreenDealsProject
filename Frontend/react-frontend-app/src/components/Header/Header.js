@@ -12,19 +12,19 @@ import {
 import RegisterModal from "../RegisterModal/RegisterModal";
 import SellProductModal from "../SellProductModal/SellProductModal";
 import Aside from "../Aside/Aside";
-import { userStore } from "../../stores/UserStore";
+import useUserStore from "../../stores/useUserStore";
 import { Link } from "react-router-dom";
 import { getUserLogged } from "../../api/userApi";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const Header = () => {
-  const isAuthenticated = userStore((state) => state.isAuthenticated);
-  const token = userStore((state) => state.token);
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
+  const token = useUserStore((state) => state.token);
 
   const [firstName, setFirstName] = useState(null);
   const [urlPhoto, setUrlPhoto ] = useState(null);
 
-  // Edit product modal - toggle its visibility
+  // Aside
     const [isAsideVisible, setAsideVisible] =
       useState(false);
   
@@ -53,7 +53,7 @@ const Header = () => {
       const isLoggedOut = await logout(token);
       if (isLoggedOut) {
         showSuccessToast("Até à próxima " + firstName);
-        userStore.getState().clearUserStore();
+        useUserStore.getState().clearUserStore();
       }
     } catch (error) {
       const toastMessage =
@@ -62,14 +62,14 @@ const Header = () => {
     }
   };
 
-  // Register modal - toggle its visibility
+  // Modal de registo
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
 
   const toggleRegisterModal = () => {
     setIsRegisterModalVisible(!isRegisterModalVisible);
   };
 
-  // Product modal - toggle its visibility
+  // Modal de Vender Produto
   const [isProductModalVisible, setIsProductModalVisible] = useState(false);
 
   const toggleProductModal = () => {

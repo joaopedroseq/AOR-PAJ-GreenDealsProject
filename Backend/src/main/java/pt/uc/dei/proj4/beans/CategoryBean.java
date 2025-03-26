@@ -14,6 +14,7 @@ import pt.uc.dei.proj4.entity.CategoryEntity;
 import pt.uc.dei.proj4.entity.ProductEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -106,8 +107,8 @@ public class CategoryBean implements Serializable {
 
 
     //Converters
-    private Set<CategoryDto> convertGroupCategoryEntityToGroupCategoryDto(Set<CategoryEntity> categories) {
-        Set<CategoryDto> categoryDtos = new HashSet<>();
+    private List<CategoryDto> convertGroupCategoryEntityToGroupCategoryDto(List<CategoryEntity> categories) {
+        ArrayList<CategoryDto> categoryDtos = new ArrayList<>();
         for (CategoryEntity categoryEntity : categories) {
             CategoryDto categoryDto = convertCategoryEntityToCategoryDto(categoryEntity);
             categoryDtos.add(categoryDto);
@@ -155,11 +156,11 @@ public class CategoryBean implements Serializable {
         return produto;
     }
 
-    public Set<CategoryDto> getAllCategories() {
+    public List<CategoryDto> getAllCategories() {
         try {
             List<CategoryEntity> categories = categoryDao.getAllCategories();
-            Set<CategoryEntity> catedorySet = new HashSet<>(categories);
-            return convertGroupCategoryEntityToGroupCategoryDto(catedorySet);
+            //Set<CategoryEntity> categorySet = new HashSet<>(categories);
+            return convertGroupCategoryEntityToGroupCategoryDto(categories);
         } catch (Exception e) {
             logger.error("Error while getting all categories");
             logger.error(e);

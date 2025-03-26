@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 //store de utilizador
-export const userStore = create(
+export const useUserStore = create(
   persist(
     (set) => ({
       token: null,
@@ -25,4 +25,4 @@ export const userStore = create(
   )
 );
 
-export default userStore;
+export default useUserStore;

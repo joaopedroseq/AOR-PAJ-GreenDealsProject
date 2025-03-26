@@ -2,14 +2,14 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../hooks/handleLogin';
-import userStore from '../../stores/UserStore';
+import useUserStore from '../../stores/useUserStore';
 
 const LoginForm = ({ toggleRegisterModal }) => {
   const { register, handleSubmit } = useForm();
-  const updateToken = userStore((state) => state.updateToken);
-  const updateIsAuthenticated = userStore((state) => state.updateIsAuthenticated);
+  const updateToken = useUserStore((state) => state.updateToken);
+  const updateIsAuthenticated = useUserStore((state) => state.updateIsAuthenticated);
 
-  const userStoreUpdates = {
+  const useUserStoreUpdates = {
     updateToken,
     updateIsAuthenticated
   };
@@ -17,7 +17,7 @@ const LoginForm = ({ toggleRegisterModal }) => {
 
 
   const onSubmit = async (loginData) => {
-    await handleLogin(loginData, userStoreUpdates);
+    await handleLogin(loginData, useUserStoreUpdates);
   };
 
    // Handle validation errors

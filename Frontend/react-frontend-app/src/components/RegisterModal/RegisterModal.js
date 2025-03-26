@@ -12,7 +12,7 @@ import {
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { handleLogin } from "../../hooks/handleLogin";
-import userStore from "../../stores/UserStore";
+import useUserStore from "../../stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const RegisterModal = ({ toggleModal, isModalVisible }) => {
@@ -24,16 +24,16 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     formState: { errors },
   } = useForm();
 
-  const updateUsername = userStore((state) => state.updateUsername);
-  const updateToken = userStore((state) => state.updateToken);
-  const updateIsAuthenticated = userStore(
+  const updateUsername = useUserStore((state) => state.updateUsername);
+  const updateToken = useUserStore((state) => state.updateToken);
+  const updateIsAuthenticated = useUserStore(
     (state) => state.updateIsAuthenticated
   );
-  const updateIsAdmin = userStore((state) => state.updateIsAdmin);
-  const updateUrlPhoto = userStore((state) => state.updateUrlPhoto);
-  const updateFirstName = userStore((state) => state.updateFirstName);
+  const updateIsAdmin = useUserStore((state) => state.updateIsAdmin);
+  const updateUrlPhoto = useUserStore((state) => state.updateUrlPhoto);
+  const updateFirstName = useUserStore((state) => state.updateFirstName);
 
-  const userStoreUpdates = {
+  const useUserStoreUpdates = {
     updateUsername,
     updateToken,
     updateIsAuthenticated,
@@ -58,7 +58,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
           "Novo registo com sucesso. Ben-vindo " + newUser.firstName
         );
         try {
-          await handleLogin(newUser, userStoreUpdates);
+          await handleLogin(newUser, useUserStoreUpdates);
           reset();
           toggleModal();
         } catch (error) {

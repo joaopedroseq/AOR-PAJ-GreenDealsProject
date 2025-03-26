@@ -1,5 +1,4 @@
 import React from "react";
-import "../../pages/Homepage/homepage.css";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {

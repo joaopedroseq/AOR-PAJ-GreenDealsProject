@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name="category")
 
 //to get all categories
-@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c WHERE c.nome != :empty")
+@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c WHERE c.nome != :empty ORDER BY nome")
 
 //get all categorie's names
 @NamedQuery(name = "Category.getAllCategoriesNames", query = "SELECT nome FROM CategoryEntity c WHERE c.nome != :empty ORDER BY nome")

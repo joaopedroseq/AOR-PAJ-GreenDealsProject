@@ -19,6 +19,7 @@ import pt.uc.dei.proj4.entity.CategoryEntity;
 import pt.uc.dei.proj4.entity.ProductEntity;
 import pt.uc.dei.proj4.entity.UserEntity;
 
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -460,7 +461,7 @@ class UserBeanTest {
         expectedUserDtos.add(new UserDto());
 
         // Act
-        Set<UserDto> result = userBean.getAllUsers();
+        ArrayList<UserDto> result = userBean.getAllUsers();
 
         // Assert
         assertNotNull(result);
@@ -474,7 +475,7 @@ class UserBeanTest {
         when(userDao.getAllUsers()).thenThrow(new RuntimeException("Error"));
 
         // Act
-        Set<UserDto> result = userBean.getAllUsers();
+        ArrayList<UserDto> result = userBean.getAllUsers();
 
         // Assert
         assertNull(result);

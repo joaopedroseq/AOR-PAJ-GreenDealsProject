@@ -6,7 +6,7 @@ import {
 } from "../Utils/ToastConfig/toastConfig";
 import errorMessages from "../Utils/constants/errorMessages";
 
-export const handleLogin = async (loginData, userStoreUpdates) => {
+export const handleLogin = async (loginData, useUserStoreUpdates) => {
   if (loginData.username.trim() === "" || loginData.password.trim() === "") {
     showErrorToast("Os campos de utilizador e password têm de ser preenchidos");
     return;
@@ -14,7 +14,7 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
   try {
     const token = await login(loginData.username, loginData.password);
     if (token !== null) {
-      await logUserInformation(token, userStoreUpdates);
+      await logUserInformation(token, useUserStoreUpdates);
     }
   } catch (error) {
     const toastMessage =
@@ -23,8 +23,8 @@ export const handleLogin = async (loginData, userStoreUpdates) => {
   }
 };
 
-export const logUserInformation = async (token, userStoreUpdates) => {
-  const { updateToken, updateIsAuthenticated } = userStoreUpdates;
+export const logUserInformation = async (token, useUserStoreUpdates) => {
+  const { updateToken, updateIsAuthenticated } = useUserStoreUpdates;
   try {
     const userInformation = await getUserLogged(token);
     updateToken(token);

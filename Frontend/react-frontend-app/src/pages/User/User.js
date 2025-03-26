@@ -6,8 +6,8 @@ import {
   showErrorToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { getUserInformation } from "../../hooks/handleLogin";
-import userStore from "../../stores/UserStore";
-import ProductCard from "../../components/ProductCard/productCard";
+import useUserStore from "../../stores/useUserStore";
+import ProductCard from "../../components/ProductCard/ProductCard";
 import useProductStore from "../../stores/useProductStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import {
@@ -22,7 +22,7 @@ export const User = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const token = userStore((state) => state.token);
+  const token = useUserStore((state) => state.token);
   const [userInfo, setUserInfo] = useState({});
   const [updatedUserInfo, setUpdatedUserInfo] = useState({});
   const { setFilters } = useProductStore();

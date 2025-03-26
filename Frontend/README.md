@@ -12,6 +12,7 @@
 - comentar com javascript doc e javadoc;
 - mudar os processos de cada componente para handles
 - renomear o UserStore para useUserStore;
+- mudar alguns fetch's do userApi para authenticationApi;
 
 ## Backend:
 - refazer os endpoints de acordo com as boas práticas/

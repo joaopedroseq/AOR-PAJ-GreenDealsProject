@@ -12,6 +12,7 @@ import pt.uc.dei.proj4.dto.CategoryDto;
 import pt.uc.dei.proj4.dto.UserDto;
 
 import java.util.List;
+import java.util.Set;
 
 @Path("/categories")
 public class CategoryService {
@@ -94,7 +95,8 @@ public class CategoryService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllCategories() {
-        List<String> categories = categoryBean.getAllCategoriesNames();
+        //List<String> categories = categoryBean.getAllCategoriesNames();
+        List<CategoryDto> categories = categoryBean.getAllCategories();
         if (categories != null) {
             logger.info(" {} categories found", categories.size());
             return Response.status(200).entity(categories).build();

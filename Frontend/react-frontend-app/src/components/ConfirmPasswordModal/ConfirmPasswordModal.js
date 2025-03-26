@@ -4,11 +4,11 @@ import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { checkIfValidPassword } from "../../Utils/UtilityFunctions";
 import handleChangeUserInformation from "../../hooks/handleChangeUserInformation";
-import userStore from "../../stores/UserStore";
+import useUserStore from "../../stores/useUserStore";
 
 const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => {
   const { register, handleSubmit, watch, reset } = useForm();
-  const token = userStore((state) => state.token);
+  const token = useUserStore((state) => state.token);
 
   const onSubmit = (passwordData) => {
     const password = passwordData.password;

@@ -8,18 +8,18 @@ import {
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { updateProduct } from "../../api/productApi";
-import { userStore } from "../../stores/UserStore";
+import useUserStore from "../../stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const EditProductModal = ({
   product,
   toggleEditProductModal,
   isEditProductModalVisible,
-  updatedProduct
+  updatedProduct,
 }) => {
   //Categories from the useCategoriesStore
   const categories = useCategoriesStore((state) => state.categories);
-  const token = userStore((state) => state.token);
+  const token = useUserStore((state) => state.token);
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = async (editedInformation) => {
@@ -177,8 +177,10 @@ const EditProductModal = ({
                   Escolha uma categoria
                 </option>
                 {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
+                  <option key={index} value={category.name}>
+                    {category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1)}{" "}
+                    {/* Display category.name */}
                   </option>
                 ))}
               </select>

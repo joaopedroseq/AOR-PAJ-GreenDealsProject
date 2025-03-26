@@ -1,6 +1,7 @@
 package pt.uc.dei.proj4.beans;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -205,7 +206,7 @@ public class UserBean implements Serializable {
         }
     }
 
-    public Set<UserDto> getAllUsers() {
+    public ArrayList<UserDto> getAllUsers() {
         try{
             List<UserEntity> userEntityList = userDao.getAllUsers();
             return convertGroupUserEntityToUserDto(userEntityList);
@@ -247,8 +248,8 @@ public class UserBean implements Serializable {
 
 
     //Converts
-    private Set<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {
-        Set<UserDto> userDtos = new HashSet<>();
+    private ArrayList<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {
+        ArrayList<UserDto> userDtos = new ArrayList<>();
         for (UserEntity userEntity : userEntities) {
             userDtos.add(convertUserEntitytoUserDto(userEntity));
         }

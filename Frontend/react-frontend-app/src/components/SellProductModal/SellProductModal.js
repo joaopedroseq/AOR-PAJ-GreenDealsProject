@@ -14,8 +14,6 @@ import useProductStore from "../../stores/useProductStore";
 
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();
-  
-
 
   //Categories from the useCategoriesStore
   const categories = useCategoriesStore((state) => state.categories);
@@ -158,8 +156,10 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
                   Escolha uma categoria
                 </option>
                 {categories.map((category, index) => (
-                  <option key={index} value={category}>
-                    {category}
+                  <option key={index} value={category.name}>
+                    {category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1)}{" "}
+                    {/* Display category.name */}
                   </option>
                 ))}
               </select>
@@ -172,8 +172,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
                 name="add-localidade"
                 maxLength="100"
                 {...register("productLocation", {
-                  required:
-                    "Tterá de preencher uma localidade",
+                  required: "Tterá de preencher uma localidade",
                 })}
               />
             </div>
@@ -184,8 +183,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
                 id="add-imagem"
                 name="add-imagem"
                 {...register("productUrlImage", {
-                  required:
-                    "Terá de preencher o url da imagem do producto",
+                  required: "Terá de preencher o url da imagem do producto",
                 })}
               />
             </div>

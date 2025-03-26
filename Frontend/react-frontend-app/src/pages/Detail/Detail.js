@@ -5,7 +5,7 @@ import {
   updateProduct,
   deleteProduct,
 } from "../../api/productApi";
-import userStore from "../../stores/UserStore";
+import useUserStore from "../../stores/useUserStore";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -23,7 +23,7 @@ import errorMessages from "../../Utils/constants/errorMessages";
 export const Detail = () => {
   const INDEX_OF_PRODUCT = 0;
   const navigate = useNavigate();
-  const token = userStore((state) => state.token);
+  const token = useUserStore((state) => state.token);
   const id = new URLSearchParams(useLocation().search).get("id");
   const [product, setProduct] = useState(null);
 

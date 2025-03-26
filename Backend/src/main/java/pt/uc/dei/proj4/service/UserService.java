@@ -15,6 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.dto.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -153,6 +155,7 @@ public class UserService {
             return Response.status(400).entity("Invalid data").build();
         } else {
             if (!userbean.checkIfTokenValid(tokenOfRequester)) {
+                logger.error("Invalid token when trying to get user {} information", userToGetInformation);
                 logger.error("Invalid token when trying to get user {} information", userToGetInformation);
                 return Response.status(401).entity("Invalid token").build();
             } else {
@@ -325,9 +328,10 @@ public class UserService {
         }
     }
 
+
+
     //Get All Regular Users
     @GET
-    @Path("/users")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllUsers(@HeaderParam("token") String token) {
         if (!userbean.checkIfTokenValid(token)) {
@@ -343,7 +347,7 @@ public class UserService {
                     logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
                     return Response.status(403).entity("User does not have admin permission to views other user's information").build();
                 } else {
-                    Set<UserDto> users = userbean.getAllUsers();
+                    ArrayList<UserDto> users = userbean.getAllUsers();
                     logger.info("User {} accessed to get all user's information", user.getUsername());
                     return Response.status(200).entity(users).build();
                 }
