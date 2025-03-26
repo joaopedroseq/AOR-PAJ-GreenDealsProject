@@ -1,3 +1,8 @@
+html {
+  scroll-padding-top: 70px; /* Adjust for the header height */
+  scroll-behavior: smooth; /* Enable smooth scrolling */
+}
+
 .App {
   text-align: center;
 }

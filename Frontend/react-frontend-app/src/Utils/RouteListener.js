@@ -7,6 +7,7 @@ const RouteListener = () => {
   const clearFilters = useProductStore((state) => state.clearFilters);
 
   useEffect(() => {
+    window.scrollTo(0, 0);  //fazer scroll para o topo em cada mudança de página
     if (location.pathname === "/") {
       clearFilters();
     }
