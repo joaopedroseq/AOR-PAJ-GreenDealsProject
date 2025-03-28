@@ -5,7 +5,8 @@
   }
     
     /*---------------The Modal (background)-----------------------*/
-    .modal-AddCategoryModal {
+    .modal-ConfirmModal {
+      display: flex;
       max-height:calc(100vh - 100px);
       position: fixed; /*fixo na página*/
       z-index: 1000; /* Sobreposição sobre as outras páginas */
@@ -21,7 +22,7 @@
     }
   
     /*--caixa de texto do formulário---*/
-    .modal-AddCategoryModal input[type="text"] {
+    .modal-ConfirmModal input[type="text"] {
       font-size: 18px;
       font-family: 'Montserrat';
       border: none;
@@ -31,7 +32,7 @@
     }
     
     /* Conteúdo da janela modal */
-    .modal-content-AddCategoryModal {
+    .modal-content-ConfirmModal {
       position: relative;
       background-color: #fefefe;
       margin: auto;
@@ -57,7 +58,7 @@
     }
   
     /*Header da janela modal*/
-    .modal-header-AddCategoryModal {
+    .modal-header-ConfirmModal {
       display: flex;
       align-items: center;
       padding: 2px 16px;
@@ -66,7 +67,7 @@
       justify-content: space-between;
     }
   
-    .modal-header-AddCategoryModal-title{
+    .modal-header-ConfirmModal-title{
       font-family: "Playfair Display";
       color: var(--beige);
       font-size: 25px;
@@ -75,40 +76,40 @@
   
     }
       
-    .modal-body-AddCategoryModal {
+    .modal-body-ConfirmModal {
       padding: 16px 16px;
       display: flex;
     }
   
   /* Estilo para o formulário de edição de produto */
-      .edit-AddCategoryModal-form{
+      .edit-ConfirmModal-form{
           display: block; /* Alinha os campos do formulário em linha */
           text-align: left;
       }
   
-      .edit-AddCategoryModal-form-field{
+      .edit-ConfirmModal-form-field{
         display: block; /* Alinha os campos do formulário em bloco */
       }
   
       /* Estilo para os rótulos e campos de entrada do formulário */
-      .edit-AddCategoryModal-form-field label{
+      .edit-ConfirmModal-form-field label{
           font-size: 18px;
           font-family: "Montserrat";
       }
   
       /* Efeito de sublinhado ao passar o mouse sobre o rótulo */
-      .edit-AddCategoryModal-form-field label:hover{
+      .edit-ConfirmModal-form-field label:hover{
         text-decoration: underline;
       }
   
       /* Estilo para os campos de entrada do formulário */
-      .edit-AddCategoryModal-form-field input{
+      .edit-ConfirmModal-form-field input{
         font-size: 14px;
       }
       
   
       /* Estilo para o botão de guardar produto */
-      .submit{
+      .confirm-button{
         float: inline-end;
         background-color: var(--green); /* Cor verde */
         color: white; /* Cor do texto */
@@ -122,7 +123,7 @@
         transition: background-color 0.3s ease;
       }
 
-      .cancel{
+      .cancel-button{
         float: inline-start;
         background-color: var(--green); /* Cor verde */
         color: white; /* Cor do texto */

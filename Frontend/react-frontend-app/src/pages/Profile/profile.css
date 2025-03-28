@@ -103,25 +103,36 @@
     align-content: center;
 }
 
-.grid-item img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: cover;
-    justify-self: center;
+.grid-item {
+  position: relative; /* Establish a containing block for absolutely positioned elements */
 }
 
-.grid-item .text-overlay {
-    position: absolute;
-    bottom: 0;
-    background: #b0b9a27e; /* Fundo semi-transparente */
-    color: white;
-    width: 100%;
-    text-align: center;
-    padding: 10px;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    font-size: 14px; /* Tamanho menor do texto */
+.grid-item .productImage {
+  display: block; /* Ensure no unexpected spacing around the image */
 }
+
+.text-overlay {
+  position: relative; /* Make sure text stays above the overlay */
+  z-index: 2; /* Layering priority */
+}
+
+.excluded-overlay {
+  z-index: 1; /* Below the text but above the product image */
+}
+
+
+.excluded-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.7; /* Adjust transparency level */
+  pointer-events: none; /* Ensure the overlay doesn't block interactions */
+}
+
 
 .text-overlay h2, p{
   font-family: "Montserrat";

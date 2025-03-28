@@ -13,6 +13,7 @@ const handleChangeUserInformation = async (
   token,
   isAdmin
 ) => {
+  console.log("ran")
   try {
     const updatesToUser = {};
     for (const key in updatedInfo) {

@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './components/Header/Header';
 import Homepage from './pages/Homepage/Homepage';
@@ -11,6 +11,7 @@ import Profile from './pages/Profile/Profile';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 
 function App() {

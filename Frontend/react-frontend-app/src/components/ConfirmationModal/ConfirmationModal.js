@@ -12,21 +12,21 @@ const AddCategoryModal = ({ title, message, isOpen, onClose, onConfirm }) => {
 
 
   return (
+    isOpen && (
     <div
       id="modal-addCategory"
-      className="modal-AddCategoryModal"
-      style={{ display: isOpen ? "flex" : "none" }}
+      className="modal-ConfirmModal"
     >
-      <div className="modal-content-AddCategoryModal">
+      <div className="modal-content-ConfirmModal">
         <div
-          className="modal-header-AddCategoryModal"
-          id="modal-header-AddCategoryModal"
+          className="modal-header-ConfirmModal"
+          id="modal-header-ConfirmModal"
         >
-          <p className="modal-header-AddCategoryModal-title">
+          <p className="modal-header-ConfirmModal-title">
             {title}
           </p>
         </div>
-        <div className="modal-body-AddCategoryModal">
+        <div className="modal-body-ConfirmModal">
           <p>{message}</p>
           <button
             className="confirm-button"
@@ -44,6 +44,7 @@ const AddCategoryModal = ({ title, message, isOpen, onClose, onConfirm }) => {
         </div>
       </div>
     </div>
+    )
   );
 };
 

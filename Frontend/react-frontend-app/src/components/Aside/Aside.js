@@ -64,6 +64,7 @@ const Aside = ({ isAsideVisible }) => {
 
   return (
     <aside
+      data-testid="aside-menu"
       id="aside-menu"
       style={{ display: isAsideVisible ? "block" : "none" }}
     >

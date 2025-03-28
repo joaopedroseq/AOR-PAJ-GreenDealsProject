@@ -1,12 +1,13 @@
 import React from "react";
+import excludedOverlay from '../../assets/icons/excludedOverlay.png'
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   return (
     <Link className="grid-item"
       data-category={product.category} to={`/detail?id=${product.id}`}>
-      <img src={product.urlImage} alt={product.name} />
-      {product.excluded && <div className="excluded-overlay"></div>}
+      <img src={product.urlImage} alt={product.name} className="productImage"/>
+      {product.excluded && <img src={excludedOverlay} className="excluded-overlay"></img>}
       <div className="text-overlay">
         <h2>{product.name}</h2>
         <p>Preço: €{product.price}</p>
