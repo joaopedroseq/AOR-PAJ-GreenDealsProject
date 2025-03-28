@@ -13,8 +13,10 @@ const Aside = ({ isAsideVisible }) => {
   const page = useLocation().pathname;
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
-
   const { setFilters, fetchProducts } = useProductStore();
+
+  //Para apresentação na página de profile
+  const username = new URLSearchParams(useLocation().search).get("username");
 
   useEffect(() => {
     const getUserInfo = async () => {
@@ -31,6 +33,9 @@ const Aside = ({ isAsideVisible }) => {
     if (page === "/admin") {
       getUserInfo();
     }
+    if (page === "/profile") {
+      getUserInfo();
+    }
     fetchCategories();
   }, [fetchCategories, page]);
 
@@ -38,7 +43,7 @@ const Aside = ({ isAsideVisible }) => {
     console.log("isAdmin state updated:", isAdmin);
   }, [isAdmin]);
 
-  const handleCategoryClick = (category, edited) => {
+  const handleCategoryClick = (category, edited, user = null) => {
     if (category) {
       setFilters({ category: category.name });
     } else {
@@ -47,7 +52,7 @@ const Aside = ({ isAsideVisible }) => {
     if(edited) {
       setFilters({ edited: true });
     }
-    if (page === "/admin" || page === "/user") {
+    if (page === "/admin" || page === "/user" || page === '/profile') {
       fetchProducts(token);
     } else {
       fetchProducts();
@@ -161,6 +166,43 @@ const Aside = ({ isAsideVisible }) => {
           </h2>
           <h2 onClick={() => handleScrollToSection("categories-section")}>
             Gestão de Categorias
+          </h2>
+        </>
+      )}
+      {page === "/profile" && isAdmin && (
+        <>
+          <h2 onClick={() => handleScrollToSection("products-section")}>
+            Produtos de {username}
+          </h2>
+          <ul>
+            <h3>Categorias</h3>
+            <li
+              id="category"
+              value="all"
+              onClick={() => handleCategoryClick(null)}
+            >
+              Todos os produtos
+            </li>
+            <li
+              id="category"
+              value="all"
+              onClick={() => handleCategoryClick(null, true)}
+            >
+              Editados
+            </li>
+            {categories.map((category, index) => (
+              <li
+                key={index}
+                value={category.name}
+                id={category.name}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+              </li>
+            ))}
+          </ul>
+          <h2 onClick={() => handleScrollToSection("profile-section")}>
+            Informações de {username}
           </h2>
         </>
       )}
