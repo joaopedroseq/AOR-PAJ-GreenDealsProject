@@ -30,7 +30,6 @@ const Aside = ({ isAsideVisible }) => {
     }
     if (page === "/admin") {
       getUserInfo();
-
     }
     fetchCategories();
   }, [fetchCategories, page]);
@@ -38,19 +37,19 @@ const Aside = ({ isAsideVisible }) => {
   useEffect(() => {
     console.log("isAdmin state updated:", isAdmin);
   }, [isAdmin]);
-  
 
-  const handleCategoryClick = (category) => {
-    if(category){
+  const handleCategoryClick = (category, edited) => {
+    if (category) {
       setFilters({ category: category.name });
-    }
-    else {
+    } else {
       setFilters({ category: null });
     }
-    if (page === "/admin" || page === "/user") {    
-      fetchProducts(token);
+    if(edited) {
+      setFilters({ edited: true });
     }
-    else {
+    if (page === "/admin" || page === "/user") {
+      fetchProducts(token);
+    } else {
       fetchProducts();
     }
   };
@@ -68,7 +67,7 @@ const Aside = ({ isAsideVisible }) => {
       id="aside-menu"
       style={{ display: isAsideVisible ? "block" : "none" }}
     >
-      {page === "/"  && (
+      {page === "/" && (
         <ul>
           <h3>Categorias</h3>
           <li
@@ -88,15 +87,15 @@ const Aside = ({ isAsideVisible }) => {
               {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
             </li>
           ))}
-          </ul>
+        </ul>
       )}
-          {page === "/user" && (
-            <ul>
-              <h2 onClick={() => handleScrollToSection("products-section")}>
-                Produtos
-              </h2>
-              <h3>Categorias</h3>
-              <li
+      {page === "/user" && (
+        <ul>
+          <h2 onClick={() => handleScrollToSection("products-section")}>
+            Produtos
+          </h2>
+          <h3>Categorias</h3>
+          <li
             id="category"
             value="all"
             onClick={() => handleCategoryClick(null)}
@@ -113,31 +112,58 @@ const Aside = ({ isAsideVisible }) => {
               {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
             </li>
           ))}
-            </ul>
-          )}
-          {page === "/user" && (
-            <h2 onClick={() => handleScrollToSection("profile-section")}>
-              Informações
-            </h2>
-          )}
-          {(page === "/user" && isAdmin) && (
-            <Link to="/admin" className="link">
-              <h2>Página de Administrador</h2>
-            </Link>
-          )}
-          {(page === "/admin" && isAdmin) && (
-            <>
-              <h2 onClick={() => handleScrollToSection("products-section")}>
-                Gestão de Produtos
-              </h2>
-              <h2 onClick={() => handleScrollToSection("users-section")}>
-                Gestão de Utilizadores
-              </h2>
-              <h2 onClick={() => handleScrollToSection("categories-section")}>
-                Gestão de Categorias
-              </h2>
-            </>
-          )}
+        </ul>
+      )}
+      {page === "/user" && (
+        <h2 onClick={() => handleScrollToSection("profile-section")}>
+          Informações
+        </h2>
+      )}
+      {page === "/user" && isAdmin && (
+        <Link to="/admin" className="link">
+          <h2>Página de Administrador</h2>
+        </Link>
+      )}
+      {page === "/admin" && isAdmin && (
+        <>
+          <h2 onClick={() => handleScrollToSection("products-section")}>
+            Gestão de Produtos
+          </h2>
+          <ul>
+            <h3>Categorias</h3>
+            <li
+              id="category"
+              value="all"
+              onClick={() => handleCategoryClick(null)}
+            >
+              Todos os produtos
+            </li>
+            <li
+              id="category"
+              value="all"
+              onClick={() => handleCategoryClick(null, true)}
+            >
+              Editados
+            </li>
+            {categories.map((category, index) => (
+              <li
+                key={index}
+                value={category.name}
+                id={category.name}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+              </li>
+            ))}
+          </ul>
+          <h2 onClick={() => handleScrollToSection("users-section")}>
+            Gestão de Utilizadores
+          </h2>
+          <h2 onClick={() => handleScrollToSection("categories-section")}>
+            Gestão de Categorias
+          </h2>
+        </>
+      )}
     </aside>
   );
 };

@@ -1,9 +1,12 @@
 import { toast } from 'react-toastify';
+import './toastConfig.css'
 
 
-// Example success toast
+//Mensagem de sucesso
 export const showSuccessToast = (message) => {
   toast.success(message, {
+    className: "custom-toast-success",
+    progressClassName: "custom-toast-success-progress",
     position: 'top-left',
     autoClose: 3000,
     hideProgressBar: false,
@@ -13,9 +16,10 @@ export const showSuccessToast = (message) => {
   });
 };
 
-// Example error toast
+// Mensagem de erro
 export const showErrorToast = (message) => {
   toast.error(message, {
+    className: "custom-toast-error",
     position: 'top-left',
     autoClose: 3000,
     hideProgressBar: false,
@@ -25,26 +29,15 @@ export const showErrorToast = (message) => {
   });
 };
 
-// Global info toast
+// Mensagem de informação
 export const showInfoToast = (message) => {
   toast.info(message, {
+    className: "custom-toast-info",
     position: 'top-left',
     autoClose: 3000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: true,
     draggable: false,
-  });
-};
-
-// Global warning toast
-export const showWarningToast = (message) => {
-  toast.warn(message, {
-    position: toast.POSITION.BOTTOM_RIGHT,
-    autoClose: 3500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
   });
 };

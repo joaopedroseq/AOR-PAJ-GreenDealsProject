@@ -1,9 +1,10 @@
+//Ficheiro de gestão de erros de operações com o backen
 const errorMessages = {
-    // Common errors
+    // Erros gerais
     network_error: "Sem resposta do servidor, verifique a sua conexão.",
     unexpected_error: "Erro inesperado. Por favor tente novamente.",
   
-    // Product-related errors
+    // Erros de produtos
     invalid_data: "Dados inválidos.",
     invalid_token: "Token inválido, por favor tente novamente.",
     permission_denied: "Sem permissão para o fazer, por favor tente novamente.",
@@ -14,14 +15,14 @@ const errorMessages = {
     non_existing_category: "Categoria não existe",
     
   
-    // User-related errors
+    // Erros de autenticação
     same_username: "O nome de usuário já existe.",
     error: "Erro nos dados fornecidos.",
     wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
     wrong_password: "Palavra-passe incorreta",
     forbidden: "A sua conta foi excluída - contacte o administrador",
   
-    // Generic operation errors
+    // Erros de get
     get_user_failed: "Falha ao obter informações do utilizador.",
     register_failed: "Falha ao registrar o utilizador."
   };

@@ -40,12 +40,7 @@ export const Profile = () => {
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const products = useProductStore((state) => state.products);
 
-  //Categories
-
-  //Get
-  const categories = useCategoriesStore((state) => state.categories);
-  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
-  //Form operations
+  //Operações de form para edição de informações do utilizador
   const {
     register,
     handleSubmit,
@@ -53,11 +48,13 @@ export const Profile = () => {
     formState: { errors },
   } = useForm();
 
+  //Get das informações do utilizador
   const getProfileInformation = async () => {
     let userInformation = await handleGetUserInformation(username, token);
     setUserProfile(userInformation);
   };
 
+  //Get dos produtos do utilizador (requer token para aceder aos produtos excluídos (apenas para admins))
   const getUserProducts = async () => {
     try {
       if (userProfile?.username) {
@@ -73,8 +70,8 @@ export const Profile = () => {
     }
   };
 
+  //Obter informação do utilizador autenticado e redirecionar caso não seja admin
   useEffect(() => {
-    console.log('teste')
     const checkIfAdmin = async () => {
       try {
         let userInformation = await getLoggedUserInformation(token);
@@ -94,12 +91,12 @@ export const Profile = () => {
     getUserProducts();
   }, []);
 
+  //useEffect de refresh de todos os dados do utilizador (informações e produtos) caso este não seja admin
   useEffect(() => {
     const getUserProducts = async () => {
       try {
         if (userProfile?.username) {
           let username = userProfile.username;
-          console.log(userProfile);
           setFilters({ username });
           await fetchProducts(token);
         }
@@ -112,13 +109,13 @@ export const Profile = () => {
     getUserProducts();
   }, [userProfile]);
 
-  //Change user information
+  //Submissão de form para alteração de informações do utilizador
   const onSubmit = async (newUserInformation) => {
     setModalConfig({
       title: "Alterar informações de utilizador",
-      message: `Pretende alterar informaçõe do utilizador ${userProfile.username}?`,
+      message: `Pretende alterar informações do utilizador ${userProfile.username}?`,
       onConfirm: async () => {
-        let password = null; //not needed since is Admin
+        let password = null; //não necessário já que o utilizador é admin
         let isAdmin = true;
 
         const isUserUpdated = await handleChangeUserInformation(
@@ -141,7 +138,7 @@ export const Profile = () => {
     setIsModalOpen(true);
   };
 
-  // Handle validation errors
+  // Apresentação de erros ao utilizador
   const onError = (errors) => {
     if (errors.firstName) {
       showErrorToast(errors.firstName.message);

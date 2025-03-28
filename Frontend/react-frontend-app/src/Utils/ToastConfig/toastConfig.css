@@ -1,0 +1,22 @@
+/* Mensagem de sucesso */
+.custom-toast-success {
+    background-color: #28a745; /* Green background */
+    color: #ffffff;           /* White text */
+  }
+  .custom-toast-success-progress {
+    background: #fff; /* White progress bar */
+  }
+  
+  
+  /* Mensagem de erro */
+  .custom-toast-error {
+    background-color: #dc3545; /* Red background */
+    color: #ffffff;           /* White text */
+  }
+  
+  
+  /* Mensagem de informação */
+  .custom-toast-info {
+    background-color: #17a2b8; /* Blue background */
+    color: #ffffff;           /* White text */
+  }

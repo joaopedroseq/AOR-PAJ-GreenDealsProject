@@ -113,7 +113,7 @@
 
 .text-overlay {
   position: relative; /* Make sure text stays above the overlay */
-  z-index: 2; /* Layering priority */
+  z-index: 1; /* Layering priority */
 }
 
 .excluded-overlay {

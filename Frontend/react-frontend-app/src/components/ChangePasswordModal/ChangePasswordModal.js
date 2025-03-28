@@ -41,29 +41,29 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => 
   return (
     isOpen && (
     <div
-      id="modal-confirmPassword"
-      className="modal-confirmPassword"
+      id="modal-changePassword"
+      className="modal-changePassword"
     >
       {/*Conteúdo da janela modal*/}
-      <div className="modal-content-confirmPassword">
+      <div className="modal-content-changePassword">
         <div
-          className="modal-header-confirmPassword"
-          id="modal-header-confirmPassword"
+          className="modal-header-changePassword"
+          id="modal-header-changePassword"
         >
-          <p className="modal-header-confirmPassword-title">
+          <p className="modal-header-changePassword-title">
             Confirme a sua password
           </p>
         </div>
-        <div className="modal-body-confirmPassword">
+        <div className="modal-body-changePassword">
           {/*Formulário de edição de informações de um produto*/}
           <form
-            className="edit-confirmPassword-form"
-            id="edit-confirmPassword-form"
+            className="edit-changePassword-form"
+            id="edit-changePassword-form"
             onSubmit={handleSubmit(onSubmit, onError)}
           >
             <div
-              className="edit-confirmPassword-form-field"
-              id="edit-confirmPassword-form-field"
+              className="edit-changePassword-form-field"
+              id="edit-changePassword-form-field"
             >
               <label htmlFor="password">Password:</label>
               <input
@@ -80,8 +80,8 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => 
               />
             </div>
             <div
-              className="edit-confirmPassword-form-field"
-              id="edit-confirmPassword-form-field"
+              className="edit-changePassword-form-field"
+              id="edit-changePassword-form-field"
             >
               <label htmlFor="passwordConfirm">Confirmar Password:</label>
               <input
@@ -103,8 +103,8 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => 
                 })}
               />
               <div
-              className="edit-confirmPassword-form-field"
-              id="edit-confirmPassword-form-field"
+              className="edit-changePassword-form-field"
+              id="edit-changePassword-form-field"
             >
               <label htmlFor="newPassword">Nova Password:</label>
               <input

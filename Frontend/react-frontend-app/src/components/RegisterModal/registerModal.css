@@ -1,29 +1,3 @@
-/* Estilo global */
-:root {
-  --green: #b0b9a2;
-  --beige: #f1f3eb;
-  --darkGreen: #132a0e;
-}
-
-*, html {
-  margin: 0;
-  padding: 0;
-}
-
-.montserrat-Montserrat {
-  font-family: "Montserrat", serif;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.playfair-display-Playfair Display {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-style: normal;
-}
-
 /*---------------Janela modal de registo-----------------------*/
 /*Não apresentada por defeito, apenas após ser selecionado na criação de novo registo*/
 .modal-register {

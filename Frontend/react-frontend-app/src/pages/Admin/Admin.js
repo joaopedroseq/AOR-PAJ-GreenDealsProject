@@ -26,24 +26,23 @@ export const Admin = () => {
   const token = useUserStore((state) => state.token);
   const navigate = useNavigate();
 
-  //Confirmation Modal
+  //Confirmation Modal - costumização e abertura/fecho
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //Users
+  //Users - obtenção de todos os utilizadores
   const [allUsers, setAllUsers] = useState([]);
 
-  //Products
+  //Products - operações de obtenção de todos os produtos
   const { setFilters } = useProductStore();
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const products = useProductStore((state) => state.products);
 
   //Categories
-  
-  //Get
+  //Get todas as categorias
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
-  //Add
+  //Adicionar nova categoria
   const {
     register,
     handleSubmit,
@@ -54,11 +53,13 @@ export const Admin = () => {
   const handleAddCategory = useCategoriesStore(
     (state) => state.handleAddCategory
   );
-  //Delete
+  //Apagar categoria
   const handleDeleteCategory = useCategoriesStore(
     (state) => state.handleDeleteCategory
   );
 
+  //Chamada à entrada da página para verificar se utilizador autenticado é admin
+  //E filtra e fazer fetch de todos os produtos
   useEffect(() => {
     const getProducts = async () => {
       try {

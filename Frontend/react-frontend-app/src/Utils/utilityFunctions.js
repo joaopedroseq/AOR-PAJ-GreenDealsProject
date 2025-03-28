@@ -21,6 +21,7 @@ export function checkIfNumeric(string) {
   ); // Garante que strings de espaços em branco falhem
 }
 
+//Função para transformar datas em array para data de javascript
 export function transformArrayDatetoDate(arrayDate){
   const date = new Date(
     arrayDate[0],
@@ -33,7 +34,7 @@ export function transformArrayDatetoDate(arrayDate){
   return date;
 }
 
-//Function to receive a javascript date and return as a string in the format of DD/MM/YYYY
+//Função para transformar datas de javascript em string
 export function dateToFormattedDate(date){
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based, so add 1
@@ -45,7 +46,7 @@ export function dateToFormattedDate(date){
 
 
 /**
- * @deprecated This method is deprecated as default fetch already sorts by date.
+ * @deprecated Este método está deprecated, o backend já ordena por data
  */
 export function sortProductsByDate(products) {
   products.sort((a, b) => {

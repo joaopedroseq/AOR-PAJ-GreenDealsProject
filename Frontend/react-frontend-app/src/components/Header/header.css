@@ -1,165 +1,137 @@
-:root{
-    --green: #B0B9A2;
-    --beige: #f1f3eb;
-    --darkGreen: #132a0e;
-}
-
-.montserrat-Montserrat {
-  font-family: "Montserrat", serif;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.playfair-display-Playfair Display {
-  font-family: "Playfair Display", serif;
-  font-optical-sizing: auto;
-  font-weight: 100;
-  font-style: normal;
-}
-
-.Header{
-    margin: 0;
-    padding: 0;
+.Header {
+  margin: 0;
+  padding: 0;
 }
 
 .Header {
-        background-color: var(--green);
-        display: flex;
-        padding-top: 1%;
-        padding-bottom: 1%;
-        border-bottom: 1px solid #d3d3d3; /* Borda inferior */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-        position: fixed;
-        width: 100%;
-        height: 50px;
-        top: 0;
-        z-index: 2;   /*Index Z é 998 e deverá ser 999 para janelas abertas*/
+  background-color: var(--green);
+  display: flex;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border-bottom: 1px solid #d3d3d3; /* Borda inferior */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  top: 0;
+  z-index: 2; /*Index Z é 998 e deverá ser 999 para janelas abertas*/
 }
 
-.headerDiv{
-    display: flex;
-    flex-direction: column; /* Stack the elements vertically */
-    align-items: center;    /* Center them horizontally */
-    justify-content: center; /* Optional: Center them vertically inside the container */
-    margin: 0 5px;
+.headerDiv {
+  display: flex;
+  flex-direction: column; /* Stack the elements vertically */
+  align-items: center; /* Center them horizontally */
+  justify-content: center; /* Optional: Center them vertically inside the container */
+  margin: 0 5px;
 }
 
-    .logo{
-        flex: 1;
-        align-self: center;
-        text-decoration: none;
-        top: 0;
-        left: 0;
-        height: 50px;
-    }
-        .logo-img{
-            height: 50px;
-        }
+.logo {
+  flex: 1;
+  align-self: center;
+  text-decoration: none;
+  top: 0;
+  left: 0;
+  height: 50px;
+}
+.logo-img {
+  height: 50px;
+}
 
-    .loginMessage{
-        color: white; /* Cor do texto */
-        font-family: "Montserrat";
-    }
-    
+.loginMessage {
+  color: white; /* Cor do texto */
+  font-family: "Montserrat";
+}
 
-    .login{
-        /*visibility: hidden;    descomentar para esconder o login*/
-        position: relative;
-        float: right;
-        margin-right: 3%;
-    }
+.login {
+  /*visibility: hidden;    descomentar para esconder o login*/
+  position: relative;
+  float: right;
+  margin-right: 3%;
+}
 
-    .loginPhoto{
-      height: 40px;
-      border-radius: 50%;
-    }
+.loginPhoto {
+  height: 40px;
+  border-radius: 50%;
+}
 
-    .category-bar{
-        flex: 1;
-        align-self: center;
-        position: relative;
-        display: block;
-        transform: rotate(0deg);
-        transition: transform 0.5s linear;
-    }
+.category-bar {
+  flex: 1;
+  align-self: center;
+  position: relative;
+  display: block;
+  transform: rotate(0deg);
+  transition: transform 0.5s linear;
+}
 
-        .hamburger{
-            height: 30px;
-        }
-    
+.hamburger {
+  height: 30px;
+}
 
-    
+.sellProductButton {
+  border-radius: 5px;
+  text-align: center;
+  font-family: "Montserrat";
+  font-size: 16px;
+  color: var(--darkGreen);
+  padding: 2px 2px;
+  background-color: #ffffff;
+  border: none;
+}
 
-    .sellProductButton{
-        border-radius: 5px;
-        text-align: center;
-        font-family: "Montserrat";
-        font-size: 16px;
-        color: var(--darkGreen);
-        padding: 2px 2px;
-        background-color: #ffffff;
-        border: none;
-    }
+.userPageButton {
+  border-radius: 5px;
+  text-align: center;
+  font-family: "Montserrat";
+  font-size: 16px;
+  color: var(--darkGreen);
+  padding: 2px 2px;
+  background-color: #ffffff;
+  border: none;
+}
 
-    .userPageButton{
-        border-radius: 5px;
-        text-align: center;
-        font-family: "Montserrat";
-        font-size: 16px;
-        color: var(--darkGreen);
-        padding: 2px 2px;
-        background-color: #ffffff;
-        border: none;
-    }
+.logoutButton {
+  border-radius: 5px;
+  text-align: center;
+  font-family: "Montserrat";
+  font-size: 16px;
+  color: var(--darkGreen);
+  padding: 2px 2px;
+  background-color: #ffffff;
+  border: none;
+}
 
-    .logoutButton{
-        border-radius: 5px;
-        text-align: center;
-        font-family: "Montserrat";
-        font-size: 16px;
-        color: var(--darkGreen);
-        padding: 2px 2px;
-        background-color: #ffffff;
-        border: none;
-    }
+.login-form label {
+  font-family: "Montserrat";
+  font-size: 16px;
+  color: white;
+}
 
-    .login-form label{
-        font-family: "Montserrat";
-        font-size: 16px;
-        color: white;
-    }
+.login:hover .dropdownLogin {
+  display: block;
+}
 
-    .login:hover .dropdownLogin{
-        display: block;
-    }    
+.modal-footer-detail {
+  padding: 2px 16px;
+  background-color: #5cb85c;
+  color: white;
+}
 
-  
-  .modal-footer-detail {
-    padding: 2px 16px;
-    background-color: #5cb85c;
-    color: white;
-  }
-  
-  .modal-footer-detail input{
-    background-color: var(--green); /* Cor verde */
-    color: white; /* Cor do texto */
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'Verdana'; /* Fonte arredondada e elegante */
-    font-size: 16px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .modal-footer-detail input:hover,
-  .modal-footer-detail input:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-  }
+.modal-footer-detail input {
+  background-color: var(--green); /* Cor verde */
+  color: white; /* Cor do texto */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: "Verdana"; /* Fonte arredondada e elegante */
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
 
-
-  
+.modal-footer-detail input:hover,
+.modal-footer-detail input:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -1,35 +1,4 @@
-/* Estilo global */
-:root{
-    --green: #B0B9A2;
-    --beige: #f1f3eb;
-    --darkGreen: #132a0e;
-  }
-  
-  /* Estilo global do html */
-  *, html{
-      margin: 0;
-      padding: 0;
-  }
-  
-  .montserrat-Montserrat {
-    font-family: "Montserrat", serif;
-    font-optical-sizing: auto;
-    font-weight: 100;
-    font-style: normal;
-  }
-  
-  
-  .playfair-display-Playfair Display {
-    font-family: "Playfair Display", serif;
-    font-optical-sizing: auto;
-    font-weight: 100;
-    font-style: normal;
-  }
-  
-  /* Estilo global do body */
-    body{
-      background-color: var(--beige);
-    }
+
   
   .container {
       display: flex;
@@ -120,6 +89,7 @@
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
       font-size: 14px; /* Tamanho menor do texto */
+      z-index: 1;
   }
   
   .text-overlay h2, p{

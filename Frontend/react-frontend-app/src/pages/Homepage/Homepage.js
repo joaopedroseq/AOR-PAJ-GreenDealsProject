@@ -6,13 +6,15 @@ import sustentabilityBanner from "../../assets/banners/banner.png";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import useProductStore from "../../stores/useProductStore";
 
-
+//Homepage
 const Homepage = () => {
   const products = useProductStore((state) => state.products);
   const filters = useProductStore((state) => state.filters);
   const fetchProducts = useProductStore((state) => state.fetchProducts);
-  const { setFilters, clearFilters } = useProductStore();
+  const { setFilters, clearFilters } = useProductStore(); //talvez seja ainda necessário
 
+
+  //Popular a página com produtos
   useEffect(() => {
     fetchProducts(); // Fetch products on component mount
   }, [filters, fetchProducts]);

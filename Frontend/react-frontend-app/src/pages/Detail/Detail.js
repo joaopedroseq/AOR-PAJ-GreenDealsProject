@@ -6,7 +6,6 @@ import {
   deleteProduct,
 } from "../../api/productApi";
 import useUserStore from "../../stores/useUserStore";
-import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   showErrorToast,
@@ -36,7 +35,7 @@ export const Detail = () => {
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Edit product modal - toggle its visibility
+  // Toggle do edit product modal
   const [isEditProductModalVisible, setIsEditProductModalVisible] =
     useState(false);
 
@@ -44,13 +43,14 @@ export const Detail = () => {
     setIsEditProductModalVisible(!isEditProductModalVisible);
   };
 
-  //A way to update the detail page information if the product is edited
+  //Flag para update das informações após alterações destas
   const [isProductUpdated, setIsProductUpdated] = useState(false);
 
   const handleProductUpdate = () => {
     setIsProductUpdated(true);
   };
 
+  //Operação de excluir produto - operação de admin
   const handleExcludeProduct = async () => {
     const exclusion = {
       excluded: !product.excluded,
@@ -77,11 +77,12 @@ export const Detail = () => {
     }
   };
 
+  //Operação de apagar produto - redireciona para a página principal
   const handleDeleteProduct = async () => {
     try {
       await deleteProduct(token, product.id);
       showSuccessToast("Produto apagado com sucesso");
-      navigate("/");
+      navigate(-1);
     } catch (error) {
       const toastMessage =
         errorMessages[error.message] || errorMessages.unexpected_error;
@@ -89,7 +90,7 @@ export const Detail = () => {
     }
   };
 
-  // Fetch product information when the component loads
+  // Fetch das informações do produto após a entrada
   useEffect(() => {
     const fetchProduct = async () => {
       if (id) {

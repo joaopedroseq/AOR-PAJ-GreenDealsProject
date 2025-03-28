@@ -16,6 +16,7 @@ import {
 import ConfirmPasswordModal from "../../components/ConfirmPasswordModal/ConfirmPasswordModal";
 import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
 
+//Página de utilizador
 export const User = () => {
   const {
     register,
@@ -41,7 +42,7 @@ export const User = () => {
     setChangePasswordOpen(true);
   }
 
-  // Handle validation errors
+  // Apresentação de erros no formulário ao utilizador
   const onError = (errors) => {
     if (errors.firstName) {
       showErrorToast(errors.firstName.message);
@@ -69,7 +70,7 @@ export const User = () => {
     }
   };
 
-  //Use effect on component mount
+  //Use effect na abertura da página - buscar todos os dados do utilizador(informações e produtos)
   useEffect(() => {
     const getUserProducts = async () => {
       try {
@@ -96,6 +97,7 @@ export const User = () => {
     getUserProducts();
   }, []);
 
+  //Use effect na venda de um novo produto nesta página
   useEffect(() => {
     const getUserProducts = async () => {
       try {
