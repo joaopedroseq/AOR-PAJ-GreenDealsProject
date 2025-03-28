@@ -37,6 +37,14 @@
         z-index: 2;   /*Index Z é 998 e deverá ser 999 para janelas abertas*/
 }
 
+.headerDiv{
+    display: flex;
+    flex-direction: column; /* Stack the elements vertically */
+    align-items: center;    /* Center them horizontally */
+    justify-content: center; /* Optional: Center them vertically inside the container */
+    margin: 0 5px;
+}
+
     .logo{
         flex: 1;
         align-self: center;
@@ -49,9 +57,7 @@
             height: 50px;
         }
 
-    .loginMessageDiv{
-        position: right;
-        align-self: center;
+    .loginMessage{
         color: white; /* Cor do texto */
         font-family: "Montserrat";
     }
@@ -65,10 +71,9 @@
     }
 
     .loginPhoto{
-      height: 50px;
+      height: 40px;
       border-radius: 50%;
     }
-
 
     .category-bar{
         flex: 1;
@@ -135,10 +140,24 @@
         margin-top: 5px;
     }
 
+    .login-buttons{
+        margin-top: 5px;
+        display: flex;
+        gap: 5%;
+    }
+
     .buttonSubmit{
-        margin-left: 10px;
-        display: block;
-        float: right;
+        border-radius: 5px;
+        text-align: center;
+        font-family: "Montserrat";
+        font-size: 16px;
+        color: var(--darkGreen);
+        padding: 2px 2px;
+        background-color: #ffffff;
+        border: none;
+    }
+
+    .buttonSubmit{
         border-radius: 5px;
         text-align: center;
         font-family: "Montserrat";
@@ -150,8 +169,39 @@
     }
 
     .buttonRegister{
-        display: block;
-        float: right;
+        border-radius: 5px;
+        text-align: center;
+        font-family: "Montserrat";
+        font-size: 16px;
+        color: var(--darkGreen);
+        padding: 2px 2px;
+        background-color: #ffffff;
+        border: none;
+    }
+
+    .sellProductButton{
+        border-radius: 5px;
+        text-align: center;
+        font-family: "Montserrat";
+        font-size: 16px;
+        color: var(--darkGreen);
+        padding: 2px 2px;
+        background-color: #ffffff;
+        border: none;
+    }
+
+    .userPageButton{
+        border-radius: 5px;
+        text-align: center;
+        font-family: "Montserrat";
+        font-size: 16px;
+        color: var(--darkGreen);
+        padding: 2px 2px;
+        background-color: #ffffff;
+        border: none;
+    }
+
+    .logoutButton{
         border-radius: 5px;
         text-align: center;
         font-family: "Montserrat";

@@ -3,7 +3,7 @@ import "./changePasswordModal.css";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { checkIfValidPassword } from "../../Utils/UtilityFunctions";
-import handleChangeUserInformation from "../../hooks/handleChangeUserInformation";
+import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 import useUserStore from "../../stores/useUserStore";
 
 const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => {

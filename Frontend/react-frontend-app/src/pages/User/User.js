@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import {
   showErrorToast,
 } from "../../Utils/ToastConfig/toastConfig";
-import { getUserInformation } from "../../hooks/handleLogin";
+import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
 import ProductCard from "../../components/ProductCard/ProductCard";
 import useProductStore from "../../stores/useProductStore";
@@ -73,7 +73,7 @@ export const User = () => {
   useEffect(() => {
     const getUserProducts = async () => {
       try {
-        let userInformation = await getUserInformation(token);
+        let userInformation = await getLoggedUserInformation(token);
         setUserInfo(userInformation);
         let username = userInformation.username;
         let isAdmin = userInformation.admin;
@@ -100,7 +100,7 @@ export const User = () => {
     const getUserProducts = async () => {
       try {
         if (addedProductFlag || addedProductFlag === undefined) {
-          let userInformation = await getUserInformation(token);
+          let userInformation = await getLoggedUserInformation(token);
           let username = userInformation.username;
           let isAdmin = userInformation.admin;
           let excluded;
@@ -149,6 +149,13 @@ export const User = () => {
               id="edit-form"
               onSubmit={handleSubmit(onSubmit, onError)}
             >
+               <div className="edit-userinfo-form-field">
+                <img
+                className="user-profile-photo"
+                src={userInfo.url}
+                alt="user icon"
+                />
+              </div>
               <div className="edit-userinfo-form-field">
                 <label>Primeiro Nome:</label>
                 <input

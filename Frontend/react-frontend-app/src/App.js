@@ -7,6 +7,7 @@ import Detail from './pages/Detail/Detail';
 import Footer from './components/Footer/Footer';
 import User from './pages/User/User';
 import Admin from './pages/Admin/Admin';
+import Profile from './pages/Profile/Profile';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
@@ -36,6 +37,11 @@ function App() {
       <Route path="/admin" element={
         <ProtectedRoute>
           <Admin />
+        </ProtectedRoute>
+      }/>
+      <Route path="/profile" element={
+        <ProtectedRoute>
+          <Profile />
         </ProtectedRoute>
       }/>
       </Routes>

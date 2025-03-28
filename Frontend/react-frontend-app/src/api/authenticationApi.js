@@ -4,8 +4,6 @@ import { apiBaseUrl } from "../config";
 
 const userAutenticationEndpoint = `${apiBaseUrl}users/`;
 
-
-
 //Função para login
 export const login = async (username, password) => {
   try {
@@ -35,6 +33,10 @@ export const login = async (username, password) => {
       if (status === 401) {
         console.log('wrong username/password');
         throw new Error('wrong_username_password')
+      }
+      if (status === 403) {
+        console.log('excluded user');
+        throw new Error('forbidden')
       }
       console.log('login failed ' + status)
       throw new Error('failed')

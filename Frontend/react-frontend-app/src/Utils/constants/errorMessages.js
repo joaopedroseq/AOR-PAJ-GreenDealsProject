@@ -10,12 +10,16 @@ const errorMessages = {
     non_existant_category: "Categoria inexistente, por favor tente novamente.",
     failed: "A operação falhou, por favor tente novamente.",
     non_existant_product: "Produto inexistente, por favor tente novamente.",
-    wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
-    wrong_password: "Palavra-passe incorreta",
+    conflict_category: "Categoria já existe",
+    non_existing_category: "Categoria não existe",
+    
   
     // User-related errors
     same_username: "O nome de usuário já existe.",
     error: "Erro nos dados fornecidos.",
+    wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
+    wrong_password: "Palavra-passe incorreta",
+    forbidden: "A sua conta foi excluída - contacte o administrador",
   
     // Generic operation errors
     get_user_failed: "Falha ao obter informações do utilizador.",

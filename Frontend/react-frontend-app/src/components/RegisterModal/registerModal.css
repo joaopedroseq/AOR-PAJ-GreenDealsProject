@@ -116,7 +116,8 @@
 
 /*---Corpo do modal---*/
 .modal-body-id {
-  padding: 16px 16px;
+  padding: 16px 30px;
+  gap: 5px;
 }
 
 /*---Form para registo de novo utilizador*/
@@ -129,7 +130,7 @@
   font-family: "Montserrat";
   border: none;
   border-bottom: 1px solid #000;
-  width: 200px;
+  width: 100%;
   outline: none;
 }
 
@@ -138,12 +139,13 @@
   font-family: "Montserrat";
   border: none;
   border-bottom: 1px solid #000;
-  width: 200px;
+  width: 100%;
   outline: none;
 }
 
 .edit-id-form-field {
   display: block;
+  margin-top: 10px;
 }
 
 .edit-id-form-field label {

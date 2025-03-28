@@ -11,7 +11,7 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
-import { handleLogin } from "../../hooks/handleLogin";
+import { handleLogin } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
@@ -128,11 +128,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
             onSubmit={handleSubmit(onSubmit, onError)}
           >
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-nome">Primeiro Nome:</label>
+              <label htmlFor="edit-nome">Primeiro Nome: </label>
               <input
                 type="text"
                 id="new-name"
                 name="new-name"
+                placeholder="nome"
                 maxLength="20"
                 {...register("firstName", {
                   required:
@@ -144,11 +145,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-apelido">Apelido:</label>
+              <label htmlFor="edit-apelido">Apelido: </label>
               <input
                 type="text"
                 id="new-lastname"
                 name="new-lastname"
+                placeholder="apelido"
                 maxLength="20"
                 {...register("lastName", {
                   required: "Para se registar terá de preencher o apelido",
@@ -159,11 +161,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-username">Username:</label>
+              <label htmlFor="edit-username">Username: </label>
               <input
                 type="text"
                 id="new-username"
                 name="new-username"
+                placeholder="username"
                 maxLength="30"
                 {...register("username", {
                   required:
@@ -175,11 +178,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-password">Password:</label>
+              <label htmlFor="edit-password">Password: </label>
               <input
                 type="password"
                 id="new-password"
                 name="new-password"
+                placeholder="password"
                 maxLength="30"
                 {...register("password", {
                   required: "Para se registar terá de preencher a password",
@@ -189,12 +193,13 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
                 })}
               />
             </div>
-            <div className="edit-id-form-field" id="edit-product-form-field">
-              <label htmlFor="edit-passwordConfirm">Confirmar Password:</label>
+            <div className="edit-id-form-field" id="edit-id-form-field">
+              <label htmlFor="edit-passwordConfirm">Confirmar Password: </label>
               <input
                 type="password"
                 id="new-passwordConfirm"
                 name="new-passwordConfirm"
+                placeholder="password"
                 maxLength="30"
                 {...register("passwordConfirm", {
                   required:
@@ -211,11 +216,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-email">Email:</label>
+              <label htmlFor="edit-email">Email: </label>
               <input
                 type="text"
                 id="new-email"
                 name="new-email"
+                placeholder="email"
                 maxLength="40"
                 {...register("email", {
                   required: "Para se registar terá de preencher o seu email",
@@ -225,11 +231,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-phone">Número de Telefone:</label>
+              <label htmlFor="edit-phone">Número de Telefone: </label>
               <input
                 type="text"
                 id="new-phone"
                 name="new-phone"
+                placeholder="contacto telefónico"
                 maxLength="20"
                 {...register("phoneNumber", {
                   required:
@@ -241,12 +248,12 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               />
             </div>
             <div className="edit-id-form-field" id="edit-id-form-field">
-              <label htmlFor="edit-photo">Fotografia de Perfil (URL):</label>
+              <label htmlFor="edit-photo">Fotografia de Perfil (URL): </label>
               <input
-                type="url"
+                type="text"
                 id="new-photo"
                 name="new-photo"
-                placeholder="URL da imagem"
+                placeholder="url de imagem"
                 {...register("urlPhoto", {
                   required:
                     "Para se registar terá de preencher com o url da sua fotografia de perfil",

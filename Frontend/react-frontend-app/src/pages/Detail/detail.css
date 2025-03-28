@@ -1,448 +1,444 @@
-
 /* Estilo para o conteúdo da página detail */
-:root{
-    --green: #B0B9A2;
-    --beige: #f1f3eb;
-    --darkGreen: #132a0e;
-  }
-  
-  *, html{
-      margin: 0;
-      padding: 0;
-  }
-  
-  .montserrat-Montserrat {
-    font-family: "Montserrat", serif;
-    font-optical-sizing: auto;
-    font-weight: 100;
-    font-style: normal;
-  }
-  
-  .playfair-display-Playfair Display {
-    font-family: "Playfair Display", serif;
-    font-optical-sizing: auto;
-    font-weight: 100;
-    font-style: normal;
-  }
-  
-  
-  /*Conteúdo principal*/
-  .container {
-      background-color: var(--beige);
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-  }
-  
-  
-  /*Título da categoria*/
-    .main-content h2{
-      text-align: left;
-      font-family: 'Montserrat';
-      color: var(--darkGreen);
-    }
-  
-  /*Informações do produto*/
-  .product-details p {
-    margin: 10px 0;
-    text-align: left;
-    font-family: 'Montserrat';
-    color: var(--darkGreen);
-    font-size: 25px;
-    line-height: 2;
-  }
-  
-  /*Labels de cada informação do produto*/
-  .product-details strong {
-    font-family: 'Montserrat';
-    color: var(--darkGreen);
-    font-weight: bold;
-  }
-  
-  
-  .main-content {
-      padding: 100px;
-      width: 100vw;
-      margin-left: 0;
-      font-size: 25px; /* Tamanho maior */
-      line-height: 2; /* Espaçamento entre linhas */
-      margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
-      text-align: center; /* Centraliza o texto */
-  }
-  
-  /* Estilo para a imagem dentro da tabela da página detail */
-  .table-img {
-      width: 430px; /* Tamanho*/
-      height: auto; /* Mantém a proporção da imagem */
-      float: left; /* Alinha a imagem à esquerda */
-      margin-right: 20px; /* Espaço entre a imagem e o texto */
-      margin-bottom: 40px; /* Espaço entre a imagem e a descrição */
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
-      transition: box-shadow 0.3s ease-in-out; /* Transição suave */
-  }
-  
-  /* Efeito de sombra ao passar o mouse sobre a imagem */
-  .table-img:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
-  }
-  
-  /* Estilo para o conteúdo da tabela da página detail */
-  .table-content {
-      overflow: hidden; /* Garante que o conteúdo não flutue ao redor da imagem */
-      margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
-      text-align: left; /* Alinha o texto à esquerda */
-  }
-  
+:root {
+  --green: #b0b9a2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
+}
+
+*,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+.montserrat-Montserrat {
+  font-family: "Montserrat", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
+.playfair-display-Playfair Display {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  font-style: normal;
+}
+
+/*Conteúdo principal*/
+.container {
+  background-color: var(--beige);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
+/*Título da categoria*/
+.main-content h2 {
+  text-align: left;
+  font-family: "Montserrat";
+  color: var(--darkGreen);
+}
+
+
+
+
+.product-image {
+  max-width: 100%; /* Image scales responsively to fit within column */
+  max-height: 100%; /* Image scales to fit without exceeding column size */
+  object-fit: contain; /* Ensures the entire image is visible within its bounds */
+}
+
+.product-image-column {
+  background-color: white;
+  flex: 1 0 ; /* Set a fixed width for the column */
+  display: flex; /* Use Flexbox for centering the image inside the column */
+  align-items: center; /* Vertically center the image */
+  justify-content: center; /* Horizontally center the image */
+  height: 400px; /* Set a fixed height to avoid layout shifts */
+  overflow: hidden; /* Ensure any excess image is cropped */
+}
+
+/* Efeito de sombra ao passar o mouse sobre a imagem */
+.product-image-column:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra mais pronunciada */
+}
+
 
   
+.product-details {
+  display: flex; /* Use Flexbox for layout */
+  flex-direction: row; /* Place columns side by side */
+  align-items: center; /* Align content vertically */
+  justify-content: space-between; /* Add space between columns */
+  gap: 20px; /* Add consistent spacing between the columns */
+}
+
+.product-detail-column {
+  text-align: start; /* Align text content to the left */
+  flex: 1; /* Allow this column to fill the remaining space */
+}
+
+
   
-  /* Estilo para os botões de Eliminar e Editar Produto no aside*/
-  #edit-product, #delete-product, #buy-button, #exclude-product-button{
-      background-color: var(--green); /* Cor verde */
-      color: white; /* Cor do texto */
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-family: 'Montserrat';
-      font-size: 16px;
-      margin-top: 20px;
-      transition: background-color 0.3s ease;
-  }
-  
-  
-  /* Para estilizar o botão de contatar o anunciante */
-  #contact-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: var(--green);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-family: Verdana;
-    border-radius: 5px; /* Borda arredondada */
-    transition: background-color 0.3s ease; /* Transição suave */
-  }
-  
-  /* Efeito de cor ao passar o rato sobre o botão */
-  #contact-btn:hover, #edit-product:hover, #delete-product:hover, #buy-button:hover, #exclude-product-button:hover {
-      color: var(--darkGreen);
-  }
-  
-  /* Estilo para o formulário de contato */
-  #contact-form {
-    text-align: center;
-    margin: 20px auto;
-    width: 80%;
-  }
-  
-  /* Estilo para o campo de entrada de mensagem */
-  #message {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: Verdana;
-  }
-  
-  /* Estilo para o botão de enviar mensagem */
-  #send-btn {
-    padding: 10px 20px;
-    background-color: var(--green);
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-family: Verdana;
-    border-radius: 5px; /* Borda arredondada */
-    transition: background-color 0.3s ease; /* Transição suave */
-  }
-  /* Efeito de cor ao passar o rato sobre o botão */
-  #send-btn:hover {
-    color: var(--darkGreen);
-  }
-  
-  
-  
-  /*   CSS relacionado com as Avaliacoes */
-  
-  .referals{
-    display: flex;
-   gap: 20px;
-  }
-  
-  
-  
-  .reviews{
-   padding: 2rem;
-  }
-  
-  
-  
-  .rating-container {
-    display: flex;
-    align-items: center;
-    margin: 10px 0;
-    
-  }
-  
-  .rating-container label {
-    margin-right: 10px;
-  }
-  
-  .rating {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-  }
-  
-  .rating i {
-    font-size: 2rem;
-    cursor: pointer;
-    color: #ccc;
-    transition: color 0.2s;
-    margin-right: 5px;
-  }
-  
-  .rating:hover i {
-    color: #ffd700;
-  }
-  
-  .rating i:hover ~ i {
-    color: #ccc;
-  }
-  
-  .rating .active {
-    color: #ffd700;
-  }
-  
-  #rating-text {
-    margin-left: 10px;
-    font-weight: bold;
-  }
-  
-  textarea {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 1rem;
-  }
-  
-  /* Verificar se isto afeta algo, se não apagar
-  button {
-    background-color: var(--dark-color);
-    color: var(--white-color);
-    padding: 0.5rem 1rem;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    height: 50px;
-    font-size: 14px;
-    line-height: 25px;
-    font-weight: 600;
-  }
-  
-  button:hover {
-    background-color: var(--highlight-color);
-   
-  }*/
-  
-  .avaliacao-item {
-    background-color: #f4f4f4;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border-radius: 5px;
-  }
-  
-  .rating-bar {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-  }
-  
-  .bar-container {
-   
-    background-color: #f0f0f0;
-    margin: 0 10px;
-  }
-  
-  .bar {
-    height: 20px;
-    background-color: #ffd700;
-  }
-  
-  #rating-summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  #average-rating {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .big-rating {
-    font-size: 48px;
-  
-    color: #ffd700;
-  }
-  
-  .out-of {
-    font-size: 18px;
-    color: #666;
-  }
-  
-  #total-ratings {
-    font-size: 14px;
-    color: #666;
-  }
-  
-  .rating-bar .fa-star {
-    color: #ffd700;
-    font-size: 1rem;
-  }
-  
-  .rating-bar .far.fa-star {
-    color: #ccc;
-  }
-  
-  .stars-container {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
-  
-  .stars-container i {
-    margin-right: 5px;
-  }
-  
-  /*  Edit/delete Avaliacao  */
-  
-  /* Containar das actions dos reviews */
-  .review-actions {
-    margin-top: 10px; 
-    display: flex;
-    gap: 10px; /* espaço entre botões*/
-  }
-  
-  /* botões Delete e Edit */
-  .review-actions button {
-    background-color: var(--green); 
-    color: white; 
-    border: none;
-    padding: 8px 16px; 
-    border-radius: 5px; /* cantos redondos */
-    cursor: pointer; /* cursor de pontar quando fizer hover */
-    font-family: "Montserrat"; 
-    font-size: 14px; 
-    transition: background-color 0.3s ease; 
-  }
-  
-  /* Efeito hover nos botões */
-  .review-actions button:hover {
-    background-color: var(--darkGreen); 
-  }
-  
-  /* Style do botão Delete */
-  .review-actions .delete-review {
-    background-color: #ff4d4d; 
-  }
-  
-  .review-actions .delete-review:hover {
-    background-color: #cc0000; 
-  }
-  
-  /* User Page Styles */
-  .profile-section {
-    background-color: white;
-    padding: 2rem;
-    margin: 2rem 0;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  .profile-section h3 {
-    color: var(--darkGreen);
-    font-family: 'Playfair Display';
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 2px solid var(--green);
-    padding-bottom: 0.5rem;
-  }
-  
-  .user-info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-  }
-  
-  .user-info-table td {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-    font-family: 'Montserrat';
-  }
-  
-  .user-info-table td:first-child {
-    font-weight: bold;
-    color: var(--darkGreen);
-    width: 30%;
-  }
-  
-  /* Review Section Specific */
-  .user-review-item {
-    background-color: var(--beige);
-    padding: 1.5rem;
-    margin: 1rem 0;
-    border-radius: 8px;
-    border-left: 4px solid var(--green);
-  }
-  
-  .review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
-  
-  .review-header strong {
-    color: var(--darkGreen);
-    font-family: 'Playfair Display';
-  }
-  
-  /* Hide profile sections by default */
-  .profile-section {
-      display: none;
-  }
-  
-  /* Show active profile section */
-  .profile-section.active-section {
-      display: block;
-  }
-  
-  /* Ensure produtos section is visible by default */
-  #produtos {
-      display: block;
-  }
-  
-  .edit-form div {
-    margin-bottom: 15px;
-  }
-  
-  .edit-form label {
-    display: block;
-    margin-bottom: 5px;
-    font-family: 'Montserrat';
-    color: var(--darkGreen);
-  }
-  
-  .edit-form input[type="password"] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-family: 'Montserrat';
-  }
+.product-details p {
+  text-align:left; /* Center-align text content */
+  margin: 10px 0; /* Maintain vertical spacing */
+}
+
+
+
+/*Labels de cada informação do produto*/
+.product-details strong {
+  font-family: "Montserrat";
+  color: var(--darkGreen);
+  font-weight: bold;
+}
+
+.main-content {
+  padding: 100px;
+  width: 100vw;
+  margin-left: 0;
+  font-size: 25px; /* Tamanho maior */
+  line-height: 2; /* Espaçamento entre linhas */
+  margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
+  text-align: center; /* Centraliza o texto */
+}
+
+/* Estilo para o conteúdo da tabela da página detail */
+.table-content {
+  overflow: hidden; /* Garante que o conteúdo não flutue ao redor da imagem */
+  margin-bottom: 20px; /* Espaço entre a descrição e o restante conteúdo */
+  text-align: left; /* Alinha o texto à esquerda */
+}
+
+/* Estilo para os botões de Eliminar e Editar Produto no aside*/
+#edit-product,
+#delete-product,
+#buy-button,
+#exclude-product-button {
+  background-color: var(--green); /* Cor verde */
+  color: white; /* Cor do texto */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: "Montserrat";
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* Para estilizar o botão de contatar o anunciante */
+#contact-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  background-color: var(--green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Verdana;
+  border-radius: 5px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+
+/* Efeito de cor ao passar o rato sobre o botão */
+#contact-btn:hover,
+#edit-product:hover,
+#delete-product:hover,
+#buy-button:hover,
+#exclude-product-button:hover {
+  color: var(--darkGreen);
+}
+
+/* Estilo para o formulário de contato */
+#contact-form {
+  text-align: center;
+  margin: 20px auto;
+  width: 80%;
+}
+
+/* Estilo para o campo de entrada de mensagem */
+#message {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: Verdana;
+}
+
+/* Estilo para o botão de enviar mensagem */
+#send-btn {
+  padding: 10px 20px;
+  background-color: var(--green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: Verdana;
+  border-radius: 5px; /* Borda arredondada */
+  transition: background-color 0.3s ease; /* Transição suave */
+}
+/* Efeito de cor ao passar o rato sobre o botão */
+#send-btn:hover {
+  color: var(--darkGreen);
+}
+
+/*   CSS relacionado com as Avaliacoes */
+
+.referals {
+  display: flex;
+  gap: 20px;
+}
+
+.reviews {
+  padding: 2rem;
+}
+
+.rating-container {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.rating-container label {
+  margin-right: 10px;
+}
+
+.rating {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.rating i {
+  font-size: 2rem;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.2s;
+  margin-right: 5px;
+}
+
+.rating:hover i {
+  color: #ffd700;
+}
+
+.rating i:hover ~ i {
+  color: #ccc;
+}
+
+.rating .active {
+  color: #ffd700;
+}
+
+#rating-text {
+  margin-left: 10px;
+  font-weight: bold;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  margin-bottom: 1rem;
+}
+
+.avaliacao-item {
+  background-color: #f4f4f4;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.bar-container {
+  background-color: #f0f0f0;
+  margin: 0 10px;
+}
+
+.bar {
+  height: 20px;
+  background-color: #ffd700;
+}
+
+#rating-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#average-rating {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.big-rating {
+  font-size: 48px;
+
+  color: #ffd700;
+}
+
+.out-of {
+  font-size: 18px;
+  color: #666;
+}
+
+#total-ratings {
+  font-size: 14px;
+  color: #666;
+}
+
+.rating-bar .fa-star {
+  color: #ffd700;
+  font-size: 1rem;
+}
+
+.rating-bar .far.fa-star {
+  color: #ccc;
+}
+
+.stars-container {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.stars-container i {
+  margin-right: 5px;
+}
+
+/*  Edit/delete Avaliacao  */
+
+/* Containar das actions dos reviews */
+.review-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px; /* espaço entre botões*/
+}
+
+/* botões Delete e Edit */
+.review-actions button {
+  background-color: var(--green);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px; /* cantos redondos */
+  cursor: pointer; /* cursor de pontar quando fizer hover */
+  font-family: "Montserrat";
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+/* Efeito hover nos botões */
+.review-actions button:hover {
+  background-color: var(--darkGreen);
+}
+
+/* Style do botão Delete */
+.review-actions .delete-review {
+  background-color: #ff4d4d;
+}
+
+.review-actions .delete-review:hover {
+  background-color: #cc0000;
+}
+
+/* User Page Styles */
+.profile-section {
+  background-color: white;
+  padding: 2rem;
+  margin: 2rem 0;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section h3 {
+  color: var(--darkGreen);
+  font-family: "Playfair Display";
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--green);
+  padding-bottom: 0.5rem;
+}
+
+.user-info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.user-info-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  font-family: "Montserrat";
+}
+
+.user-info-table td:first-child {
+  font-weight: bold;
+  color: var(--darkGreen);
+  width: 30%;
+}
+
+/* Review Section Specific */
+.user-review-item {
+  background-color: var(--beige);
+  padding: 1.5rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  border-left: 4px solid var(--green);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.review-header strong {
+  color: var(--darkGreen);
+  font-family: "Playfair Display";
+}
+
+/* Hide profile sections by default */
+.profile-section {
+  display: none;
+}
+
+/* Show active profile section */
+.profile-section.active-section {
+  display: block;
+}
+
+/* Ensure produtos section is visible by default */
+#produtos {
+  display: block;
+}
+
+.edit-form div {
+  margin-bottom: 15px;
+}
+
+.edit-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-family: "Montserrat";
+  color: var(--darkGreen);
+}
+
+.edit-form input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: "Montserrat";
+}

@@ -46,6 +46,8 @@
       margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
       text-align: center; /* Centraliza o texto */
   }
+
+  
   
   
     /* Estilo para o botão de fechar o aside */
@@ -66,10 +68,20 @@
   #guardarAlteracoesUser-btn:hover, #alterarPassword-btn:hover {
     color: var(--darkGreen);
 }
-  
-  .infoPhoto{
-    border-radius: 50%;
-  }
+
+  .user-profile-photo {
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      margin-right: 20px;
+      cursor: pointer;
+    }
+    
+    .user-profile-photo:hover {
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
   
   /* Estilo para a grade de imagens */
   .grid-container {

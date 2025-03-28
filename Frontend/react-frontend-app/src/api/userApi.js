@@ -35,7 +35,7 @@ export const getUserLogged = async (token) => {
 };
 
 //Get user information
-export const getUser = async (username, token) => {
+export const getUserInformation = async (username, token) => {
   try {
     const response = await axios.get(`${userEndpoint}${username}`,
       {
@@ -49,9 +49,21 @@ export const getUser = async (username, token) => {
   } catch (error) {
     if (error.response) {
       const status = error.response.status;
+      if (status === 400) {
+        console.log('Invalid data - get user information');
+        throw new Error('invalid_data')
+      }
       if (status === 401) {
         console.log('Invalid token');
         throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 404) {
+        console.log("non-existant user");
+        throw new Error("non-existant_user");
       }
       console.log('get user information failed ' + status)
       throw new Error('failed')
@@ -164,6 +176,137 @@ export const getAllUsers = async (token) => {
       if (status === 403) {
         console.log("permission denied");
         throw new Error("permission_denied");
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+
+//Delete all products of a user
+export const deleteUserProducts = async (token, username) => {
+  try {
+    const response = await axios.delete(`${userEndpoint}${username}/products`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 500) {
+        console.log("server side exception");
+        throw new Error("failed");
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+//Exclude user
+export const excludeUser = async (token, username) => {
+  try {
+    const response = await axios.patch(`${userEndpoint}${username}/exclude`,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 400) {
+        console.log('Invalid data - excluding user');
+        throw new Error('invalid_data')
+      }
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 500) {
+        console.log("server side exception");
+        throw new Error("failed");
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+//Delete user
+export const deleteUser = async (token, username) => {
+  try {
+    const response = await axios.delete(`${userEndpoint}${username}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 400) {
+        console.log('Invalid data - excluding user');
+        throw new Error('invalid_data')
+      }
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 404) {
+        console.log("non-existant user");
+        throw new Error("non-existant_user");
+      }
+      if (status === 500) {
+        console.log("server side exception");
+        throw new Error("failed");
       }
       console.log('get user information failed ' + status)
       throw new Error('failed')

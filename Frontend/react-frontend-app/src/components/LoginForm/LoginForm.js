@@ -1,7 +1,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
-import { handleLogin } from '../../hooks/handleLogin';
+import { handleLogin } from '../../Handles/handleLogin';
 import useUserStore from '../../stores/useUserStore';
 
 const LoginForm = ({ toggleRegisterModal }) => {
@@ -59,21 +59,22 @@ const LoginForm = ({ toggleRegisterModal }) => {
           <label htmlFor="checkbox">Mostrar password</label>
         </div>
 
-        <button type="submit" className="buttonSubmit" id="loginSubmit">
-          Submit
-        </button>
+        <div className="login-buttons">
+          <button type="submit" className="buttonSubmit" id="loginSubmit">
+            Submit
+          </button>
+          <input
+            type="button"
+            className="buttonRegister"
+            id="newAccountBtn"
+            value="Register"
+            size="12px"
+            onClick={toggleRegisterModal}
+          />
+        </div>
       </form>
-
-      <div className="buttons">
-        <input
-          type="button"
-          className="buttonRegister"
-          id="newAccountBtn"
-          value="Register"
-          size="12px"
-          onClick={toggleRegisterModal}
-        />
-      </div>
+      
+      
     </div>
   );
 };

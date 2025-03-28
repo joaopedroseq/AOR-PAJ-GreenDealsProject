@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj4.beans.CategoryBean;
 import pt.uc.dei.proj4.beans.ProductBean;
 import pt.uc.dei.proj4.beans.UserBean;
+import pt.uc.dei.proj4.dao.CategoryDao;
 import pt.uc.dei.proj4.dto.*;
 
 import java.util.Set;
@@ -76,6 +77,7 @@ public class ProductService {
     }
 
 
+    //Deprecated - with new Get
     //Edited products - Excluded products, all states
     @GET
     @Path("/edited")
@@ -179,7 +181,9 @@ public class ProductService {
         Parameter parameter;
         Order order;
         UserDto user = userbean.verifyToken(token);
-        if (ordering != null && !ordering.equals("asc")) {
+        order = resolveOrder(ordering);
+        parameter = resolveParameter(param);
+        /*if (ordering != null && !ordering.equals("asc")) {
             try {
                 order = Order.valueOf(ordering.toLowerCase().trim());
             } catch (IllegalArgumentException e) {
@@ -198,7 +202,8 @@ public class ProductService {
             }
         } else {
             parameter = Parameter.date;
-        }
+        }*/
+
         //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
         // apenas poderá procurar productos DISPONÍVEL, produtos não excluídos e não editados (edited == true)
         if (user == null && (username != null || id != null || (state != null && !state.equals("DISPONIVEL")) || excluded != null || edited)) {
@@ -227,7 +232,7 @@ public class ProductService {
             logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), username);
             return Response.status(404).entity("Error getting all products of inexistent user").build();
         }
-        if(username != null && !user.getAdmin()) {
+        if (username != null && !user.getAdmin()) {
             excluded = false;
         }
         if (category != null) {
@@ -317,6 +322,37 @@ public class ProductService {
                     logger.info("Error : Product with id {} not updated by {}", product.getId(), user.getUsername());
                     return Response.status(400).entity("Error").build();
                 }
+            }
+        }
+    }
+
+    @PATCH
+    @Path("{ProductId}/buy")
+    public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
+        UserDto user = userbean.verifyToken(token);
+        if (user == null) {
+            logger.error("Invalid token - buying product with id: {}", pathProductId);
+            return Response.status(401).entity("Invalid token").build();
+        } else {
+            ProductDto product = productBean.findProductById(pathProductId);
+            if (product == null) {
+                logger.error("Buying product - Product with id {} not found", pathProductId);
+                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
+            } else if (product.getSeller().equals(user.getUsername())) {
+                logger.error("Permission denied - {} buying own product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - buying own product").build();
+            } else if (product.getState().equals(StateId.COMPRADO)) {
+                logger.error("Permission denied - {} buying already bought product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - buying already bought product").build();
+            } else if (product.isExcluded()) {
+                logger.error("Permission denied - {} buying an excluded product with id: {}", user.getUsername(), pathProductId);
+                return Response.status(403).entity("Permission denied - buying excluded product").build();
+            } else if (productBean.buyProduct(product)) {
+                logger.info("Product with id {} bought by {}", pathProductId, user.getUsername());
+                return Response.status(200).entity("produto comprado com sucesso").build();
+            } else {
+                logger.info("Error : Product with id {} not bought by {}", pathProductId, user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
         }
     }

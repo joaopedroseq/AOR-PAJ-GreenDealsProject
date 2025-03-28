@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import excludeIcon from "../../assets/icons/exclude.png";
 
-const CategoryCard = ({ category }) => {
+const CategoryCard = ({ category, onDelete }) => {
   let numberOfProducts;
   if (category.products != null) {
     numberOfProducts = category.products.length;
@@ -21,8 +20,9 @@ const CategoryCard = ({ category }) => {
           src={excludeIcon}
           alt="exclude category"
           className="remove-category-button"
-          //data-category-numberofproducts={numberOfProducts} poderá talvez apagar-se
-          //data-category-name={category.name} poderá talvez apagar-se
+          onClick={onDelete}
+          data-category-numberofproducts={numberOfProducts}
+          data-category-name={category.name}
         />
       </div>
     </div>

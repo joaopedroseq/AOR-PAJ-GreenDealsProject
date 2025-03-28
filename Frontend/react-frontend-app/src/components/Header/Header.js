@@ -101,46 +101,42 @@ const Header = () => {
       {/*Verifica se há um utilizador autenticado para renderizar estes botões, caso contrário não os renderiza*/}
       {isAuthenticated ? (
         <>
-          <div className="add-product">
-            <input
-              type="button"
-              className="buttonSubmit"
-              id="add-product-btn"
-              value="Vender um produto"
-              onClick={toggleProductModal}
-            ></input>
+          <div className="headerDiv">
+              <input
+                type="button"
+                className="sellProductButton"
+                id="add-product-btn"
+                value="Vender um produto"
+                onClick={toggleProductModal}
+              ></input>
+            </div>
+          <div className="headerDiv">
+            <Link to="/user">
+              <input
+                type="button"
+                className="userPageButton"
+                id="userAreaBtn"
+                value="Página pessoal"
+              />
+            </Link>
           </div>
-          <div className="user-page">
-          <Link to="/user">
-            <input
-              type="button"
-              className="buttonSubmit"
-              id="userAreaBtn"
-              value="Aceder à página pessoal"
-            />
-          </Link>
-          </div>
-
-          {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
-          <div className="loginMessageDiv" id="loginMessage">
-            <h4 className="loginMessage" id="mensagem_boasVindas">
-              bem-vindo {firstName}
-            </h4>
-
-            <form
-              id="logout-form"
-              className="logout-form"
-              onSubmit={handleLogout}
-            >
+          <div className="headerDiv">            
               <input
                 type="submit"
-                className="buttonSubmit"
+                className="logoutButton"
                 id="logoutButton"
                 value="logout"
                 size="12px"
+                onClick={handleLogout}
               ></input>
-            </form>
+            </div>
 
+          {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
+          
+            <div className="headerDiv">
+            <h4 className="loginMessage" id="mensagem_boasVindas">
+              bem-vindo {firstName}
+            </h4>
               <img
                 id="loginPhoto"
                 className="loginPhoto"

@@ -16,9 +16,11 @@ import {
   transformArrayDatetoDate,
   dateToFormattedDate,
 } from "../../Utils/UtilityFunctions";
-import { getUserInformation } from "../../hooks/handleLogin";
+import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import EditProductModal from "../../components/EditProductModal/EditProductModal";
 import errorMessages from "../../Utils/constants/errorMessages";
+import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import handleBuyingProduct from "../../Handles/handleBuyingProduct";
 
 export const Detail = () => {
   const INDEX_OF_PRODUCT = 0;
@@ -30,13 +32,9 @@ export const Detail = () => {
   const [isOwner, setOwner] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
 
-  //categorieStore - talvez para apagar já que o homepage já o faz
-  //no entanto, o modal tem carregado sem as categorias
-  const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
-
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+  //Confirmation Modal
+  const [modalConfig, setModalConfig] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Edit product modal - toggle its visibility
   const [isEditProductModalVisible, setIsEditProductModalVisible] =
@@ -99,7 +97,7 @@ export const Detail = () => {
         try {
           //Get all the product information
           let queryParam = {
-            id: id
+            id: id,
           };
           productData = await getProducts(queryParam, token);
           if (productData.length > 1) {
@@ -114,7 +112,7 @@ export const Detail = () => {
         }
         try {
           //Get the userLogged and compare with the owner
-          const user = await getUserInformation(token);
+          const user = await getLoggedUserInformation(token);
           if (user.admin) {
             setAdmin(true);
           }
@@ -132,6 +130,26 @@ export const Detail = () => {
     fetchProduct();
   }, [id, token, isProductUpdated]);
 
+  //Comprar produto
+  const buyingProduct = async () => {
+    setModalConfig({
+      title: "Comprar Produto",
+      message: `Deseja comprar ${product.name}?`,
+      onConfirm: async () => {
+        const response = await handleBuyingProduct(id, token);
+        if (response) {
+          showSuccessToast(`Produto comprado com sucesso`);
+          setIsProductUpdated(true);
+          setIsModalOpen(false);
+        } else {
+          showErrorToast("Falha na compra do produto");
+          setIsModalOpen(false);
+        }
+      },
+    });
+    setIsModalOpen(true);
+  };
+
   return (
     <div className="container">
       <div className="main-content">
@@ -141,35 +159,42 @@ export const Detail = () => {
         </h2>
         {/*Informações do produto*/}
         <div className="product-details">
-          <img
-            className="table-img"
-            id="product-image"
-            src={product ? product.urlImage : "../images/placeholder/item.png"}
-            alt={product ? product.name : "item placeholde"}
-          />
-          <p id="product-name">
-            <strong>Nome do Produto: </strong>
-            {product ? product.name : "nome"}
-          </p>
-          <p id="product-description">
-            <strong>Descrição: </strong>{" "}
-            {product ? product.description : "descrição"}
-          </p>
-          <p id="product-price">
-            <strong>Preço: </strong>
-            {product ? product.price : "preço"} €{" "}
-          </p>
-          <p id="product-seller">
-            <strong>Vendedor: </strong> {product ? product.seller : "vendedor"}
-          </p>
-          <p id="product-location">
-            <strong>Localização: </strong>{" "}
-            {product ? product.location : "localização"}
-          </p>
-          <p id="product-date">
-            <strong>Data de Publicação:</strong>{" "}
-            {product ? dateToFormattedDate(product.date) : "dd/mm/aaaa"}
-          </p>
+          <div className="product-image-column">
+            <img
+              className="product-image"
+              id="product-image"
+              src={
+                product ? product.urlImage : "../images/placeholder/item.png"
+              }
+              alt={product ? product.name : "item placeholder"}
+            />
+          </div>
+          <div className="product-detail-column">
+            <p id="product-name">
+              <strong>Nome do Produto: </strong>
+              {product ? product.name : "nome"}
+            </p>
+            <p id="product-description">
+              <strong>Descrição: </strong>{" "}
+              {product ? product.description : "descrição"}
+            </p>
+            <p id="product-price">
+              <strong>Preço: </strong>
+              {product ? product.price : "preço"} €{" "}
+            </p>
+            <p id="product-seller">
+              <strong>Vendedor: </strong>{" "}
+              {product ? product.seller : "vendedor"}
+            </p>
+            <p id="product-location">
+              <strong>Localização: </strong>{" "}
+              {product ? product.location : "localização"}
+            </p>
+            <p id="product-date">
+              <strong>Data de Publicação:</strong>{" "}
+              {product ? dateToFormattedDate(product.date) : "dd/mm/aaaa"}
+            </p>
+          </div>
         </div>
         {/*Se for admin mostrar botões de excluir produto*/}
         {isAdmin ? (
@@ -177,46 +202,56 @@ export const Detail = () => {
             type="button"
             id="exclude-product-button"
             className="exclude-product-button"
-            value="Excluir permanentemente produto"
+            value="Apagar Produto"
             onClick={handleDeleteProduct}
           />
         ) : null}
 
-        {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
-        {isAdmin || isOwner ? (
-          <div id="edit-delete-buttons">
+        <div className="productButtons">
+          {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
+          {isAdmin || isOwner ? (
+            <div id="edit-delete-buttons">
+              <input
+                type="button"
+                id="edit-product"
+                value="Editar informações"
+                onClick={toggleEditProductModal}
+              />
+              <input
+                type="button"
+                id="delete-product"
+                value={
+                  isAdmin
+                    ? product.excluded
+                      ? "Recuperar produto"
+                      : "Excluir produto"
+                    : isOwner && !isAdmin
+                    ? "Apagar Produto"
+                    : ""
+                }
+                onClick={handleExcludeProduct}
+              />
+            </div>
+          ) : null}
+          {/*Se não for dono, não mostrar botão de comprar produto*/}
+          {isOwner ? null : (
             <input
               type="button"
-              id="edit-product"
-              value="Editar informações"
-              onClick={toggleEditProductModal}
+              id="buy-button"
+              value="Comprar"
+              onClick={buyingProduct}
             />
-            <input
-              type="button"
-              id="delete-product"
-              value={
-                isAdmin && product.excluded
-                  ? "Recuperar produto"
-                  : "Apagar produto"
-              }
-              onClick={handleExcludeProduct}
-            />
+          )}
+
+          {/*Butão de contacto*/}
+          <button id="contact-btn">Contatar o Anunciante</button>
+          <div id="contact-form" style={{ display: "none" }}>
+            <textarea
+              id="message"
+              placeholder="Escreva aqui a sua mensagem..."
+            ></textarea>
+            <button id="send-btn">Enviar</button>
           </div>
-        ) : null}
-
-        {/*Se não for dono, não mostrar botão de comprar produto*/}
-        {isOwner ? null : (
-          <input type="button" id="buy-button" value="Comprar" />
-        )}
-
-        {/*Butão de contacto*/}
-        <button id="contact-btn">Contatar o Anunciante</button>
-        <div id="contact-form" style={{ display: "none" }}>
-          <textarea
-            id="message"
-            placeholder="Escreva aqui a sua mensagem..."
-          ></textarea>
-          <button id="send-btn">Enviar</button>
         </div>
       </div>
       <EditProductModal
@@ -224,6 +259,13 @@ export const Detail = () => {
         toggleEditProductModal={toggleEditProductModal}
         isEditProductModalVisible={isEditProductModalVisible}
         updatedProduct={handleProductUpdate}
+      />
+      <ConfirmationModal
+        title={modalConfig.title}
+        message={modalConfig.message}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={modalConfig.onConfirm}
       />
     </div>
   );

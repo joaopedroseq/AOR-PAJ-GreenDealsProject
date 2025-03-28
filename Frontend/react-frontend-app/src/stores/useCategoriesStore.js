@@ -1,6 +1,7 @@
 import { create } from "zustand";
-import { fetchCategories } from "../api/categoryApi";
-import { showErrorToast } from '../Utils/ToastConfig/toastConfig';
+import { fetchCategories, addCategory, deleteCategory } from "../api/categoryApi";
+import { showSuccessToast, showErrorToast } from '../Utils/ToastConfig/toastConfig';
+import errorMessages from "./../Utils/constants/errorMessages";
 
 
 export const useCategoriesStore = create((set) => ({
@@ -16,13 +17,45 @@ export const useCategoriesStore = create((set) => ({
       console.log(error);
     }
   },
-  
-    
-    /*adicionar: ,addCategory: (newCategory) => {
-    set((state) => ({
-      categories: [...state.categories, newCategory],
+
+  handleAddCategory: async(token, newCategoryName ) => {
+    console.log(newCategoryName);
+    const newCategory = {
+      name: newCategoryName
     }
-  };*/
+    try{
+      const response = await addCategory(token, newCategory);
+      console.log(response);
+      if(response.status === 200){
+        console.log("ok")
+        return true;
+      }
+            
+    } catch (error) {
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
+    }
+  },
+
+  handleDeleteCategory: async(token, categoryToDelete ) => {
+    const category = {
+      name: categoryToDelete.name
+    }
+    try{
+      const response = await deleteCategory(token, category);
+      console.log(response);
+      if(response.status === 200){
+        console.log("ok")
+        return true;
+      }
+            
+    } catch (error) {
+      const toastMessage =
+        errorMessages[error.message] || errorMessages.unexpected_error;
+      showErrorToast(toastMessage);
+    }
+  }
 })
 );
 

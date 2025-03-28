@@ -1,13 +1,17 @@
 import { checkPassword } from "../api/authenticationApi";
 import { updateUserInformation } from "../api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
-import { showErrorToast, showSuccessToast } from "../Utils/ToastConfig/toastConfig";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../Utils/ToastConfig/toastConfig";
 
 const handleChangeUserInformation = async (
   userInfo,
   updatedInfo,
   confirmPassword,
-  token
+  token,
+  isAdmin
 ) => {
   try {
     const updatesToUser = {};
@@ -16,11 +20,16 @@ const handleChangeUserInformation = async (
         updatesToUser[key] = updatedInfo[key];
       }
     }
+    console.log(updatesToUser)
+    console.log(isAdmin);
 
-    const isPasswordValid = await checkPassword(
-      userInfo.username,
-      confirmPassword
-    );
+    let isPasswordValid;
+    if (!isAdmin) {
+      isPasswordValid = await checkPassword(userInfo.username, confirmPassword);
+    } else {
+      isPasswordValid = true;
+    }
+
     if (!isPasswordValid) {
       throw new Error("Password confirmation failed.");
     } else {
@@ -31,13 +40,15 @@ const handleChangeUserInformation = async (
           updatesToUser
         );
         console.log(response.status);
-        if(response.status === 200){
-          showSuccessToast("Alterações efetuadas com sucesso")
+        if (response.status === 200) {
+          showSuccessToast("Alterações efetuadas com sucesso");
+          return true;
         }
       } catch (error) {
         const toastMessage =
           errorMessages[error.message] || errorMessages.unexpected_error;
         showErrorToast(toastMessage);
+        return false;
       }
     }
   } catch (error) {

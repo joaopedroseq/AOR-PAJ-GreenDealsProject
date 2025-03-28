@@ -2,10 +2,11 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const productsEndpoint = `${apiBaseUrl}products`;
+const productsEndpoint = `${apiBaseUrl}products/`;
 
 //Função para obter todos os produtos disponíveis
 export const getProducts = async (queryParams, token) => {
+  console.log(queryParams);
   try {
     const response = await axios.get(`${productsEndpoint}`, {
       headers: {
@@ -58,10 +59,51 @@ export const addProduct = async (product, token) => {
         throw new Error("permission_denied");
       }
       if (status === 404) {
-        console.log("non-existant category");
-        throw new Error("non-existant_category");
+        console.log("non existant product");
+        throw new Error("non-non_existant_product");
       }
       console.log("adding productc failed " + status);
+      throw new Error("failed");
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+export const buyProduct = async (productId, token) => {
+  try {
+    const response = await axios.patch(`${productsEndpoint}${productId}/buy`,
+      {},
+      {
+      headers: { "Content-Type": "application/json", token: token },
+    });
+    return response;
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.log("Invalid data - buying product");
+        throw new Error("invalid_data");
+      }
+      if (status === 401) {
+        console.log("invalid token");
+        throw new Error("invalid_token");
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 404) {
+        console.log("non existant product");
+        throw new Error("non_existant_product");
+      }
+      console.log("adding product failed " + status);
       throw new Error("failed");
     }
     if (error.request) {
@@ -77,7 +119,7 @@ export const addProduct = async (product, token) => {
 //Add a product to the user
 export const updateProduct = async (editedProduct, token, productId) => {
     try {
-    const response = await axios.patch(`${productsEndpoint}/${productId}`,
+    const response = await axios.patch(`${productsEndpoint}${productId}`,
       editedProduct, {
       headers: { "Content-Type": "application/json", token: token },
     });
@@ -115,10 +157,10 @@ export const updateProduct = async (editedProduct, token, productId) => {
   }
 };
 
-//Add a product to the user
+//Delete product
 export const deleteProduct = async (token, productId) => {
   try {
-    const response = await axios.delete(`${productsEndpoint}/${productId}`,
+    const response = await axios.delete(`${productsEndpoint}${productId}`,
       {
       headers: { "Content-Type": "application/json", token: token },
     });

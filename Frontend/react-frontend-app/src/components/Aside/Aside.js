@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import useProductStore from "../../stores/useProductStore";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import useUserStore from "../../stores/useUserStore";
-import { getUserInformation } from "../../hooks/handleLogin";
+import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { Link } from "react-router-dom";
 
 const Aside = ({ isAsideVisible }) => {
@@ -14,12 +14,12 @@ const Aside = ({ isAsideVisible }) => {
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
 
-  const { setFilters } = useProductStore();
+  const { setFilters, fetchProducts } = useProductStore();
 
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        let userInfo = await getUserInformation(token);
+        let userInfo = await getLoggedUserInformation(token);
         if (userInfo.admin) {
           setIsAdmin(true);
         }
@@ -41,7 +41,18 @@ const Aside = ({ isAsideVisible }) => {
   
 
   const handleCategoryClick = (category) => {
-    setFilters({ category });
+    if(category){
+      setFilters({ category: category.name });
+    }
+    else {
+      setFilters({ category: null });
+    }
+    if (page === "/admin" || page === "/user") {    
+      fetchProducts(token);
+    }
+    else {
+      fetchProducts();
+    }
   };
 
   const handleScrollToSection = (sectionId) => {

@@ -37,7 +37,7 @@ export const logUserInformation = async (token, useUserStoreUpdates) => {
   }
 };
 
-export const getUserInformation = async (token) => {
+export const getLoggedUserInformation = async (token) => {
   try {
     const userInformation = await getUserLogged(token);
     return userInformation;

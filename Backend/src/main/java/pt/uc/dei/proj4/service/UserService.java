@@ -86,10 +86,18 @@ public class UserService {
             logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
+        if(!userbean.checkIfUserExists(user.getUsername())){
+            logger.error("Login failed from {} - wrong username/password", user.getUsername());
+            return Response.status(401).entity("Invalid data").build();
+        }
+        if(userbean.getUserInformation(user.getUsername()).getExcluded()){
+            logger.error("Login failed from excluded user {}", user.getUsername());
+            return Response.status(403).entity("Forbidden - excluded user").build();
+        }
         String token = userbean.login(user);
         if (token == null) {
             logger.error("Login failed from {} - wrong username/password", user.getUsername());
-            return Response.status(401).entity("Wrong Username or Password !").build();
+            return Response.status(401).entity("Wrong Username or Password!").build();
         } else {
             logger.info("Login from {} successful", user.getUsername());
             return Response.status(200).entity(token).build();
@@ -156,7 +164,6 @@ public class UserService {
         } else {
             if (!userbean.checkIfTokenValid(tokenOfRequester)) {
                 logger.error("Invalid token when trying to get user {} information", userToGetInformation);
-                logger.error("Invalid token when trying to get user {} information", userToGetInformation);
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 UserDto user = userbean.verifyToken(tokenOfRequester);
@@ -171,7 +178,7 @@ public class UserService {
                     } else {
                         if (!userbean.checkIfUserExists(userToGetInformation)) {
                             logger.error("User {} does not exist", userToGetInformation);
-                            return Response.status(400).entity("Invalid data").build();
+                            return Response.status(404).entity("Invalid data").build();
                         } else {
                             UserDto userDto = userbean.getUserInformation(userToGetInformation);
                             logger.info("User {} got user {} information", user.getUsername(), userDto.getUsername());
@@ -251,7 +258,7 @@ public class UserService {
     }
 
     @DELETE
-    @Path("/{username}/delete")
+    @Path("/{username}")
     public Response deleteUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDelete) {
         if (usernameUserDelete.trim().equals("")) {
             logger.error("Invalid data - missing params - Deleting user");
@@ -290,7 +297,7 @@ public class UserService {
     }
 
     @DELETE
-    @Path("/{username}/products/delete/")
+    @Path("/{username}/products/")
     public Response deleteProductsOfUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDeleteProducts) {
         if (usernameUserDeleteProducts.trim().equals("")) {
             logger.error("Invalid data - missing params - Deleting products of user");
@@ -453,7 +460,6 @@ public class UserService {
         }
     }
 
-    //Produtos
 */
 
 
@@ -483,35 +489,7 @@ public class UserService {
         }
     }
 
-    //Deprecated for PATCH in ProductService
-    //buying product
-    @PATCH
-    @Path("/products/buy/{ProductId}")
-    public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
-        UserDto user = userbean.verifyToken(token);
-        if (user == null) {
-            logger.error("Invalid token - buying product with id: {}", pathProductId);
-            return Response.status(401).entity("Invalid token").build();
-        } else {
-            ProductDto product = productbean.findProductById(pathProductId);
-            if (product == null) {
-                logger.error("Buying product - Product with id {} not found", pathProductId);
-                return Response.status(404).entity("Product with id " + pathProductId + " not found").build();
-            } else if (product.getSeller().equals(user.getUsername())) {
-                logger.error("Permission denied - {} buying own product with id: {}", user.getUsername(), pathProductId);
-                return Response.status(403).entity("Permission denied - buying own product").build();
-            } else if (product.getState().equals(StateId.COMPRADO)) {
-                logger.error("Permission denied - {} buying already bought product with id: {}", user.getUsername(), pathProductId);
-                return Response.status(403).entity("Permission denied - buying already bought product").build();
-            } else if (productbean.buyProduct(product)) {
-                logger.info("Product with id {} bought by {}", pathProductId, user.getUsername());
-                return Response.status(200).entity("produto comprado com sucesso").build();
-            } else {
-                logger.info("Error : Product with id {} not bought by {}", pathProductId, user.getUsername());
-                return Response.status(400).entity("Error").build();
-            }
-        }
-    }
+
 
     //Deprecated for PATCH in ProductService
     //Excluding product

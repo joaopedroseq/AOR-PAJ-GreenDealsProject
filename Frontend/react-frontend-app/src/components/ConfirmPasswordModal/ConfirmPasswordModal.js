@@ -3,7 +3,7 @@ import "./confirmPasswordModal.css";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { checkIfValidPassword } from "../../Utils/UtilityFunctions";
-import handleChangeUserInformation from "../../hooks/handleChangeUserInformation";
+import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 import useUserStore from "../../stores/useUserStore";
 
 const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => {
@@ -12,13 +12,12 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
 
   const onSubmit = (passwordData) => {
     const password = passwordData.password;
-    handleChangeUserInformation(userInfo, updatedUserInfo, password, token);
+    handleChangeUserInformation(userInfo, updatedUserInfo, password, token, false);
     reset();
     onClose();
 };
 
   const onError = (errors) => {
-    console.log("ran");
     if (errors.password) {
       showErrorToast(errors.password.message);
     }

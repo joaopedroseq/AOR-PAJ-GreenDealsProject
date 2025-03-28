@@ -11,6 +11,7 @@ const ProductCard = ({ product }) => {
         <h2>{product.name}</h2>
         <p>Preço: €{product.price}</p>
         <p>Categoria: {product.category}</p>
+        <p>Vendedor: {product.seller}</p>
       </div>
     </Link>
   );

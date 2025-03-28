@@ -25,7 +25,6 @@ public class CategoryService {
     UserBean userbean;
 
     @POST
-    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
@@ -50,7 +49,7 @@ public class CategoryService {
                         return Response.status(409).entity("{\"message\": \"Conflict - category already exists\"}").type(MediaType.APPLICATION_JSON).build();
                     } else {
                         logger.info("Added new category - {} - by {}", categoryDto.getName(), user.getUsername());
-                        return Response.status(200).entity("{\"message\": \"Added new category " + categoryDto.getName() +  "\"}").type(MediaType.APPLICATION_JSON).build();
+                        return Response.status(200).entity("{\"message\": \"Added new category " + categoryDto.getName() + "\"}").type(MediaType.APPLICATION_JSON).build();
                     }
                 }
             }
@@ -58,23 +57,24 @@ public class CategoryService {
     }
 
     @DELETE
-    @Path("/delete")
+    @Path("/{categoryName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
+    public Response deleteCategory(@HeaderParam("token") String token, @PathParam("categoryName") String categoryName) {
         if (!userbean.checkIfTokenValid(token)) {
-            logger.error("Invalid token(null) - deleting category - {}", categoryDto.getName());
+            logger.error("Invalid token(null) - deleting category - {}", categoryName);
             return Response.status(401).entity("Invalid token").build();
         } else {
             UserDto user = userbean.verifyToken(token);
             if (user == null) {
-                logger.error("Invalid token when trying to delete category {}", categoryDto.getName());
+                logger.error("Invalid token when trying to delete category {}", categoryName);
                 return Response.status(401).entity("Invalid token").build();
             } else {
                 if (!user.getAdmin()) {
-                    logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), categoryDto.getName());
+                    logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), categoryName);
                     return Response.status(403).entity("User does not have admin permission to delete categories").build();
                 } else {
-                    categoryDto.setName(categoryDto.getName().toLowerCase().trim());
+                    CategoryDto categoryDto = new CategoryDto();
+                    categoryDto.setName(categoryName.toLowerCase().trim());
                     if (!categoryBean.checkIfCategoryExists(categoryDto)) {
                         logger.info("User {} tried to delete category {} non-existent", categoryDto.getName(), user.getUsername());
                         return Response.status(404).entity("Category " + categoryDto.getName() + " doesn't exist").build();
