@@ -3,7 +3,12 @@ import deleteProducts from "../../assets/icons/deleteProducts.png";
 import deleteUser from '../../assets/icons/deleteUser.png';
 import { Link } from "react-router-dom";
 
+//Cartão de utilizador usado na página de admin
+//recebe quatro props - o atributo USER - o próprio utilizador a que o cartão diz respeito
+//e operações de deleteProducts, excludeUser e deleteUser
+//tratadas no Admin e subsequentemente respetivos handles
 const UserCard = ({ user, onDeleteProducts, onExcludeUser, onDeleteUser }) => {
+
   return (
     <div className="user-card" >
       <Link to={`/profile?username=${user.username}`}>

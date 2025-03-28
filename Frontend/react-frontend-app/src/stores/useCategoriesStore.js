@@ -5,7 +5,9 @@ import errorMessages from "./../Utils/constants/errorMessages";
 
 
 export const useCategoriesStore = create((set) => ({
+  //Store para a gestão de categorias
   categories: [],
+  //operação de get das categorias para popular a store
   fetchCategories: async() => {
     try{
       const allCategories = await fetchCategories();
@@ -18,14 +20,13 @@ export const useCategoriesStore = create((set) => ({
     }
   },
 
+  //Operação de Admin para adicionar categoria
   handleAddCategory: async(token, newCategoryName ) => {
-    console.log(newCategoryName);
     const newCategory = {
       name: newCategoryName
     }
     try{
       const response = await addCategory(token, newCategory);
-      console.log(response);
       if(response.status === 200){
         console.log("ok")
         return true;
@@ -38,6 +39,7 @@ export const useCategoriesStore = create((set) => ({
     }
   },
 
+  //Operação de apagar uma categoria
   handleDeleteCategory: async(token, categoryToDelete ) => {
     const category = {
       name: categoryToDelete.name

@@ -1,5 +1,5 @@
 import { login } from "../api/authenticationApi";
-import { getUserLogged } from "../api/userApi";
+import { getUserLogged } from "../api/authenticationApi";
 import {
   showSuccessToast,
   showErrorToast,

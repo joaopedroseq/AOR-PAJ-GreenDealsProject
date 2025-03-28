@@ -4,6 +4,8 @@ import {
 } from "../Utils/ToastConfig/toastConfig";
 import { getAllUsers } from "../api/userApi";
 
+//operação de obter todas as informações de todos os utilizadore
+//utilizado por admin, por isso requerer token
 const handleGetAllUsers = async (token) => {
   try {
     const allUsers = await getAllUsers(token);

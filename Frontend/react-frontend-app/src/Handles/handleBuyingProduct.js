@@ -7,6 +7,7 @@ import {
 } from "../Utils/ToastConfig/toastConfig";
 import { buyProduct } from "../api/productApi";
 
+//Operação de compra de produto
 const handleBuyingProduct = async (productId, token) => {
   try {
     console.log(productId);

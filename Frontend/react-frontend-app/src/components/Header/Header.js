@@ -14,17 +14,22 @@ import SellProductModal from "../SellProductModal/SellProductModal";
 import Aside from "../Aside/Aside";
 import useUserStore from "../../stores/useUserStore";
 import { Link } from "react-router-dom";
-import { getUserLogged } from "../../api/userApi";
+import { getUserLogged } from "../../api/authenticationApi";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const Header = () => {
+  //Acesso ao user store para operações que requerem autenticação
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const token = useUserStore((state) => state.token);
 
+  //Preenchimento de campos com o primeiro nome e foto
   const [firstName, setFirstName] = useState(null);
   const [urlPhoto, setUrlPhoto ] = useState(null);
 
-  // Aside
+  //Toggle do login form
+  const [ showLoginForm, setShowLoginForm] = useState(false);
+
+  //Toggle do aside (através do botão hamburguer)
     const [isAsideVisible, setAsideVisible] =
       useState(false);
   
@@ -32,6 +37,8 @@ const Header = () => {
       setAsideVisible(!isAsideVisible);
     };
 
+  //Após alteração do estado de autenticação, faz fetch das informações do utilizador
+  //para costumização de elementos do header (nome e foto)
   useEffect(() => {
     if (isAuthenticated) {
       const getUserInfo = async () => {
@@ -47,6 +54,7 @@ const Header = () => {
     }
   }, [isAuthenticated, token]);
 
+  //operação de logout - chamada ao cleardo user store
   const handleLogout = async (event) => {
     event.preventDefault();
     try {
@@ -62,14 +70,14 @@ const Header = () => {
     }
   };
 
-  // Modal de registo
+  // Modal de Registo de novo utilizador
   const [isRegisterModalVisible, setIsRegisterModalVisible] = useState(false);
 
   const toggleRegisterModal = () => {
     setIsRegisterModalVisible(!isRegisterModalVisible);
   };
 
-  // Modal de Vender Produto
+  // Modal de Vender novo produto
   const [isProductModalVisible, setIsProductModalVisible] = useState(false);
 
   const toggleProductModal = () => {
@@ -89,7 +97,6 @@ const Header = () => {
         />
       </div>
       {/*Logo GreenDeals*/}
-
       <div className="logo">
         <nav>
           <Link to="/">
@@ -132,7 +139,6 @@ const Header = () => {
             </div>
 
           {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
-          
             <div className="headerDiv">
             <h4 className="loginMessage" id="mensagem_boasVindas">
               bem-vindo {firstName}
@@ -152,12 +158,18 @@ const Header = () => {
         </>
       ) : (
         <>
-          {/*Botão de login- não apresentado se o utilizado fizer login*/}
-
+          {/*Botão de login- não apresentado se o utilizado fizer login
+          é também utilizado para mostrar o login form*/}
           <div className="login" id="loginButton">
-            <img src={loginPhoto} height="50px" alt='user logged'></img>
+            <img src={loginPhoto} height="50px" alt='user logged'
+            onClick={() => {
+              setShowLoginForm(!showLoginForm);
+            }}/>
             <div className="buttons"></div>
-            <LoginForm toggleRegisterModal={toggleRegisterModal} />
+            <LoginForm
+            isOpen={showLoginForm}
+            isClosed={() => setShowLoginForm(false)}
+            toggleRegisterModal={toggleRegisterModal}/>
             <RegisterModal
               toggleModal={toggleRegisterModal}
               isModalVisible={isRegisterModalVisible}

@@ -16,6 +16,7 @@ import useUserStore from "../../stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const RegisterModal = ({ toggleModal, isModalVisible }) => {
+  //Modal de Registo de novo utilizador
   const {
     register,
     handleSubmit,
@@ -24,6 +25,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     formState: { errors },
   } = useForm();
 
+  //Acesso ao UserStore para operações de login após novo registo
   const updateUsername = useUserStore((state) => state.updateUsername);
   const updateToken = useUserStore((state) => state.updateToken);
   const updateIsAuthenticated = useUserStore(
@@ -42,6 +44,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     updateFirstName,
   };
 
+  //Submissão do formulário (admin é sempre falso)
   const onSubmit = async (registerData) => {
     const newUser = {
       username: registerData.username,
@@ -78,7 +81,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     }
   };
 
-  // Handle validation errors
+  // Apresentação de erros ao utilizador
   const onError = (errors) => {
     if (errors.firstName) {
       showErrorToast(errors.firstName.message);
@@ -107,10 +110,10 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
   };
 
   return (
+    isModalVisible && (
     <div
       id="modal-register"
       className="modal-register"
-      style={{ display: isModalVisible ? "flex" : "none" }}
     >
       <div className="modal-content-id">
         {/* Header do modal */}
@@ -270,6 +273,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
         </div>
       </div>
     </div>
+    )
   );
 };
 

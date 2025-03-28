@@ -123,7 +123,7 @@ export const Admin = () => {
   const handleRemovingCategory = (category) => {
     setModalConfig({
       title: "Remover categoria?",
-      message: `Deseja adicionar remover categoria ${category.name}?\n
+      message: `Deseja remover categoria ${category.name}?\n
       Esta categoria tem ${category.products.length} produtos associados\n
       que irão para uma categoria vazia - empty`,
       onConfirm: async () => {

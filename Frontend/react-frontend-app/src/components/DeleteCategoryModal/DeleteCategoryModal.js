@@ -13,10 +13,10 @@ const DeleteCategoryModal = ({ Category, isOpen, onClose, onConfirm }) => {
   };
 
   return (
+    isOpen && (
     <div
       id="modal-addCategory"
       className="modal-DeleteCategoryModal"
-      style={{ display: isOpen ? "flex" : "none" }}
     >
       <div className="modal-content-DeleteCategoryModal">
         <div
@@ -33,7 +33,7 @@ const DeleteCategoryModal = ({ Category, isOpen, onClose, onConfirm }) => {
           </p>
           {Category.products.length > 0 ? 
           <p>
-          Esta catogoria tem {Category.products.length} produtos<br></br>que ficarão sem qualquer categoria - empty.
+          Esta categoria tem {Category.products.length} produtos<br></br>que ficarão sem qualquer categoria - empty.
           </p>
           :
           null
@@ -52,6 +52,7 @@ const DeleteCategoryModal = ({ Category, isOpen, onClose, onConfirm }) => {
         </div>
       </div>
     </div>
+    )
   );
 };
 

@@ -1,40 +1,10 @@
 import axios from "axios";
 import { apiBaseUrl } from "../config";
 
+//Todas as operações de utilizadores
 const userEndpoint = `${apiBaseUrl}users/`;
 
-//Get user logged
-export const getUserLogged = async (token) => {
-  try {
-    const response = await axios.get(`${userEndpoint}me`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          'token': token
-        }
-      },
-    );
-    return response.data;
-  } catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-      if (status === 401) {
-        console.log('Invalid token');
-        throw new Error('invalid_token')
-      }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
-    }
-    if (error.request) {
-      console.error("No response from server:", error.request);
-      throw new Error("network_error");
-    }
-    console.log(error.response);
-    throw new Error("unexpected_error");
-  }
-};
-
-//Get user information
+//GET informações de UM utilizador (pode não ser o logged)
 export const getUserInformation = async (username, token) => {
   try {
     const response = await axios.get(`${userEndpoint}${username}`,
@@ -77,7 +47,7 @@ export const getUserInformation = async (username, token) => {
   }
 };
 
-//Register new user
+//Registo de novo utilizador
 export const registerUser = async (user) => {
   try {
     await axios.post(`${userEndpoint}register`,
@@ -112,7 +82,7 @@ export const registerUser = async (user) => {
   }
 };
 
-//Patch user information
+//Update de utilizador com novas informações
 export const updateUserInformation = async (token, username, userInformation) => {
   try {
     const response = await axios.patch(`${userEndpoint}${username}`,
@@ -154,7 +124,7 @@ export const updateUserInformation = async (token, username, userInformation) =>
   };
 
   
-//Get all users information
+//GET de todas as informações de todos os utilizadores regulares (não admin)
 export const getAllUsers = async (token) => {
   try {
     const response = await axios.get(`${userEndpoint}`,
@@ -190,7 +160,7 @@ export const getAllUsers = async (token) => {
 };
 
 
-//Delete all products of a user
+//Apagar todos os produtos de um utilizador
 export const deleteUserProducts = async (token, username) => {
   try {
     const response = await axios.delete(`${userEndpoint}${username}/products`,
@@ -229,7 +199,7 @@ export const deleteUserProducts = async (token, username) => {
   }
 };
 
-//Exclude user
+//Excluir um utilizador
 export const excludeUser = async (token, username) => {
   try {
     const response = await axios.patch(`${userEndpoint}${username}/exclude`,
@@ -273,7 +243,7 @@ export const excludeUser = async (token, username) => {
   }
 };
 
-//Delete user
+//Apagar permanentemente um utilizador
 export const deleteUser = async (token, username) => {
   try {
     const response = await axios.delete(`${userEndpoint}${username}`,

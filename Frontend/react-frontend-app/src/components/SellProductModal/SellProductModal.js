@@ -7,7 +7,7 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { checkIfNumeric } from "../../Utils/UtilityFunctions";
 import { addProduct } from "../../api/productApi";
-import { getUserLogged } from "../../api/userApi";
+import { getUserLogged } from "../../api/authenticationApi";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import useProductStore from "../../stores/useProductStore";
@@ -15,9 +15,10 @@ import useProductStore from "../../stores/useProductStore";
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();
 
-  //Categories from the useCategoriesStore
+  //Utiliza as categorias disponíveis no CategoriesStore
   const categories = useCategoriesStore((state) => state.categories);
 
+  //Obtenção do nome de utilizador logged
   const getUsername = async () => {
     try {
       const user = await getUserLogged(token);
@@ -28,8 +29,9 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
     }
   };
 
+  //Submissão do formulário para novo produto
   const onSubmit = async (registerProduct) => {
-    const username = await getUsername();
+    const username = await getUsername();   //irá buscar o nome de utilizado ao user store
     const newProduct = {
       seller: username,
       name: registerProduct.productName,
@@ -46,8 +48,8 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
         "O seu produto foi adicionado como RASCUNHO\nPara alterar, edite o produto na sua página pessoal"
       );
       useProductStore.getState().setProductAddedFlag(true);
-      reset();
-      toggleProductModal();
+      reset();  //reset do form
+      toggleProductModal();   //fecho do modal
     } catch (error) {
       const toastMessage =
         errorMessages[error.message] || errorMessages.unexpected_error;
@@ -57,7 +59,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
     }
   };
 
-  // Handle validation errors
+  // informação ao utilizador sobre erros
   const onError = (errors) => {
     if (errors.productName) {
       showErrorToast(errors.productName.message);
@@ -81,10 +83,10 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
 
   //Modal para adicionar produto - provavelmente mover para assets ou outro component
   return (
+    isProductModalVisible && (
     <div
       id="modal-addProduct"
       className="modal-addProduct"
-      style={{ display: isProductModalVisible ? "flex" : "none" }}
     >
       {/*Modal content*/}
       <div className="modal-content-addProduct">
@@ -197,6 +199,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
         </div>
       </div>
     </div>
+    )
   );
 };
 

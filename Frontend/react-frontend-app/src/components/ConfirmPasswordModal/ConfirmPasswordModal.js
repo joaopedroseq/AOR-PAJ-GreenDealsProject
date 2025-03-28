@@ -33,10 +33,10 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
 
 
   return (
+    isOpen && (
     <div
       id="modal-confirmPassword"
       className="modal-confirmPassword"
-      style={{ display: isOpen ? "flex" : "none" }}
     >
       {/*Conteúdo da janela modal*/}
       <div className="modal-content-confirmPassword">
@@ -59,7 +59,7 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
               className="edit-confirmPassword-form-field"
               id="edit-confirmPassword-form-field"
             >
-              <label htmlFor="edit-password">Password:</label>
+              <label htmlFor="password">Password:</label>
               <input
                 type="password"
                 id="password"
@@ -77,7 +77,7 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
               className="edit-confirmPassword-form-field"
               id="edit-confirmPassword-form-field"
             >
-              <label htmlFor="edit-passwordConfirm">Confirmar Password:</label>
+              <label htmlFor="passwordConfirm">Confirmar Password:</label>
               <input
                 type="password"
                 id="passwordConfirm"
@@ -110,6 +110,7 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
         </div>
       </div>
     </div>
+    )
   );
 };
 

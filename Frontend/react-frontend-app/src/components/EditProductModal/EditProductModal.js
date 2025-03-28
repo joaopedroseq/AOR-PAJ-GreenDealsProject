@@ -83,10 +83,10 @@ const EditProductModal = ({
   }
 
   return (
+    isEditProductModalVisible && (
     <div
       id="modal-detail"
       className="modal-detail"
-      style={{ display: isEditProductModalVisible ? "flex" : "none" }}
     >
       {/*Conteúdo da janela modal*/}
       <div className="modal-content-detail">
@@ -269,6 +269,7 @@ const EditProductModal = ({
         </div>
       </div>
     </div>
+    )
   );
 };
 

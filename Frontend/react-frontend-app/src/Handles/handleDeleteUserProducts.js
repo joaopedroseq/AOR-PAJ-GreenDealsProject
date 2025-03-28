@@ -2,6 +2,8 @@ import { deleteUserProducts } from "../api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
 import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
 
+
+//Operação de remoção de todos os produtos de um utilzador
 const handleDeleteUserProducts = async(token, username) => {
         try{
           const response = await deleteUserProducts(token, username);

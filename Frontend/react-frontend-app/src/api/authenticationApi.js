@@ -84,7 +84,8 @@ export const logout = async (token) => {
 }
 };
 
-//Função para login
+//Função para verificar se a password está correta
+//utilizada em operações de alteração de informações e certas operações de administrador
 export const checkPassword = async (username, password) => {
   try {
     const response = await axios.post(
@@ -115,6 +116,37 @@ export const checkPassword = async (username, password) => {
         throw new Error('wrong_password')
       }
       console.log('login failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+//GET informações do utilizador logged
+export const getUserLogged = async (token) => {
+  try {
+    const response = await axios.get(`${userAutenticationEndpoint}me`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      console.log('get user information failed ' + status)
       throw new Error('failed')
     }
     if (error.request) {

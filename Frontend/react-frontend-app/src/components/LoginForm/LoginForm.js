@@ -1,11 +1,15 @@
 import React from 'react';
+import './loginForm.css'
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../Handles/handleLogin';
 import useUserStore from '../../stores/useUserStore';
 
-const LoginForm = ({ toggleRegisterModal }) => {
-  const { register, handleSubmit } = useForm();
+const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
+  //utilização de funções do useForm
+  const { register, handleSubmit, reset } = useForm();
+  
+  //Acesso ao UserStore para operações de autenticação
   const updateToken = useUserStore((state) => state.updateToken);
   const updateIsAuthenticated = useUserStore((state) => state.updateIsAuthenticated);
 
@@ -14,23 +18,29 @@ const LoginForm = ({ toggleRegisterModal }) => {
     updateIsAuthenticated
   };
 
-
-
+    
   const onSubmit = async (loginData) => {
     await handleLogin(loginData, useUserStoreUpdates);
+    reset()
+    isClosed();
   };
 
    // Handle validation errors
    const onError = (errors) => {
     if (errors.username) {
       showErrorToast('Por favor, preencha o nome de utilizador.');
+      reset()
+      isClosed();
     }
     if (errors.password) {
       showErrorToast('Por favor, preencha a sua password.');
+      reset()
+      isClosed();
     }
   };
 
   return (
+    isOpen && (
     <div className="dropdownLogin">
       <form id="login-form" className="login-form" onSubmit={handleSubmit(onSubmit, onError)}>
         <label htmlFor="login-form">Log In</label>
@@ -72,10 +82,9 @@ const LoginForm = ({ toggleRegisterModal }) => {
             onClick={toggleRegisterModal}
           />
         </div>
-      </form>
-      
-      
+      </form>     
     </div>
+    )
   );
 };
 

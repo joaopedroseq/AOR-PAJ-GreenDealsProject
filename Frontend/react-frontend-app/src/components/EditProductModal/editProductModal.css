@@ -6,6 +6,7 @@
   
   /*---------------The Modal (background)-----------------------*/
   .modal-detail {
+    display: flex;
     max-height:calc(100vh - 100px);
     position: fixed; /*fixo na página*/
     z-index: 1000; /* Sobreposição sobre as outras páginas */

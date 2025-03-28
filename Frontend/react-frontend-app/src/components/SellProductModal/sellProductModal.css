@@ -1,7 +1,7 @@
 /* Estilo para o modal de detalhes */
 .modal-addProduct {
     max-height:calc(100vh - 100px);
-    display: none; /* Hidden by default */
+    display: flex; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1000; /* Sit on top */
     padding-top: 100px; /* Location of the box */

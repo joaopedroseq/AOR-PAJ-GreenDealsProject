@@ -2,6 +2,7 @@ import { excludeUser } from "../api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
 import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
 
+//operação de excluir um utilizador
 const handleExcludeUser = async(token, username) => {
         try{
           const response = await excludeUser(token, username);

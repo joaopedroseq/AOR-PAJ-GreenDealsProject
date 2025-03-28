@@ -6,6 +6,7 @@ import {
   showSuccessToast,
 } from "../Utils/ToastConfig/toastConfig";
 
+//Operações de update de informações de utilizador
 const handleChangeUserInformation = async (
   userInfo,
   updatedInfo,
@@ -13,8 +14,9 @@ const handleChangeUserInformation = async (
   token,
   isAdmin
 ) => {
-  console.log("ran")
   try {
+    //check por contraposição entre que informações se mantém e quais são novas
+    //para que backend recebe apenas patch com as novas informações
     const updatesToUser = {};
     for (const key in updatedInfo) {
       if (updatedInfo[key] !== userInfo[key]) {
@@ -24,6 +26,7 @@ const handleChangeUserInformation = async (
     console.log(updatesToUser)
     console.log(isAdmin);
 
+    //check da password CASO o utilizador requisitante não seja admin
     let isPasswordValid;
     if (!isAdmin) {
       isPasswordValid = await checkPassword(userInfo.username, confirmPassword);

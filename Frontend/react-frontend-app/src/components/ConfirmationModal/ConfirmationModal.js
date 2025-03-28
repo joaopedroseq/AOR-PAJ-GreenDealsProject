@@ -1,7 +1,7 @@
 import React from "react";
 import "./confirmationModal.css";
 
-const AddCategoryModal = ({ title, message, isOpen, onClose, onConfirm }) => {
+const ConfirmationModal = ({ title, message, isOpen, onClose, onConfirm }) => {
   const handleSubmit = async () => {
     try {
       await onConfirm();
@@ -48,4 +48,4 @@ const AddCategoryModal = ({ title, message, isOpen, onClose, onConfirm }) => {
   );
 };
 
-export default AddCategoryModal;
+export default ConfirmationModal;
