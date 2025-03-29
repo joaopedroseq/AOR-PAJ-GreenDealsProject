@@ -107,36 +107,39 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
             onSubmit={handleSubmit(onSubmit, onError)}
           >
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-nome">Nome do Produto:</label>
+              <label htmlFor="add-nome">Nome do Produto: </label>
               <input
                 type="text"
                 id="add-nome"
                 name="add-nome"
                 maxLength="30"
+                placeholder="nome"
                 {...register("productName", {
                   required: "Terá de preencher o nome do produto",
                 })}
               />
             </div>
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-descricao">Descrição:</label>
+              <label htmlFor="add-descricao">Descrição: </label>
               <input
                 type="text"
                 id="add-descricao"
                 name="add-descricao"
                 maxLength="100"
+                placeholder="descrição"
                 {...register("productDescription", {
                   required: "Terá de preencher uma descrição do produto",
                 })}
               />
             </div>
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-preco">Preço do Produto:</label>
+              <label htmlFor="add-preco">Preço do Produto: </label>
               <input
                 type="text"
                 id="add-preco"
                 name="add-preco"
                 maxLength="10"
+                placeholder="preço"
                 {...register("productPrice", {
                   required: "Terá de preencher o preço do produto",
                   validate: (value) =>
@@ -146,7 +149,7 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
               />
             </div>
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-categoria">Categoria do Produto:</label>
+              <label htmlFor="add-categoria">Categoria do Produto: </label>
               <select
                 id="add-categoria"
                 name="add-categoria"
@@ -167,11 +170,12 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
               </select>
             </div>
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-localidade">Localização:</label>
+              <label htmlFor="add-localidade">Localização: </label>
               <input
                 type="text"
                 id="add-localidade"
                 name="add-localidade"
+                placeholder="morada"
                 maxLength="100"
                 {...register("productLocation", {
                   required: "Tterá de preencher uma localidade",
@@ -179,11 +183,12 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
               />
             </div>
             <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-imagem">url de imagem:</label>
+              <label htmlFor="add-imagem">url de imagem: </label>
               <input
                 type="text"
                 id="add-imagem"
                 name="add-imagem"
+                placeholder="url"
                 {...register("productUrlImage", {
                   required: "Terá de preencher o url da imagem do producto",
                 })}

@@ -123,7 +123,7 @@ const Header = () => {
                 type="button"
                 className="userPageButton"
                 id="userAreaBtn"
-                value="Página pessoal"
+                value="O meu perfil"
               />
             </Link>
           </div>
@@ -141,7 +141,7 @@ const Header = () => {
           {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
             <div className="headerDiv">
             <h4 className="loginMessage" id="mensagem_boasVindas">
-              bem-vindo {firstName}
+              Bem-Vindo {firstName}
             </h4>
               <img
                 id="loginPhoto"

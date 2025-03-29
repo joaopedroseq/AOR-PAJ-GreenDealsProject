@@ -124,7 +124,7 @@ export const User = () => {
 
   return (
     <div className="user-main-content">
-      <section className="products" id="products-section">
+      <section className="products-section" id="products-section">
         <h3>Os meus produtos</h3>
         <div className="grid-container">
           {products.length === 0 ? (
@@ -159,7 +159,7 @@ export const User = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Primeiro Nome:</label>
+                <label>Primeiro Nome</label>
                 <input
                   type="text"
                   id="edit-firstname"
@@ -174,7 +174,7 @@ export const User = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Último Nome:</label>
+                <label>Último Nome</label>
                 <input
                   type="text"
                   id="edit-lastname"
@@ -189,9 +189,9 @@ export const User = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Email:</label>
+                <label>Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="edit-email"
                   maxLength="40"
                   defaultValue={userInfo.email}
@@ -203,9 +203,9 @@ export const User = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Telefone:</label>
+                <label>Telefone</label>
                 <input
-                  type="tel"
+                  type="text"
                   id="edit-phone"
                   maxLength="20"
                   defaultValue={userInfo.phoneNumber}
@@ -218,7 +218,7 @@ export const User = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Foto url:</label>
+                <label>Link Foto</label>
                 <input
                   type="url"
                   id="edit-photoUrl"

@@ -13,7 +13,6 @@ import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-
 function App() {
   
   return (

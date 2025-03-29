@@ -309,6 +309,22 @@ p {
   border: none;
 }
 
+.addCategory {
+  margin: 0 10px;
+  height: 50px;
+  margin-left: 10px;
+  display: block;
+  float: right;
+  border-radius: 5px;
+  text-align: center;
+  font-family: "Montserrat";
+  font-size: 20px;
+  color: white;
+  padding: 2px 2px;
+  background-color: var(--green);
+  border: none;
+}
+
 .newCategoryName {
   display: flex;
   align-items: center; /* Align items vertically */
@@ -317,11 +333,11 @@ p {
 .newCategoryName label,
 .newCategoryName input,
 .newCategoryName img {
+  font-family: "Montserrat";
   margin-right: 10px; /* Add spacing between elements */
 }
 
 .newCategoryName label {
-  font-weight: bold;
   color: #333;
   font-family: "Montserrat";
 }

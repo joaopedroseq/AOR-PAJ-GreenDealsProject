@@ -3,8 +3,10 @@ import "./homepage.css";
 import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
+import rebanner from '../../assets/banners/rebanner.png'
 import ProductCard from "../../components/ProductCard/ProductCard";
 import useProductStore from "../../stores/useProductStore";
+
 
 //Homepage
 const Homepage = () => {
@@ -26,8 +28,7 @@ const Homepage = () => {
         <img src={leaf} style={{ rotate: "45deg" }} alt='leaf sustainability icon'/>
         <h4>GreenDeals</h4>
       </div>
-      <div className="mission-statement">
-        <p>
+        <p className="mission-statement">
           Na <em>GreenDeals</em> acreditamos que a sustentabilidade começa com
           pequenas ações que fazem uma grande diferença. <br />
           Oferecemos um ambiente virtual onde você pode vender itens que já não
@@ -36,7 +37,6 @@ const Homepage = () => {
           Ao reutilizar bens, contribuímos para a redução do desperdício e
           promovemos um consumo mais consciente.
         </p>
-      </div>
       {/*Banners do site*/}
       <div className="grid-container">
         {products.length === 0 ? (

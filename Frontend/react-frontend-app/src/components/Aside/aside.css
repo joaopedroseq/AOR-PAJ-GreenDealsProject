@@ -6,7 +6,7 @@ aside {
     top: 80px;
     padding: 10px;
     color:var(--darkGreen);
-    background-color: #f1f3ebaa; /* Cor verde com transparência */
+    background-color: #f1f3ebe8; /* Cor verde com transparência */
     border: 1px solid #d3d3d3;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -22,8 +22,15 @@ aside {
   }
   
   aside ul h3 {
+    margin-top: 5%;
+    font: "Playfair Display";
     text-align: center;
     text-decoration: none;
+  }
+
+  .asideTitle {
+    margin-top: 10%;
+    text-align: center;
   }
 
   aside h2 {
@@ -38,7 +45,7 @@ aside {
     
   
   aside ul li {
-    font-family: "Verdana";
+    font-family: "Montserrat";
     list-style-type: none;
     text-align: center;
     cursor: pointer;

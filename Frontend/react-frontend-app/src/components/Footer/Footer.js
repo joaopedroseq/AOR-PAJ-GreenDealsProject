@@ -61,22 +61,6 @@ const Footer = (props) => {
         <div className="copyright">
             &copy; 2025 GreenDeals. Todos os direitos reservados.
         </div>
-        {/*The Modal*/}
-        <div id="modal" className="modal">
-            {/*Modal content*/}
-            <div className="modal-content">
-                <div className="modal-header">
-                    <span className="close">&times;</span>
-                    <h2 id="modal-header">Modal Header</h2>
-                </div>
-                <div className="modal-body">
-                    <h4 id="title1"></h4>
-                    <p id="phrase1"></p>
-                    <h4 id="title2"></h4>
-                    <p id="phrase2"></p>
-                </div>
-            </div>
-        </div>
     </div>
     );
 };

@@ -197,43 +197,43 @@ export const Detail = () => {
             </p>
           </div>
         </div>
-        {/*Se for admin mostrar botões de excluir produto*/}
-        {isAdmin ? (
-          <input
-            type="button"
-            id="exclude-product-button"
-            className="exclude-product-button"
-            value="Apagar Produto"
-            onClick={handleDeleteProduct}
-          />
-        ) : null}
-
         <div className="productButtons">
-          {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
-          {isAdmin || isOwner ? (
-            <div id="edit-delete-buttons">
-              <input
-                type="button"
-                id="edit-product"
-                value="Editar informações"
-                onClick={toggleEditProductModal}
-              />
-              <input
-                type="button"
-                id="delete-product"
-                value={
-                  isAdmin
-                    ? product.excluded
-                      ? "Recuperar produto"
-                      : "Excluir produto"
-                    : isOwner && !isAdmin
-                    ? "Apagar Produto"
-                    : ""
-                }
-                onClick={handleExcludeProduct}
-              />
-            </div>
+          {/*Se for admin mostrar botões de excluir produto*/}
+          {isAdmin ? (
+            <input
+              type="button"
+              id="exclude-product-button"
+              className="exclude-product-button"
+              value="Apagar Produto"
+              onClick={handleDeleteProduct}
+            />
           ) : null}
+
+          {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
+          {(isAdmin || isOwner) && (
+            <input
+              type="button"
+              id="edit-product"
+              value="Editar informações"
+              onClick={toggleEditProductModal}
+            />
+          )}
+          {(isAdmin || isOwner) && (
+            <input
+              type="button"
+              id="delete-product"
+              value={
+                isAdmin
+                  ? product.excluded
+                    ? "Recuperar produto"
+                    : "Excluir produto"
+                  : isOwner && !isAdmin
+                  ? "Apagar Produto"
+                  : ""
+              }
+              onClick={handleExcludeProduct}
+            />
+          )}
           {/*Se não for dono, não mostrar botão de comprar produto*/}
           {isOwner ? null : (
             <input
@@ -243,16 +243,6 @@ export const Detail = () => {
               onClick={buyingProduct}
             />
           )}
-
-          {/*Butão de contacto*/}
-          <button id="contact-btn">Contatar o Anunciante</button>
-          <div id="contact-form" style={{ display: "none" }}>
-            <textarea
-              id="message"
-              placeholder="Escreva aqui a sua mensagem..."
-            ></textarea>
-            <button id="send-btn">Enviar</button>
-          </div>
         </div>
       </div>
       <EditProductModal

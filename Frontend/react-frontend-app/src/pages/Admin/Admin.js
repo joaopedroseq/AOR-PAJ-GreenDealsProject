@@ -93,7 +93,8 @@ export const Admin = () => {
   const handleSubmittingNewCategory = (data) => {
     setModalConfig({
       title: "Adicionar Categoria?",
-      message: `Deseja adicionar nova categoria ${data.newCategoryName}?`,
+      message1: `Deseja adicionar nova categoria ${data.newCategoryName}?`,
+      message2: null,
       onConfirm: async () => {
         const response = await handleAddCategory(token, data.newCategoryName);
         if (response) {
@@ -124,9 +125,8 @@ export const Admin = () => {
   const handleRemovingCategory = (category) => {
     setModalConfig({
       title: "Remover categoria?",
-      message: `Deseja remover categoria ${category.name}?\n
-      Esta categoria tem ${category.products.length} produtos associados\n
-      que irão para uma categoria vazia - empty`,
+      message1: `Deseja remover categoria ${category.name}?`,
+      message2: `Os ${category.products.length} produtos associados ficarão empty`,
       onConfirm: async () => {
         const response = await handleDeleteCategory(token, category);
         if (response) {
@@ -148,7 +148,8 @@ export const Admin = () => {
   const handleDeletingUserProducts = async(user) => {
     setModalConfig({
       title: "Remover produtos de utilizador",
-      message: `Deseja apagar todos os produtos de ${user.username}?`,
+      message1: `Deseja apagar todos os produtos de ${user.username}?`,
+      message2: null,
       onConfirm: async () => {
         const response = await handleDeleteUserProducts(token, user.username);
         if (response) {
@@ -168,7 +169,8 @@ export const Admin = () => {
   const handleExcludingUser = async(user) => {
     setModalConfig({
       title: "Excluir utilizador",
-      message: `Deseja excluir o utilizador ${user.username}?\nIrá também excluir todos os seus produtos`,
+      message1: `Deseja excluir o utilizador ${user.username}?`,
+      message2: 'Irá também excluir todos os seus produtos',
       onConfirm: async () => {
         const response = await handleExcludeUser(token, user.username);
         if (response) {
@@ -190,7 +192,8 @@ export const Admin = () => {
   const handleDeletingUser = async(user) => {
     setModalConfig({
       title: "Apagar utilizador",
-      message: `Deseja apagar o utilizador ${user.username}?\nTodos os seus produtos irão ser excluídos e\nirão passar para um utilizador anónimo`,
+      message1: `Deseja apagar o utilizador ${user.username}?`,
+      message2: 'Os seus produtos serão excluídos',
       onConfirm: async () => {
         const response = await handleDeleteUser(token, user.username);
         if (response) {
@@ -282,7 +285,7 @@ export const Admin = () => {
                 id="newCategoryName"
                 onSubmit={handleSubmit(handleSubmittingNewCategory, onError)}
               >
-                <label>nome da categoria:</label>
+                <label>nome da categoria</label>
                 <input
                   type="text"
                   className="newCategoryNameBox"
@@ -303,7 +306,8 @@ export const Admin = () => {
       </section>
       <ConfirmationModal
         title={modalConfig.title}
-        message={modalConfig.message}
+        message1={modalConfig.message1}
+        message2={modalConfig.message2}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={modalConfig.onConfirm}

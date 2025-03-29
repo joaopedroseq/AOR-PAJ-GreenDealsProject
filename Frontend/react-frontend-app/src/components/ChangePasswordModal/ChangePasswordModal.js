@@ -127,6 +127,7 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => 
               />
               </div>
             </div>
+            <div className="changePasswordButtons">
             <input
               type="submit"
               className="submit"
@@ -134,8 +135,9 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => 
               value="Confirmar"
             />
             <button className="cancel" type="button" onClick={handleCancel}>
-              Cancel
+              Cancelar
             </button>
+            </div>
           </form>
         </div>
       </div>

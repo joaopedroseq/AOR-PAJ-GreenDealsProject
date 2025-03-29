@@ -96,10 +96,9 @@ const Aside = ({ isAsideVisible }) => {
       )}
       {page === "/user" && (
         <ul>
-          <h2 onClick={() => handleScrollToSection("products-section")}>
+          <h3 onClick={() => handleScrollToSection("products-section")}>
             Produtos
-          </h2>
-          <h3>Categorias</h3>
+          </h3>
           <li
             id="category"
             value="all"
@@ -120,22 +119,21 @@ const Aside = ({ isAsideVisible }) => {
         </ul>
       )}
       {page === "/user" && (
-        <h2 onClick={() => handleScrollToSection("profile-section")}>
+        <h3 className="asideTitle" onClick={() => handleScrollToSection("profile-section")}>
           Informações
-        </h2>
+        </h3>
       )}
       {page === "/user" && isAdmin && (
         <Link to="/admin" className="link">
-          <h2>Página de Administrador</h2>
+          <h3 className="asideTitle">Página de Administrador</h3>
         </Link>
       )}
       {page === "/admin" && isAdmin && (
-        <>
-          <h2 onClick={() => handleScrollToSection("products-section")}>
+        <ul>
+          <h3 onClick={() => handleScrollToSection("products-section")}>
             Gestão de Produtos
-          </h2>
+          </h3>
           <ul>
-            <h3>Categorias</h3>
             <li
               id="category"
               value="all"
@@ -161,13 +159,13 @@ const Aside = ({ isAsideVisible }) => {
               </li>
             ))}
           </ul>
-          <h2 onClick={() => handleScrollToSection("users-section")}>
+          <h3 className="asideTitle" onClick={() => handleScrollToSection("users-section")}>
             Gestão de Utilizadores
-          </h2>
-          <h2 onClick={() => handleScrollToSection("categories-section")}>
+          </h3>
+          <h3 className="asideTitle" onClick={() => handleScrollToSection("categories-section")}>
             Gestão de Categorias
-          </h2>
-        </>
+          </h3>
+        </ul>
       )}
       {page === "/profile" && isAdmin && (
         <>

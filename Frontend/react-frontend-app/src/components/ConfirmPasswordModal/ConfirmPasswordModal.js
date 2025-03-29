@@ -97,6 +97,7 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
                 })}
               />
             </div>
+            <div className="confirmPasswordButtons">
             <input
               type="submit"
               className="submit"
@@ -104,8 +105,9 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
               value="Confirmar"
             />
             <button className="cancel" type="button" onClick={handleCancel}>
-              Cancel
+              Cancelar
             </button>
+            </div>
           </form>
         </div>
       </div>

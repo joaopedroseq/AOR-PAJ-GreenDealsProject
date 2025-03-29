@@ -1,7 +1,7 @@
 import React from "react";
 import "./confirmationModal.css";
 
-const ConfirmationModal = ({ title, message, isOpen, onClose, onConfirm }) => {
+const ConfirmationModal = ({ title, message1, message2, isOpen, onClose, onConfirm }) => {
   const handleSubmit = async () => {
     try {
       await onConfirm();
@@ -27,7 +27,9 @@ const ConfirmationModal = ({ title, message, isOpen, onClose, onConfirm }) => {
           </p>
         </div>
         <div className="modal-body-ConfirmModal">
-          <p>{message}</p>
+          <p>{message1}</p>
+          <p>{message2}</p>
+          <div className="confirmationModalButtons">
           <button
             className="confirm-button"
             onClick={handleSubmit}
@@ -40,7 +42,7 @@ const ConfirmationModal = ({ title, message, isOpen, onClose, onConfirm }) => {
           >
             Cancelar
           </button>
-
+          </div>
         </div>
       </div>
     </div>

@@ -113,7 +113,8 @@ export const Profile = () => {
   const onSubmit = async (newUserInformation) => {
     setModalConfig({
       title: "Alterar informações de utilizador",
-      message: `Pretende alterar informações do utilizador ${userProfile.username}?`,
+      message1: `Pretende alterar informações do utilizador ${userProfile.username}?`,
+      message2: null,
       onConfirm: async () => {
         let password = null; //não necessário já que o utilizador é admin
         let isAdmin = true;
@@ -171,7 +172,8 @@ export const Profile = () => {
   const handleDeletingUserProducts = async () => {
     setModalConfig({
       title: "Remover produtos de utilizador",
-      message: `Deseja apagar todos os produtos de ${userProfile.username}?`,
+      message1: `Deseja apagar todos os produtos de ${userProfile.username}?`,
+      message2: null,
       onConfirm: async () => {
         const response = await handleDeleteUserProducts(token, userProfile.username);
         if (response) {
@@ -190,7 +192,8 @@ export const Profile = () => {
   const handleExcludingUser = async () => {
     setModalConfig({
       title: "Excluir utilizador",
-      message: `Deseja excluir o utilizador ${userProfile.username}?\nIrá também excluir todos os seus produtos`,
+      message1: `Deseja excluir o utilizador ${userProfile.username}?`,
+      message2: 'Irá também excluir todos os seus produtos',
       onConfirm: async () => {
         const response = await handleExcludeUser(token, userProfile.username);
         if (response) {
@@ -210,7 +213,8 @@ export const Profile = () => {
   const handleDeletingUser = async () => {
     setModalConfig({
       title: "Apagar utilizador",
-      message: `Deseja apagar o utilizador ${userProfile.username}?\nTodos os seus produtos irão ser excluídos e\nirão passar para um utilizador anónimo`,
+      message1: `Deseja apagar o utilizador ${userProfile.username}?`,
+      message2: 'Todos os seus produtos serão excluídos',
       onConfirm: async () => {
         const response = await handleDeleteUser(token, userProfile.username);
         if (response) {
@@ -229,7 +233,7 @@ export const Profile = () => {
     <div className="user-main-content">
       {userProfile?.username && (
       <>
-      <section className="products" id="products-section">
+      <section className="products-section" id="products-section">
         <h3>Produtos de {userProfile.username}</h3>
         <div className="grid-container">
           {products.length === 0 ? (
@@ -264,7 +268,7 @@ export const Profile = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Primeiro Nome:</label>
+                <label>Primeiro Nome</label>
                 <input
                   type="text"
                   id="edit-firstname"
@@ -279,7 +283,7 @@ export const Profile = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Último Nome:</label>
+                <label>Último Nome</label>
                 <input
                   type="text"
                   id="edit-lastname"
@@ -294,9 +298,9 @@ export const Profile = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Email:</label>
+                <label>Email</label>
                 <input
-                  type="email"
+                  type="text"
                   id="edit-email"
                   maxLength="40"
                   defaultValue={userProfile.email}
@@ -308,9 +312,9 @@ export const Profile = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Telefone:</label>
+                <label>Telefone</label>
                 <input
-                  type="tel"
+                  type="text"
                   id="edit-phone"
                   maxLength="20"
                   defaultValue={userProfile.phoneNumber}
@@ -323,9 +327,9 @@ export const Profile = () => {
                 />
               </div>
               <div className="edit-userinfo-form-field">
-                <label>Foto url:</label>
+                <label>Foto url</label>
                 <input
-                  type="url"
+                  type="text"
                   id="edit-photoUrl"
                   defaultValue={userProfile.url}
                   {...register("url", {
@@ -367,7 +371,8 @@ export const Profile = () => {
       </>)}
       <ConfirmationModal
         title={modalConfig.title}
-        message={modalConfig.message}
+        message1={modalConfig.message1}
+        message2={modalConfig.message2}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={modalConfig.onConfirm}
