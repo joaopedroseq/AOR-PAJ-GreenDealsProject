@@ -14,7 +14,7 @@ import {
 import {
   transformArrayDatetoDate,
   dateToFormattedDate,
-} from "../../Utils/UtilityFunctions";
+} from "../../Utils/utilityFunctions";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import EditProductModal from "../../components/EditProductModal/EditProductModal";
 import errorMessages from "../../Utils/constants/errorMessages";

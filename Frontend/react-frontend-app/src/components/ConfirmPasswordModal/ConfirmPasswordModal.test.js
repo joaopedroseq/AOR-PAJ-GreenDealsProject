@@ -1,11 +1,11 @@
 import React from "react";
 import { render, fireEvent, waitFor, screen } from "@testing-library/react";
 import ConfirmPasswordModal from "./ConfirmPasswordModal";
-import { checkIfValidPassword } from "../../Utils/UtilityFunctions";
+import { checkIfValidPassword } from "../../Utils/utilityFunctions";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 
 
-jest.mock("../../Utils/UtilityFunctions", () => ({
+jest.mock("../../Utils/utilityFunctions", () => ({
   checkIfValidPassword: jest.fn(),
 }));
 

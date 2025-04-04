@@ -4,7 +4,7 @@
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{dd/MM/yyyy HH:mm:ss.SSS} [%highlight{%level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue}] %c{1}.%M:%L - %msg%n"/>
         </Console>
-        <RollingFile name="RollingFileAppender" fileName="logging-proj3.log"
+        <RollingFile name="RollingFileAppender" fileName="logging-proj5.log"
                      filePattern="logs/${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{dd/MM/yyyy HH:mm:ss.SSS} [%highlight{%level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue}] %c{1}.%M:%L - %msg%n"/>
             <Policies>

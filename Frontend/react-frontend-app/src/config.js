@@ -1,4 +1,5 @@
-export const apiBaseUrl = 'http://localhost:8080/sequeira-proj4/rest/';
+export const apiBaseUrl = 'http://localhost:8080/sequeira-proj5/rest/';
+//Para https export const apiBaseUrl = 'https://localhost:8443/sequeira-proj5/rest/';
 
 export const httpStatusCodes = {
     success: 200, // OK

@@ -9,7 +9,7 @@ import {
 import { useForm } from "react-hook-form";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import productCard from "../../components/ProductCard/productCard";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
 import useProductStore from "../../stores/useProductStore";
 import useCategoriesStore from "../../stores/useCategoriesStore";
@@ -227,7 +227,7 @@ export const Admin = () => {
             </div>
           ) : (
             products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <productCard key={product.id} product={product} />
             ))
           )}
         </div>

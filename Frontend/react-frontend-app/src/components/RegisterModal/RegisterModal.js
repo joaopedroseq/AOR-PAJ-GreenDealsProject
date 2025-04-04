@@ -1,11 +1,11 @@
 import React from "react";
 import "./registerModal.css";
-import { registerUser } from "../../api/userApi";
+import { registerUser } from "../../api/authenticationApi";
 import {
   checkIfValidName,
   checkIfValidUsername,
   checkIfValidPassword,
-} from "../../Utils/UtilityFunctions";
+} from "../../Utils/utilityFunctions";
 import { useForm } from "react-hook-form";
 import {
   showErrorToast,

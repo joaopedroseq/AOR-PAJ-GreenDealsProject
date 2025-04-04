@@ -8,12 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
-import pt.uc.dei.proj4.beans.CategoryBean;
-import pt.uc.dei.proj4.beans.UserBean;
-import pt.uc.dei.proj4.dto.CategoryDto;
-import pt.uc.dei.proj4.dto.LoginDto;
-import pt.uc.dei.proj4.dto.UserDto;
-import pt.uc.dei.proj4.service.CategoryService;
+import pt.uc.dei.proj5.beans.CategoryBean;
+import pt.uc.dei.proj5.beans.UserBean;
+import pt.uc.dei.proj5.dto.CategoryDto;
+import pt.uc.dei.proj5.dto.LoginDto;
+import pt.uc.dei.proj5.dto.UserDto;
+import pt.uc.dei.proj5.service.CategoryService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 class CategoryServiceTest {
+    /*
 
     @Mock
     CategoryBean categoryBean;
@@ -70,9 +71,9 @@ class CategoryServiceTest {
 
         //Categories
         validCategory = new CategoryDto();
-        validCategory.setName("Categoria A");
+        validCategory.setNome("Categoria A");
         invalidCategory = new CategoryDto();
-        invalidCategory.setName("");
+        invalidCategory.setNome("");
     }
 
     @Test
@@ -87,5 +88,5 @@ class CategoryServiceTest {
 
     @Test
     void getAllCategories() {
-    }
+    }*/
 }

@@ -7,12 +7,12 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import productCard from "../../components/ProductCard/productCard";
 import useProductStore from "../../stores/useProductStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import {
   checkIfValidName,
-} from "../../Utils/UtilityFunctions";
+} from "../../Utils/utilityFunctions.js";
 import ConfirmPasswordModal from "../../components/ConfirmPasswordModal/ConfirmPasswordModal";
 import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
 
@@ -137,7 +137,7 @@ export const User = () => {
             </div>
           ) : (
             products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <productCard key={product.id} product={product} />
             ))
           )}
         </div>

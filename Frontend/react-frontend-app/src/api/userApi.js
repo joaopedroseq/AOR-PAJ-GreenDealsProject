@@ -47,41 +47,6 @@ export const getUserInformation = async (username, token) => {
   }
 };
 
-//Registo de novo utilizador
-export const registerUser = async (user) => {
-  try {
-    await axios.post(`${userEndpoint}register`,
-      user,
-      {
-        headers: {"Content-Type": "application/json"}
-      }
-    );
-      return true;
-    }
-  catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-
-      if (status === 400) {
-        console.log('Invalid data - registering user');
-        throw new Error('invalid_data')
-      }
-      if (status === 409) {
-        console.log('username already exists');
-        throw new Error('same_username')
-      }
-      console.log('register failed ' + status)
-      throw new Error('failed')
-    }
-    if (error.request) {
-      console.error("No response from server:", error.request);
-      throw new Error("network_error");
-    }
-    console.log(error.response);
-    throw new Error("unexpected_error");
-  }
-};
-
 //Update de utilizador com novas informações
 export const updateUserInformation = async (token, username, userInformation) => {
   try {
@@ -146,46 +111,6 @@ export const getAllUsers = async (token) => {
       if (status === 403) {
         console.log("permission denied");
         throw new Error("permission_denied");
-      }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
-    }
-    if (error.request) {
-      console.error("No response from server:", error.request);
-      throw new Error("network_error");
-    }
-    console.log(error.response);
-    throw new Error("unexpected_error");
-  }
-};
-
-
-//Apagar todos os produtos de um utilizador
-export const deleteUserProducts = async (token, username) => {
-  try {
-    const response = await axios.delete(`${userEndpoint}${username}/products`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          'token': token
-        }
-      },
-    );
-    return response;
-  } catch (error) {
-    if (error.response) {
-      const status = error.response.status;
-      if (status === 401) {
-        console.log('Invalid token');
-        throw new Error('invalid_token')
-      }
-      if (status === 403) {
-        console.log("permission denied");
-        throw new Error("permission_denied");
-      }
-      if (status === 500) {
-        console.log("server side exception");
-        throw new Error("failed");
       }
       console.log('get user information failed ' + status)
       throw new Error('failed')
@@ -289,3 +214,45 @@ export const deleteUser = async (token, username) => {
     throw new Error("unexpected_error");
   }
 };
+
+//Apagar todos os produtos de um utilizador
+export const deleteUserProducts = async (token, username) => {
+  try {
+    const response = await axios.delete(`${userEndpoint}${username}/products`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': token
+        }
+      },
+    );
+    return response;
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+      if (status === 401) {
+        console.log('Invalid token');
+        throw new Error('invalid_token')
+      }
+      if (status === 403) {
+        console.log("permission denied");
+        throw new Error("permission_denied");
+      }
+      if (status === 500) {
+        console.log("server side exception");
+        throw new Error("failed");
+      }
+      console.log('get user information failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
+
+
+

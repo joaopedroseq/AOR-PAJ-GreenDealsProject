@@ -2,7 +2,7 @@ import React from "react";
 import excludedOverlay from '../../assets/icons/excludedOverlay.png'
 import { Link } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+const productCard = ({ product }) => {
   //Cartão de Produto - para popular diferentes páginas
   return (
     <Link className="grid-item"
@@ -19,4 +19,4 @@ const ProductCard = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default productCard;

@@ -16,11 +16,16 @@ import useUserStore from "../../stores/useUserStore";
 import { Link } from "react-router-dom";
 import { getUserLogged } from "../../api/authenticationApi";
 import errorMessages from "../../Utils/constants/errorMessages";
+import { FormattedMessage, useIntl } from "react-intl";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const token = useUserStore((state) => state.token);
+  //Opções de língua
+  const locale = useUserStore((state) => state.locale);
+  const updateLocale = useUserStore((state) => state.updateLocale);
+  const intl = useIntl();
 
   //Preenchimento de campos com o primeiro nome e foto
   const [firstName, setFirstName] = useState(null);
@@ -60,7 +65,7 @@ const Header = () => {
     try {
       const isLoggedOut = await logout(token);
       if (isLoggedOut) {
-        showSuccessToast("Até à próxima " + firstName);
+        showSuccessToast(`${intl.formatMessage({ id: 'goodbye' }, { firstName: firstName })}`);
         useUserStore.getState().clearUserStore();
       }
     } catch (error) {
@@ -84,6 +89,11 @@ const Header = () => {
     setIsProductModalVisible(!isProductModalVisible);
   };
 
+  //Mudança de lingua
+  const handleChangeLanguage = (event) => {
+    updateLocale(event.target.value);
+  }
+
   return (
     <div className="Header">
       {/*Botão hamburger para mostrar aside*/}
@@ -95,6 +105,12 @@ const Header = () => {
           id="hamburger"
           onClick={toggleAside}
         />
+        <select onChange={handleChangeLanguage} defaultValue={locale}>
+        {" "}
+        {["en", "pt"].map((language) => (
+          <option key={language}>{language}</option>
+        ))}{" "}
+      </select> 
       </div>
       {/*Logo GreenDeals*/}
       <div className="logo">
@@ -113,7 +129,7 @@ const Header = () => {
                 type="button"
                 className="sellProductButton"
                 id="add-product-btn"
-                value="Vender um produto"
+                value={intl.formatMessage({ id: 'sellProductButton' })}
                 onClick={toggleProductModal}
               ></input>
             </div>
@@ -123,7 +139,7 @@ const Header = () => {
                 type="button"
                 className="userPageButton"
                 id="userAreaBtn"
-                value="O meu perfil"
+                value={intl.formatMessage({ id: 'profileButton' })}
               />
             </Link>
           </div>
@@ -132,7 +148,7 @@ const Header = () => {
                 type="submit"
                 className="logoutButton"
                 id="logoutButton"
-                value="logout"
+                value={intl.formatMessage({ id: 'logoutButton' })}
                 size="12px"
                 onClick={handleLogout}
               ></input>
@@ -141,7 +157,7 @@ const Header = () => {
           {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
             <div className="headerDiv">
             <h4 className="loginMessage" id="mensagem_boasVindas">
-              Bem-Vindo {firstName}
+            <FormattedMessage id="welcomeMessage"/> {firstName}
             </h4>
               <img
                 id="loginPhoto"

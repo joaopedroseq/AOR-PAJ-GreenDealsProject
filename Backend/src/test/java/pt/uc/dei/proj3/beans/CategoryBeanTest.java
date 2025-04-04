@@ -2,11 +2,11 @@ package pt.uc.dei.proj3.beans;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import pt.uc.dei.proj4.beans.CategoryBean;
-import pt.uc.dei.proj4.dao.CategoryDao;
-import pt.uc.dei.proj4.dao.ProductDao;
-import pt.uc.dei.proj4.dto.CategoryDto;
-import pt.uc.dei.proj4.entity.CategoryEntity;
+import pt.uc.dei.proj5.beans.CategoryBean;
+import pt.uc.dei.proj5.dao.CategoryDao;
+import pt.uc.dei.proj5.dao.ProductDao;
+import pt.uc.dei.proj5.dto.CategoryDto;
+import pt.uc.dei.proj5.entity.CategoryEntity;
 
 import java.util.ArrayList;
 
@@ -51,9 +51,9 @@ class CategoryBeanTest {
     @Test
     void testfindCategoryByNameSUCCESS() {
         CategoryDto categoryDto1 = new CategoryDto();
-        categoryDto1.setName("tecnologia");
+        categoryDto1.setNome("tecnologia");
         CategoryDto categoryDto2 = new CategoryDto();
-        categoryDto2.setName("vestuario");
+        categoryDto2.setNome("vestuario");
 
         assertAll(
                 () -> assertTrue(categoryBean.checkIfCategoryExists(categoryDto1)),
@@ -64,9 +64,9 @@ class CategoryBeanTest {
     @Test
     void testfindCategoryByNameFAIL() {
         CategoryDto categoryDto1 = new CategoryDto();
-        categoryDto1.setName("Tecnologia");
+        categoryDto1.setNome("Tecnologia");
         CategoryDto categoryDto2 = new CategoryDto();
-        categoryDto2.setName("arrumacao");
+        categoryDto2.setNome("arrumacao");
         assertAll(
                 () -> assertFalse(categoryBean.checkIfCategoryExists(categoryDto1)),
                 () -> assertFalse(categoryBean.checkIfCategoryExists(categoryDto2))
@@ -77,9 +77,9 @@ class CategoryBeanTest {
     @Test
     void testRegisterNewCategorySUCCESS() {
         CategoryDto categoryDto1 = new CategoryDto();
-        categoryDto1.setName("tecnologias");
+        categoryDto1.setNome("tecnologias");
         CategoryDto categoryDto2 = new CategoryDto();
-        categoryDto2.setName("calcado");
+        categoryDto2.setNome("calcado");
 
         assertTrue(categoryBean.registerNewCategory(categoryDto1));
         verify(categoryDao, times(1)).persist(any(CategoryEntity.class));  // Verify first call
@@ -90,11 +90,11 @@ class CategoryBeanTest {
     @Test
     void testRegisterNewCategoryFAIL() {
         CategoryDto categoryDto1 = new CategoryDto();
-        categoryDto1.setName("Tecnologia");
+        categoryDto1.setNome("Tecnologia");
         CategoryDto categoryDto2 = new CategoryDto();
-        categoryDto2.setName("tecnologia");
+        categoryDto2.setNome("tecnologia");
         CategoryDto categoryDto3 = new CategoryDto();
-        categoryDto3.setName("VeStUaRiO");
+        categoryDto3.setNome("VeStUaRiO");
 
         assertAll(
                 () -> categoryBean.registerNewCategory(categoryDto1),
@@ -107,10 +107,10 @@ class CategoryBeanTest {
     @Test
     void testDeleteCategory() {
         CategoryDto categoryDto1 = new CategoryDto();
-        categoryDto1.setName("tecnologia");
+        categoryDto1.setNome("tecnologia");
 
         CategoryDto categoryDto2 = new CategoryDto();
-        categoryDto2.setName("calcado");
+        categoryDto2.setNome("calcado");
 
         // Setting up the mock to return the new category entity
         CategoryEntity calcadoCategory = new CategoryEntity();

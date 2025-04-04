@@ -5,7 +5,7 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
-import { checkIfNumeric } from "../../Utils/UtilityFunctions";
+import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import { addProduct } from "../../api/productApi";
 import { getUserLogged } from "../../api/authenticationApi";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";

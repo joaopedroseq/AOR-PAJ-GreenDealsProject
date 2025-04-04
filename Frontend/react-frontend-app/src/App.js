@@ -12,12 +12,16 @@ import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { IntlProvider } from "react-intl";
+import languages from "./Utils/translations";
+import useUserStore from './stores/useUserStore';
 
 function App() {
+  const locale = useUserStore((state) => state.locale);
   
   return (
-    
-
+    <IntlProvider locale={locale} messages={languages[locale]}>
+      
     <BrowserRouter>
     <RouteListener />
     <div className="GreenDealsApp">
@@ -49,6 +53,7 @@ function App() {
      <ToastContainer limit={3}/>
     </div>
     </BrowserRouter>
+    </IntlProvider>
   );
 }
 

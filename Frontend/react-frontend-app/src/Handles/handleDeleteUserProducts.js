@@ -10,7 +10,6 @@ const handleDeleteUserProducts = async(token, username) => {
           if(response.status === 200){
             return true;
           }
-                
         } catch (error) {
           const toastMessage =
             errorMessages[error.message] || errorMessages.unexpected_error;

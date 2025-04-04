@@ -2,7 +2,7 @@ import React from "react";
 import "./confirmPasswordModal.css";
 import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
-import { checkIfValidPassword } from "../../Utils/UtilityFunctions";
+import { checkIfValidPassword } from "../../Utils/utilityFunctions";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 import useUserStore from "../../stores/useUserStore";
 

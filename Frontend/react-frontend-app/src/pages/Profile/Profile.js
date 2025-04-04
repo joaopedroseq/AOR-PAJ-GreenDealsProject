@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
 import { useLocation, useNavigate } from "react-router-dom";
 import useUserStore from "../../stores/useUserStore";
-import ProductCard from "../../components/ProductCard/ProductCard";
+import productCard from "../../components/ProductCard/productCard.js";
 import useProductStore from "../../stores/useProductStore";
 import useCategoriesStore from "../../stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
@@ -22,7 +22,7 @@ import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationMo
 import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
 import handleExcludeUser from "../../Handles/handleExcludeUser";
 import handleDeleteUser from "../../Handles/handleDeleteUser";
-import { checkIfValidName } from "../../Utils/UtilityFunctions";
+import { checkIfValidName } from "../../Utils/utilityFunctions.js";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 
 export const Profile = () => {
@@ -246,7 +246,7 @@ export const Profile = () => {
             </div>
           ) : (
             products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <productCard key={product.id} product={product} />
             ))
           )}
         </div>

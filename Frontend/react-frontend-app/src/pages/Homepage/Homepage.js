@@ -4,8 +4,10 @@ import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
 import rebanner from '../../assets/banners/rebanner.png'
-import ProductCard from "../../components/ProductCard/ProductCard";
+import productCard from "../../components/ProductCard/productCard";
 import useProductStore from "../../stores/useProductStore";
+import useUserStore from "../../stores/useUserStore";
+import { FormattedMessage } from "react-intl";
 
 
 //Homepage
@@ -15,6 +17,8 @@ const Homepage = () => {
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const { setFilters, clearFilters } = useProductStore(); //talvez seja ainda necessário
 
+  //Opções de língua
+  const locale = useUserStore((state) => state.locale);
 
   //Popular a página com produtos
   useEffect(() => {
@@ -29,13 +33,7 @@ const Homepage = () => {
         <h4>GreenDeals</h4>
       </div>
         <p className="mission-statement">
-          Na <em>GreenDeals</em> acreditamos que a sustentabilidade começa com
-          pequenas ações que fazem uma grande diferença. <br />
-          Oferecemos um ambiente virtual onde você pode vender itens que já não
-          utiliza e encontrar produtos usados de qualidade a preços acessíveis.{" "}
-          <br />
-          Ao reutilizar bens, contribuímos para a redução do desperdício e
-          promovemos um consumo mais consciente.
+        <FormattedMessage id="missionStatement"/> 
         </p>
       {/*Banners do site*/}
       <div className="grid-container">
@@ -52,7 +50,7 @@ const Homepage = () => {
           </div>
         ) : (
           products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <productCard key={product.id} product={product} />
           ))
         )}
       </div>

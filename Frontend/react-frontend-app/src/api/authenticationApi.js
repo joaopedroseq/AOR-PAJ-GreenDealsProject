@@ -2,7 +2,43 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const userAutenticationEndpoint = `${apiBaseUrl}users/`;
+const userAutenticationEndpoint = `${apiBaseUrl}auth/`;
+
+//Registo de novo utilizador
+export const registerUser = async (user) => {
+  try {
+    await axios.post(`${userAutenticationEndpoint}register`,
+      user,
+      {
+        headers: {"Content-Type": "application/json"}
+      }
+    );
+  console.log("ran")
+      return true;
+    }
+  catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.log('Invalid data - registering user');
+        throw new Error('invalid_data')
+      }
+      if (status === 409) {
+        console.log('username already exists');
+        throw new Error('same_username')
+      }
+      console.log('register failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};
 
 //Função para login
 export const login = async (username, password) => {
@@ -89,7 +125,7 @@ export const logout = async (token) => {
 export const checkPassword = async (username, password) => {
   try {
     const response = await axios.post(
-      `${apiBaseUrl}auth/confirm-password`,
+      `${userAutenticationEndpoint}confirm-password/`,
       {
         username: username,
         password: password,
@@ -157,3 +193,4 @@ export const getUserLogged = async (token) => {
     throw new Error("unexpected_error");
   }
 };
+

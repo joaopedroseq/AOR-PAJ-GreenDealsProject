@@ -2,7 +2,7 @@ import React from "react";
 import "./editProductModal.css";
 import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import { useForm } from "react-hook-form";
-import { checkIfNumeric } from "../../Utils/UtilityFunctions";
+import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import {
   showErrorToast,
   showSuccessToast,

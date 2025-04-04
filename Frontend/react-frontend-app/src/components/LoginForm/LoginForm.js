@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../Handles/handleLogin';
 import useUserStore from '../../stores/useUserStore';
+import { FormattedMessage, useIntl } from "react-intl";
 
 const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
   //utilização de funções do useForm
@@ -13,6 +14,9 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
   const updateToken = useUserStore((state) => state.updateToken);
   const updateIsAuthenticated = useUserStore((state) => state.updateIsAuthenticated);
 
+  //Opções de língua
+  const intl = useIntl()
+
   const useUserStoreUpdates = {
     updateToken,
     updateIsAuthenticated
@@ -20,7 +24,7 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
 
     
   const onSubmit = async (loginData) => {
-    await handleLogin(loginData, useUserStoreUpdates);
+    await handleLogin(loginData, useUserStoreUpdates, intl);
     reset()
     isClosed();
   };
@@ -28,12 +32,12 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
    // Handle validation errors
    const onError = (errors) => {
     if (errors.username) {
-      showErrorToast('Por favor, preencha o nome de utilizador.');
+      showErrorToast(<FormattedMessage id="noUsername"/>);
       reset()
       isClosed();
     }
     if (errors.password) {
-      showErrorToast('Por favor, preencha a sua password.');
+      showErrorToast(<FormattedMessage id="noPassword"/>);
       reset()
       isClosed();
     }
@@ -43,9 +47,9 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
     isOpen && (
     <div className="dropdownLogin">
       <form id="login-form" className="login-form" onSubmit={handleSubmit(onSubmit, onError)}>
-        <label htmlFor="login-form">Log In</label>
+        <label htmlFor="login-form"><FormattedMessage id="logIn"/></label>
         <br />
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username"><FormattedMessage id="username"/></label>
         <input
           type="text"
           className="textbox"
@@ -55,7 +59,7 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
           {...register('username', { required: true })}
         />
 
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password"><FormattedMessage id="password"/></label>
         <input
           type="password"
           className="textbox"
@@ -66,18 +70,18 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
 
         <div>
           <input type="checkbox" id="showPasswordBtn" />
-          <label htmlFor="checkbox">Mostrar password</label>
+          <label htmlFor="checkbox"><FormattedMessage id="showPassword"/></label>
         </div>
 
         <div className="login-buttons">
           <button type="submit" className="buttonSubmit" id="loginSubmit">
-            Submit
+          <FormattedMessage id="submit"/>
           </button>
           <input
             type="button"
             className="buttonRegister"
             id="newAccountBtn"
-            value="Register"
+            value={intl.formatMessage({ id: 'register' })}
             size="12px"
             onClick={toggleRegisterModal}
           />
