@@ -16,6 +16,7 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         super(TokenEntity.class);
     }
 
+    //Authentication Token
     public UserEntity findUserByAuthenticationToken(String authenticationToken) {
         try {
             return (UserEntity) em.createNamedQuery("Token.findUserByAuthenticationToken").setParameter("token", authenticationToken)
@@ -27,6 +28,19 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         }
     }
 
+
+    public TokenEntity findTokenByAuthenticationToken(String authenticationToken) {
+        try {
+            return (TokenEntity) em.createNamedQuery("Token.findTokenByAuthenticationToken").setParameter("token", authenticationToken)
+                    .getSingleResult();
+
+        } catch (NoResultException e) {
+            logger.error("Exception {} in TokenDao.findTokenByAuthenticationToken", e.getMessage());
+            return null;
+        }
+    }
+
+    //Talvez para apagar
     public boolean findIfAuthenticationTokenExists(String authenticationToken) {
         try{
             if (em.createNamedQuery("Token.findIfAuthenticationTokenExists").setParameter("token", authenticationToken).getResultList().isEmpty()) {
@@ -42,16 +56,33 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         }
     }
 
-    public TokenEntity findTokenByAuthenticationToken(String authenticationToken) {
+    public boolean removeAuthenticationToken(String authenticationToken) {
+        try{
+            if (em.createNamedQuery("Token.removeAuthenticationToken").setParameter("authenticationToken", authenticationToken).executeUpdate() > 0) {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in TokenDao.findIfAuthenticationTokenExists", e.getMessage());
+            return false;
+        }
+    }
+
+    //Activation Token
+    public UserEntity findUserByActivationToken(String activationToken) {
         try {
-            return (TokenEntity) em.createNamedQuery("Token.findTokenByAuthenticationToken").setParameter("token", authenticationToken)
+            return (UserEntity) em.createNamedQuery("Token.findUserByActivationToken").setParameter("token", activationToken)
                     .getSingleResult();
 
         } catch (NoResultException e) {
-            logger.error("Exception {} in TokenDao.findTokenByAuthenticationToken", e.getMessage());
+            logger.error("Exception {} in TokenDao.findUserByAuthenticationToken", e.getMessage());
             return null;
         }
     }
+
 
     public TokenEntity findTokenByUsername(String username) {
         try {
@@ -64,8 +95,16 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         }
     }
 
+    //PasswordChangeTOken
+    public UserEntity findUserByPasswordChangeToken(String passwordChangeToken) {
+        try {
+            return (UserEntity) em.createNamedQuery("Token.findUserByPasswordChangeToken").setParameter("token", passwordChangeToken)
+                    .getSingleResult();
 
-
-
+        } catch (NoResultException e) {
+            logger.error("Exception {} in TokenDao.findUserByAuthenticationToken", e.getMessage());
+            return null;
+        }
+    }
 
 }

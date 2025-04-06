@@ -1,5 +1,6 @@
 package pt.uc.dei.proj5.dto;
 
+import jakarta.ejb.Local;
 import jakarta.persistence.*;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import pt.uc.dei.proj5.entity.UserEntity;
@@ -11,6 +12,7 @@ public class ConfigurationDto {
     private int activationExpirationTime;
     private int passwordChangeExpirationTime;
     private String adminUsername;
+    private LocalDateTime dateOfUpdate;
 
     public ConfigurationDto() {
     }
@@ -45,5 +47,13 @@ public class ConfigurationDto {
 
     public void setAdminUsername(String adminUsername) {
         this.adminUsername = adminUsername;
+    }
+
+    public LocalDateTime getDateOfUpdate() {
+        return dateOfUpdate;
+    }
+
+    public void setDateOfUpdate(LocalDateTime dateOfUpdate) {
+        this.dateOfUpdate = dateOfUpdate;
     }
 }

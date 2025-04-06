@@ -7,8 +7,8 @@ public class TokenDto {
     private String usernmame;
     private String authenticationToken;
     private LocalDateTime authenticationTokenDate;
-    private String confirmationToken;
-    private LocalDateTime confirmationTokenDate;
+    private String activationToken;
+    private LocalDateTime activationTokenDate;
     private String passwordChangeToken;
     private LocalDateTime passwordChangeTokenDate;
 
@@ -31,20 +31,20 @@ public class TokenDto {
         this.authenticationToken = authenticationToken;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public String getActivationToken() {
+        return activationToken;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 
-    public LocalDateTime getConfirmationTokenDate() {
-        return confirmationTokenDate;
+    public LocalDateTime getActivationTokenDate() {
+        return activationTokenDate;
     }
 
-    public void setConfirmationTokenDate(LocalDateTime confirmationTokenDate) {
-        this.confirmationTokenDate = confirmationTokenDate;
+    public void setActivationTokenDate(LocalDateTime activationTokenDate) {
+        this.activationTokenDate = activationTokenDate;
     }
 
     public String getPasswordChangeToken() {
@@ -61,5 +61,13 @@ public class TokenDto {
 
     public void setPasswordChangeTokenDate(LocalDateTime passwordChangeTokenDate) {
         this.passwordChangeTokenDate = passwordChangeTokenDate;
+    }
+
+    public LocalDateTime getAuthenticationTokenDate() {
+        return authenticationTokenDate;
+    }
+
+    public void setAuthenticationTokenDate(LocalDateTime authenticationTokenDate) {
+        this.authenticationTokenDate = authenticationTokenDate;
     }
 }

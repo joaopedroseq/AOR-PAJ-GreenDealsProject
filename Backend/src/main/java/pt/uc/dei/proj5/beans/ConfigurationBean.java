@@ -39,6 +39,7 @@ public class ConfigurationBean {
             configurationDto.setAuthenticationExpirationTime(configurationEntity.getAuthenticationExpirationTime());
             configurationDto.setActivationExpirationTime(configurationEntity.getActivationExpirationTime());
             configurationDto.setPasswordChangeExpirationTime(configurationEntity.getPasswordChangeExpirationTime());
+            configurationDto.setDateOfUpdate(configurationEntity.getDateOfUpdate());
             return configurationDto;
         }
         catch (Exception e) {

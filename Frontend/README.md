@@ -16,4 +16,3 @@
 - implementar paginação de produtos/
 - tratar dos bad requests/
 - implementar uma forma de apagar todos os tokens no fecho do servidor;
-- URGENTE - bloquear users accounts excluídas

@@ -20,7 +20,7 @@ import java.util.Set;
 //delete user
 @NamedQuery(name="User.deleteUser", query = "DELETE FROM UserEntity WHERE username = :username")
 //exclude user
-@NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET excluded = true WHERE username = :username")
+@NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET state = 'EXCLUDED' WHERE username = :username")
 //get all non-admin users
 @NamedQuery(name="User.getAllUsers", query = "SELECT u FROM UserEntity u WHERE u.admin = false ORDER BY username")
 public class UserEntity implements Serializable {
@@ -60,10 +60,6 @@ public class UserEntity implements Serializable {
     @Column(name = "admin", nullable = false, unique = false, updatable = true)
     private Boolean admin;
 
-    //Exluded - Boolean - is it excluded?
-    @Column(name = "excluded", nullable = false, unique = false, updatable = true)
-    private Boolean excluded;
-
     //Pensar em juntar com o excluded num state de conta em que pode ser activated, exludede ou por ativar
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false, unique = false, updatable = true)
@@ -78,7 +74,7 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "seller")
     private Set<EvaluationEntity> evaluationsReceived;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private TokenEntity token;
 
 
@@ -101,14 +97,6 @@ public class UserEntity implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Boolean getExcluded() {
-        return excluded;
-    }
-
-    public void setExcluded(Boolean excluded) {
-        this.excluded = excluded;
     }
 
     public String getFirstName() {
@@ -211,10 +199,11 @@ public class UserEntity implements Serializable {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", url='" + url + '\'' +
                 ", admin=" + admin +
-                ", excluded=" + excluded +
+                ", state=" + state +
                 ", products=" + products +
                 ", evaluationsWritten=" + evaluationsWritten +
                 ", evaluationsReceived=" + evaluationsReceived +
+                ", token=" + token +
                 '}';
     }
 }

@@ -41,8 +41,8 @@ public class UserService {
     //Utilizar este para a maior parte das operações
     @GET
     @Path("/{username}")
-    public Response getUserInformation(@HeaderParam("token") String token, @PathParam("username") String userToGetInformation) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response getUserInformation(@HeaderParam("token") String authenticationToken, @PathParam("username") String userToGetInformation) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - getting information from user {}", userToGetInformation);
             return Response.status(401).entity("Missing token").build();
         }
@@ -50,19 +50,26 @@ public class UserService {
             logger.error("Invalid data - missing params - Getting another user information");
             return Response.status(400).entity("Invalid data").build();
         } else {
-
-            if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+            //TAlvez apagar este
+            if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
                 logger.error("Invalid token when trying to get user {} information", userToGetInformation);
                 return Response.status(401).entity("Invalid token").build();
             } else {
-                UserDto user = tokenBean.verifyAuthenticationToken(token);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setAuthenticationToken(authenticationToken);
+                UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
                 if (user == null) {
                     logger.error("Invalid token when trying to get user {} information", userToGetInformation);
                     return Response.status(401).entity("Invalid token").build();
-                } else {
+                }
+                if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                    logger.error("Permission denied - user {} tried to get user {} information with inactive or excluded account", user.getUsername(), userToGetInformation);
+                    return Response.status(403).entity("User has inactive or excluded account").build();
+                }
+                else {
                     userToGetInformation = userToGetInformation.trim();
                     if (!user.getAdmin() && !(user.getUsername().equals(userToGetInformation))) {
-                        logger.error("User {} tried to get user {} information without admin permissions", user.getUsername(), userToGetInformation);
+                        logger.error("Permission denied - user {} tried to get user {} information without admin permissions", user.getUsername(), userToGetInformation);
                         return Response.status(403).entity("User does not have admin permission to access other users information").build();
                     } else {
                         if (!userbean.checkIfUserExists(userToGetInformation)) {
@@ -83,22 +90,28 @@ public class UserService {
     @PATCH
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(@HeaderParam("token") String token, @PathParam("username") String username, UserDto userDto) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response updateUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String username, UserDto userDto) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - updating user {}", username);
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto user = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token updating user");
             return Response.status(401).entity("Invalid token").build();
         } else {
+            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                logger.error("Permission denied - user {} tried to update user {} information with inactive or excluded account", user.getUsername(), userDto.getUsername());
+                return Response.status(403).entity("User has inactive or excluded account").build();
+            }
             if (!user.getUsername().equals(username) && !user.getAdmin()) {
                 logger.info("Permission denied - user {} tried to update another user {} without admin privileges", user.getUsername(), username);
                 return Response.status(403).entity("Permission denied").build();
             }
             if (!userbean.checkIfUserExists(username)) {
-                logger.info("User {} tried to update non-existant user {}", username, userDto.getUsername());
+                logger.info("User {} tried to update non-existent user {}", username, userDto.getUsername());
                 return Response.status(404).entity("User does not exist").build();
             }
             if (userbean.updateUser(username, userDto)) {
@@ -113,19 +126,26 @@ public class UserService {
 
     //Get All Regular Users
     @GET
-    public Response getAllUsers(@HeaderParam("token") String token) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response getAllUsers(@HeaderParam("token") String authenticationToken) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - getting all users information");
             return Response.status(401).entity("Missing token").build();
         }
-        if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+        //Talvez para apagar
+        if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
             logger.error("Invalid token when trying to get all users");
             return Response.status(401).entity("Invalid token").build();
         } else {
-            UserDto user = tokenBean.verifyAuthenticationToken(token);
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.setAuthenticationToken(authenticationToken);
+            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
             if (user == null) {
                 logger.error("Invalid token when trying to get all users {}", user.getUsername());
                 return Response.status(401).entity("Invalid token").build();
+            }
+            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                logger.error("Permission denied - user {} tried to get user's information with inactive or excluded account", user.getUsername());
+                return Response.status(403).entity("User has inactive or excluded account").build();
             } else {
                 if (!user.getAdmin()) {
                     logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
@@ -142,8 +162,8 @@ public class UserService {
 
     @PATCH
     @Path("/{username}/exclude")
-    public Response excludeUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserExclude) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response excludeUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserExclude) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - excluding user {}", usernameUserExclude);
             return Response.status(401).entity("Missing token").build();
         }
@@ -152,14 +172,20 @@ public class UserService {
             logger.error("Invalid data - missing params - Excluding user");
             return Response.status(400).entity("Invalid data").build();
         } else {
-            if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+            if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
                 logger.error("Invalid token when trying to exclude user {}", usernameUserExclude);
                 return Response.status(401).entity("Invalid token").build();
             } else {
-                UserDto user = tokenBean.verifyAuthenticationToken(token);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setAuthenticationToken(authenticationToken);
+                UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
                 if (user == null) {
                     logger.error("Invalid token when trying to exclude user {}", usernameUserExclude);
                     return Response.status(401).entity("Invalid token").build();
+                }
+                if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                    logger.error("Permission denied - user {} tried to exclude user {} information with inactive or excluded account", user.getUsername(), usernameUserExclude);
+                    return Response.status(403).entity("User has inactive or excluded account").build();
                 } else {
                     if (!user.getAdmin()) {
                         logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), usernameUserExclude);
@@ -185,8 +211,8 @@ public class UserService {
 
     @DELETE
     @Path("/{username}")
-    public Response deleteUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDelete) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response deleteUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserDelete) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - deleting user {}", usernameUserDelete);
             return Response.status(401).entity("Missing token").build();
         }
@@ -194,14 +220,20 @@ public class UserService {
             logger.error("Invalid data - missing params - Deleting user");
             return Response.status(400).entity("Invalid data").build();
         } else {
-            if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+            //Talvez para apagar
+            if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
                 logger.error("Invalid token when trying to delete user {}", usernameUserDelete);
                 return Response.status(401).entity("Invalid token").build();
             } else {
-                UserDto user = tokenBean.verifyAuthenticationToken(token);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setAuthenticationToken(authenticationToken);
+                UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
                 if (user == null) {
                     logger.error("Invalid token when trying to delete user {}", usernameUserDelete);
                     return Response.status(401).entity("Invalid token").build();
+                }if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                    logger.error("Permission denied - user {} tried to delete user {} information with inactive or excluded account", user.getUsername(), usernameUserDelete);
+                    return Response.status(403).entity("User has inactive or excluded account").build();
                 } else {
                     if (!user.getAdmin()) {
                         logger.error("User {} tried to delete {} without admin permissions", user.getUsername(), usernameUserDelete);
@@ -228,8 +260,8 @@ public class UserService {
 
     @DELETE
     @Path("/{username}/products/")
-    public Response deleteProductsOfUser(@HeaderParam("token") String token, @PathParam("username") String usernameUserDeleteProducts) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response deleteProductsOfUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserDeleteProducts) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - deleting all products of {}", usernameUserDeleteProducts);
             return Response.status(401).entity("Missing token").build();
         }
@@ -237,14 +269,21 @@ public class UserService {
             logger.error("Invalid data - missing params - Deleting products of user");
             return Response.status(400).entity("Invalid data").build();
         } else {
-            if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+            //Talvez apagar
+            if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
                 logger.error("Invalid token when trying to delete products of user {}", usernameUserDeleteProducts);
                 return Response.status(401).entity("Invalid token").build();
             } else {
-                UserDto user = tokenBean.verifyAuthenticationToken(token);
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setAuthenticationToken(authenticationToken);
+                UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
                 if (user == null) {
                     logger.error("Invalid token when trying to delete products of user {}", usernameUserDeleteProducts);
                     return Response.status(401).entity("Invalid token").build();
+                }
+                if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                    logger.error("Permission denied - user {} tried to delete user {}'s products with inactive or excluded account", user.getUsername(), usernameUserDeleteProducts);
+                    return Response.status(403).entity("User has inactive or excluded account").build();
                 } else {
                     if (!user.getAdmin()) {
                         logger.error("User {} tried to delete products of user {} without admin permissions", user.getUsername(), usernameUserDeleteProducts);

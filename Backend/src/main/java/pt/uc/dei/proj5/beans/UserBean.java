@@ -13,10 +13,7 @@ import jakarta.ejb.Stateless;
 import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
 import pt.uc.dei.proj5.dao.UserDao;
-import pt.uc.dei.proj5.dto.LoginDto;
-import pt.uc.dei.proj5.dto.ProductDto;
-import pt.uc.dei.proj5.dto.ProductStateId;
-import pt.uc.dei.proj5.dto.UserDto;
+import pt.uc.dei.proj5.dto.*;
 import pt.uc.dei.proj5.entity.ProductEntity;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
@@ -42,6 +39,11 @@ public class UserBean implements Serializable {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
         if (user == null) {
             UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
+            newUserEntity.setAdmin(false);
+            newUserEntity.setState(UserAccountState.INACTIVE);
+            TokenEntity tokenEntity = new TokenEntity();
+            tokenEntity.setUser(newUserEntity);
+            newUserEntity.setToken(tokenEntity);
             userDao.persist(newUserEntity);
             return true;
         } else
@@ -53,6 +55,9 @@ public class UserBean implements Serializable {
         if (user == null) {
             UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             newUserEntity.setAdmin(true);
+            newUserEntity.setState(UserAccountState.ACTIVE);
+            TokenEntity tokenEntity = new TokenEntity();
+            tokenEntity.setUser(newUserEntity);
             userDao.persist(newUserEntity);
             return true;
         } else
@@ -102,6 +107,9 @@ public class UserBean implements Serializable {
                 if (userDto.getLastName() != null) {
                     userToUpdate.setLastName(userDto.getLastName());
                 }
+                if (userDto.getState() != null) {
+                    userToUpdate.setState(userDto.getState());
+                }
                 if (userDto.getEmail() != null) {
                     userToUpdate.setEmail(userDto.getEmail());
                 }
@@ -131,7 +139,7 @@ public class UserBean implements Serializable {
                 anonymous.setPassword("admin");
                 anonymous.setAdmin(true);
                 anonymous.setEmail("-");
-                anonymous.setExcluded(false);
+                anonymous.setState(UserAccountState.ACTIVE);
                 anonymous.setFirstName("anonymous");
                 anonymous.setLastName("-");
                 anonymous.setPhoneNumber("-1");
@@ -231,99 +239,26 @@ public class UserBean implements Serializable {
         userEntity.setEmail(user.getEmail());
         userEntity.setPhoneNumber(user.getPhoneNumber());
         userEntity.setUrl(user.getUrl());
-        userEntity.setAdmin(false);
-        userEntity.setExcluded(false);
+        userEntity.setAdmin(user.getAdmin());
+        userEntity.setState(user.getState());
         return userEntity;
     }
 
     public UserDto convertUserEntitytoUserDto(UserEntity user) {
         UserDto userDto = new UserDto();
         userDto.setUsername(user.getUsername());
-        userDto.setPassword(user.getPassword());
+        //userDto.setPassword(user.getPassword());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());
         userDto.setUrl(user.getUrl());
         userDto.setAdmin(user.getAdmin());
-        userDto.setExcluded(user.getExcluded());
+        userDto.setState(user.getState());
         userDto.setProducts(convertGroupProductEntityToGroupProductDto(user.getProducts()));
         //userDto.setEvaluationsReceived(user.getEvaluationsReceived());
         return userDto;
     }
-
-    public Set<ProductDto> getActiveProducts() {
-        try {
-            List<ProductEntity> products = productDao.getActiveProducts();
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting active products");
-            logger.error(e);
-            return null;
-        }
-    }
-
-    public Set<ProductDto> getAllProducts() {
-        try {
-            List<ProductEntity> products = productDao.getAllProducts();
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting active products");
-            logger.error(e);
-            return null;
-        }
-    }
-
-    public Set<ProductDto> getEditedProducts() {
-        try {
-            List<ProductEntity> products = productDao.getEditedProducts();
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting active products");
-            logger.error(e);
-            return null;
-        }
-    }
-
-    public Set<ProductDto> getActiveProductsByUser(String username) {
-        try {
-            List<ProductEntity> products = productDao.getActiveProductsByUser(username);
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting products by user");
-            logger.error(e);
-            return null;
-        }
-    }
-
-    public Set<ProductDto> getAllProductsByUser(String username) {
-        try {
-            List<ProductEntity> products = productDao.getAllProductsByUser(username);
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting products by user");
-            logger.error(e);
-            return null;
-        }
-    }
-
-    public Set<ProductDto> getAvailableProducts() {
-        try {
-            List<ProductEntity> products = productDao.getAvailableProducts();
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
-        } catch (Exception e) {
-            logger.error("Error while getting available products");
-            logger.error(e);
-            return null;
-        }
-    }
-
 
     public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
         Set<ProductDto> productDtos = new HashSet<>();

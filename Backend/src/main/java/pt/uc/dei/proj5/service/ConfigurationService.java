@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.ConfigurationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.dto.ConfigurationDto;
+import pt.uc.dei.proj5.dto.TokenDto;
+import pt.uc.dei.proj5.dto.TokenType;
 import pt.uc.dei.proj5.dto.UserDto;
 
 @Path("/configuration")
@@ -23,12 +25,14 @@ public class ConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLatestConfiguration(@HeaderParam("token") String token) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response getLatestConfiguration(@HeaderParam("token") String authenticationToken) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("No token - get the latest configuration");
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto requester = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto requester = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (requester == null) {
             logger.error("Invalid token - get the latest configuration");
             return Response.status(401).entity("Invalid token").build();
@@ -46,12 +50,14 @@ public class ConfigurationService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response addNewConfiguration(@HeaderParam("token") String token, ConfigurationDto configurationDto) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response addNewConfiguration(@HeaderParam("token") String authenticationToken, ConfigurationDto configurationDto) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("No token - implementing new configuration");
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto requester = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto requester = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (requester == null) {
             logger.error("Invalid token - adding new configuration");
             return Response.status(401).entity("Invalid token").build();

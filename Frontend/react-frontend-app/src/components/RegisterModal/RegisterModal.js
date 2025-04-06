@@ -11,8 +11,6 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
-import { handleLogin } from "../../Handles/handleLogin";
-import useUserStore from "../../stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const RegisterModal = ({ toggleModal, isModalVisible }) => {
@@ -22,27 +20,7 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
   } = useForm();
-
-  //Acesso ao UserStore para operações de login após novo registo
-  const updateUsername = useUserStore((state) => state.updateUsername);
-  const updateToken = useUserStore((state) => state.updateToken);
-  const updateIsAuthenticated = useUserStore(
-    (state) => state.updateIsAuthenticated
-  );
-  const updateIsAdmin = useUserStore((state) => state.updateIsAdmin);
-  const updateUrlPhoto = useUserStore((state) => state.updateUrlPhoto);
-  const updateFirstName = useUserStore((state) => state.updateFirstName);
-
-  const useUserStoreUpdates = {
-    updateUsername,
-    updateToken,
-    updateIsAuthenticated,
-    updateIsAdmin,
-    updateUrlPhoto,
-    updateFirstName,
-  };
 
   //Submissão do formulário (admin é sempre falso)
   const onSubmit = async (registerData) => {
@@ -58,26 +36,17 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     try {
       if (await registerUser(newUser)) {
         showSuccessToast(
-          "Novo registo com sucesso. Ben-vindo " + newUser.firstName
+          "Novo registo com sucesso. Bem-vindo " + newUser.firstName
         );
-        try {
-          await handleLogin(newUser, useUserStoreUpdates);
-          reset();
-          toggleModal();
-        } catch (error) {
-          const toastMessage =
-            errorMessages[error.message] || errorMessages.unexpected_error;
-          showErrorToast(toastMessage);
-          reset();
-          toggleModal();
-          return;
-        }
+        reset();
+        toggleModal();
       }
     } catch (error) {
       const toastMessage =
         errorMessages[error.message] || errorMessages.unexpected_error;
       showErrorToast(toastMessage);
-      return;
+      reset();
+      toggleModal();
     }
   };
 

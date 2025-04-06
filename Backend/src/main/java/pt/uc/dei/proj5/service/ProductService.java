@@ -32,7 +32,7 @@ public class ProductService {
     TokenBean tokenBean;
 
     @GET
-    public Response getProducts(@HeaderParam("token") String token,
+    public Response getProducts(@HeaderParam("token") String authenticationToken,
                                 @QueryParam("username") String username,
                                 @QueryParam("id") String id,
                                 @QueryParam("name") String name,
@@ -48,8 +48,14 @@ public class ProductService {
         Parameter parameter;
         Order order;
         UserDto user = null;
-        if(token != null) {
-            user = tokenBean.verifyAuthenticationToken(token);
+        if(authenticationToken != null) {
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.setAuthenticationToken(authenticationToken);
+            user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+                logger.error("Permission denied - user {} trying to get products with inactive or excluded account", user.getUsername());
+                return Response.status(403).entity("User has inactive or excluded account").build();
+            }
         }
         order = resolveOrder(ordering);
         parameter = resolveParameter(param);
@@ -113,15 +119,21 @@ public class ProductService {
     //Add product to user
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addProduct(@HeaderParam("token") String token, ProductDto newProductDto) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response addProduct(@HeaderParam("token") String authenticationToken, ProductDto newProductDto) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - adding new product - {}", newProductDto.getName());
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto user = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token - adding new product");
             return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("Permission denied - user {} tried add new products with inactive or excluded account", user.getUsername());
+            return Response.status(403).entity("User has inactive or excluded account").build();
         } else {
             CategoryDto category = new CategoryDto();
             category.setNome(newProductDto.getCategory());
@@ -144,15 +156,21 @@ public class ProductService {
 
     @PATCH
     @Path("{ProductId}/buy")
-    public Response buyProduct(@HeaderParam("token") String token, @PathParam("ProductId") int pathProductId) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response buyProduct(@HeaderParam("token") String authenticationToken, @PathParam("ProductId") int pathProductId) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - buying product - {}");
             return Response.status(401).entity("Invalid token").build();
         }
-        UserDto user = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token - buying product with id: {}", pathProductId);
             return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("Permission denied - user {} tried buy product id {} with inactive or excluded account", user.getUsername(), pathProductId);
+            return Response.status(403).entity("User has inactive or excluded account").build();
         } else {
             ProductDto product = productBean.findProductById(pathProductId);
             if (product == null) {
@@ -181,15 +199,21 @@ public class ProductService {
     @PATCH
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduct(@HeaderParam("token") String token, @PathParam("id") int pathProductId, ProductDto productDto) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response updateProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") int pathProductId, ProductDto productDto) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - updating product id - {}", pathProductId);
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto user = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token - updateProduct");
             return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("Permission denied - user {} tried updated product id {} with inactive or excluded account", user.getUsername(), pathProductId);
+            return Response.status(403).entity("User has inactive or excluded account").build();
         } else {
             ProductDto product = productBean.findProductById(pathProductId);
             boolean isOwner = user.getUsername().equals(product.getSeller());
@@ -223,15 +247,21 @@ public class ProductService {
     //Deleting products
     @DELETE
     @Path("{id}")
-    public Response deleteProduct(@HeaderParam("token") String token, @PathParam("id") int pathProductId) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response deleteProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") int pathProductId) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - deleting product id - {}", pathProductId);
             return Response.status(401).entity("Missing token").build();
         }
-        UserDto user = tokenBean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token - deleteProduct");
             return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("Permission denied - user {} tried to delete product {} with inactive or excluded account", user.getUsername(), pathProductId);
+            return Response.status(403).entity("User has inactive or excluded account").build();
         } else {
             ProductDto product = productBean.findProductById(pathProductId);
             if (product == null) {

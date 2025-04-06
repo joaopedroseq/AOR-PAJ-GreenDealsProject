@@ -18,7 +18,7 @@ public class ConfigurationDao extends AbstractDao<ConfigurationEntity> {
 
     public ConfigurationEntity getLatestConfiguration() {
         try {
-            ConfigurationEntity currentConfiguration =  (ConfigurationEntity) em.createNamedQuery("Configuration.getLatestConfiguration").getSingleResult();
+            ConfigurationEntity currentConfiguration =  (ConfigurationEntity) em.createNamedQuery("Configuration.getLatestConfiguration").setMaxResults(1).getSingleResult();
             logger.info("Current configuration: " + currentConfiguration);
             return currentConfiguration;
         } catch (NoResultException e) {

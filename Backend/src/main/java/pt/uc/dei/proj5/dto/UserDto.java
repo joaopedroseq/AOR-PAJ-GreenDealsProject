@@ -17,11 +17,11 @@ public class UserDto implements Serializable {
     private String phoneNumber;
     private String url;
     private Boolean admin;
-    private Boolean excluded;
     private UserAccountState state;
     private Set<ProductDto> products;
     private Set<Evaluation> evaluationsReceived;
     private EvaluationCounts evaluationCounts;
+    private TokenDto token;
 
 
     public UserDto() {
@@ -36,10 +36,11 @@ public class UserDto implements Serializable {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.url = url;
+        this.state = UserAccountState.INACTIVE;
     }
 
     //Construtor para conversão de Entity para Dto
-    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, Boolean excluded, Set<ProductDto> productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
+    public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url, Boolean admin, UserAccountState state, Set<ProductDto> productDtos, Set<Evaluation> evaluationsReceived, EvaluationCounts ratings) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -48,7 +49,7 @@ public class UserDto implements Serializable {
         this.phoneNumber = phoneNumber;
         this.url = url;
         this.admin = admin;
-        this.excluded = excluded;
+        this.state = state;
         this.products = productDtos;
         this.evaluationsReceived = evaluationsReceived;
         this.evaluationCounts = ratings;
@@ -142,12 +143,20 @@ public class UserDto implements Serializable {
         this.admin = admin;
     }
 
-    public Boolean getExcluded() {
-        return excluded;
+    public UserAccountState getState() {
+        return state;
     }
 
-    public void setExcluded(Boolean excluded) {
-        this.excluded = excluded;
+    public void setState(UserAccountState state) {
+        this.state = state;
+    }
+
+    public TokenDto getToken() {
+        return token;
+    }
+
+    public void setToken(TokenDto token) {
+        this.token = token;
     }
 
     public boolean hasValidValues() {
@@ -159,4 +168,6 @@ public class UserDto implements Serializable {
                 && this.email != null && !this.email.isEmpty()
                 && this.url != null && !this.url.isEmpty();
     }
+
+
 }

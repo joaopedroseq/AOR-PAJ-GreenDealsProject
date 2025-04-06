@@ -10,10 +10,20 @@ import java.time.LocalDateTime;
 
 //to login
 @NamedQuery(name = "Token.findUserByAuthenticationToken", query = "SELECT token.user FROM TokenEntity token WHERE token.authenticationToken = :token")
-//to find if token exists
-@NamedQuery(name = "Token.findIfAuthenticationTokenExists", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
-//find by AutenticationToken
+//to logout
+@NamedQuery(name = "Token.removeAuthenticationToken", query = "UPDATE TokenEntity token " +
+        "SET token.authenticationToken = NULL, token.authenticationTokenDate = NULL WHERE token.authenticationToken = :authenticationToken")
+//to activate account
+@NamedQuery(name = "Token.findUserByActivationToken", query = "SELECT token.user FROM TokenEntity token WHERE token.activationToken = :token")
+//to change password
+@NamedQuery(name = "Token.findUserByPasswordChangeToken", query = "SELECT token.user FROM TokenEntity token WHERE token.passwordChangeToken = :token")
+
+//find Token by AutenticationToken
 @NamedQuery(name = "Token.findTokenByAuthenticationToken", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
+//find Token by AutenticationToken
+@NamedQuery(name = "Token.findTokenByActivationToken", query = "SELECT token FROM TokenEntity token WHERE token.activationToken = :token")
+//to find if authentication token exists
+@NamedQuery(name = "Token.findIfAuthenticationTokenExists", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
 //find by username
 @NamedQuery(name = "Token.findTokenByUsername", query = "SELECT token FROM TokenEntity token WHERE token.user.username = :username")
 @Entity
@@ -36,10 +46,10 @@ public class TokenEntity implements Serializable {
     private LocalDateTime authenticationTokenDate;
 
     @Column(name = "activationToken")
-    private String confirmationToken;
+    private String activationToken;
 
     @Column(name = "activationTokenDate")
-    private LocalDateTime confirmationTokenDate;
+    private LocalDateTime activationTokenDate;
 
     @Column(name = "passwordChangeToken")
     private String passwordChangeToken;
@@ -85,19 +95,27 @@ public class TokenEntity implements Serializable {
     }
 
     public String getConfirmationToken() {
-        return confirmationToken;
+        return activationToken;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setConfirmationToken(String activationToken) {
+        this.activationToken = activationToken;
     }
 
-    public LocalDateTime getConfirmationTokenDate() {
-        return confirmationTokenDate;
+    public String getActivationToken() {
+        return activationToken;
     }
 
-    public void setConfirmationTokenDate(LocalDateTime confirmationTokenDate) {
-        this.confirmationTokenDate = confirmationTokenDate;
+    public void setActivationToken(String activationToken) {
+        this.activationToken = activationToken;
+    }
+
+    public LocalDateTime getActivationTokenDate() {
+        return activationTokenDate;
+    }
+
+    public void setActivationTokenDate(LocalDateTime activationTokenDate) {
+        this.activationTokenDate = activationTokenDate;
     }
 
     public String getPasswordChangeToken() {

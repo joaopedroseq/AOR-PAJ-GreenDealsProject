@@ -25,7 +25,6 @@ public class UserInitializer {
             admin.setLastName("admin");
             admin.setEmail("admin@admin.com");
             admin.setPhoneNumber("-1");
-            admin.setExcluded(false);
             admin.setState(UserAccountState.ACTIVE);
             admin.setAdmin(true);
             admin.setUrl("https://icon-icons.com/icons2/508/PNG/512/macintosh_icon-icons.com_49902.png");
@@ -42,7 +41,6 @@ public class UserInitializer {
             anonymous.setPassword(password);
             anonymous.setAdmin(true);
             anonymous.setEmail("anon@anon");
-            anonymous.setExcluded(false);
             anonymous.setState(UserAccountState.ACTIVE);
             anonymous.setFirstName("anonymous");
             anonymous.setLastName("-");

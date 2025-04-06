@@ -10,6 +10,8 @@ import pt.uc.dei.proj5.beans.CategoryBean;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.beans.UserBean;
 import pt.uc.dei.proj5.dto.CategoryDto;
+import pt.uc.dei.proj5.dto.TokenDto;
+import pt.uc.dei.proj5.dto.TokenType;
 import pt.uc.dei.proj5.dto.UserDto;
 
 import java.util.List;
@@ -41,15 +43,17 @@ public class CategoryService {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response registerNewCategory(@HeaderParam("token") String token, CategoryDto categoryDto) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response registerNewCategory(@HeaderParam("token") String authenticationToken, CategoryDto categoryDto) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token(null) - adding new category - {}", categoryDto.getNome());
             return Response.status(401).entity("Invalid token").build();
         } else if (!categoryDto.hasValidValues()) {
             logger.error("Invalid data - register new category");
             return Response.status(400).entity("Invalid data").build();
         } else {
-            UserDto user = tokenBean.verifyAuthenticationToken(token);
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.setAuthenticationToken(authenticationToken);
+            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
             if (user == null) {
                 logger.error("Invalid token - adding new category - {}", categoryDto.getNome());
                 return Response.status(401).entity("Invalid token").build();
@@ -73,16 +77,19 @@ public class CategoryService {
     @DELETE
     @Path("/{categoryName}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteCategory(@HeaderParam("token") String token, @PathParam("categoryName") String categoryName) {
-        if (token == null || token.trim().isEmpty()) {
+    public Response deleteCategory(@HeaderParam("token") String authenticationToken, @PathParam("categoryName") String categoryName) {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - deleting category - {}", categoryName);
             return Response.status(401).entity("Missing token").build();
         }
-        if (!tokenBean.checkIfAuthenticationTokenValid(token)) {
+        //Talvez apagar
+        if (!tokenBean.checkIfAuthenticationTokenValid(authenticationToken)) {
             logger.error("Invalid token(null) - deleting category - {}", categoryName);
             return Response.status(401).entity("Invalid token").build();
         } else {
-            UserDto user = tokenBean.verifyAuthenticationToken(token);
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.setAuthenticationToken(authenticationToken);
+            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
             if (user == null) {
                 logger.error("Invalid token when trying to delete category {}", categoryName);
                 return Response.status(401).entity("Invalid token").build();

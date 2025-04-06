@@ -32,8 +32,9 @@ public class AuthenticationService {
             return Response.status(400).entity("Invalid data").build();
         }
         if (userbean.registerNormalUser(userDto)) {
-            logger.info("Registering user: " + userDto);
-            return Response.status(200).entity("The new user is registered").build();
+            logger.info("Registered user: " + userDto);
+            String newActivationToken = tokenbean.generateNewActivationToken(userDto);
+            return Response.status(200).entity(newActivationToken).build();
         } else {
             logger.error("Same username conflict - Registering user");
             return Response.status(409).entity("There is a user with the same username!").build();
@@ -67,13 +68,18 @@ public class AuthenticationService {
             logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
-        if(!userbean.checkIfUserExists(user.getUsername())){
+        if (!userbean.checkIfUserExists(user.getUsername())) {
             logger.error("Login failed from {} - wrong username/password", user.getUsername());
             return Response.status(401).entity("Invalid data").build();
         }
-        if(userbean.getUserInformation(user.getUsername()).getExcluded()){
+        UserDto userToLogin = userbean.getUserInformation(user.getUsername());
+        if (userToLogin.getState() == UserAccountState.EXCLUDED) {
             logger.error("Login failed from excluded user {}", user.getUsername());
             return Response.status(403).entity("Forbidden - excluded user").build();
+        }
+        if (userToLogin.getState() == UserAccountState.INACTIVE) {
+            logger.error("Login failed from inactive user {}", user.getUsername());
+            return Response.status(403).entity("Forbidden - inactive user").build();
         }
         String token = tokenbean.login(user);
         if (token == null) {
@@ -89,12 +95,14 @@ public class AuthenticationService {
     @POST
     @Path("/logout")
     public Response logout(@HeaderParam("token") String token) {
-        if (tokenbean.logout(token)) {
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(token);
+        if (tokenbean.logout(tokenDto)) {
             logger.info("Logout successful");
             return Response.status(200).entity("Logout Successful!").build();
         } else {
             logger.error("Logout failed");
-            return Response.status(401).entity("Invalid Token!").build();
+            return Response.status(401).entity("Invalid Token.").build();
         }
     }
 
@@ -107,6 +115,15 @@ public class AuthenticationService {
             logger.error("Invalid data - login from user {}", user.getUsername());
             return Response.status(400).entity("Invalid data").build();
         }
+        UserDto userToLogin = userbean.getUserInformation(user.getUsername());
+        if (userToLogin.getState() == UserAccountState.EXCLUDED) {
+            logger.error("User {} tried to confirm password with excluded account ", user.getUsername());
+            return Response.status(403).entity("Forbidden - excluded user").build();
+        }
+        if (userToLogin.getState() == UserAccountState.INACTIVE) {
+            logger.error("User {} tried to confirm password with inactive account", user.getUsername());
+            return Response.status(403).entity("Forbidden - inactive user").build();
+        }
         if (!userbean.checkPassword(user)) {
             logger.error("Incorrect password from {} - wrong username/password", user.getUsername());
             return Response.status(401).entity("Wrong Username or Password !").build();
@@ -116,14 +133,64 @@ public class AuthenticationService {
         }
     }
 
+    @POST
+    @Path("/activate")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response activateAccount(@HeaderParam("token") String activationToken) {
+        if (activationToken == null || activationToken.trim().isEmpty()) {
+            logger.error("Missing token (null)");
+            return Response.status(401).entity("Missing token").build();
+        }
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setActivationToken(activationToken);
+        UserDto user = tokenbean.checkToken(tokenDto, TokenType.ACTIVATION);
+        if (user == null) {
+            logger.error("Invalid token");
+            return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.ACTIVE) {
+            logger.error("User {} tried activate already active account", user.getUsername());
+            return Response.status(400).entity("Bad request - already active account").build();
+        }
+        if (user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("User {} tried activate excluded account", user.getUsername());
+            return Response.status(400).entity("Bad request - excluded account").build();
+        } else {
+            tokenDto = user.getToken();
+            if (!tokenbean.isTokenExpired(tokenDto, TokenType.ACTIVATION)) {
+                user.setState(UserAccountState.ACTIVE);
+                if (userbean.updateUser(user.getUsername(), user)) {
+                    logger.info("User {} activated his account", user.getUsername());
+                    return Response.status(200).entity("Activated account").build();
+                } else {
+                    logger.error("Error activating user {} account", user.getUsername());
+                    return Response.status(500).entity("User " + user.getUsername() + " accoubt not activated").build();
+                }
+            } else {
+                logger.error("User {} tried to activate account with expired token");
+                return Response.status(401).entity("Expired token").build();
+            }
+        }
+    }
+
     //Apenas utilizar este para o login
     @GET
     @Path("/me")
     public Response getUserLogged(@HeaderParam("token") String token) {
-        UserDto user = tokenbean.verifyAuthenticationToken(token);
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(token);
+        UserDto user = tokenbean.checkToken(tokenDto, TokenType.AUTHENTICATION);
         if (user == null) {
             logger.error("Invalid token");
             return Response.status(401).entity("Invalid token").build();
+        }
+        if (user.getState() == UserAccountState.INACTIVE) {
+            logger.error("User {} tried to get it's information with inactive", user.getUsername());
+            return Response.status(403).entity("Forbidden - inactive account").build();
+        }
+        if (user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("User {} tried to get it's information with excluded account", user.getUsername());
+            return Response.status(403).entity("Forbidden - excluded account").build();
         } else {
             logger.info("User information retrieved from user {}", user.getUsername());
             return Response.status(200).entity(user).build();
