@@ -5,15 +5,24 @@ import jakarta.ejb.Singleton;
 import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.entity.CategoryEntity;
 
-@Singleton
+/**
+ * Classe para inicializar categoria
+ * @author João Sequeira
+ * @version 1.0.0
+ * @see DataInitializerSingleton
+ */
 public class CategoryInitializer {
     @EJB
     private CategoryDao categoryDao;
 
+    /**
+     * Metodo para inicializar uma categoria vazia - empty
+     * caso esta não exista
+     */
     public void categoryInitializer() {
         if (!categoryDao.findIfCategoryEmptyExists()) {
             CategoryEntity empty = new CategoryEntity();
-            empty.setNome("sem categoria");
+            empty.setNome("semCategoria");
             empty.setNameEng("empty");
             categoryDao.persist(empty);
         }

@@ -1,33 +1,32 @@
-package pt.uc.dei.proj5.singleton;
-
-import at.favre.lib.crypto.bcrypt.BCrypt;
+package pt.uc.dei.proj5.initializer;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
-import jakarta.mail.internet.HeaderTokenizer;
-import pt.uc.dei.proj5.dao.CategoryDao;
-import pt.uc.dei.proj5.dao.ConfigurationDao;
-import pt.uc.dei.proj5.dao.UserDao;
-import pt.uc.dei.proj5.dto.UserAccountState;
-import pt.uc.dei.proj5.entity.CategoryEntity;
-import pt.uc.dei.proj5.entity.ConfigurationEntity;
-import pt.uc.dei.proj5.entity.TokenEntity;
-import pt.uc.dei.proj5.entity.UserEntity;
 
-import java.time.LocalDateTime;
-
+/**
+ * Singleton inicializado aquando do arranque do servidor
+ * @author João Sequeira
+ * @version 1.0.0
+ * @see DataInitializerSingleton
+ */
 @Singleton
 @Startup
-public class DataInitializer {
+public class DataInitializerSingleton {
     @EJB
     private UserInitializer userInitializer;
     @EJB
     private CategoryInitializer categoryInitializer;
-
     @EJB
     private ConfigurationInitializer configurationInitializer;
 
+    /**
+     * Metodo que chama que chama os processos
+     * <b>userInitializer</b>,
+     * <b>categoryInitializer</b> e
+     * <b>configurationInitializer</b>
+     * para construir configurações iniciais
+     */
     @PostConstruct
     public void init() {
         userInitializer.userInitializer();

@@ -2,18 +2,26 @@ package pt.uc.dei.proj5.singleton;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.ejb.EJB;
-import jakarta.ejb.Singleton;
-import pt.uc.dei.proj5.dao.ConfigurationDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.UserAccountState;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
 
-@Singleton
+/**
+ * Classe para inicializar utilizadores
+ * @author João Sequeira
+ * @version 1.0.0
+ * @see DataInitializerSingleton
+ */
 public class UserInitializer {
     @EJB
     private UserDao userDao;
 
+    /**
+     * Metodo para inicializar dois utilizadores defaults - admin e anonymous -
+     * caso estes não existam,
+     * o primeiro um utilizador ADMIN e ACTIVE, o último, um utilizador INACTIVE
+     */
     public void userInitializer() {
         if (!userDao.findIfUserExists("admin")) {
             UserEntity admin = new UserEntity();
@@ -41,7 +49,7 @@ public class UserInitializer {
             anonymous.setPassword(password);
             anonymous.setAdmin(true);
             anonymous.setEmail("anon@anon");
-            anonymous.setState(UserAccountState.ACTIVE);
+            anonymous.setState(UserAccountState.INACTIVE);
             anonymous.setFirstName("anonymous");
             anonymous.setLastName("-");
             anonymous.setPhoneNumber("-1");

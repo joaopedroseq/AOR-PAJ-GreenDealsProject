@@ -2,21 +2,30 @@ package pt.uc.dei.proj5.singleton;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
-import jakarta.ejb.Startup;
-import jakarta.ejb.Stateless;
-import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ConfigurationDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.entity.ConfigurationEntity;
 import java.time.LocalDateTime;
 
-@Singleton
+/**
+ * Classe para inicializar configuração
+ * @author João Sequeira
+ * @version 1.0.0
+ * @see DataInitializerSingleton
+ */
 public class ConfigurationInitializer {
     @EJB
     private ConfigurationDao configurationDao;
     @EJB
     private UserDao userDao;
 
+    /**
+     * Metodo para inicializar uma configuração default
+     * criado pelo admin com a data atual, com tempos de
+     * validade para tokens de autenticação, ativação
+     * e mudança de password.
+     * Define para todos uma duração de 2880 minutos (48 horas).
+     */
     public void configurationInitializer() {
         if(configurationDao.getLatestConfiguration() == null) {
             ConfigurationEntity newConfiguration = new ConfigurationEntity();
