@@ -136,6 +136,7 @@ public class AuthenticationService {
     @POST
     @Path("/activate")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response activateAccount(@HeaderParam("token") String activationToken) {
         if (activationToken == null || activationToken.trim().isEmpty()) {
             logger.error("Missing token (null)");
@@ -150,11 +151,11 @@ public class AuthenticationService {
         }
         if (user.getState() == UserAccountState.ACTIVE) {
             logger.error("User {} tried activate already active account", user.getUsername());
-            return Response.status(400).entity("Bad request - already active account").build();
+            return Response.status(403).entity("Bad request - already active account").build();
         }
         if (user.getState() == UserAccountState.EXCLUDED) {
             logger.error("User {} tried activate excluded account", user.getUsername());
-            return Response.status(400).entity("Bad request - excluded account").build();
+            return Response.status(403).entity("Bad request - excluded account").build();
         } else {
             tokenDto = user.getToken();
             if (!tokenbean.isTokenExpired(tokenDto, TokenType.ACTIVATION)) {
@@ -164,11 +165,12 @@ public class AuthenticationService {
                     return Response.status(200).entity("Activated account").build();
                 } else {
                     logger.error("Error activating user {} account", user.getUsername());
-                    return Response.status(500).entity("User " + user.getUsername() + " accoubt not activated").build();
+                    return Response.status(500).entity("User " + user.getUsername() + " account not activated").build();
                 }
             } else {
-                logger.error("User {} tried to activate account with expired token");
-                return Response.status(401).entity("Expired token").build();
+                String newActivationToken = tokenbean.generateNewActivationToken(user);
+                logger.error("User {} tried to activate account with expired token. New activation token generated", user.getUsername());
+                return Response.status(409).entity(newActivationToken).build();
             }
         }
     }

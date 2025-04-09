@@ -32,6 +32,7 @@ public class ProductService {
     TokenBean tokenBean;
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts(@HeaderParam("token") String authenticationToken,
                                 @QueryParam("username") String username,
                                 @QueryParam("id") String id,
@@ -45,7 +46,7 @@ public class ProductService {
                                 @QueryParam("page") @DefaultValue("1") int page,
                                 @QueryParam("size") @DefaultValue("10") int size) {
         ProductStateId productStateId = null;
-        Parameter parameter;
+        ProductParameter parameter;
         Order order;
         UserDto user = null;
         if(authenticationToken != null) {
@@ -87,7 +88,7 @@ public class ProductService {
             logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), username);
             return Response.status(404).entity("Error getting all products of inexistent user").build();
         }
-        if (username != null && !user.getAdmin()) {
+        if (username != null || !user.getAdmin()) {
             excluded = false;
         }
         if (category != null) {
@@ -104,6 +105,14 @@ public class ProductService {
             } catch (IllegalArgumentException e) {
                 logger.error("Error - {} getting all products of state {} because it's invalid", user.getUsername(), state);
                 return Response.status(400).entity("Invalid State Id").build();
+            }
+        }
+        else {
+            if((user.getUsername().equals(username)) || user.getAdmin()){
+                productStateId = null;
+            }
+            else {
+                productStateId = ProductStateId.DISPONIVEL;
             }
         }
         Set<ProductDto> products = productBean.getProducts(username, id, name, productStateId, excluded, category, edited, parameter, order);
@@ -296,12 +305,12 @@ public class ProductService {
         }
     }
 
-    private Parameter resolveParameter(String param) {
-        if (param == null || param.equalsIgnoreCase("date")) {
-            return Parameter.date; // Default to "date" if null
+    private ProductParameter resolveParameter(String param) {
+        if (param == null || param.equalsIgnoreCase("DATE")) {
+            return ProductParameter.DATE; // Default to "date" if null
         }
         try {
-            return Parameter.valueOf(param.toLowerCase().trim()); // Convert valid value to enum
+            return ProductParameter.valueOf(param.toLowerCase().trim()); // Convert valid value to enum
         } catch (IllegalArgumentException e) {
             logger.error("Invalid parameter value: {}", param);
             throw new WebApplicationException(

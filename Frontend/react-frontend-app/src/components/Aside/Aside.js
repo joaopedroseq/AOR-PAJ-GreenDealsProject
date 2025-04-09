@@ -6,14 +6,19 @@ import { useCategoriesStore } from "../../stores/useCategoriesStore";
 import useUserStore from "../../stores/useUserStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { Link } from "react-router-dom";
+import { renderCategoryList } from "../../Handles/renderCategoryList";
 
 const Aside = ({ isAsideVisible }) => {
+  //User state
   const token = useUserStore((state) => state.token);
+  const locale = useUserStore((state) => state.locale);
   const [isAdmin, setIsAdmin] = useState(false);
   const page = useLocation().pathname;
+  //Categories load
   const categories = useCategoriesStore((state) => state.categories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { setFilters, fetchProducts } = useProductStore();
+  //Locale
 
   //Para apresentação na página de profile
   const username = new URLSearchParams(useLocation().search).get("username");
@@ -39,20 +44,16 @@ const Aside = ({ isAsideVisible }) => {
     fetchCategories();
   }, [fetchCategories, page]);
 
-  useEffect(() => {
-    console.log("isAdmin state updated:", isAdmin);
-  }, [isAdmin]);
-
   const handleCategoryClick = (category, edited, user = null) => {
     if (category) {
-      setFilters({ category: category.name });
+      setFilters({ category: category });
     } else {
       setFilters({ category: null });
     }
-    if(edited) {
+    if (edited) {
       setFilters({ edited: true });
     }
-    if (page === "/admin" || page === "/user" || page === '/profile') {
+    if (page === "/admin" || page === "/user" || page === "/profile") {
       fetchProducts(token);
     } else {
       fetchProducts();
@@ -74,24 +75,8 @@ const Aside = ({ isAsideVisible }) => {
     >
       {page === "/" && (
         <ul>
-          <h3>Categorias</h3>
-          <li
-            id="category"
-            value="all"
-            onClick={() => handleCategoryClick(null)}
-          >
-            Todos os produtos
-          </li>
-          {categories.map((category, index) => (
-            <li
-              key={index}
-              value={category.name}
-              id={category.name}
-              onClick={() => handleCategoryClick(category)}
-            >
-              {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-            </li>
-          ))}
+          {renderCategoryList(categories, locale, handleCategoryClick)}
+
         </ul>
       )}
       {page === "/user" && (
@@ -106,20 +91,35 @@ const Aside = ({ isAsideVisible }) => {
           >
             Todos os produtos
           </li>
-          {categories.map((category, index) => (
-            <li
-              key={index}
-              value={category.name}
-              id={category.name}
-              onClick={() => handleCategoryClick(category)}
-            >
-              {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-            </li>
-          ))}
+          {categories.map((category, index) =>
+            locale === "pt" ? (
+              <li
+                key={index}
+                value={category.nome}
+                id={category.nome}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+              </li>
+            ) : (
+              <li
+                key={index}
+                value={category.engName}
+                id={category.engName}
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category.engName.charAt(0).toUpperCase() +
+                  category.engName.slice(1)}
+              </li>
+            )
+          )}
         </ul>
       )}
       {page === "/user" && (
-        <h3 className="asideTitle" onClick={() => handleScrollToSection("profile-section")}>
+        <h3
+          className="asideTitle"
+          onClick={() => handleScrollToSection("profile-section")}
+        >
           Informações
         </h3>
       )}
@@ -159,10 +159,16 @@ const Aside = ({ isAsideVisible }) => {
               </li>
             ))}
           </ul>
-          <h3 className="asideTitle" onClick={() => handleScrollToSection("users-section")}>
+          <h3
+            className="asideTitle"
+            onClick={() => handleScrollToSection("users-section")}
+          >
             Gestão de Utilizadores
           </h3>
-          <h3 className="asideTitle" onClick={() => handleScrollToSection("categories-section")}>
+          <h3
+            className="asideTitle"
+            onClick={() => handleScrollToSection("categories-section")}
+          >
             Gestão de Categorias
           </h3>
         </ul>

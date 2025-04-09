@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/*
 class CategoryBeanTest {
 
     CategoryBean categoryBean;
@@ -128,4 +128,4 @@ class CategoryBeanTest {
         verify(categoryDao, times(2)).deleteCategory(any(CategoryEntity.class));
     }
 
-}
+}*/

@@ -9,8 +9,8 @@ import {
 import { useForm } from "react-hook-form";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
-import productCard from "../../components/ProductCard/productCard";
 import CategoryCard from "../../components/CategoryCard/CategoryCard";
+import ProductCard from '../../components/ProductCard/productCard';
 import useProductStore from "../../stores/useProductStore";
 import useCategoriesStore from "../../stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
@@ -47,7 +47,6 @@ export const Admin = () => {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
   } = useForm();
   const [showAddCategory, setShowAddCategory] = useState(false);
   const handleAddCategory = useCategoriesStore(
@@ -227,7 +226,7 @@ export const Admin = () => {
             </div>
           ) : (
             products.map((product) => (
-              <productCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} />
             ))
           )}
         </div>

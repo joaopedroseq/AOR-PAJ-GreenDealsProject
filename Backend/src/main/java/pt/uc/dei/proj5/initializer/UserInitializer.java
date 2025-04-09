@@ -1,7 +1,8 @@
-package pt.uc.dei.proj5.singleton;
+package pt.uc.dei.proj5.initializer;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import jakarta.ejb.EJB;
+import jakarta.ejb.Singleton;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.UserAccountState;
 import pt.uc.dei.proj5.entity.TokenEntity;
@@ -13,6 +14,7 @@ import pt.uc.dei.proj5.entity.UserEntity;
  * @version 1.0.0
  * @see DataInitializerSingleton
  */
+@Singleton
 public class UserInitializer {
     @EJB
     private UserDao userDao;

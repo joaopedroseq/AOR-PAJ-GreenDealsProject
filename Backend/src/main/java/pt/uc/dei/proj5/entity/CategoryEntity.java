@@ -8,11 +8,8 @@ import java.util.Set;
 @Entity
 @Table(name="category")
 
-//to get all categories
-@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM CategoryEntity c WHERE c.nome != :empty ORDER BY nome")
-
 //get all categorie's names
-@NamedQuery(name = "Category.getAllCategoriesNames", query = "SELECT nome FROM CategoryEntity c WHERE c.nome != :empty ORDER BY nome")
+@NamedQuery(name = "Category.getAllCategoriesNames", query = "SELECT nome FROM CategoryEntity c WHERE c.nameEng != :empty ORDER BY nome")
 
 // to get a category by name
 @NamedQuery(name = "Category.findCategoryByName", query = "SELECT c FROM CategoryEntity c WHERE c.nome = :nome")

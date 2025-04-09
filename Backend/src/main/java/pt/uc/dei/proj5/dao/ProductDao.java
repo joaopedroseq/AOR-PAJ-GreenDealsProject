@@ -7,7 +7,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import pt.uc.dei.proj5.dto.Order;
-import pt.uc.dei.proj5.dto.Parameter;
+import pt.uc.dei.proj5.dto.ProductParameter;
 import pt.uc.dei.proj5.dto.ProductStateId;
 import pt.uc.dei.proj5.entity.CategoryEntity;
 import pt.uc.dei.proj5.entity.ProductEntity;
@@ -165,7 +165,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     //Criteria API query's
     public List<ProductEntity> getFilteredProducts(String username, String id, String productName,
                                                    ProductStateId productStateId, Boolean excluded, String category,
-                                                   Boolean edited, Parameter paramId, Order orderId) {
+                                                   Boolean edited, ProductParameter paramId, Order orderId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ProductEntity> query = cb.createQuery(ProductEntity.class);
         Root<ProductEntity> root = query.from(ProductEntity.class);
@@ -188,8 +188,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             predicates.add(nameSearchPredicate);
         }
         if (productStateId != null) {
-            int state = ProductStateId.intFromStateId(productStateId);
-            predicates.add(cb.equal(root.get("state"), state));
+            predicates.add(cb.equal(root.get("state"), productStateId));
         }
         if (excluded != null) {
             predicates.add(cb.equal(root.get("excluded"), excluded));
@@ -202,7 +201,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
         // Combina os predicados para a query - o toArray(new Predicate[0]) transforma o arrayList num array
         query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
-        if(orderBy.equals("asc")) {
+        if(orderId.equals("asc")) {
 
             query.orderBy(cb.asc(root.get(param)));
         }

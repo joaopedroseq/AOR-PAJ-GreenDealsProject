@@ -1,27 +1,29 @@
 package pt.uc.dei.proj5.dto;
 
 public enum ProductStateId {
-    RASCUNHO,
     DISPONIVEL,
     RESERVADO,
-    COMPRADO;
+    COMPRADO,
+    RASCUNHO;
 
     public ProductStateId stateIdFromInt(int stateId) {
         switch (stateId) {
-            case 2: return DISPONIVEL;
-            case 3: return RESERVADO;
-            case 4: return COMPRADO;
-            default: return RASCUNHO;
+            case 1: return DISPONIVEL;
+            case 2: return RESERVADO;
+            case 3: return COMPRADO;
+            case 4: return RASCUNHO;
         }
+        return null;
     }
 
     static public int intFromStateId(ProductStateId productStateId) {
         switch (productStateId) {
-            case DISPONIVEL: return 2;
-            case RESERVADO: return 3;
-            case COMPRADO: return 4;
-            default: return 1;
+            case DISPONIVEL: return 1;
+            case RESERVADO: return 2;
+            case COMPRADO: return 3;
+            case RASCUNHO: return 4;
         }
+        return -1;
     }
 
     public static boolean checkIfValidStateId(String stateIdString) {

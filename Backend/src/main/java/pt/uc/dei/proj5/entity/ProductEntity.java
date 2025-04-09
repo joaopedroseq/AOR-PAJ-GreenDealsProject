@@ -1,6 +1,7 @@
 package pt.uc.dei.proj5.entity;
 
 import jakarta.persistence.*;
+import pt.uc.dei.proj5.dto.ProductStateId;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,13 +16,13 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.getEditedProducts", query = "SELECT p FROM ProductEntity p WHERE editedDate != date")
 
-@NamedQuery(name = "Product.getAvailableProducts", query = "SELECT p FROM ProductEntity p WHERE state = 2 AND excluded = false")
+@NamedQuery(name = "Product.getAvailableProducts", query = "SELECT p FROM ProductEntity p WHERE state = 'DISPONIVEL' AND excluded = false")
 
 @NamedQuery(name = "Product.getActiveProductsByUser", query = "SELECT p FROM ProductEntity p WHERE p.seller.username LIKE :username AND p.excluded = false")
 
 @NamedQuery(name = "Product.getAllProductsByUser", query = "SELECT p FROM ProductEntity p WHERE p.seller.username LIKE :username")
 
-@NamedQuery(name = "Product.getProductsByCategory", query = "SELECT p FROM ProductEntity p WHERE p.category.nome LIKE :category AND p.excluded = false AND state = 2")
+@NamedQuery(name = "Product.getProductsByCategory", query = "SELECT p FROM ProductEntity p WHERE p.category.nome LIKE :category AND p.excluded = false AND state = 'DISPONIVEL'")
 
 @NamedQuery(name = "Product.getProductById", query = "SELECT p FROM ProductEntity p WHERE p.id = :id")
 
@@ -29,7 +30,7 @@ import java.time.LocalDateTime;
 
 @NamedQuery(name = "Product.setProductsOfUserToAnonymous", query = "UPDATE ProductEntity p SET p.seller = :anonymous WHERE p.seller = :seller")
 
-@NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 4 WHERE id = :id")
+@NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 'COMPRADO' WHERE id = :id")
 
 @NamedQuery(name = "Product.excludeProduct", query = "UPDATE ProductEntity SET excluded = true WHERE id = :id")
 
@@ -64,9 +65,9 @@ public class ProductEntity implements Serializable {
     @Column(name="location", nullable=false, unique = false, updatable = true)
     private String location;
 
-    //state
+    @Enumerated(EnumType.STRING)
     @Column(name="state", nullable=false, unique = false, updatable = true)
-    private int state;
+    private ProductStateId state;
 
     //publishing date
     @Column(name="pubdate", nullable=false, unique = false, updatable = true)
@@ -176,11 +177,11 @@ public class ProductEntity implements Serializable {
         this.seller = seller;
     }
 
-    public int getState() {
+    public ProductStateId getState() {
         return state;
     }
 
-    public void setState(int state) {
+    public void setState(ProductStateId state) {
         this.state = state;
     }
 

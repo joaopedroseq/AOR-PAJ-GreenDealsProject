@@ -7,7 +7,7 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../stores/useUserStore";
-import productCard from "../../components/ProductCard/productCard";
+import ProductCard from "../../components/ProductCard/productCard";
 import useProductStore from "../../stores/useProductStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import {
@@ -137,7 +137,7 @@ export const User = () => {
             </div>
           ) : (
             products.map((product) => (
-              <productCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} />
             ))
           )}
         </div>

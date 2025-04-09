@@ -5,16 +5,16 @@ import { apiBaseUrl } from "../config";
 const categoriesEndpoint = `${apiBaseUrl}categories/`;
 
 //Função para obter todas as categories
-export const fetchCategories = async () => {
+export const fetchCategories = async (language) => {
     try {
       const response = await axios.get(
-        `${categoriesEndpoint}`,
-        {
+        `${categoriesEndpoint}`, {
+          params: { locale: language }, // Sends locale in the query string
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
+        });
+    
       return response.data;
     } catch (error) {
       if (error.response) {
@@ -36,7 +36,6 @@ export const fetchCategories = async () => {
 
   //Adicionar categoria
   export const addCategory = async (token, newCategory) => {
-    console.log(newCategory);
     try {
       const response = await axios.post(
         `${categoriesEndpoint}`,

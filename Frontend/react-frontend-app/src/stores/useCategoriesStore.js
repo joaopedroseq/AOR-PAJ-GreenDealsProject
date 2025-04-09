@@ -2,17 +2,19 @@ import { create } from "zustand";
 import { fetchCategories, addCategory, deleteCategory } from "../api/categoryApi";
 import { showSuccessToast, showErrorToast } from '../Utils/ToastConfig/toastConfig';
 import errorMessages from "./../Utils/constants/errorMessages";
+import useUserStore from "./useUserStore";
 
 
-export const useCategoriesStore = create((set) => ({
+export const useCategoriesStore = create((set, get) => ({
   //Store para a gestão de categorias
   categories: [],
   //operação de get das categorias para popular a store
   fetchCategories: async() => {
+    const locale = useUserStore.getState().locale;
+
     try{
-      const allCategories = await fetchCategories();
+      const allCategories = await fetchCategories(locale);
       set({categories: allCategories});
-      
     }
     catch(error) {
       showErrorToast("Failed to fetch categories");
@@ -21,9 +23,9 @@ export const useCategoriesStore = create((set) => ({
   },
 
   //Operação de Admin para adicionar categoria
-  handleAddCategory: async(token, newCategoryName ) => {
+  handleAddCategory: async(token, newCategoryName) => {
     const newCategory = {
-      name: newCategoryName
+      nome: newCategoryName
     }
     try{
       const response = await addCategory(token, newCategory);
@@ -60,5 +62,14 @@ export const useCategoriesStore = create((set) => ({
   }
 })
 );
+
+useUserStore.subscribe(
+  (state) => state.locale,
+  (newLocale) => {
+    useCategoriesStore.setState({ locale: newLocale });
+    useCategoriesStore.getState().fetchCategories(); // Refetch categories on locale change
+  }
+);
+
 
 export default useCategoriesStore;

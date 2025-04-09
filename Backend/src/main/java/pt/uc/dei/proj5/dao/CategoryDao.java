@@ -3,6 +3,7 @@ package pt.uc.dei.proj5.dao;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
+import pt.uc.dei.proj5.dto.Language;
 import pt.uc.dei.proj5.entity.CategoryEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,14 +24,18 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
         em.flush();
     }
 
-    public List<CategoryEntity> getAllCategories() {
-        try {
-            return (List<CategoryEntity>) em.createNamedQuery("Category.getAllCategories").setParameter("empty", "sem categoria").getResultList();
-
-        } catch (NoResultException e) {
-            return null;
-        }
+    public List<CategoryEntity> getAllCategories(Language localeLanguage) {
+        String orderByField = switch (localeLanguage) {
+            case EN -> "nameEng";
+            case PT -> "nome";
+        };
+        String queryString = "SELECT c FROM CategoryEntity c WHERE c.nameEng != :empty OR c.nome != :semCategoria ORDER BY c." + orderByField;
+        TypedQuery<CategoryEntity> query = em.createQuery(queryString, CategoryEntity.class);
+        query.setParameter("empty", "empty");
+        query.setParameter("semCategoria", "semCategoria");
+        return query.getResultList();
     }
+
 
     public List<String> getAllCategoriesNamesOnly() {
         try {
@@ -52,7 +57,7 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
 
     public boolean findIfCategoryEmptyExists() {
         TypedQuery<CategoryEntity> query = em.createNamedQuery("Category.findCategoryByName", CategoryEntity.class)
-                .setParameter("nome", "sem categoria");
+                .setParameter("nome", "semCategoria");
         boolean exists = !query.getResultList().isEmpty();
         logger.info("Empty category exists: " + exists);
         return exists;
@@ -72,5 +77,4 @@ public class CategoryDao extends AbstractDao<CategoryEntity>{
             return false;
         }
     }
-
 }

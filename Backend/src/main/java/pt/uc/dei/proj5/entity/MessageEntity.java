@@ -23,8 +23,8 @@ public class MessageEntity implements Serializable {
     @Column(name="isDeleted", nullable = false, unique = false, updatable = true)
     private Boolean isDeleted;
 
-    @Column(name="dateSent", nullable = false, unique = false, updatable = false)
-    private LocalDateTime dateSent;
+    @Column(name="timestamp", nullable = false, unique = false, updatable = false)
+    private LocalDateTime timestamp;
 
     @Column(name="dateEdited", nullable = true, unique = false, updatable = false)
     private LocalDateTime dateEdited;
@@ -72,12 +72,12 @@ public class MessageEntity implements Serializable {
         isDeleted = deleted;
     }
 
-    public LocalDateTime getDateSent() {
-        return dateSent;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setDateSent(LocalDateTime dateSent) {
-        this.dateSent = dateSent;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public UserEntity getSender() {
@@ -94,5 +94,13 @@ public class MessageEntity implements Serializable {
 
     public void setReceiver(UserEntity receiver) {
         this.receiver = receiver;
+    }
+
+    public LocalDateTime getDateEdited() {
+        return dateEdited;
+    }
+
+    public void setDateEdited(LocalDateTime dateEdited) {
+        this.dateEdited = dateEdited;
     }
 }

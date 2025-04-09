@@ -6,7 +6,6 @@ const productsEndpoint = `${apiBaseUrl}products/`;
 
 //Função para obter todos os produtos disponíveis
 export const getProducts = async (queryParams, token) => {
-  console.log(queryParams);
   try {
     const response = await axios.get(`${productsEndpoint}`, {
       headers: {

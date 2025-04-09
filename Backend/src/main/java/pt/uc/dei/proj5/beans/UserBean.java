@@ -6,6 +6,7 @@ import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import jakarta.jws.soap.SOAPBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
@@ -33,6 +34,25 @@ public class UserBean implements Serializable {
     ProductDao productDao;
 
     public UserBean() {
+    }
+
+    public Set<UserDto> getUsers(String username, String firstName, String lastName, String email, String phone, UserAccountState state, UserParameter parameter, Order order) {
+        try{
+            List<UserEntity> userEntities = userDao.getFilteredUsers(username, firstName, lastName, email, phone, state, parameter, order);
+            Set<UserDto> userDtos = new HashSet<>();
+            for (UserEntity userEntity : userEntities) {
+                UserDto userDto = convertUserEntitytoUserDto(userEntity);
+                userDtos.add(userDto);
+            }
+            for (UserDto userDto : userDtos) {
+                System.out.println(userDto);
+            }
+            return userDtos;
+        }
+        catch(Exception e){
+            logger.error(e);
+            return null;
+        }
     }
 
     public boolean registerNormalUser(UserDto userDto) {
@@ -230,7 +250,7 @@ public class UserBean implements Serializable {
         return userDtos;
     }
 
-    private UserEntity convertUserDtotoUserEntity(UserDto user) {
+    public UserEntity convertUserDtotoUserEntity(UserDto user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());
         userEntity.setPassword(user.getPassword());
@@ -288,9 +308,7 @@ public class UserBean implements Serializable {
         product.setDate(productDto.getDate());
         product.setEditedDate(productDto.getEdited());
         product.setLocation(productDto.getLocation());
-        ProductStateId state = ProductStateId.RASCUNHO;
-        int stateInt = state.intFromStateId(productDto.getState());
-        product.setState(stateInt);
+        product.setState(productDto.getState());
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
         product.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
         product.setUrlImage(productDto.getUrlImage());
@@ -305,8 +323,7 @@ public class UserBean implements Serializable {
         produto.setName(productEntity.getName());
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
-        ProductStateId state = ProductStateId.RASCUNHO;
-        produto.setState(state.stateIdFromInt(productEntity.getState()));
+        produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());

@@ -20,7 +20,11 @@ const errorMessages = {
     error: "Erro nos dados fornecidos.",
     wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
     wrong_password: "Palavra-passe incorreta",
-    forbidden: "A sua conta foi excluída - contacte o administrador",
+    forbidden: "Não tem permissão para essa operação",
+    account_excluded: "A sua conta foi excluída - contacte o administrador",
+    account_inactive: "A sua conta ainda não está ativada",
+    account_already_active: "A sua conta já está ativada",
+    expired_token: "O token para ativar a sua conta expirou",
   
     // Erros de get
     get_user_failed: "Falha ao obter informações do utilizador.",

@@ -6,7 +6,6 @@ import errorMessages from "../Utils/constants/errorMessages";
 export const handleGetUserInformation = async (username, token) => {
   try {
     const userInformation = await getUserInformation(username, token);
-    console.log(userInformation);
     return userInformation;
   } catch (error) {
     const toastMessage =

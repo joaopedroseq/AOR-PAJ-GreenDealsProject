@@ -33,6 +33,9 @@ public class TokenBean {
     @EJB
     ConfigurationDao configurationDao;
 
+    @EJB
+    UserBean userBean;
+
     //Operação para login
     public String login(LoginDto user) {
         UserEntity userEntity = userDao.findUserByUsername(user.getUsername());
@@ -46,6 +49,10 @@ public class TokenBean {
                 return newAuthenticationToken;
             }
         }
+        return null;
+    }
+
+    public TokenDto getAuthenticationToken(String username){
         return null;
     }
 
@@ -67,10 +74,7 @@ public class TokenBean {
                 return null;
             }
             //Mudanças - Em vez de converter completamente o userEntity, é apenas enviado o username, o state, e o admin
-            UserDto userDto = new UserDto();
-            userDto.setUsername(userEntity.getUsername());
-            userDto.setState(userEntity.getState());
-            userDto.setAdmin(userEntity.getAdmin());
+            UserDto userDto = userBean.convertUserEntitytoUserDto(userEntity);
             userDto.setToken(convertTokenEntityToTokenDto(userEntity.getToken(), tokenType));
             return userDto;
             //return userBean.convertUserEntitytoUserDto(userEntity);

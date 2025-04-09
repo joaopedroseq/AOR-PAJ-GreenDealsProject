@@ -2,10 +2,18 @@ package pt.uc.dei.proj5.dao;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import pt.uc.dei.proj5.dto.Order;
+import pt.uc.dei.proj5.dto.UserAccountState;
+import pt.uc.dei.proj5.dto.UserParameter;
 import pt.uc.dei.proj5.entity.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -15,6 +23,65 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public UserDao() {
         super(UserEntity.class);
+    }
+
+    public List<UserEntity> getFilteredUsers(String username, String firstName, String lastName, String email, String phone, UserAccountState state, UserParameter parameter, Order order) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> query = cb.createQuery(UserEntity.class);
+        Root<UserEntity> root = query.from(UserEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+        String param = parameter.toString().toLowerCase();
+        if(username != null) {
+            Predicate usernameSearchPredicate = cb.or(
+                    cb.like(cb.lower(root.get("username")), "%" + username.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("username")), username.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("username")), "%" + username.toLowerCase())
+            );
+            predicates.add(usernameSearchPredicate);
+        }
+        if(firstName != null) {
+            Predicate firstNameSearchPredicate = cb.or(
+                    cb.like(cb.lower(root.get("firstname")), "%" + firstName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("firstname")), firstName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("firstname")), "%" + firstName.toLowerCase())
+            );
+            predicates.add(firstNameSearchPredicate);
+        }
+        if (lastName != null) {
+            Predicate lastNameSearchPredicate = cb.or(
+                    cb.like(cb.lower(root.get("lastname")), "%" + lastName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("lastname")), lastName.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("lastname")), "%" + lastName.toLowerCase())
+            );
+            predicates.add(lastNameSearchPredicate);
+        }
+        if(email != null) {
+            Predicate emailPredicate = cb.or(
+                    cb.like(cb.lower(root.get("email")), "%" + email.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("email")), email.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("email")), "%" + email.toLowerCase())
+            );
+            predicates.add(emailPredicate);
+        }
+        if (phone != null) {
+            Predicate phonePredicate = cb.or(
+                    cb.like(cb.lower(root.get("phonenumber")), "%" + phone.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("phonenumber")), phone.toLowerCase() + "%"),
+                    cb.like(cb.lower(root.get("phonenumber")), "%" + phone.toLowerCase())
+            );
+            predicates.add(phonePredicate);
+        }
+        if (state != null) {
+            predicates.add(cb.equal(root.get("state"), state));
+        }
+        query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
+        if(order.equals(Order.asc)) {
+            query.orderBy(cb.asc(root.get(param)));
+        }
+        else if(order.equals(Order.desc)) {
+            query.orderBy(cb.desc(root.get(param)));
+        }
+        return em.createQuery(query).getResultList();
     }
 
     public UserEntity findUserByUsername(String username) {

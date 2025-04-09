@@ -9,7 +9,7 @@ import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.Order;
-import pt.uc.dei.proj5.dto.Parameter;
+import pt.uc.dei.proj5.dto.ProductParameter;
 import pt.uc.dei.proj5.dto.ProductDto;
 import pt.uc.dei.proj5.dto.ProductStateId;
 import pt.uc.dei.proj5.entity.ProductEntity;
@@ -42,7 +42,7 @@ public class ProductBean {
     }
 
     //Novo fetch
-    public Set<ProductDto> getProducts(String username, String id, String name, ProductStateId state, Boolean excluded, String category, Boolean edited, Parameter param, Order order) {
+    public Set<ProductDto> getProducts(String username, String id, String name, ProductStateId state, Boolean excluded, String category, Boolean edited, ProductParameter param, Order order) {
         try{
             List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category, edited, param, order);
             Set<ProductDto> productSet = new LinkedHashSet<>();
@@ -57,7 +57,6 @@ public class ProductBean {
         }
         catch(Exception e) {
             logger.error("Error while getting available products");
-            logger.error(e);
             return null;
         }
     }
@@ -68,7 +67,7 @@ public class ProductBean {
             //check if the only diference is in product state
             ProductEntity productEntity = productDao.getProductById(productDto.getId());
             if (checkIfOnlyStateChanges(productDto, productEntity)) {
-                productEntity.setState(ProductStateId.intFromStateId(productDto.getState()));
+                productEntity.setState(productDto.getState());
                 return true;
             } else {
                 if (productDto.getName() != null) {
@@ -90,8 +89,8 @@ public class ProductBean {
                     productEntity.setUrlImage(productDto.getUrlImage());
                 }
                 if ((productDto.getState() != null)) {
-                    if(ProductStateId.intFromStateId(productDto.getState()) != productEntity.getState()) {
-                        productEntity.setState(ProductStateId.intFromStateId(productDto.getState()));
+                    if(productDto.getState() != productEntity.getState()) {
+                        productEntity.setState(productDto.getState());
                     }
                 }
                 if(productDto.isExcluded() != null) {
@@ -147,7 +146,7 @@ public class ProductBean {
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
         ProductStateId state = ProductStateId.RASCUNHO;
-        produto.setState(state.stateIdFromInt(productEntity.getState()));
+        produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(productEntity.getCategory().getNome());
         produto.setUrlImage(productEntity.getUrlImage());

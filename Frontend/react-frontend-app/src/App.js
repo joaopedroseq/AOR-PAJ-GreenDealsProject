@@ -15,6 +15,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
 import useUserStore from './stores/useUserStore';
+import ChatBox from './components/ChatBox/chatBox';
 
 function App() {
   const locale = useUserStore((state) => state.locale);
@@ -48,7 +49,13 @@ function App() {
           <Profile />
         </ProtectedRoute>
       }/>
+      <Route path="/activate" element={
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      }/>
       </Routes>
+      <ChatBox/>
       <Footer/>
      <ToastContainer limit={3}/>
     </div>

@@ -1,10 +1,11 @@
-package pt.uc.dei.proj5.singleton;
+package pt.uc.dei.proj5.initializer;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import pt.uc.dei.proj5.dao.ConfigurationDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.entity.ConfigurationEntity;
+
 import java.time.LocalDateTime;
 
 /**
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
  * @version 1.0.0
  * @see DataInitializerSingleton
  */
+@Singleton
 public class ConfigurationInitializer {
     @EJB
     private ConfigurationDao configurationDao;

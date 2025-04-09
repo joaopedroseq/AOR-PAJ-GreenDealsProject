@@ -13,7 +13,6 @@ export const registerUser = async (user) => {
         headers: {"Content-Type": "application/json"}
       }
     );
-  console.log("ran")
       return true;
     }
   catch (error) {
@@ -61,6 +60,7 @@ export const login = async (username, password) => {
     console.log(error.response);
     if (error.response) {
       const status = error.response.status;
+      const message = error.response.data;
 
       if (status === 400) {
         console.log('Invalid data - login from user');
@@ -71,8 +71,14 @@ export const login = async (username, password) => {
         throw new Error('wrong_username_password')
       }
       if (status === 403) {
-        console.log('excluded user');
-        throw new Error('forbidden')
+        if (message === "Forbidden - inactive user") {
+          console.log('Account is inactive');
+          throw new Error('account_inactive');
+        }
+        if (message === "Forbidden - excluded user") {
+          console.log('Account is excluded');
+          throw new Error('account_excluded');
+        }    
       }
       console.log('login failed ' + status)
       throw new Error('failed')
@@ -88,7 +94,6 @@ export const login = async (username, password) => {
 
 //Função para logout
 export const logout = async (token) => {
-  console.log("logout token:" + token);
   try {
     const response = await axios.post(
       `${userAutenticationEndpoint}logout`,
@@ -194,3 +199,55 @@ export const getUserLogged = async (token) => {
   }
 };
 
+//Activar conta de utilizador
+export const activateUserAccount = async (activationToken) => {
+  try {
+    const response = await axios.post(`${userAutenticationEndpoint}activate`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          'token': activationToken
+        }
+      },
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data;
+
+      if (status === 409) {
+        if (message?.newToken) {
+          console.log("Token expired. New token:", message.newToken);
+          return message.newToken; // Return the new token so it can be shown to the user
+        } else {
+          throw new Error("token_expired_no_new_token");
+        }
+      }
+
+      if (status === 403) {
+        if (message === "Bad request - already active account") {
+          console.log('Account is already active');
+          throw new Error('account_already_active');
+        }
+        if (message === "Bad request - excluded account") {
+          console.log('Account is excluded');
+          throw new Error('account_excluded');
+        }    
+      }
+      if (status === 401) {
+        console.log('invalid token');
+        throw new Error('invalid_token')
+      }
+      console.log('login failed ' + status)
+      throw new Error('failed')
+    }
+    if (error.request) {
+      console.error("No response from server:", error.request);
+      throw new Error("network_error");
+    }
+    console.log(error.response);
+    throw new Error("unexpected_error");
+  }
+};

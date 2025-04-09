@@ -8,10 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.ConfigurationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.dto.ConfigurationDto;
-import pt.uc.dei.proj5.dto.TokenDto;
-import pt.uc.dei.proj5.dto.TokenType;
-import pt.uc.dei.proj5.dto.UserDto;
+import pt.uc.dei.proj5.dto.*;
 
 @Path("/configuration")
 public class ConfigurationService {
@@ -25,25 +22,9 @@ public class ConfigurationService {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getLatestConfiguration(@HeaderParam("token") String authenticationToken) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("No token - get the latest configuration");
-            return Response.status(401).entity("Missing token").build();
-        }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto requester = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (requester == null) {
-            logger.error("Invalid token - get the latest configuration");
-            return Response.status(401).entity("Invalid token").build();
-        }
-        //Implemetar bloqueio de contas excluídas
-        if (requester.getAdmin() == false){
-            logger.error("Permission denied - getting latest configuration by {} without admin privileges", requester.getUsername());
-            return Response.status(403).entity("Permission denied").build();
-        }
+    public Response getLatestConfiguration() {
         ConfigurationDto latestConfiguration = configurationBean.getLatestConfiguration();
-        logger.info("Admin {} requested latest configuration settings", requester.getUsername());
+        logger.info("Latest configuration requested");
         return Response.status(200).entity(latestConfiguration).build();
     }
 
@@ -57,19 +38,23 @@ public class ConfigurationService {
         }
         TokenDto tokenDto = new TokenDto();
         tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto requester = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (requester == null) {
+        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+        if (user == null) {
             logger.error("Invalid token - adding new configuration");
             return Response.status(401).entity("Invalid token").build();
         }
-        //IMplemetar bloqueio de contas excluídas
-        if (requester.getAdmin() == false){
-            logger.error("Permission denied - adding new configuration by {} without admin privileges", requester.getUsername());
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            logger.error("Permission denied - user {} tried to add new configuration with inactive or excluded account", user.getUsername());
+            return Response.status(403).entity("User has inactive or excluded account").build();
+        }
+        if (user.getAdmin() == false){
+            logger.error("Permission denied - adding new configuration by {} without admin privileges", user.getUsername());
             return Response.status(403).entity("Permission denied").build();
         }
-        configurationDto.setAdminUsername(requester.getUsername());
+        configurationDto.setAdminUsername(user.getUsername());
         if(configurationBean.createNewConfiguration(configurationDto)) {
-            logger.info("Admin {} added new configuration settings {}", requester.getUsername(), configurationDto);
+            configurationDto = configurationBean.getLatestConfiguration();
+            logger.info("Admin {} added new configuration settings {}", user.getUsername(), configurationDto);
             return Response.status(200).entity(configurationDto).build();
         }
         else {

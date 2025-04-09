@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useUserStore((state) => state);
 
   if (!isAuthenticated) {
-    showInfoToast('Para visualizar produtos, registe-se e/ou faça login.');
+    showInfoToast('Para aceder a esta página, registe-se e/ou faça login.');
     return <Navigate to="/" />;
   }
 

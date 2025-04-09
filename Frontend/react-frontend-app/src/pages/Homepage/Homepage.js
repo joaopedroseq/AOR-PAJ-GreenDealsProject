@@ -4,7 +4,7 @@ import leaf from "../../assets/icons/leaf.png";
 import placeholder from '../../assets/placeholder/item.png';
 import sustentabilityBanner from "../../assets/banners/banner.png";
 import rebanner from '../../assets/banners/rebanner.png'
-import productCard from "../../components/ProductCard/productCard";
+import ProductCard from "../../components/ProductCard/productCard";
 import useProductStore from "../../stores/useProductStore";
 import useUserStore from "../../stores/useUserStore";
 import { FormattedMessage } from "react-intl";
@@ -50,7 +50,7 @@ const Homepage = () => {
           </div>
         ) : (
           products.map((product) => (
-            <productCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))
         )}
       </div>

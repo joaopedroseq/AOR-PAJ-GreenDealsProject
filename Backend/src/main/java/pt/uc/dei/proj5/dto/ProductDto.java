@@ -111,13 +111,12 @@ public class ProductDto implements Serializable{
         return seller;
     }
 
-    @XmlElement
     public ProductStateId getState() {
-        try {
-            return state;
-        } catch (Exception e) {
-            return null;
-        }
+        return state;
+    }
+
+    public Boolean getExcluded() {
+        return excluded;
     }
 
     @XmlElement
