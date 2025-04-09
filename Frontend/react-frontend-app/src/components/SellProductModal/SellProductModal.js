@@ -6,11 +6,11 @@ import {
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { checkIfNumeric } from "../../Utils/utilityFunctions";
-import { addProduct } from "../../api/productApi";
-import { getUserLogged } from "../../api/authenticationApi";
-import { useCategoriesStore } from "../../stores/useCategoriesStore";
+import { addProduct } from "../../Api/productApi";
+import { getUserLogged } from "../../Api/authenticationApi";
+import { useCategoriesStore } from "../../Stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
-import useProductStore from "../../stores/useProductStore";
+import useProductStore from "../../Stores/useProductStore";
 
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();

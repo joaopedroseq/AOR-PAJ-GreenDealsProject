@@ -1,4 +1,4 @@
-import { excludeUser } from "../api/userApi";
+import { excludeUser } from "../Api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
 import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
 

@@ -46,6 +46,7 @@ const ConfirmationModal = ({ title, message1, message2, isOpen, onClose, onConfi
         </div>
       </div>
     </div>
+    
     )
   );
 };

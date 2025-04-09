@@ -4,8 +4,8 @@ import {
   getProducts,
   updateProduct,
   deleteProduct,
-} from "../../api/productApi";
-import useUserStore from "../../stores/useUserStore";
+} from "../../Api/productApi";
+import useUserStore from "../../Stores/useUserStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   showErrorToast,
@@ -16,9 +16,9 @@ import {
   dateToFormattedDate,
 } from "../../Utils/utilityFunctions";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
-import EditProductModal from "../../components/EditProductModal/EditProductModal";
+import EditProductModal from "../../Components/EditProductModal/EditProductModal";
 import errorMessages from "../../Utils/constants/errorMessages";
-import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleBuyingProduct from "../../Handles/handleBuyingProduct";
 
 export const Detail = () => {

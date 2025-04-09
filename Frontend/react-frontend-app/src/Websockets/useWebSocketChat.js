@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import useUserStore from "../stores/useUserStore";
+import useUserStore from "../Stores/useUserStore";
 
-function WebSocketClient() {
+function useWebSocketChat() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const token = useUserStore((state) => state.token);
   const WS_URL = "ws://localhost:8080/sequeira-proj5/websocket/chat/";
@@ -60,4 +60,4 @@ function WebSocketClient() {
   return { sendMessage };
 }
 
-export default WebSocketClient;
+export default useWebSocketChat;

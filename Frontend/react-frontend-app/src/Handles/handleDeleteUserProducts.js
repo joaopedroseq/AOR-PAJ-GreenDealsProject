@@ -1,4 +1,4 @@
-import { deleteUserProducts } from "../api/userApi";
+import { deleteUserProducts } from "../Api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
 import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
 

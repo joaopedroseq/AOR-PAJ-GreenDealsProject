@@ -7,13 +7,13 @@ const userAutenticationEndpoint = `${apiBaseUrl}auth/`;
 //Registo de novo utilizador
 export const registerUser = async (user) => {
   try {
-    await axios.post(`${userAutenticationEndpoint}register`,
+    const response = await axios.post(`${userAutenticationEndpoint}register`,
       user,
       {
         headers: {"Content-Type": "application/json"}
       }
     );
-      return true;
+      return response.data;
     }
   catch (error) {
     if (error.response) {

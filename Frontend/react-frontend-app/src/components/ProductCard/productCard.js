@@ -1,5 +1,5 @@
 import React from "react";
-import excludedOverlay from '../../assets/icons/excludedOverlay.png'
+import excludedOverlay from '../../Assets/icons/excludedOverlay.png'
 import { Link } from "react-router-dom";
 
 const productCard = ({ product }) => {

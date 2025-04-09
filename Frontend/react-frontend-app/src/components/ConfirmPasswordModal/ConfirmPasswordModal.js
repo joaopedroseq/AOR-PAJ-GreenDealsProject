@@ -4,7 +4,7 @@ import { showErrorToast } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { checkIfValidPassword } from "../../Utils/utilityFunctions";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
-import useUserStore from "../../stores/useUserStore";
+import useUserStore from "../../Stores/useUserStore";
 
 const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) => {
   const { register, handleSubmit, watch, reset } = useForm();

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import WebSocketClient from "../../websocket/WebSocketClient";
+import useWebSocketChat from "../../Websockets/useWebSocketChat";
 
 const ChatBox = () => {
   const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
-  const { sendMessage } = WebSocketClient(); // Use WebSocketClient for sending messages
+  const { sendMessage } = useWebSocketChat(); // Use WebSocketClient for sending messages
 
   const handleSend = () => {
     if (username && message) {

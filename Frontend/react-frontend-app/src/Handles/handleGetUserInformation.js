@@ -1,4 +1,4 @@
-import { getUserInformation } from "../api/userApi";
+import { getUserInformation } from "../Api/userApi";
 import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
 import errorMessages from "../Utils/constants/errorMessages";
 

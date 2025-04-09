@@ -1,5 +1,5 @@
 import React from "react";
-import excludeIcon from "../../assets/icons/exclude.png";
+import excludeIcon from "../../Assets/icons/exclude.png";
 
 const CategoryCard = ({ category, onDelete }) => {
   let numberOfProducts;

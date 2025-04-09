@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import useProductStore from "../stores/useProductStore";
+import useProductStore from "../Stores/useProductStore";
 
 const RouteListener = () => {
   const location = useLocation();

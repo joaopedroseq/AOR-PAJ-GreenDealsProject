@@ -1,5 +1,5 @@
-import { checkPassword } from "../api/authenticationApi";
-import { updateUserInformation } from "../api/userApi";
+import { checkPassword } from "../Api/authenticationApi";
+import { updateUserInformation } from "../Api/userApi";
 import errorMessages from "../Utils/constants/errorMessages";
 import {
   showErrorToast,

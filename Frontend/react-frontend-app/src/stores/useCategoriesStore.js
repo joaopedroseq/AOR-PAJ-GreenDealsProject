@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { fetchCategories, addCategory, deleteCategory } from "../api/categoryApi";
+import { fetchCategories, addCategory, deleteCategory } from "../Api/categoryApi";
 import { showSuccessToast, showErrorToast } from '../Utils/ToastConfig/toastConfig';
-import errorMessages from "./../Utils/constants/errorMessages";
+import errorMessages from "../Utils/constants/errorMessages";
 import useUserStore from "./useUserStore";
 
 

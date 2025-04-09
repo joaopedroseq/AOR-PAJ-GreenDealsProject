@@ -1,21 +1,21 @@
 import './App.css';
 
 import 'react-toastify/dist/ReactToastify.css';
-import Header from './components/Header/Header';
-import Homepage from './pages/Homepage/Homepage';
-import Detail from './pages/Detail/Detail';
-import Footer from './components/Footer/Footer';
-import User from './pages/User/User';
-import Admin from './pages/Admin/Admin';
-import Profile from './pages/Profile/Profile';
+import Header from './Components/Header/Header';
+import Homepage from './Pages/Homepage/Homepage';
+import Detail from './Pages/Detail/Detail';
+import Footer from './Components/Footer/Footer';
+import User from './Pages/User/User';
+import Admin from './Pages/Admin/Admin';
+import Profile from './Pages/Profile/Profile';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
-import useUserStore from './stores/useUserStore';
-import ChatBox from './components/ChatBox/chatBox';
+import useUserStore from './Stores/useUserStore';
+import ChatBox from './Components/ChatBox/chatBox';
 
 function App() {
   const locale = useUserStore((state) => state.locale);

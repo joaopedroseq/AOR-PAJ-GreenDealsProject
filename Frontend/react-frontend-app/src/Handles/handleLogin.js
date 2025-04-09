@@ -1,5 +1,4 @@
-import { login } from "../api/authenticationApi";
-import { getUserLogged } from "../api/authenticationApi";
+import { login, getUserLogged } from "../Api/authenticationApi";
 import {
   showSuccessToast,
   showErrorToast,

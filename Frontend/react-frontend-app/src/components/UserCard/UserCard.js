@@ -1,6 +1,6 @@
-import exclude from "../../assets/icons/exclude.png";
-import deleteProducts from "../../assets/icons/deleteProducts.png";
-import deleteUser from '../../assets/icons/deleteUser.png';
+import exclude from "../../Assets/icons/exclude.png";
+import deleteProducts from "../../Assets/icons/deleteProducts.png";
+import deleteUser from '../../Assets/icons/deleteUser.png';
 import { Link } from "react-router-dom";
 
 //Cartão de utilizador usado na página de admin

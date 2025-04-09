@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { getProducts } from "../api/productApi";
+import { getProducts } from "../Api/productApi";
 
 const useProductStore = create((set, get) => ({
   //Store para gestão de produtos

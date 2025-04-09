@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
-import placeholder from "../../assets/placeholder/item.png";
+import placeholder from "../../Assets/placeholder/item.png";
 import "./user.css";
 import { useForm } from "react-hook-form";
 import {
   showErrorToast,
-} from "../../Utils/ToastConfig/toastConfig";
-import { getLoggedUserInformation } from "../../Handles/handleLogin";
-import useUserStore from "../../stores/useUserStore";
-import ProductCard from "../../components/ProductCard/productCard";
-import useProductStore from "../../stores/useProductStore";
-import errorMessages from "../../Utils/constants/errorMessages";
+} from "../../Utils/ToastConfig/toastConfig.js";
+import { getLoggedUserInformation } from "../../Handles/handleLogin.js";
+import useUserStore from "../../Stores/useUserStore.js";
+import ProductCard from "../../Components/ProductCard/productCard.js";
+import useProductStore from "../../Stores/useProductStore.js";
+import errorMessages from "../../Utils/constants/errorMessages.js";
 import {
   checkIfValidName,
 } from "../../Utils/utilityFunctions.js";
-import ConfirmPasswordModal from "../../components/ConfirmPasswordModal/ConfirmPasswordModal";
-import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
+import ConfirmPasswordModal from "../../Components/ConfirmPasswordModal/ConfirmPasswordModal.js";
+import ChangePasswordModal from "../../Components/ChangePasswordModal/ChangePasswordModal.js";
 
 //Página de utilizador
 export const User = () => {

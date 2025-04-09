@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import placeholder from "../../assets/placeholder/item.png";
+import placeholder from "../../Assets/placeholder/item.png";
 import "./admin.css";
 import {
   showSuccessToast,
@@ -8,16 +8,16 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
-import useUserStore from "../../stores/useUserStore";
-import CategoryCard from "../../components/CategoryCard/CategoryCard";
-import ProductCard from '../../components/ProductCard/productCard';
-import useProductStore from "../../stores/useProductStore";
-import useCategoriesStore from "../../stores/useCategoriesStore";
+import useUserStore from "../../Stores/useUserStore";
+import CategoryCard from "../../Components/CategoryCard/CategoryCard";
+import ProductCard from '../../Components/ProductCard/productCard';
+import useProductStore from "../../Stores/useProductStore";
+import useCategoriesStore from "../../Stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import { useNavigate } from "react-router-dom";
 import handleGetAllUsers from "../../Handles/handleGetAllUsers";
-import UserCard from "../../components/UserCard/UserCard";
-import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import UserCard from "../../Components/UserCard/UserCard";
+import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
 import handleExcludeUser from "../../Handles/handleExcludeUser";
 import handleDeleteUser from "../../Handles/handleDeleteUser"

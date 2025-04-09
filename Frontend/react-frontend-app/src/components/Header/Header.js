@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./header.css";
-import hambuguer from "../../assets/icons/hamburger.png";
-import logo from "../../assets/logo/logo.png";
-import loginPhoto from "../../assets/icons/login.png";
+import hambuguer from "../../Assets/icons/hamburger.png";
+import logo from "../../Assets/logo/logo.png";
+import loginPhoto from "../../Assets/icons/login.png";
 import LoginForm from "../LoginForm/LoginForm";
-import { logout } from "../../api/authenticationApi";
+import { logout } from "../../Api/authenticationApi";
 import {
   showSuccessToast,
   showErrorToast,
@@ -12,9 +12,9 @@ import {
 import RegisterModal from "../RegisterModal/RegisterModal";
 import SellProductModal from "../SellProductModal/SellProductModal";
 import Aside from "../Aside/Aside";
-import useUserStore from "../../stores/useUserStore";
+import useUserStore from "../../Stores/useUserStore";
 import { Link } from "react-router-dom";
-import { getUserLogged } from "../../api/authenticationApi";
+import { getUserLogged } from "../../Api/authenticationApi";
 import errorMessages from "../../Utils/constants/errorMessages";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -26,13 +26,14 @@ const Header = () => {
   const locale = useUserStore((state) => state.locale);
   const updateLocale = useUserStore((state) => state.updateLocale);
   const intl = useIntl();
-
   //Preenchimento de campos com o primeiro nome e foto
   const [firstName, setFirstName] = useState(null);
   const [urlPhoto, setUrlPhoto ] = useState(null);
-
   //Toggle do login form
   const [ showLoginForm, setShowLoginForm] = useState(false);
+  //Toggle do registo para token de ativação
+    const [modalConfig, setModalConfig] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
   //Toggle do aside (através do botão hamburguer)
     const [isAsideVisible, setAsideVisible] =

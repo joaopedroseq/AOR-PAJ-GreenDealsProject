@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./aside.css";
 import { useLocation } from "react-router-dom";
-import useProductStore from "../../stores/useProductStore";
-import { useCategoriesStore } from "../../stores/useCategoriesStore";
-import useUserStore from "../../stores/useUserStore";
+import useProductStore from "../../Stores/useProductStore";
+import { useCategoriesStore } from "../../Stores/useCategoriesStore";
+import useUserStore from "../../Stores/useUserStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { Link } from "react-router-dom";
 import { renderCategoryList } from "../../Handles/renderCategoryList";

@@ -3,7 +3,7 @@ import './loginForm.css'
 import { useForm } from 'react-hook-form';
 import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../Handles/handleLogin';
-import useUserStore from '../../stores/useUserStore';
+import useUserStore from '../../Stores/useUserStore';
 import { FormattedMessage, useIntl } from "react-intl";
 
 const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {

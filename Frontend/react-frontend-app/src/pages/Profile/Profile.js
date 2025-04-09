@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import placeholder from "../../assets/placeholder/item.png";
-import exclude from "../../assets/icons/exclude.png";
-import deleteProducts from "../../assets/icons/deleteProducts.png";
-import deleteUser from '../../assets/icons/deleteUser.png';
+import placeholder from "../../Assets/placeholder/item.png";
+import exclude from "../../Assets/icons/exclude.png";
+import deleteProducts from "../../Assets/icons/deleteProducts.png";
+import deleteUser from '../../Assets/icons/deleteUser.png';
 import "./profile.css";
 import {
   showSuccessToast,
@@ -12,13 +12,13 @@ import {
 import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
 import { useLocation, useNavigate } from "react-router-dom";
-import useUserStore from "../../stores/useUserStore";
-import productCard from "../../components/ProductCard/productCard.js";
-import useProductStore from "../../stores/useProductStore";
-import useCategoriesStore from "../../stores/useCategoriesStore";
+import useUserStore from "../../Stores/useUserStore";
+import productCard from "../../Components/ProductCard/productCard.js";
+import useProductStore from "../../Stores/useProductStore";
+import useCategoriesStore from "../../Stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
-import ConfirmationModal from "../../components/ConfirmationModal/ConfirmationModal";
+import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
 import handleExcludeUser from "../../Handles/handleExcludeUser";
 import handleDeleteUser from "../../Handles/handleDeleteUser";

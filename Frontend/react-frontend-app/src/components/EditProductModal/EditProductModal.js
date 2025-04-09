@@ -1,14 +1,14 @@
 import React from "react";
 import "./editProductModal.css";
-import { useCategoriesStore } from "../../stores/useCategoriesStore";
+import { useCategoriesStore } from "../../Stores/useCategoriesStore";
 import { useForm } from "react-hook-form";
 import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import {
   showErrorToast,
   showSuccessToast,
 } from "../../Utils/ToastConfig/toastConfig";
-import { updateProduct } from "../../api/productApi";
-import useUserStore from "../../stores/useUserStore";
+import { updateProduct } from "../../Api/productApi";
+import useUserStore from "../../Stores/useUserStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 
 const EditProductModal = ({

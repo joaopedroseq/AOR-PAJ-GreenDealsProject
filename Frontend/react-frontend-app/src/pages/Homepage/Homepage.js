@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./homepage.css";
-import leaf from "../../assets/icons/leaf.png";
-import placeholder from '../../assets/placeholder/item.png';
-import sustentabilityBanner from "../../assets/banners/banner.png";
-import rebanner from '../../assets/banners/rebanner.png'
-import ProductCard from "../../components/ProductCard/productCard";
-import useProductStore from "../../stores/useProductStore";
-import useUserStore from "../../stores/useUserStore";
+import leaf from "../../Assets/icons/leaf.png";
+import placeholder from '../../Assets/placeholder/item.png';
+import sustentabilityBanner from "../../Assets/banners/banner.png";
+import rebanner from '../../Assets/banners/rebanner.png'
+import ProductCard from "../../Components/ProductCard/productCard";
+import useProductStore from "../../Stores/useProductStore";
+import useUserStore from "../../Stores/useUserStore";
 import { FormattedMessage } from "react-intl";
 
 
