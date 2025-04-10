@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import placeholder from "../../Assets/placeholder/item.png";
 import exclude from "../../Assets/icons/exclude.png";
 import deleteProducts from "../../Assets/icons/deleteProducts.png";
-import deleteUser from '../../Assets/icons/deleteUser.png';
+import deleteUser from "../../Assets/icons/deleteUser.png";
 import "./profile.css";
 import {
   showSuccessToast,
@@ -13,9 +13,7 @@ import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
 import { useLocation, useNavigate } from "react-router-dom";
 import useUserStore from "../../Stores/useUserStore";
-import productCard from "../../Components/ProductCard/productCard.js";
 import useProductStore from "../../Stores/useProductStore";
-import useCategoriesStore from "../../Stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
@@ -24,12 +22,15 @@ import handleExcludeUser from "../../Handles/handleExcludeUser";
 import handleDeleteUser from "../../Handles/handleDeleteUser";
 import { checkIfValidName } from "../../Utils/utilityFunctions.js";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
+import ProductCard from "../../Components/ProductCard/productCard.js";
+import { useIntl } from "react-intl";
 
 export const Profile = () => {
   const token = useUserStore((state) => state.token);
   const username = new URLSearchParams(useLocation().search).get("username");
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState({});
+  const intl = useIntl();
 
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
@@ -70,13 +71,12 @@ export const Profile = () => {
     }
   };
 
-  //Obter informação do utilizador autenticado e redirecionar caso não seja admin
   useEffect(() => {
     const checkIfAdmin = async () => {
       try {
         let userInformation = await getLoggedUserInformation(token);
         if (userInformation.admin === false) {
-          showInfoToast("Não tem permissão para aceder a esta página");
+          showInfoToast(intl.formatMessage({ id: "profileNoPermission" }));
           navigate("/");
         }
       } catch (error) {
@@ -109,14 +109,16 @@ export const Profile = () => {
     getUserProducts();
   }, [userProfile]);
 
-  //Submissão de form para alteração de informações do utilizador
   const onSubmit = async (newUserInformation) => {
     setModalConfig({
-      title: "Alterar informações de utilizador",
-      message1: `Pretende alterar informações do utilizador ${userProfile.username}?`,
+      title: intl.formatMessage({ id: "profileUpdateTitle" }),
+      message1: intl.formatMessage(
+        { id: "profileUpdateMessage1" },
+        { username: userProfile.username }
+      ),
       message2: null,
       onConfirm: async () => {
-        let password = null; //não necessário já que o utilizador é admin
+        let password = null; // Not necessary since the user is an admin
         let isAdmin = true;
 
         const isUserUpdated = await handleChangeUserInformation(
@@ -167,17 +169,27 @@ export const Profile = () => {
     }
   };
 
-  //Users
-  //Apagar produtos de utilizador
+  // Remove all products from a user
   const handleDeletingUserProducts = async () => {
     setModalConfig({
-      title: "Remover produtos de utilizador",
-      message1: `Deseja apagar todos os produtos de ${userProfile.username}?`,
+      title: intl.formatMessage({ id: "profileRemoveUserProductsTitle" }),
+      message1: intl.formatMessage(
+        { id: "profileRemoveUserProductsMessage1" },
+        { username: userProfile.username }
+      ),
       message2: null,
       onConfirm: async () => {
-        const response = await handleDeleteUserProducts(token, userProfile.username);
+        const response = await handleDeleteUserProducts(
+          token,
+          userProfile.username
+        );
         if (response) {
-          showSuccessToast(`Apagados todos os produtos de ${userProfile.username}`);
+          showSuccessToast(
+            intl.formatMessage(
+              { id: "profileRemoveUserProductsSuccess" },
+              { username: userProfile.username }
+            )
+          );
           fetchProducts(token);
           setIsModalOpen(false);
         } else {
@@ -188,17 +200,24 @@ export const Profile = () => {
     setIsModalOpen(true);
   };
 
-  //Excluír utilizador
+  // Exclude a user
   const handleExcludingUser = async () => {
     setModalConfig({
-      title: "Excluir utilizador",
-      message1: `Deseja excluir o utilizador ${userProfile.username}?`,
-      message2: 'Irá também excluir todos os seus produtos',
+      title: intl.formatMessage({ id: "profileExcludeUserTitle" }),
+      message1: intl.formatMessage(
+        { id: "profileExcludeUserMessage1" },
+        { username: userProfile.username }
+      ),
+      message2: intl.formatMessage({ id: "profileExcludeUserMessage2" }),
       onConfirm: async () => {
         const response = await handleExcludeUser(token, userProfile.username);
         if (response) {
-          showSuccessToast(`Excluído o utilizador ${userProfile.username}`);
-          //
+          showSuccessToast(
+            intl.formatMessage(
+              { id: "profileExcludeUserSuccess" },
+              { username: userProfile.username }
+            )
+          );
           fetchProducts(token);
           setIsModalOpen(false);
         } else {
@@ -209,18 +228,26 @@ export const Profile = () => {
     setIsModalOpen(true);
   };
 
-  //Apagar utilizador
+  // Delete a user
   const handleDeletingUser = async () => {
     setModalConfig({
-      title: "Apagar utilizador",
-      message1: `Deseja apagar o utilizador ${userProfile.username}?`,
-      message2: 'Todos os seus produtos serão excluídos',
+      title: intl.formatMessage({ id: "profileDeleteUserTitle" }),
+      message1: intl.formatMessage(
+        { id: "profileDeleteUserMessage1" },
+        { username: userProfile.username }
+      ),
+      message2: intl.formatMessage({ id: "profileDeleteUserMessage2" }),
       onConfirm: async () => {
         const response = await handleDeleteUser(token, userProfile.username);
         if (response) {
-          showSuccessToast(`Apagado o utilizador ${userProfile.username}`);
+          showSuccessToast(
+            intl.formatMessage(
+              { id: "profileDeleteUserSuccess" },
+              { username: userProfile.username }
+            )
+          );
           setIsModalOpen(false);
-          navigate('/admin');
+          navigate("/admin");
         } else {
           setIsModalOpen(false);
         }
@@ -228,147 +255,185 @@ export const Profile = () => {
     });
     setIsModalOpen(true);
   };
-
   return (
     <div className="user-main-content">
       {userProfile?.username && (
-      <>
-      <section className="products-section" id="products-section">
-        <h3>Produtos de {userProfile.username}</h3>
-        <div className="grid-container">
-          {products.length === 0 ? (
-            <div className="grid-item no-products">
-              <img src={placeholder} alt="No products available" />
-              <div className="text-overlay">
-                <h2>No Products Available</h2>
-                <p>Please check back later.</p>
-              </div>
+        <>
+          <section className="products-section" id="products-section">
+            <h3>
+              {intl.formatMessage(
+                { id: "profileUserProductsTitle" },
+                { username: userProfile.username }
+              )}
+            </h3>
+            <div className="grid-container">
+              {products.length === 0 ? (
+                <div className="grid-item no-products">
+                  <img
+                    src={placeholder}
+                    alt={intl.formatMessage({ id: "profileNoProductsAlt" })}
+                  />
+                  <div className="text-overlay">
+                    <h2>
+                      {intl.formatMessage({ id: "profileNoProductsHeading" })}
+                    </h2>
+                    <p>
+                      {intl.formatMessage({ id: "profileNoProductsMessage" })}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))
+              )}
             </div>
-          ) : (
-            products.map((product) => (
-              <productCard key={product.id} product={product} />
-            ))
-          )}
-        </div>
-      </section>
-      <section className="profile-section" id="profile-section">
-        <h3>Informações de {userProfile.username}</h3>
-        {userProfile?.username && (
-          <div id="user-info-container">
-            <form
-              className="edit-form"
-              id="edit-form"
-              onSubmit={handleSubmit(onSubmit, onError)}
-            >
-              <div className="edit-userinfo-form-field">
-                <img
-                className="user-profile-photo"
-                src={userProfile.url}
-                alt="user icon"
-                />
+          </section>
+
+          <section className="profile-section" id="profile-section">
+            <h3>
+              {intl.formatMessage(
+                { id: "profileUserInfoTitle" },
+                { username: userProfile.username }
+              )}
+            </h3>
+            {userProfile?.username && (
+              <div id="user-info-container">
+                <form
+                  className="edit-form"
+                  id="edit-form"
+                  onSubmit={handleSubmit(onSubmit, onError)}
+                >
+                  <div className="edit-userinfo-form-field">
+                    <img
+                      className="user-profile-photo"
+                      src={userProfile.url}
+                      alt={intl.formatMessage({ id: "profileUserIconAlt" })}
+                    />
+                  </div>
+                  <div className="edit-userinfo-form-field">
+                    <label>
+                      {intl.formatMessage({ id: "profileFirstNameLabel" })}
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-firstname"
+                      maxLength="20"
+                      defaultValue={userProfile.firstName}
+                      {...register("firstName", {
+                        required: intl.formatMessage({
+                          id: "profileFirstNameRequired",
+                        }),
+                        validate: (value) =>
+                          checkIfValidName(value) ||
+                          intl.formatMessage({ id: "profileFirstNameInvalid" }),
+                      })}
+                    />
+                  </div>
+                  <div className="edit-userinfo-form-field">
+                    <label>
+                      {intl.formatMessage({ id: "profileLastNameLabel" })}
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-lastname"
+                      maxLength="20"
+                      defaultValue={userProfile.lastName}
+                      {...register("lastName", {
+                        required: intl.formatMessage({
+                          id: "profileLastNameRequired",
+                        }),
+                        validate: (value) =>
+                          checkIfValidName(value) ||
+                          intl.formatMessage({ id: "profileLastNameInvalid" }),
+                      })}
+                    />
+                  </div>
+                  <div className="edit-userinfo-form-field">
+                    <label>
+                      {intl.formatMessage({ id: "profileEmailLabel" })}
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-email"
+                      maxLength="40"
+                      defaultValue={userProfile.email}
+                      {...register("email", {
+                        required: intl.formatMessage({
+                          id: "profileEmailRequired",
+                        }),
+                        validate: (value) =>
+                          value.includes("@") ||
+                          intl.formatMessage({ id: "profileEmailInvalid" }),
+                      })}
+                    />
+                  </div>
+                  <div className="edit-userinfo-form-field">
+                    <label>
+                      {intl.formatMessage({ id: "profilePhoneLabel" })}
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-phone"
+                      maxLength="20"
+                      defaultValue={userProfile.phoneNumber}
+                      {...register("phoneNumber", {
+                        required: intl.formatMessage({
+                          id: "profilePhoneRequired",
+                        }),
+                        validate: (value) =>
+                          /^\d{9}$/.test(value) ||
+                          intl.formatMessage({ id: "profilePhoneInvalid" }),
+                      })}
+                    />
+                  </div>
+                  <div className="edit-userinfo-form-field">
+                    <label>
+                      {intl.formatMessage({ id: "profilePhotoUrlLabel" })}
+                    </label>
+                    <input
+                      type="text"
+                      id="edit-photoUrl"
+                      defaultValue={userProfile.url}
+                      {...register("url", {
+                        required: intl.formatMessage({
+                          id: "profilePhotoUrlRequired",
+                        }),
+                      })}
+                    />
+                  </div>
+                  <input
+                    type="submit"
+                    id="guardarAlteracoesUser-btn"
+                    className="guardarAlteracoesUser-btn"
+                    value="Guardar Alterações"
+                  />
+                  <div>
+                    <img
+                      src={deleteProducts}
+                      alt="exclude user"
+                      className="deleteProductsUserBtn"
+                      onClick={handleDeletingUserProducts}
+                    />
+                    <img
+                      src={exclude}
+                      alt="exclude user"
+                      className="excludeUserBtn"
+                      onClick={handleExcludingUser}
+                    />
+                    <img
+                      src={deleteUser}
+                      alt="delete user"
+                      className="deleteUserBtn"
+                      onClick={handleDeletingUser}
+                    />
+                  </div>
+                </form>
               </div>
-              <div className="edit-userinfo-form-field">
-                <label>Primeiro Nome</label>
-                <input
-                  type="text"
-                  id="edit-firstname"
-                  maxLength="20"
-                  defaultValue={userProfile.firstName}
-                  {...register("firstName", {
-                    required: "Terá de preencher o primeiro nome",
-                    validate: (value) =>
-                      checkIfValidName(value) ||
-                      "O primeiro nome não deverá conter caracteres especiais",
-                  })}
-                />
-              </div>
-              <div className="edit-userinfo-form-field">
-                <label>Último Nome</label>
-                <input
-                  type="text"
-                  id="edit-lastname"
-                  maxLength="20"
-                  defaultValue={userProfile.lastName}
-                  {...register("lastName", {
-                    required: "Terá de preencher o apelido",
-                    validate: (value) =>
-                      checkIfValidName(value) ||
-                      "O apelido não deverá conter caracteres especiais",
-                  })}
-                />
-              </div>
-              <div className="edit-userinfo-form-field">
-                <label>Email</label>
-                <input
-                  type="text"
-                  id="edit-email"
-                  maxLength="40"
-                  defaultValue={userProfile.email}
-                  {...register("email", {
-                    required: "Terá de preencher o seu email",
-                    validate: (value) =>
-                      value.includes("@") || "O seu email tem de conter um @",
-                  })}
-                />
-              </div>
-              <div className="edit-userinfo-form-field">
-                <label>Telefone</label>
-                <input
-                  type="text"
-                  id="edit-phone"
-                  maxLength="20"
-                  defaultValue={userProfile.phoneNumber}
-                  {...register("phoneNumber", {
-                    required: "Terá de preencher o seu contacto telefónico",
-                    validate: (value) =>
-                      /^\d{9}$/.test(value) ||
-                      "O seu número de telefone tem de conter pelo menos 9 digitos",
-                  })}
-                />
-              </div>
-              <div className="edit-userinfo-form-field">
-                <label>Foto url</label>
-                <input
-                  type="text"
-                  id="edit-photoUrl"
-                  defaultValue={userProfile.url}
-                  {...register("url", {
-                    required:
-                      "Terá de preencher com o url da sua fotografia de perfil",
-                  })}
-                />
-              </div>
-              <input
-                type="submit"
-                id="guardarAlteracoesUser-btn"
-                className="guardarAlteracoesUser-btn"
-                value="Guardar Alterações"
-              />
-              <div>
-              <img
-                src={deleteProducts}
-                alt="exclude user"
-                className="deleteProductsUserBtn"
-                onClick={handleDeletingUserProducts}
-              />
-              <img
-                src={exclude}
-                alt="exclude user"
-                className="excludeUserBtn"
-                onClick={handleExcludingUser}
-              />
-              <img
-                src={deleteUser}
-                alt="delete user"
-                className="deleteUserBtn"
-                onClick={handleDeletingUser}
-              />
-              </div>
-            </form>
-          </div>
-        )}
-      </section>
-      </>)}
+            )}
+          </section>
+        </>
+      )}
       <ConfirmationModal
         title={modalConfig.title}
         message1={modalConfig.message1}

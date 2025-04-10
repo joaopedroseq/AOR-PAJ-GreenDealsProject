@@ -4,7 +4,6 @@ import handleActivateAccount from "../../Handles/handleActivateAccount";
 import { showInfoToast, showErrorToast } from "../../Utils/ToastConfig/toastConfig"
 import errorMessages from "../../Utils/constants/errorMessages";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
-import useLocaleStore from "../../Stores/useLocaleStore";
 import { useIntl } from "react-intl";
 
 export const Activate = () => {
@@ -14,8 +13,6 @@ export const Activate = () => {
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   //Opções de língua
-  const locale = useLocaleStore((state) => state.locale);
-  const updateLocale = useLocaleStore((state) => state.updateLocale);
   const intl = useIntl();
 
   //Obter informação do utilizador autenticado e redirecionar caso não seja admin

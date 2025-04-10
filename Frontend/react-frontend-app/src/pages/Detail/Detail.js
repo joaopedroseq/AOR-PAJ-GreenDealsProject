@@ -15,6 +15,8 @@ import {
   transformArrayDatetoDate,
   dateToFormattedDate,
 } from "../../Utils/utilityFunctions";
+import { useIntl } from "react-intl";
+import useLocaleStore from "../../Stores/useLocaleStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import EditProductModal from "../../Components/EditProductModal/EditProductModal";
 import errorMessages from "../../Utils/constants/errorMessages";
@@ -34,6 +36,10 @@ export const Detail = () => {
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //Opções de língua
+  const intl = useIntl();
+  const locale = useLocaleStore((state) => state.locale);
 
   // Toggle do edit product modal
   const [isEditProductModalVisible, setIsEditProductModalVisible] =
@@ -58,17 +64,23 @@ export const Detail = () => {
     try {
       await updateProduct(exclusion, token, product.id);
       if (!isAdmin) {
-        showSuccessToast("Produto apagado com sucesso");
+        showSuccessToast(
+          intl.formatMessage({ id: "detailProductDeletedSuccess" })
+        );
         navigate("/");
       } else {
         if (!product.excluded) {
-          showSuccessToast("Produto excluído com sucesso");
+          showSuccessToast(
+            intl.formatMessage({ id: "detailProductExcludedSuccess" })
+          );
         } else {
-          showSuccessToast("Produto recuperado com sucesso");
+          showSuccessToast(
+            intl.formatMessage({ id: "detailProductRecoveredSuccess" })
+          );
         }
       }
-      const updatedProduct = { ...product, excluded: exclusion.excluded }; //... é spread operator: adiciona ou suplanta o excluded
-      setProduct(updatedProduct); // Update the state to reflect the changes
+      const updatedProduct = { ...product, excluded: exclusion.excluded };
+      setProduct(updatedProduct);
       handleProductUpdate();
     } catch (error) {
       const toastMessage =
@@ -77,11 +89,13 @@ export const Detail = () => {
     }
   };
 
-  //Operação de apagar produto - redireciona para a página principal
+  // Operação de apagar produto - redireciona para a página principal
   const handleDeleteProduct = async () => {
     try {
       await deleteProduct(token, product.id);
-      showSuccessToast("Produto apagado com sucesso");
+      showSuccessToast(
+        intl.formatMessage({ id: "detailProductDeletedSuccess" })
+      );
       navigate(-1);
     } catch (error) {
       const toastMessage =
@@ -96,7 +110,6 @@ export const Detail = () => {
       if (id) {
         let productData;
         try {
-          //Get all the product information
           let queryParam = {
             id: id,
           };
@@ -105,14 +118,15 @@ export const Detail = () => {
             throw new Error("Invalid product - non unique product Id");
           }
           productData = productData[INDEX_OF_PRODUCT];
-          productData.date = transformArrayDatetoDate(productData.date); //passa o array de date para um objeto date javascript
+          productData.date = transformArrayDatetoDate(productData.date);
           setProduct(productData);
         } catch (error) {
-          showErrorToast("Error fetching product information");
+          showErrorToast(
+            intl.formatMessage({ id: "detailErrorFetchingProduct" })
+          );
           navigate("/");
         }
         try {
-          //Get the userLogged and compare with the owner
           const user = await getLoggedUserInformation(token);
           if (user.admin) {
             setAdmin(true);
@@ -122,7 +136,7 @@ export const Detail = () => {
           }
         } catch (error) {
           console.log("error in getting userlogged" + error);
-          showErrorToast("Error fetching user information");
+          showErrorToast(intl.formatMessage({ id: "detailErrorFetchingUser" }));
           setAdmin(false);
           setOwner(false);
         }
@@ -131,19 +145,22 @@ export const Detail = () => {
     fetchProduct();
   }, [id, token, isProductUpdated]);
 
-  //Comprar produto
+  // Comprar produto
   const buyingProduct = async () => {
     setModalConfig({
-      title: "Comprar Produto",
-      message: `Deseja comprar ${product.name}?`,
+      title: intl.formatMessage({ id: "detailBuyProductTitle" }),
+      message: intl.formatMessage(
+        { id: "detailBuyProductMessage" },
+        { productName: product.name }
+      ),
       onConfirm: async () => {
         const response = await handleBuyingProduct(id, token);
         if (response) {
-          showSuccessToast(`Produto comprado com sucesso`);
+          showSuccessToast(intl.formatMessage({ id: "detailPurchaseSuccess" }));
           setIsProductUpdated(true);
           setIsModalOpen(false);
         } else {
-          showErrorToast("Falha na compra do produto");
+          showErrorToast(intl.formatMessage({ id: "detailPurchaseFailure" }));
           setIsModalOpen(false);
         }
       },
@@ -154,11 +171,14 @@ export const Detail = () => {
   return (
     <div className="container">
       <div className="main-content">
-        {/*Título da categoria do produto*/}
+        {/* Título da categoria do produto */}
         <h2 id="product-category">
-          Categoria: {product ? product.category : "a, b, c"}
+          {intl.formatMessage({ id: "detailProductCategoryTitle" })}:{" "}
+          {product
+            ? product.category
+            : intl.formatMessage({ id: "detailDefaultCategory" })}
         </h2>
-        {/*Informações do produto*/}
+        {/* Informações do produto */}
         <div className="product-details">
           <div className="product-image-column">
             <img
@@ -167,54 +187,84 @@ export const Detail = () => {
               src={
                 product ? product.urlImage : "../images/placeholder/item.png"
               }
-              alt={product ? product.name : "item placeholder"}
+              alt={
+                product
+                  ? product.name
+                  : intl.formatMessage({ id: "detailImagePlaceholderAlt" })
+              }
             />
           </div>
           <div className="product-detail-column">
             <p id="product-name">
-              <strong>Nome do Produto: </strong>
-              {product ? product.name : "nome"}
+              <strong>
+                {intl.formatMessage({ id: "detailProductNameLabel" })}:{" "}
+              </strong>
+              {product
+                ? product.name
+                : intl.formatMessage({ id: "detailDefaultProductName" })}
             </p>
             <p id="product-description">
-              <strong>Descrição: </strong>{" "}
-              {product ? product.description : "descrição"}
+              <strong>
+                {intl.formatMessage({ id: "detailProductDescriptionLabel" })}:{" "}
+              </strong>
+              {product
+                ? product.description
+                : intl.formatMessage({ id: "detailDefaultProductDescription" })}
             </p>
             <p id="product-price">
-              <strong>Preço: </strong>
-              {product ? product.price : "preço"} €{" "}
+              <strong>
+                {intl.formatMessage({ id: "detailProductPriceLabel" })}:{" "}
+              </strong>
+              {product
+                ? `${product.price} €`
+                : intl.formatMessage({ id: "detailDefaultProductPrice" })}
             </p>
             <p id="product-seller">
-              <strong>Vendedor: </strong>{" "}
-              {product ? product.seller : "vendedor"}
+              <strong>
+                {intl.formatMessage({ id: "detailProductSellerLabel" })}:{" "}
+              </strong>
+              {product
+                ? product.seller
+                : intl.formatMessage({ id: "detailDefaultProductSeller" })}
             </p>
             <p id="product-location">
-              <strong>Localização: </strong>{" "}
-              {product ? product.location : "localização"}
+              <strong>
+                {intl.formatMessage({ id: "detailProductLocationLabel" })}:{" "}
+              </strong>
+              {product
+                ? product.location
+                : intl.formatMessage({ id: "detailDefaultProductLocation" })}
             </p>
             <p id="product-date">
-              <strong>Data de Publicação:</strong>{" "}
-              {product ? dateToFormattedDate(product.date) : "dd/mm/aaaa"}
+              <strong>
+                {intl.formatMessage({ id: "detailProductDateLabel" })}:{" "}
+              </strong>
+              {product
+                ? dateToFormattedDate(product.date)
+                : intl.formatMessage({ id: "detailDefaultProductDate" })}
             </p>
           </div>
         </div>
         <div className="productButtons">
-          {/*Se for admin mostrar botões de excluir produto*/}
+          {/* Se for admin, mostrar botão de excluir produto */}
           {isAdmin ? (
             <input
               type="button"
               id="exclude-product-button"
               className="exclude-product-button"
-              value="Apagar Produto"
+              value={intl.formatMessage({
+                id: "detailDeleteProductButtonLabel",
+              })}
               onClick={handleDeleteProduct}
             />
           ) : null}
 
-          {/*Se for admin ou dono do produto, mostrar botões de apagar e editar produto*/}
+          {/* Se for admin ou dono do produto, mostrar botões de apagar e editar produto */}
           {(isAdmin || isOwner) && (
             <input
               type="button"
               id="edit-product"
-              value="Editar informações"
+              value={intl.formatMessage({ id: "detailEditProductButtonLabel" })}
               onClick={toggleEditProductModal}
             />
           )}
@@ -225,39 +275,45 @@ export const Detail = () => {
               value={
                 isAdmin
                   ? product.excluded
-                    ? "Recuperar produto"
-                    : "Excluir produto"
+                    ? intl.formatMessage({
+                        id: "detailRecoverProductButtonLabel",
+                      })
+                    : intl.formatMessage({
+                        id: "detailExcludeProductButtonLabel",
+                      })
                   : isOwner && !isAdmin
-                  ? "Apagar Produto"
+                  ? intl.formatMessage({ id: "detailDeleteProductButtonLabel" })
                   : ""
               }
               onClick={handleExcludeProduct}
             />
           )}
-          {/*Se não for dono, não mostrar botão de comprar produto*/}
+          {/* Se não for dono, não mostrar botão de comprar produto */}
           {isOwner ? null : (
             <input
               type="button"
               id="buy-button"
-              value="Comprar"
+              value={intl.formatMessage({ id: "detailBuyProductButtonLabel" })}
               onClick={buyingProduct}
             />
           )}
+
+          <EditProductModal
+            product={product}
+            toggleEditProductModal={toggleEditProductModal}
+            isEditProductModalVisible={isEditProductModalVisible}
+            updatedProduct={handleProductUpdate}
+          />
+
+          <ConfirmationModal
+            title={modalConfig.title}
+            message={modalConfig.message}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={modalConfig.onConfirm}
+          />
         </div>
       </div>
-      <EditProductModal
-        product={product}
-        toggleEditProductModal={toggleEditProductModal}
-        isEditProductModalVisible={isEditProductModalVisible}
-        updatedProduct={handleProductUpdate}
-      />
-      <ConfirmationModal
-        title={modalConfig.title}
-        message={modalConfig.message}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={modalConfig.onConfirm}
-      />
     </div>
   );
 };
