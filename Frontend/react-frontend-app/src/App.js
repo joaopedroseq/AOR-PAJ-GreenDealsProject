@@ -1,5 +1,4 @@
 import './App.css';
-
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Components/Header/Header';
 import Homepage from './Pages/Homepage/Homepage';
@@ -16,6 +15,7 @@ import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
 import useUserStore from './Stores/useUserStore';
 import ChatBox from './Components/ChatBox/chatBox';
+import Activate from './Pages/Activate/Activate';
 
 function App() {
   const locale = useUserStore((state) => state.locale);
@@ -50,9 +50,7 @@ function App() {
         </ProtectedRoute>
       }/>
       <Route path="/activate" element={
-        <ProtectedRoute>
-          <Profile />
-        </ProtectedRoute>
+          <Activate />
       }/>
       </Routes>
       <ChatBox/>

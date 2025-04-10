@@ -24,8 +24,8 @@ Features:
 IMPORTANTE:
 - websockets
 - paginação de produtos;
-- CriteriaAPI para users;
 - implementar timer para apagar utilizadores expirados;
+- ver uma forma de haver apenas uma autenticação para vários websockets
 
 Features:
 - implementar recuperar (contrário de exluir) utilizador

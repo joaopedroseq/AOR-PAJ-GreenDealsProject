@@ -135,7 +135,6 @@ public class AuthenticationService {
 
     @POST
     @Path("/activate")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response activateAccount(@HeaderParam("token") String activationToken) {
         if (activationToken == null || activationToken.trim().isEmpty()) {
@@ -168,7 +167,8 @@ public class AuthenticationService {
                     return Response.status(500).entity("User " + user.getUsername() + " account not activated").build();
                 }
             } else {
-                String newActivationToken = tokenbean.generateNewActivationToken(user);
+                TokenDto newActivationToken = new TokenDto();
+                newActivationToken.setActivationToken(tokenbean.generateNewActivationToken(user));
                 logger.error("User {} tried to activate account with expired token. New activation token generated", user.getUsername());
                 return Response.status(409).entity(newActivationToken).build();
             }

@@ -8,48 +8,55 @@ function useWebSocketChat() {
   const [websocket, setWebSocket] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket(WS_URL);
-    ws.onopen = function (event) {
-      let authMessage = JSON.stringify({
-        type: "AUTHENTICATION",
-        token: token,
-      });
-      ws.send(authMessage);
-    };
+    if (isAuthenticated && token) {
+      const ws = new WebSocket(WS_URL);
+      ws.onopen = function (event) {
+        let authMessage = JSON.stringify({
+          type: "AUTHENTICATION",
+          token: token,
+        });
+        ws.send(authMessage);
+      };
 
-    ws.onmessage = function(event) {
-      const data = JSON.parse(event.data);
-  
-      switch (data.type) {
+      ws.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+
+        switch (data.type) {
           case "MESSAGE":
-              console.log("New message from", data.sender, ":", data.message, ":", data.timestamp);
-              break;
+            console.log(
+              "New message from",
+              data.sender,
+              ":",
+              data.message,
+              ":",
+              data.timestamp
+            );
+            break;
           case "AUTHENTICATED":
-              console.log("User authenticated:", data.username);
-              break;
+            break;
           case "PING":
-              ws.send(JSON.stringify({ type: "PONG" })); // Respond to keep the connection alive
-              break;
+            ws.send(JSON.stringify({ type: "PONG" })); // Respond to keep the connection alive
+            break;
           default:
-              console.warn("Unknown message type:", data.type);
-      }
-  };
+            console.warn("Unknown message type:", data.type);
+        }
+      };
 
-    setWebSocket(ws);
+      setWebSocket(ws);
 
-    return () => {
-      ws.close(); // Cleanup connection on unmount
-    };
-  }, [isAuthenticated]);
+      return () => {
+        ws.close(); // Cleanup connection on unmount
+      };
+    }
+  }, [token, isAuthenticated]);
 
   const sendMessage = (username, message) => {
-    
     if (websocket) {
       const payload = JSON.stringify({
-        type: 'MESSAGE',
+        type: "MESSAGE",
         receiver: username,
-        message: message
-      })
+        message: message,
+      });
       websocket.send(payload);
       console.log("Message sent:", payload);
     } else {

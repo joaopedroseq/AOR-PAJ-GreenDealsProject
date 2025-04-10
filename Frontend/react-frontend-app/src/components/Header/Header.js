@@ -31,9 +31,6 @@ const Header = () => {
   const [urlPhoto, setUrlPhoto ] = useState(null);
   //Toggle do login form
   const [ showLoginForm, setShowLoginForm] = useState(false);
-  //Toggle do registo para token de ativação
-    const [modalConfig, setModalConfig] = useState({});
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
   //Toggle do aside (através do botão hamburguer)
     const [isAsideVisible, setAsideVisible] =

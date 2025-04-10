@@ -10,7 +10,7 @@ import {
 import { useForm } from "react-hook-form";
 import {
   showErrorToast,
-  showSuccessToast,
+  showSuccessToast, showInfoToast
 } from "../../Utils/ToastConfig/toastConfig";
 import errorMessages from "../../Utils/constants/errorMessages";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
@@ -35,11 +35,14 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
     };
     try {
       const activationToken = await registerUser(newUser);
+      const activationLink = "localhost:3000/activate/token?" + activationToken
+      navigator.clipboard.writeText(activationLink);
       showSuccessToast(
         "Novo registo com sucesso " +
           newUser.firstName +
           " falta apenas ativar a sua conta"
       );
+      showInfoToast("O seu link de ativação foi copiado para o clipboard")
       reset();
       setModalConfig({
         title: "Token de ativação de conta",

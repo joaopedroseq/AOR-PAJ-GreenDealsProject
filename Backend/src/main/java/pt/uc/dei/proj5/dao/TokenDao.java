@@ -74,8 +74,9 @@ public class TokenDao extends AbstractDao<TokenEntity> {
     //Activation Token
     public UserEntity findUserByActivationToken(String activationToken) {
         try {
-            return (UserEntity) em.createNamedQuery("Token.findUserByActivationToken").setParameter("token", activationToken)
+            UserEntity user = (UserEntity) em.createNamedQuery("Token.findUserByActivationToken").setParameter("token", activationToken)
                     .getSingleResult();
+            return user;
 
         } catch (NoResultException e) {
             logger.error("Exception {} in TokenDao.findUserByAuthenticationToken", e.getMessage());

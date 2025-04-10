@@ -203,6 +203,7 @@ export const getUserLogged = async (token) => {
 export const activateUserAccount = async (activationToken) => {
   try {
     const response = await axios.post(`${userAutenticationEndpoint}activate`,
+      {},
       {
         headers: {
           "Content-Type": "application/json",
@@ -210,21 +211,22 @@ export const activateUserAccount = async (activationToken) => {
         }
       },
     );
-    return response.data;
+    return response;
   } catch (error) {
-    console.log(error.response);
     if (error.response) {
       const status = error.response.status;
       const message = error.response.data;
 
       if (status === 409) {
-        if (message?.newToken) {
-          console.log("Token expired. New token:", message.newToken);
-          return message.newToken; // Return the new token so it can be shown to the user
-        } else {
-          throw new Error("token_expired_no_new_token");
+        try {
+            if (message?.activationToken) {
+                return error.response;
+            }
+        } catch (parseError) {
+            console.error("Error parsing expired token response:", parseError);
+            throw new Error("token_expired_no_new_token");
         }
-      }
+    }
 
       if (status === 403) {
         if (message === "Bad request - already active account") {
@@ -240,7 +242,7 @@ export const activateUserAccount = async (activationToken) => {
         console.log('invalid token');
         throw new Error('invalid_token')
       }
-      console.log('login failed ' + status)
+      console.log('failed ' + status)
       throw new Error('failed')
     }
     if (error.request) {
