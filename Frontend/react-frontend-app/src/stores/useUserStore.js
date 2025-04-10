@@ -12,9 +12,6 @@ export const useUserStore = create(
       updateToken: (token) => set({ token }),   //apenas o token é guardado
       //boolean para facilitar operações que requerem autenticação
       updateIsAuthenticated: () => set({ isAuthenticated: true }),
-      //Lingua
-      locale: 'pt',
-      updateLocale: (locale) => set({ locale }),
       //operação de logout - clear da userStore
       clearUserStore: () => {
         set({

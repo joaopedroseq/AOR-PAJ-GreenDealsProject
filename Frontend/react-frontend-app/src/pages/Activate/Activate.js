@@ -4,6 +4,8 @@ import handleActivateAccount from "../../Handles/handleActivateAccount";
 import { showInfoToast, showErrorToast } from "../../Utils/ToastConfig/toastConfig"
 import errorMessages from "../../Utils/constants/errorMessages";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
+import useLocaleStore from "../../Stores/useLocaleStore";
+import { useIntl } from "react-intl";
 
 export const Activate = () => {
   const activationToken = new URLSearchParams(useLocation().search).get("token");
@@ -11,6 +13,10 @@ export const Activate = () => {
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  //Opções de língua
+  const locale = useLocaleStore((state) => state.locale);
+  const updateLocale = useLocaleStore((state) => state.updateLocale);
+  const intl = useIntl();
 
   //Obter informação do utilizador autenticado e redirecionar caso não seja admin
   useEffect(() => {
@@ -22,8 +28,8 @@ export const Activate = () => {
         let response = await handleActivateAccount(activationToken);
         if (response.status === 200) {
           setModalConfig({
-            title: "Conta ativada",
-            message1: `A sua conta foi ativada com sucesso`,
+            title: intl.formatMessage({ id: "accountActivateActivatedTitle" }),
+            message1: intl.formatMessage({ id: "accountActivateActivatedMessage1" }),
             message2: null,
             onConfirm: () => {
               setModalConfig({});
@@ -38,18 +44,18 @@ export const Activate = () => {
           try{
           navigator.clipboard.writeText(activationLink);
           showInfoToast(
-            "O seu novo link de ativação foi copiado para o clipboard"
+            intl.formatMessage({ id: "accountActivateInfoCopy" })
           );
           }
           catch(error){
             showInfoToast(
-              "Não foi possível copiar para o clipboard o novo link"
+              intl.formatMessage({ id: "accountActivateInfoNotCopy" })
             );
           }
           
           setModalConfig({
-            title: "Token de ativação expirado",
-            message1: `O seu token expirou. Utilize o novo link`,
+            title: intl.formatMessage({ id: "accountActivateActivatedFailTitle" }),
+            message1: intl.formatMessage({ id: "accountActivateActivatedFailMessage1" }),
             message2: "http://localhost:3000/activate?token=" + newToken,
             onConfirm: () => {
               setModalConfig({});

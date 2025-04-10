@@ -13,12 +13,12 @@ import RouteListener from './Utils/RouteListener';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
-import useUserStore from './Stores/useUserStore';
+import useLocaleStore from './Stores/useLocaleStore';
 import ChatBox from './Components/ChatBox/chatBox';
 import Activate from './Pages/Activate/Activate';
 
 function App() {
-  const locale = useUserStore((state) => state.locale);
+  const locale = useLocaleStore((state) => state.locale);
   
   return (
     <IntlProvider locale={locale} messages={languages[locale]}>

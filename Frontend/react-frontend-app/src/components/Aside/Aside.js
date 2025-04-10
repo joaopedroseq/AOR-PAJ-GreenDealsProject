@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import useProductStore from "../../Stores/useProductStore";
 import { useCategoriesStore } from "../../Stores/useCategoriesStore";
 import useUserStore from "../../Stores/useUserStore";
+import useLocaleStore from "../../Stores/useLocaleStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { Link } from "react-router-dom";
 import { renderCategoryList } from "../../Handles/renderCategoryList";
@@ -11,7 +12,6 @@ import { renderCategoryList } from "../../Handles/renderCategoryList";
 const Aside = ({ isAsideVisible }) => {
   //User state
   const token = useUserStore((state) => state.token);
-  const locale = useUserStore((state) => state.locale);
   const [isAdmin, setIsAdmin] = useState(false);
   const page = useLocation().pathname;
   //Categories load
@@ -19,6 +19,7 @@ const Aside = ({ isAsideVisible }) => {
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { setFilters, fetchProducts } = useProductStore();
   //Locale
+  const locale = useLocaleStore((state) => state.locale);
 
   //Para apresentação na página de profile
   const username = new URLSearchParams(useLocation().search).get("username");
@@ -80,40 +81,10 @@ const Aside = ({ isAsideVisible }) => {
         </ul>
       )}
       {page === "/user" && (
-        <ul>
-          <h3 onClick={() => handleScrollToSection("products-section")}>
-            Produtos
-          </h3>
-          <li
-            id="category"
-            value="all"
-            onClick={() => handleCategoryClick(null)}
-          >
-            Todos os produtos
-          </li>
-          {categories.map((category, index) =>
-            locale === "pt" ? (
-              <li
-                key={index}
-                value={category.nome}
-                id={category.nome}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-              </li>
-            ) : (
-              <li
-                key={index}
-                value={category.engName}
-                id={category.engName}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category.engName.charAt(0).toUpperCase() +
-                  category.engName.slice(1)}
-              </li>
-            )
-          )}
-        </ul>
+         <ul>
+         {renderCategoryList(categories, locale, handleCategoryClick)}
+
+       </ul>
       )}
       {page === "/user" && (
         <h3

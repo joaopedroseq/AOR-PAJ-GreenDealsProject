@@ -20,7 +20,9 @@ import UserCard from "../../Components/UserCard/UserCard";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
 import handleExcludeUser from "../../Handles/handleExcludeUser";
-import handleDeleteUser from "../../Handles/handleDeleteUser"
+import handleDeleteUser from "../../Handles/handleDeleteUser";
+import useLocaleStore from "../../Stores/useLocaleStore";
+import { useIntl } from "react-intl";
 
 export const Admin = () => {
   const token = useUserStore((state) => state.token);
@@ -56,6 +58,10 @@ export const Admin = () => {
   const handleDeleteCategory = useCategoriesStore(
     (state) => state.handleDeleteCategory
   );
+   //Opções de língua
+    const locale = useLocaleStore((state) => state.locale);
+    const updateLocale = useLocaleStore((state) => state.updateLocale);
+    const intl = useIntl();
 
   //Chamada à entrada da página para verificar se utilizador autenticado é admin
   //E filtra e fazer fetch de todos os produtos
@@ -64,7 +70,7 @@ export const Admin = () => {
       try {
         let userInformation = await getLoggedUserInformation(token);
         if (userInformation.admin === false) {
-          showInfoToast("Não tem permissão para aceder a esta página");
+          showInfoToast(intl.formatMessage({ id: "adminNoPermission" }));
           navigate("/");
         } else {
           let username = null;
@@ -91,13 +97,13 @@ export const Admin = () => {
   //Adicionar Nova Categoria
   const handleSubmittingNewCategory = (data) => {
     setModalConfig({
-      title: "Adicionar Categoria?",
-      message1: `Deseja adicionar nova categoria ${data.newCategoryName}?`,
+      title: intl.formatMessage({ id: "adminModalAddCategoryTitle" }),
+      message1: intl.formatMessage({ id: 'goodbye' }, { newCategoryName: data.newCategoryName }),
       message2: null,
       onConfirm: async () => {
         const response = await handleAddCategory(token, data.newCategoryName);
         if (response) {
-          showSuccessToast("Categoria adicionada com sucesso!");
+          showSuccessToast(intl.formatMessage({ id: "adminNewCategorySuccess" }));
           fetchCategories();
           setShowAddCategory(false);
           reset();
@@ -123,13 +129,13 @@ export const Admin = () => {
   // Apagar Categoria
   const handleRemovingCategory = (category) => {
     setModalConfig({
-      title: "Remover categoria?",
-      message1: `Deseja remover categoria ${category.name}?`,
-      message2: `Os ${category.products.length} produtos associados ficarão empty`,
+      title: intl.formatMessage({ id: "adminModalRemoveCategoryTitle" }),
+      message1: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { categoryName: category.name}),
+      message2: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { numberOfProducts: category.products.length}),
       onConfirm: async () => {
         const response = await handleDeleteCategory(token, category);
         if (response) {
-          showSuccessToast("Categoria removida com sucesso!");
+          showSuccessToast(intl.formatMessage({ id: "adminRemoveCategorySucess" }));
           fetchCategories();
           fetchProducts(token);
           setIsModalOpen(false);
@@ -146,13 +152,13 @@ export const Admin = () => {
   //Apagar produtos de utilizador
   const handleDeletingUserProducts = async(user) => {
     setModalConfig({
-      title: "Remover produtos de utilizador",
-      message1: `Deseja apagar todos os produtos de ${user.username}?`,
+      title: intl.formatMessage({ id: "adminRemoveUserProductsTitle"}),
+      message1: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { username: user.username}),
       message2: null,
       onConfirm: async () => {
         const response = await handleDeleteUserProducts(token, user.username);
         if (response) {
-          showSuccessToast(`Apagados todos os produtos de ${user.username}`);
+          showSuccessToast(intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { username: user.username}))
           fetchProducts(token);
           setIsModalOpen(false);
         }
@@ -167,13 +173,13 @@ export const Admin = () => {
   //Excluír utilizador
   const handleExcludingUser = async(user) => {
     setModalConfig({
-      title: "Excluir utilizador",
-      message1: `Deseja excluir o utilizador ${user.username}?`,
-      message2: 'Irá também excluir todos os seus produtos',
+      title: intl.formatMessage({ id: "adminExcludeUserTitle"}),
+      message1: intl.formatMessage({ id: "adminExcludeUserMessage1"}, { username: user.username}),
+      message2: intl.formatMessage({ id: "adminExcludeUserMessage2"}),
       onConfirm: async () => {
         const response = await handleExcludeUser(token, user.username);
         if (response) {
-          showSuccessToast(`Excluído o utilizador ${user.username}`);
+          showSuccessToast(intl.formatMessage({ id: "adminExcludeUserSuccess"}, { username: user.username}));
           const users = await handleGetAllUsers(token);
           setAllUsers(users);
           fetchProducts(token);
@@ -190,13 +196,13 @@ export const Admin = () => {
   //Apagar utilizador
   const handleDeletingUser = async(user) => {
     setModalConfig({
-      title: "Apagar utilizador",
-      message1: `Deseja apagar o utilizador ${user.username}?`,
-      message2: 'Os seus produtos serão excluídos',
+      title: intl.formatMessage({ id: "adminDeleteUserTitle"}),
+      message1: intl.formatMessage({ id: "adminDeleteUserMessage1"}, { username: user.username}),
+      message2: intl.formatMessage({ id: "adminDeleteUserMessage2"}),
       onConfirm: async () => {
         const response = await handleDeleteUser(token, user.username);
         if (response) {
-          showSuccessToast(`Apagado o utilizador ${user.username}`);
+          showSuccessToast(intl.formatMessage({ id: "adminDeleteUserSuccess"}, { username: user.username}));
           const users = await handleGetAllUsers(token);
           setAllUsers(users);
           fetchProducts(token);
@@ -214,14 +220,14 @@ export const Admin = () => {
   return (
     <div className="admin-main-content">
       <section className="products-section" id="products-section">
-        <h3>Gestão de Produtos</h3>
+        <h3>{intl.formatMessage({ id: "ProductsManagementTitle"})}</h3>
         <div className="grid-container">
           {products.length === 0 ? (
             <div className="grid-item no-products">
               <img src={placeholder} alt="No products available" />
               <div className="text-overlay">
-                <h2>No Products Available</h2>
-                <p>Please check back later.</p>
+                <h2>{intl.formatMessage({ id: "noProductsToShow"})}</h2>
+                <p>{intl.formatMessage({ id: "checkBackLater"})}</p>
               </div>
             </div>
           ) : (
@@ -232,10 +238,10 @@ export const Admin = () => {
         </div>
       </section>
       <section className="users-section" id="users-section">
-        <h3>Gestão de utilizadores</h3>
+        <h3>{intl.formatMessage({ id: "categoryManagementTitle"})}</h3>
         <div id="user-info-container" className="user-info-container">
           {allUsers.length === 0 ? (
-            <p>Sem utilizadores</p>
+            <p>{intl.formatMessage({ id: "noUsersToShow"})}</p>
           ) : (
             allUsers.map((user) => <UserCard
             key={user.id}
@@ -248,12 +254,12 @@ export const Admin = () => {
         </div>
       </section>
       <section className="categories-section" id="categories-section">
-        <h3>Gestão de categorias</h3>
+        <h3>{intl.formatMessage({ id: "categoryManagementTitle"})}</h3>
         <div className="category-container" id="category-container">
           {categories.length === 0 ? (
             <div className="category-card">
               <div className="category-info">
-                <p className="category-name">Não existem categorias criadas</p>
+                <p className="category-name">{intl.formatMessage({ id: "noCategoriesToShow"})}</p>
               </div>
             </div>
           ) : (
@@ -275,7 +281,7 @@ export const Admin = () => {
                   setShowAddCategory(!showAddCategory);
                 }}
               >
-                Criar nova categoria
+                {intl.formatMessage({ id: "createNewCategory"})}
               </button>
               <form
                 className={`newCategoryName ${
@@ -284,7 +290,7 @@ export const Admin = () => {
                 id="newCategoryName"
                 onSubmit={handleSubmit(handleSubmittingNewCategory, onError)}
               >
-                <label>nome da categoria</label>
+                <label>{intl.formatMessage({ id: "categoryNameLabel"})}</label>
                 <input
                   type="text"
                   className="newCategoryNameBox"
@@ -296,7 +302,7 @@ export const Admin = () => {
                   })}
                 />
                 <button type="submit" className="addCategory" id="addCategory">
-                  Adicionar
+                {intl.formatMessage({ id: "addCategoryButtonLabel"})}
                 </button>
               </form>
             </div>

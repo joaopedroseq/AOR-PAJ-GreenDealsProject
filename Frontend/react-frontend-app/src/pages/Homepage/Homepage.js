@@ -3,10 +3,10 @@ import "./homepage.css";
 import leaf from "../../Assets/icons/leaf.png";
 import placeholder from '../../Assets/placeholder/item.png';
 import sustentabilityBanner from "../../Assets/banners/banner.png";
-import rebanner from '../../Assets/banners/rebanner.png'
 import ProductCard from "../../Components/ProductCard/productCard";
 import useProductStore from "../../Stores/useProductStore";
 import useUserStore from "../../Stores/useUserStore";
+import useLocaleStore from "../../Stores/useLocaleStore";
 import { FormattedMessage } from "react-intl";
 
 
@@ -18,12 +18,13 @@ const Homepage = () => {
   const { setFilters, clearFilters } = useProductStore(); //talvez seja ainda necessário
 
   //Opções de língua
-  const locale = useUserStore((state) => state.locale);
+  const locale = useLocaleStore((state) => state.locale);
 
   //Popular a página com produtos
   useEffect(() => {
+    clearFilters()
     fetchProducts(); // Fetch products on component mount
-  }, [filters, fetchProducts]);
+  }, []);
 
 
   return (

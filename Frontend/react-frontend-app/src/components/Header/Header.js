@@ -13,18 +13,18 @@ import RegisterModal from "../RegisterModal/RegisterModal";
 import SellProductModal from "../SellProductModal/SellProductModal";
 import Aside from "../Aside/Aside";
 import useUserStore from "../../Stores/useUserStore";
+import useLocaleStore from "../../Stores/useLocaleStore";
 import { Link } from "react-router-dom";
 import { getUserLogged } from "../../Api/authenticationApi";
 import errorMessages from "../../Utils/constants/errorMessages";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const token = useUserStore((state) => state.token);
   //Opções de língua
-  const locale = useUserStore((state) => state.locale);
-  const updateLocale = useUserStore((state) => state.updateLocale);
+  const locale = useLocaleStore((state) => state.locale);
   const intl = useIntl();
   //Preenchimento de campos com o primeiro nome e foto
   const [firstName, setFirstName] = useState(null);
@@ -89,7 +89,7 @@ const Header = () => {
 
   //Mudança de lingua
   const handleChangeLanguage = (event) => {
-    updateLocale(event.target.value);
+    useLocaleStore.getState().updateLocale(event.target.value); // Change locale to "es"
   }
 
   return (
@@ -155,7 +155,7 @@ const Header = () => {
           {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
             <div className="headerDiv">
             <h4 className="loginMessage" id="mensagem_boasVindas">
-            <FormattedMessage id="welcomeMessage"/> {firstName}
+            {intl.formatMessage({ id: 'welcomeMessage' }, { firstName })}
             </h4>
               <img
                 id="loginPhoto"
