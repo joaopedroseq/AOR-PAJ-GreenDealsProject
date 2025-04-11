@@ -14,7 +14,7 @@ public class ProductDto implements Serializable{
     private String name;
     private String description;
     private double price;
-    private String category;
+    private CategoryDto category;
     private String location;
     private String urlImage;
     private ProductStateId state;
@@ -26,7 +26,7 @@ public class ProductDto implements Serializable{
     }
 
     //CONSTRUTOR QUANDO É ADICIONADO PRODUTO
-    public ProductDto(String seller, String name, String description, double price, String category, String location, String urlImage) {
+    public ProductDto(String seller, String name, String description, double price, CategoryDto category, String location, String urlImage) {
         this.seller = seller;
         this.name = name;
         this.description = description;
@@ -37,7 +37,7 @@ public class ProductDto implements Serializable{
     }
 
     //CONSTRUTOR QUANDO É BUSCADO UM PRODUTO
-    public ProductDto(String seller, String name, String description, double price, String category, String location, String urlImage, ProductStateId state, LocalDateTime date, int id) {
+    public ProductDto(String seller, String name, String description, double price, CategoryDto category, String location, String urlImage, ProductStateId state, LocalDateTime date, int id) {
         this.seller = seller;
         this.name = name;
         this.description = description;
@@ -60,7 +60,7 @@ public class ProductDto implements Serializable{
         this.urlImage = productDto.urlImage;
         this.state = ProductStateId.RASCUNHO;
         this.date = LocalDateTime.now();
-        this.id = generateHash(seller,name,description,price,category,location,urlImage,date);
+        this.id = generateHash(seller,name,description,price,category.getNome(),location,urlImage,date);
         this.excluded = productDto.excluded;
         this.edited = date;
     }
@@ -93,17 +93,12 @@ public class ProductDto implements Serializable{
         this.price = price;
     }
 
-    @XmlElement
-    public String getCategory() {
-        try {
-            return category.toLowerCase();
-        } catch (Exception e) {
-            return null;
-        }
+    public CategoryDto getCategory() {
+        return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category.toLowerCase();
+    public void setCategory(CategoryDto category) {
+        this.category = category;
     }
 
     @XmlElement
@@ -189,7 +184,7 @@ public class ProductDto implements Serializable{
                 && this.name != null && !this.name.isEmpty()
                 && this.description != null && !this.description.isEmpty()
                 && this.price != 0
-                && this.category != null && !this.category.isEmpty()
+                && this.category != null && !this.category.getNome().isEmpty()
                 && this.location != null && !this.location.isEmpty()
                 && this.urlImage != null && !this.urlImage.isEmpty();
 
@@ -201,7 +196,7 @@ public class ProductDto implements Serializable{
                 && this.name != null && !this.name.isEmpty()
                 && this.description != null && !this.description.isEmpty()
                 && this.price != 0
-                && this.category != null && !this.category.isEmpty()
+                && this.category != null && !this.category.getNome().isEmpty()
                 && this.location != null && !this.location.isEmpty()
                 && this.urlImage != null && !this.urlImage.isEmpty()
                 && this.state != null

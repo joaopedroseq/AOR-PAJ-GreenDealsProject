@@ -15,6 +15,7 @@ import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.*;
+import pt.uc.dei.proj5.entity.CategoryEntity;
 import pt.uc.dei.proj5.entity.ProductEntity;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
@@ -28,7 +29,7 @@ public class UserBean implements Serializable {
     UserDao userDao;
 
     @EJB
-    CategoryDao categoryDao;
+    CategoryBean categoryBean;
 
     @EJB
     ProductDao productDao;
@@ -310,7 +311,7 @@ public class UserBean implements Serializable {
         product.setLocation(productDto.getLocation());
         product.setState(productDto.getState());
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
-        product.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
+        product.setCategory(categoryBean.convertCategoryDtoToCategoryEntity(productDto.getCategory()));
         product.setUrlImage(productDto.getUrlImage());
         return product;
     }
@@ -325,7 +326,11 @@ public class UserBean implements Serializable {
         produto.setLocation(productEntity.getLocation());
         produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
-        produto.setCategory(productEntity.getCategory().getNome());
+        if (productEntity.getCategory() != null) {
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setNome(productEntity.getCategory().getNome());
+            categoryDto.setNameEng(productEntity.getCategory().getNameEng());
+        }
         produto.setUrlImage(productEntity.getUrlImage());
         produto.setEdited(productEntity.getEditedDate());
         produto.setExcluded(productEntity.getExcluded());

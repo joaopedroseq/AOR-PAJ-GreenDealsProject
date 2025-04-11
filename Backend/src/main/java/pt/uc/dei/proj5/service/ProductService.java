@@ -53,7 +53,7 @@ public class ProductService {
             TokenDto tokenDto = new TokenDto();
             tokenDto.setAuthenticationToken(authenticationToken);
             user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            if (user==null || user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
                 logger.error("Permission denied - user {} trying to get products with inactive or excluded account", user.getUsername());
                 return Response.status(403).entity("User has inactive or excluded account").build();
             }
@@ -144,9 +144,14 @@ public class ProductService {
             logger.error("Permission denied - user {} tried add new products with inactive or excluded account", user.getUsername());
             return Response.status(403).entity("User has inactive or excluded account").build();
         } else {
-            CategoryDto category = new CategoryDto();
-            category.setNome(newProductDto.getCategory());
+            if(newProductDto.getCategory() == null){
+                logger.error("Invalid data - adding new product");
+                return Response.status(400).entity("Invalid data").build();
+            }
+            CategoryDto category = categoryBean.getCategoryDto(newProductDto.getCategory().getNome());
+            newProductDto.setCategory(category);
             newProductDto.setExcluded(false);
+            newProductDto.setSeller(user.getUsername());
             if (!newProductDto.newProductIsValid()) {
                 logger.error("Invalid data - adding new product");
                 return Response.status(400).entity("Invalid data").build();

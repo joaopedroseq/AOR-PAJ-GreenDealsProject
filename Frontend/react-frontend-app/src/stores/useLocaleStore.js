@@ -1,15 +1,13 @@
 import { create } from "zustand";
 
-//UserStore responsável pela gestão de utilizadores logged
+// Store responsável pela gestão do idioma
 export const useLocaleStore = create((set) => ({
-      //Lingua
-      locale: 'pt',
-      updateLocale: (locale) => {
-        console.log(locale);
-        set({ locale });
-  }
+  locale: "pt", // ✅ Default value
+
+  setLocale: (newLocale) => {
+    console.log("🌍 Setting new locale:", newLocale);
+    set({ locale: newLocale });
+  },
 }));
-
-
 
 export default useLocaleStore;

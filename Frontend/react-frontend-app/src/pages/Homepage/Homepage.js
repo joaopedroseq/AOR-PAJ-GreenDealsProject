@@ -51,7 +51,7 @@ const Homepage = () => {
           </div>
         ) : (
           products.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} locale={locale} />
           ))
         )}
       </div>

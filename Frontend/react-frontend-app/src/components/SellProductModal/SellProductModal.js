@@ -7,33 +7,22 @@ import {
 } from "../../Utils/ToastConfig/toastConfig";
 import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import { addProduct } from "../../Api/productApi";
-import { getUserLogged } from "../../Api/authenticationApi";
 import { useCategoriesStore } from "../../Stores/useCategoriesStore";
 import errorMessages from "../../Utils/constants/errorMessages";
 import useProductStore from "../../Stores/useProductStore";
+import useUserStore from "../../Stores/useUserStore";
 
 const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
   const { register, handleSubmit, reset } = useForm();
+  const { isAuthenticated } = useUserStore((state) => state);
 
   //Utiliza as categorias disponíveis no CategoriesStore
   const categories = useCategoriesStore((state) => state.categories);
 
-  //Obtenção do nome de utilizador logged
-  const getUsername = async () => {
-    try {
-      const user = await getUserLogged(token);
-      return user.username;
-    } catch (error) {
-      console.error("Failed to get username:", error);
-      return;
-    }
-  };
-
   //Submissão do formulário para novo produto
   const onSubmit = async (registerProduct) => {
-    const username = await getUsername();   //irá buscar o nome de utilizado ao user store
+    if(isAuthenticated){
     const newProduct = {
-      seller: username,
       name: registerProduct.productName,
       description: registerProduct.productDescription,
       price: registerProduct.productPrice,
@@ -57,7 +46,11 @@ const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
       reset();
       return;
     }
-  };
+  }
+  else {
+    showErrorToast("Não está autenticado para vender um produto");
+    }
+};
 
   // informação ao utilizador sobre erros
   const onError = (errors) => {

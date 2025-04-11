@@ -25,7 +25,7 @@ public class CategoryEntity implements Serializable {
     @Column(name="nameEng", nullable=false, unique = true, updatable = false)
     private String nameEng;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private Set<ProductEntity> products;
 
     //Constructors

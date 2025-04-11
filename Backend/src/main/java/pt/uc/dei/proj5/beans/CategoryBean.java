@@ -80,11 +80,17 @@ public class CategoryBean implements Serializable {
     public boolean checkIfCategoryExists(CategoryDto category) {
         List<CategoryEntity> categoryEntities = categoryDao.getAllCategories(Language.PT);
         for(CategoryEntity categoryEntity : categoryEntities) {
-            if(categoryEntity.getNome().equals(category.getNome())){
-                return true;
+            if(!categoryEntity.getNome().equals(category.getNome())){
+                return false;
             }
         }
-        return false;
+        categoryEntities = categoryDao.getAllCategories(Language.EN);
+        for(CategoryEntity categoryEntity : categoryEntities) {
+            if(!categoryEntity.getNome().equals(category.getNome())){
+                return false;
+            }
+        }
+        return true;
     }
 
     private CategoryEntity createEmptyCategory() {
@@ -97,13 +103,12 @@ public class CategoryBean implements Serializable {
         return empty;
     }
 
-    public Set<ProductDto> getProductsByCategory(String category) {
+    public CategoryDto getCategoryDto(String category) {
         try {
-            List<ProductEntity> products = productDao.getProductsByCategory(category);
-            Set<ProductEntity> productSet = new HashSet<>(products);
-            return convertGroupProductEntityToGroupProductDto(productSet);
+            CategoryEntity categoryEntity = categoryDao.findCategoryByName(category);
+            return convertCategoryEntityToCategoryDto(categoryEntity);
         } catch (Exception e) {
-            logger.error("Error while getting active products");
+            logger.error("Error while category" + category);
             logger.error(e);
             return null;
         }
@@ -124,7 +129,6 @@ public class CategoryBean implements Serializable {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setNome(categoryEntity.getNome());
         categoryDto.setNameEng(categoryEntity.getNameEng());
-        categoryDto.setProducts(userBean.convertGroupProductEntityToGroupProductDto(categoryEntity.getProduct()));
         return categoryDto;
     }
 
@@ -135,32 +139,6 @@ public class CategoryBean implements Serializable {
         return categoryEntity;
     }
 
-    public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
-        Set<ProductDto> productDtos = new HashSet<>();
-        for (ProductEntity productEntity : products) {
-            ProductDto produto = convertSingleProductEntitytoProductDto(productEntity);
-            productDtos.add(produto);
-        }
-        return productDtos;
-    }
-
-    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
-        ProductDto produto = new ProductDto();
-        produto.setId(productEntity.getId());
-        produto.setDescription(productEntity.getDescription());
-        produto.setPrice(productEntity.getPrice());
-        produto.setName(productEntity.getName());
-        produto.setDate(productEntity.getDate());
-        produto.setLocation(productEntity.getLocation());
-        ProductStateId state = ProductStateId.RASCUNHO;
-        produto.setState(productEntity.getState());
-        produto.setSeller(productEntity.getSeller().getUsername());
-        produto.setCategory(productEntity.getCategory().getNome());
-        produto.setUrlImage(productEntity.getUrlImage());
-        produto.setEdited(productEntity.getEditedDate());
-        produto.setExcluded(productEntity.getExcluded());
-        return produto;
-    }
 
     public List<CategoryDto> getAllCategories(Language language) {
         try {

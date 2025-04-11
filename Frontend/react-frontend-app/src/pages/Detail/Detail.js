@@ -175,7 +175,11 @@ export const Detail = () => {
         <h2 id="product-category">
           {intl.formatMessage({ id: "detailProductCategoryTitle" })}:{" "}
           {product
-            ? product.category
+            ? locale === "pt"
+              ? product.category.nome
+              : locale === "en"
+              ? product.category.nameEng
+              : intl.formatMessage({ id: "detailDefaultCategory" }) // Default for unsupported locales
             : intl.formatMessage({ id: "detailDefaultCategory" })}
         </h2>
         {/* Informações do produto */}

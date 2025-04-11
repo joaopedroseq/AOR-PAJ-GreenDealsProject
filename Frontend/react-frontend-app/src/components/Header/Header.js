@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { getUserLogged } from "../../Api/authenticationApi";
 import errorMessages from "../../Utils/constants/errorMessages";
 import { useIntl } from "react-intl";
+import handleLocaleChange from "../../Handles/handleLocaleChange";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
@@ -57,6 +58,7 @@ const Header = () => {
     }
   }, [isAuthenticated, token]);
 
+  
   //operação de logout - chamada ao cleardo user store
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -89,8 +91,15 @@ const Header = () => {
 
   //Mudança de lingua
   const handleChangeLanguage = (event) => {
-    useLocaleStore.getState().updateLocale(event.target.value); // Change locale to "es"
-  }
+    const newLocale = event.target.value;
+    console.log("🌍 Changing language to:", newLocale);
+
+    useLocaleStore.getState().setLocale(newLocale); // ✅ Directly updating Zustand store
+
+    handleLocaleChange(newLocale); // ✅ Ensures sorting happens after locale change
+};
+
+  
 
   return (
     <div className="Header">

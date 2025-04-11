@@ -15,7 +15,7 @@ const Aside = ({ isAsideVisible }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const page = useLocation().pathname;
   //Categories load
-  const categories = useCategoriesStore((state) => state.categories);
+  const displayedCategories = useCategoriesStore((state) => state.displayedCategories);
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { setFilters, fetchProducts } = useProductStore();
   //Locale
@@ -43,7 +43,13 @@ const Aside = ({ isAsideVisible }) => {
       getUserInfo();
     }
     fetchCategories();
-  }, [fetchCategories, page]);
+  }, [token, page]);
+  
+  useEffect(() => {
+    useLocaleStore.getState().setLocale("en"); // Change the locale manually
+  }, []);
+
+  const categories = useCategoriesStore((state) => state.displayedCategories);
 
   const handleCategoryClick = (category, edited, user = null) => {
     if (category) {
@@ -60,6 +66,7 @@ const Aside = ({ isAsideVisible }) => {
       fetchProducts();
     }
   };
+  
 
   const handleScrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -76,13 +83,12 @@ const Aside = ({ isAsideVisible }) => {
     >
       {page === "/" && (
         <ul>
-          {renderCategoryList(categories, locale, handleCategoryClick)}
-
+          {renderCategoryList(displayedCategories, locale, handleCategoryClick)}
         </ul>
       )}
       {page === "/user" && (
          <ul>
-         {renderCategoryList(categories, locale, handleCategoryClick)}
+         {renderCategoryList(displayedCategories, locale, handleCategoryClick)}
 
        </ul>
       )}
@@ -119,7 +125,7 @@ const Aside = ({ isAsideVisible }) => {
             >
               Editados
             </li>
-            {categories.map((category, index) => (
+            {displayedCategories.map((category, index) => (
               <li
                 key={index}
                 value={category.name}
@@ -165,7 +171,7 @@ const Aside = ({ isAsideVisible }) => {
             >
               Editados
             </li>
-            {categories.map((category, index) => (
+            {displayedCategories.map((category, index) => (
               <li
                 key={index}
                 value={category.name}
@@ -184,4 +190,12 @@ const Aside = ({ isAsideVisible }) => {
     </aside>
   );
 };
+
+useLocaleStore.subscribe(
+  (state) => state.locale,
+  (locale) => {
+    console.log("🔥 Locale changed to:", locale);
+    useCategoriesStore.getState().sortByLocale(locale); // ✅ Ensuring sorting updates store
+  }
+);
 export default Aside;

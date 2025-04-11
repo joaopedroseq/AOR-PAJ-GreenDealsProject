@@ -80,7 +80,7 @@ public class ProductBean {
                     productEntity.setPrice(productDto.getPrice());
                 }
                 if (productDto.getCategory() != null) {
-                    productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory()));
+                    productEntity.setCategory(categoryDao.findCategoryByName(productDto.getCategory().getNome()));
                 }
                 if (productDto.getLocation() != null) {
                     productEntity.setLocation(productDto.getLocation());
@@ -148,7 +148,7 @@ public class ProductBean {
         ProductStateId state = ProductStateId.RASCUNHO;
         produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
-        produto.setCategory(productEntity.getCategory().getNome());
+        produto.setCategory(categoryBean.convertCategoryEntityToCategoryDto(productEntity.getCategory()));
         produto.setUrlImage(productEntity.getUrlImage());
         produto.setExcluded(productEntity.getExcluded());
         return produto;

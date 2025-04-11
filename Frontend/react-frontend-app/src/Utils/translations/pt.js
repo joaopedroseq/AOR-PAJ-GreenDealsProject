@@ -74,7 +74,7 @@ const pt = {
   //Detail
   detailProductDeletedSuccess: "Produto apagado com sucesso",
   detailProductExcludedSuccess: "Produto excluído com sucesso",
-  detailBroductRecoveredSuccess: "Produto recuperado com sucesso",
+  detailProductRecoveredSuccess: "Produto recuperado com sucesso",
   detailBuyProductTitle: "Comprar Produto",
   detailBuyProductMessage: "Deseja comprar {productName}?",
   detailPurchaseSuccess: "Produto comprado com sucesso",
@@ -139,5 +139,31 @@ profilePhoneRequired: "Terá de preencher o seu contacto telefónico",
 profilePhoneInvalid: "O seu número de telefone tem de conter pelo menos 9 dígitos",
 profilePhotoUrlLabel: "Foto URL",
 profilePhotoUrlRequired: "Terá de preencher com o URL da sua fotografia de perfil",
+
+// Página: Utilizador
+userMyProductsTitle: "Os meus produtos",
+userNoProductsAlt: "Nenhum produto disponível",
+userNoProductsHeading: "Sem produtos disponíveis",
+userNoProductsMessage: "Por favor, verifique novamente mais tarde.",
+userPersonalInfoTitle: "Informações Pessoais",
+userProfilePhotoAlt: "Ícone do utilizador",
+userFirstNameLabel: "Primeiro Nome",
+userFirstNameRequired: "Terá de preencher o primeiro nome",
+userFirstNameInvalid: "O primeiro nome não deverá conter caracteres especiais",
+userLastNameLabel: "Último Nome",
+userLastNameRequired: "Terá de preencher o apelido",
+userLastNameInvalid: "O apelido não deverá conter caracteres especiais",
+userEmailLabel: "Email",
+userEmailRequired: "Terá de preencher o seu email",
+userEmailInvalid: "O seu email tem de conter um @",
+userPhoneLabel: "Telefone",
+userPhoneRequired: "Terá de preencher o seu contacto telefónico",
+userPhoneInvalid: "O seu número de telefone tem de conter pelo menos 9 dígitos",
+userPhotoUrlLabel: "Link Foto",
+userPhotoUrlRequired: "Terá de preencher com o URL da sua fotografia de perfil",
+userSaveChangesButton: "Guardar Alterações",
+userChangePasswordButton: "Alterar password",
+
+//NOVO
 };
 export default pt;
