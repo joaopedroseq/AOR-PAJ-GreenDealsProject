@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 import "./homepage.css";
 import leaf from "../../Assets/icons/leaf.png";
 import placeholder from '../../Assets/placeholder/item.png';
 import sustentabilityBanner from "../../Assets/banners/banner.png";
-import ProductCard from "../../Components/ProductCard/productCard";
+import ProductCard from "../../Components/ProductCard/ProductCard";
 import useProductStore from "../../Stores/useProductStore";
-import useUserStore from "../../Stores/useUserStore";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { FormattedMessage } from "react-intl";
 
@@ -13,9 +12,8 @@ import { FormattedMessage } from "react-intl";
 //Homepage
 const Homepage = () => {
   const products = useProductStore((state) => state.products);
-  const filters = useProductStore((state) => state.filters);
   const fetchProducts = useProductStore((state) => state.fetchProducts);
-  const { setFilters, clearFilters } = useProductStore(); //talvez seja ainda necessário
+  const { clearFilters } = useProductStore(); //talvez seja ainda necessário
 
   //Opções de língua
   const locale = useLocaleStore((state) => state.locale);
@@ -24,7 +22,7 @@ const Homepage = () => {
   useEffect(() => {
     clearFilters()
     fetchProducts(); // Fetch products on component mount
-  }, []);
+  }, [clearFilters, fetchProducts]);
 
 
   return (

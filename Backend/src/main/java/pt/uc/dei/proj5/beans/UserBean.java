@@ -227,21 +227,6 @@ public class UserBean implements Serializable {
     }
 
 
-
-    //Deprecated - provavelmente para apagar
-    public boolean excludeProduct(int productId) {
-        try {
-            productDao.excludeProduct(productId);
-            return true;
-        } catch (Exception e) {
-            logger.error("Error while excluding product {}", productId);
-            logger.error(e);
-            return false;
-        }
-    }
-
-
-
     //Converts
     private ArrayList<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {
         ArrayList<UserDto> userDtos = new ArrayList<>();
@@ -309,6 +294,7 @@ public class UserBean implements Serializable {
         product.setDate(productDto.getDate());
         product.setEditedDate(productDto.getEdited());
         product.setLocation(productDto.getLocation());
+        System.out.println("STATE:" + productDto.getState().toString());
         product.setState(productDto.getState());
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
         product.setCategory(categoryBean.convertCategoryDtoToCategoryEntity(productDto.getCategory()));

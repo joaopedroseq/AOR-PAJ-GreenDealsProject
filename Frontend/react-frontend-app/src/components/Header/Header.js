@@ -16,9 +16,9 @@ import useUserStore from "../../Stores/useUserStore";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { Link } from "react-router-dom";
 import { getUserLogged } from "../../Api/authenticationApi";
-import errorMessages from "../../Utils/constants/errorMessages";
 import { useIntl } from "react-intl";
 import handleLocaleChange from "../../Handles/handleLocaleChange";
+import handleNotification from "../../Handles/handleNotification";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
@@ -52,6 +52,7 @@ const Header = () => {
           setUrlPhoto(userInfo.url);
         } catch (error) {
           console.error("Failed to get user information:", error);
+          handleNotification(intl, "error", `error${error.message}`);
         }
       };
       getUserInfo();
@@ -65,13 +66,12 @@ const Header = () => {
     try {
       const isLoggedOut = await logout(token);
       if (isLoggedOut) {
-        showSuccessToast(`${intl.formatMessage({ id: 'goodbye' }, { firstName: firstName })}`);
+        handleNotification(intl, "success", "goodbye", { firstName });
         useUserStore.getState().clearUserStore();
       }
     } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
+      console.error("Logout failed:", error);
+      handleNotification(intl, "error", `error${error.message}`);
     }
   };
 
@@ -92,11 +92,7 @@ const Header = () => {
   //Mudança de lingua
   const handleChangeLanguage = (event) => {
     const newLocale = event.target.value;
-    console.log("🌍 Changing language to:", newLocale);
-
-    useLocaleStore.getState().setLocale(newLocale); // ✅ Directly updating Zustand store
-
-    handleLocaleChange(newLocale); // ✅ Ensures sorting happens after locale change
+    handleLocaleChange(newLocale);
 };
 
   
@@ -177,6 +173,7 @@ const Header = () => {
             toggleProductModal={toggleProductModal}
             isProductModalVisible={isProductModalVisible}
             token={token}
+            locale={locale}
           />
         </>
       ) : (
@@ -196,6 +193,7 @@ const Header = () => {
             <RegisterModal
               toggleModal={toggleRegisterModal}
               isModalVisible={isRegisterModalVisible}
+              locale={locale}
             />
           </div>
         </>

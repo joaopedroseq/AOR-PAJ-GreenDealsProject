@@ -39,6 +39,7 @@ public class UserDao extends AbstractDao<UserEntity> {
             );
             predicates.add(usernameSearchPredicate);
         }
+        predicates.add(cb.notEqual(cb.lower(root.get("username")), "anonymous"));
         if(firstName != null) {
             Predicate firstNameSearchPredicate = cb.or(
                     cb.like(cb.lower(root.get("firstname")), "%" + firstName.toLowerCase() + "%"),
@@ -128,8 +129,13 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public boolean deleteUser(String username) {
         try{
-            if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {
-                return true;
+            if (em.createNamedQuery("Token.deleteToken").setParameter("username", username).executeUpdate() > 0) {
+                if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
             else{
                 return false;

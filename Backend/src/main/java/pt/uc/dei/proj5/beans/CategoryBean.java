@@ -80,17 +80,17 @@ public class CategoryBean implements Serializable {
     public boolean checkIfCategoryExists(CategoryDto category) {
         List<CategoryEntity> categoryEntities = categoryDao.getAllCategories(Language.PT);
         for(CategoryEntity categoryEntity : categoryEntities) {
-            if(!categoryEntity.getNome().equals(category.getNome())){
-                return false;
+            if(categoryEntity.getNome().equals(category.getNome())){
+                return true;
             }
         }
         categoryEntities = categoryDao.getAllCategories(Language.EN);
         for(CategoryEntity categoryEntity : categoryEntities) {
-            if(!categoryEntity.getNome().equals(category.getNome())){
-                return false;
+            if(categoryEntity.getNome().equals(category.getNome())){
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private CategoryEntity createEmptyCategory() {
@@ -129,6 +129,7 @@ public class CategoryBean implements Serializable {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setNome(categoryEntity.getNome());
         categoryDto.setNameEng(categoryEntity.getNameEng());
+        categoryDto.setProducts(categoryEntity.getProduct().size());
         return categoryDto;
     }
 

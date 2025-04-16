@@ -1,6 +1,4 @@
 export function renderCategoryList(categories, locale, handleCategoryClick) {
-  console.log(categories);
-  console.log(locale);
   return (
     <>
       <li id="category" value="all" onClick={() => handleCategoryClick(null)}>
@@ -11,7 +9,7 @@ export function renderCategoryList(categories, locale, handleCategoryClick) {
           key={index}
           value={locale === "pt" ? category.nome : category.nameEng}
           id={locale === "pt" ? category.nome : category.nameEng}
-          onClick={() => handleCategoryClick(category)}
+          onClick={() => handleCategoryClick(category.nome)}
         >
           {locale === "pt"
             ? category.nome.charAt(0).toUpperCase() + category.nome.slice(1)

@@ -36,7 +36,7 @@ async function fetchRequest(endpoint, requestType, body = null) {
       return null;
     }
   } catch (error) {
-    console.error("Fetch request failed:", error);
+    console.error("Fetch request errorFailed:", error);
     throw error;
   }
 }

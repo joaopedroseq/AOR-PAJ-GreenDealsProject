@@ -6,6 +6,7 @@ import java.util.Set;
 public class CategoryDto implements Serializable {
     private String nome;
     private String nameEng;
+    private int products;
 
     //Constructors
     public CategoryDto() {}
@@ -29,6 +30,14 @@ public class CategoryDto implements Serializable {
     }
     public void setNameEng(String nameEng) {
         this.nameEng = nameEng;
+    }
+
+    public int getProducts() {
+        return products;
+    }
+
+    public void setProducts(int products) {
+        this.products = products;
     }
 
     public boolean hasValidValues() {

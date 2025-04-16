@@ -1,10 +1,10 @@
 import React from 'react';
 import './loginForm.css'
 import { useForm } from 'react-hook-form';
-import { showErrorToast } from '../../Utils/ToastConfig/toastConfig';
 import { handleLogin } from '../../Handles/handleLogin';
 import useUserStore from '../../Stores/useUserStore';
 import { FormattedMessage, useIntl } from "react-intl";
+import handleNotification from "../../Handles/handleNotification";
 
 const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
   //utilização de funções do useForm
@@ -32,12 +32,12 @@ const LoginForm = ({ isOpen, isClosed, toggleRegisterModal }) => {
    // Handle validation errors
    const onError = (errors) => {
     if (errors.username) {
-      showErrorToast(<FormattedMessage id="noUsername"/>);
+      handleNotification(intl, "error", `noUsername`);
       reset()
       isClosed();
     }
     if (errors.password) {
-      showErrorToast(<FormattedMessage id="noPassword"/>);
+      handleNotification(intl, "error", `noPassword`);
       reset()
       isClosed();
     }

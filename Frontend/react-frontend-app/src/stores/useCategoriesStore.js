@@ -15,43 +15,22 @@ export const useCategoriesStore = create((set, get) => ({
 
   //operação de get das categorias para popular a store
   fetchCategories: async () => {
-    console.log(
-      "Manual locale check inside script:",
-      useLocaleStore.getState().locale
-    );
-    console.log("ran fetch categories");
     const locale = useLocaleStore.getState().locale;
-    console.log("Using locale:", locale);
-
     try {
       const allCategories = await fetchCategories(locale);
-      console.log(allCategories);
       set({ categories: allCategories });
       set({ displayedCategories: allCategories });
     } catch (error) {
-      showErrorToast("Failed to fetch categories");
+      showErrorToast("errorFailed to fetch categories");
       console.log(error);
     }
   },
   
   sortByLocale: (locale) => {
-    console.log("ran sort");
-
     const allCategories = get().categories;
-    if (!Array.isArray(allCategories) || allCategories.length === 0) {
-        console.error("⚠️ Categories list is empty or not an array, cannot sort.");
-        return []; // ✅ Ensures function always returns an array
-    }
-
-    const sortedCategories = [...allCategories].sort((a, b) => 
-        (locale === "pt" ? a.nome : a.nameEng).localeCompare(locale === "pt" ? b.nome : b.nameEng)
-    );
-
-    console.log("✅ Sorted categories:", sortedCategories);
-    
-    set({ displayedCategories: sortedCategories }); // ✅ Updates Zustand state
-
-    return sortedCategories; // ✅ Ensures function returns sorted array
+    const sortedCategories = allCategories.sort((a, b) => 
+          (locale === "pt" ? a.nome : a.nameEng).localeCompare(locale === "pt" ? b.nome : b.nameEng));
+    set({ displayedCategories: sortedCategories });
 },
 
   //Operação de Admin para adicionar categoria
@@ -67,7 +46,7 @@ export const useCategoriesStore = create((set, get) => ({
       }
     } catch (error) {
       const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
+        errorMessages[error.message] || errorMessages.errorUnexpected;
       showErrorToast(toastMessage);
     }
   },
@@ -75,8 +54,9 @@ export const useCategoriesStore = create((set, get) => ({
   //Operação de apagar uma categoria
   handleDeleteCategory: async (token, categoryToDelete) => {
     const category = {
-      name: categoryToDelete.name,
+      name: categoryToDelete.nome,
     };
+    console.log(category);
     try {
       const response = await deleteCategory(token, category);
       console.log(response);
@@ -86,7 +66,7 @@ export const useCategoriesStore = create((set, get) => ({
       }
     } catch (error) {
       const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
+        errorMessages[error.message] || errorMessages.errorUnexpected;
       showErrorToast(toastMessage);
     }
   },

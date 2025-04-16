@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import handleActivateAccount from "../../Handles/handleActivateAccount";
-import { showInfoToast, showErrorToast } from "../../Utils/ToastConfig/toastConfig"
-import errorMessages from "../../Utils/constants/errorMessages";
+import handleNotification from "../../Handles/handleNotification";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import { useIntl } from "react-intl";
 
 export const Activate = () => {
-  const activationToken = new URLSearchParams(useLocation().search).get("token");
+  const activationToken = new URLSearchParams(useLocation().search).get(
+    "token"
+  );
   const navigate = useNavigate();
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
@@ -17,7 +18,7 @@ export const Activate = () => {
 
   //Obter informação do utilizador autenticado e redirecionar caso não seja admin
   useEffect(() => {
-        if (!activationToken) {
+    if (!activationToken) {
       navigate("/");
     }
     const activateUserAccount = async (activationToken) => {
@@ -26,7 +27,9 @@ export const Activate = () => {
         if (response.status === 200) {
           setModalConfig({
             title: intl.formatMessage({ id: "accountActivateActivatedTitle" }),
-            message1: intl.formatMessage({ id: "accountActivateActivatedMessage1" }),
+            message1: intl.formatMessage({
+              id: "accountActivateActivatedMessage1",
+            }),
             message2: null,
             onConfirm: () => {
               setModalConfig({});
@@ -37,22 +40,21 @@ export const Activate = () => {
           setIsModalOpen(true);
         } else if (response.status === 409) {
           const newToken = response.data.activationToken;
-          const activationLink = "localhost:3000/activate/token?" + newToken;
-          try{
-          navigator.clipboard.writeText(activationLink);
-          showInfoToast(
-            intl.formatMessage({ id: "accountActivateInfoCopy" })
-          );
+          const activationLink = "localhost:3000/activate?token=" + newToken;
+          try {
+            navigator.clipboard.writeText(activationLink);
+            handleNotification(intl, "success", "accountActivateInfoCopy");
+          } catch (error) {
+            handleNotification(intl, "error", "accountActivateInfoNotCopy");
           }
-          catch(error){
-            showInfoToast(
-              intl.formatMessage({ id: "accountActivateInfoNotCopy" })
-            );
-          }
-          
+
           setModalConfig({
-            title: intl.formatMessage({ id: "accountActivateActivatedFailTitle" }),
-            message1: intl.formatMessage({ id: "accountActivateActivatedFailMessage1" }),
+            title: intl.formatMessage({
+              id: "accountActivateActivatedFailTitle",
+            }),
+            message1: intl.formatMessage({
+              id: "accountActivateActivatedFailMessage1",
+            }),
             message2: "http://localhost:3000/activate?token=" + newToken,
             onConfirm: () => {
               setModalConfig({});
@@ -63,9 +65,7 @@ export const Activate = () => {
           setIsModalOpen(true);
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", "errorUnexpected");
         navigate("/");
       }
     };

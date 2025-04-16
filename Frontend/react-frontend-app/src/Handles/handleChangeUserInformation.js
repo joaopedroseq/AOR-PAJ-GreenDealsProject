@@ -1,10 +1,6 @@
 import { checkPassword } from "../Api/authenticationApi";
 import { updateUserInformation } from "../Api/userApi";
-import errorMessages from "../Utils/constants/errorMessages";
-import {
-  showErrorToast,
-  showSuccessToast,
-} from "../Utils/ToastConfig/toastConfig";
+import handleNotification from "./handleNotification";
 
 //Operações de update de informações de utilizador
 const handleChangeUserInformation = async (
@@ -12,7 +8,8 @@ const handleChangeUserInformation = async (
   updatedInfo,
   confirmPassword,
   token,
-  isAdmin
+  isAdmin,
+  intl
 ) => {
   try {
     //check por contraposição entre que informações se mantém e quais são novas
@@ -23,8 +20,6 @@ const handleChangeUserInformation = async (
         updatesToUser[key] = updatedInfo[key];
       }
     }
-    console.log(updatesToUser)
-    console.log(isAdmin);
 
     //check da password CASO o utilizador requisitante não seja admin
     let isPasswordValid;
@@ -35,7 +30,7 @@ const handleChangeUserInformation = async (
     }
 
     if (!isPasswordValid) {
-      throw new Error("Password confirmation failed.");
+      throw new Error("Password confirmation errorFailed.");
     } else {
       try {
         const response = await updateUserInformation(
@@ -43,22 +38,17 @@ const handleChangeUserInformation = async (
           userInfo.username,
           updatesToUser
         );
-        console.log(response.status);
         if (response.status === 200) {
-          showSuccessToast("Alterações efetuadas com sucesso");
+          handleNotification(intl, "success", "handleChangeUserInformationSucess")
           return true;
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", `${error.message}`);
         return false;
       }
     }
   } catch (error) {
-    const toastMessage =
-      errorMessages[error.message] || errorMessages.unexpected_error;
-    showErrorToast(toastMessage);
+    handleNotification(intl, "error", `${error.message}`);
   }
 };
 

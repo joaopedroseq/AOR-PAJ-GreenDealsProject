@@ -5,32 +5,32 @@ import deleteProducts from "../../Assets/icons/deleteProducts.png";
 import deleteUser from "../../Assets/icons/deleteUser.png";
 import "./profile.css";
 import {
-  showSuccessToast,
-  showErrorToast,
   showInfoToast,
 } from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
 import { useLocation, useNavigate } from "react-router-dom";
 import useUserStore from "../../Stores/useUserStore";
+import useLocaleStore from "../../Stores/useLocaleStore.js";
 import useProductStore from "../../Stores/useProductStore";
-import errorMessages from "../../Utils/constants/errorMessages";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
-import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
-import handleExcludeUser from "../../Handles/handleExcludeUser";
-import handleDeleteUser from "../../Handles/handleDeleteUser";
-import { checkIfValidName } from "../../Utils/utilityFunctions.js";
+import { checkIfValidName } from "../../Utils/utilityFunctions";
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
-import ProductCard from "../../Components/ProductCard/productCard.js";
+import ProductCard from "../../Components/ProductCard/ProductCard";
 import { useIntl } from "react-intl";
+import handleNotification from "../../Handles/handleNotification.js";
+import { handleExcludingUser, handleDeletingUserProducts, handleDeletingUser } from '../../Handles/handleUserOperations';
 
 export const Profile = () => {
   const token = useUserStore((state) => state.token);
   const username = new URLSearchParams(useLocation().search).get("username");
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState({});
+
+ //Opções de língua
   const intl = useIntl();
+  const locale = useLocaleStore((state) => state.locale);
 
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
@@ -65,24 +65,21 @@ export const Profile = () => {
         await fetchProducts(token);
       }
     } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
+      handleNotification(intl, "error", `error${error.message}`);
     }
+  
   };
 
   useEffect(() => {
     const checkIfAdmin = async () => {
       try {
-        let userInformation = await getLoggedUserInformation(token);
+        let userInformation = await getLoggedUserInformation(token, intl);
         if (userInformation.admin === false) {
           showInfoToast(intl.formatMessage({ id: "profileNoPermission" }));
           navigate("/");
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", `error${error.message}`);  
         navigate("/");
       }
     };
@@ -101,9 +98,7 @@ export const Profile = () => {
           await fetchProducts(token);
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", `error${error.message}`);
       }
     };
     getUserProducts();
@@ -143,118 +138,54 @@ export const Profile = () => {
 
   // Apresentação de erros ao utilizador
   const onError = (errors) => {
-    if (errors.firstName) {
-      showErrorToast(errors.firstName.message);
-    }
-    if (errors.lastName) {
-      showErrorToast(errors.lastName.message);
-    }
-    if (errors.username) {
-      showErrorToast(errors.username.message);
-    }
-    if (errors.password) {
-      showErrorToast(errors.password.message);
-    }
-    if (errors.passwordConfirm) {
-      showErrorToast(errors.passwordConfirm.message);
-    }
-    if (errors.email) {
-      showErrorToast(errors.email.message);
-    }
-    if (errors.phoneNumber) {
-      showErrorToast(errors.phoneNumber.message);
-    }
-    if (errors.urlPhoto) {
-      showErrorToast(errors.urlPhoto.message);
-    }
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `profile${errorKey}Required`);
+    });
   };
 
-  // Remove all products from a user
-  const handleDeletingUserProducts = async () => {
-    setModalConfig({
-      title: intl.formatMessage({ id: "profileRemoveUserProductsTitle" }),
-      message1: intl.formatMessage(
-        { id: "profileRemoveUserProductsMessage1" },
-        { username: userProfile.username }
-      ),
-      message2: null,
-      onConfirm: async () => {
-        const response = await handleDeleteUserProducts(
-          token,
-          userProfile.username
-        );
-        if (response) {
-          showSuccessToast(
-            intl.formatMessage(
-              { id: "profileRemoveUserProductsSuccess" },
-              { username: userProfile.username }
-            )
-          );
-          fetchProducts(token);
-          setIsModalOpen(false);
-        } else {
-          setIsModalOpen(false);
-        }
-      },
-    });
-    setIsModalOpen(true);
-  };
+  //Apagar produtos de utilizador
+    const handleDeleteUserProducts = (user) => {
+      setModalConfig({
+        title: intl.formatMessage({ id: "adminRemoveUserProductsTitle"}, { user: user.username }),
+        message1: intl.formatMessage({ id: "adminRemoveUserProductsMessage1" }, { username: user.username }),
+        message2: null,
+        onConfirm: async () => {
+          await handleDeletingUserProducts(token, user, setIsModalOpen, fetchProducts, intl);
+        },
+      });
+    
+      setIsModalOpen(true);
+    };
+  
+  
+    //Excluír utilizador
+    const handleExcludeUser = async(user) => {
+      setModalConfig({
+        title: intl.formatMessage({ id: "adminExcludeUserTitle"}),
+        message1: intl.formatMessage({ id: "adminExcludeUserMessage1"}, { username: user.username}),
+        message2: intl.formatMessage({ id: "adminExcludeUserMessage2"}),
+        onConfirm: async () => {
+          await handleExcludingUser(token, user, null, setIsModalOpen, fetchProducts, intl);
+        },
+      });
+    
+      setIsModalOpen(true);
+    };
+  
+    //Apagar utilizador
+    const handleDeleteUser = async(user) => {
+      setModalConfig({
+        title: intl.formatMessage({ id: "adminDeleteUserTitle"}),
+        message1: intl.formatMessage({ id: "adminDeleteUserMessage1"}, { username: user.username}),
+        message2: intl.formatMessage({ id: "adminDeleteUserMessage2"}),
+        onConfirm: async () => {
+          await handleDeletingUser(token, user, null, setIsModalOpen, navigate, fetchProducts, intl);
+        },
+      });
+      setIsModalOpen(true);
+    };
 
-  // Exclude a user
-  const handleExcludingUser = async () => {
-    setModalConfig({
-      title: intl.formatMessage({ id: "profileExcludeUserTitle" }),
-      message1: intl.formatMessage(
-        { id: "profileExcludeUserMessage1" },
-        { username: userProfile.username }
-      ),
-      message2: intl.formatMessage({ id: "profileExcludeUserMessage2" }),
-      onConfirm: async () => {
-        const response = await handleExcludeUser(token, userProfile.username);
-        if (response) {
-          showSuccessToast(
-            intl.formatMessage(
-              { id: "profileExcludeUserSuccess" },
-              { username: userProfile.username }
-            )
-          );
-          fetchProducts(token);
-          setIsModalOpen(false);
-        } else {
-          setIsModalOpen(false);
-        }
-      },
-    });
-    setIsModalOpen(true);
-  };
 
-  // Delete a user
-  const handleDeletingUser = async () => {
-    setModalConfig({
-      title: intl.formatMessage({ id: "profileDeleteUserTitle" }),
-      message1: intl.formatMessage(
-        { id: "profileDeleteUserMessage1" },
-        { username: userProfile.username }
-      ),
-      message2: intl.formatMessage({ id: "profileDeleteUserMessage2" }),
-      onConfirm: async () => {
-        const response = await handleDeleteUser(token, userProfile.username);
-        if (response) {
-          showSuccessToast(
-            intl.formatMessage(
-              { id: "profileDeleteUserSuccess" },
-              { username: userProfile.username }
-            )
-          );
-          setIsModalOpen(false);
-          navigate("/admin");
-        } else {
-          setIsModalOpen(false);
-        }
-      },
-    });
-    setIsModalOpen(true);
-  };
   return (
     <div className="user-main-content">
       {userProfile?.username && (
@@ -283,9 +214,7 @@ export const Profile = () => {
                   </div>
                 </div>
               ) : (
-                products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))
+                products.map((product) => <ProductCard key={product.id} product={product} locale={locale} />)
               )}
             </div>
           </section>
@@ -413,19 +342,19 @@ export const Profile = () => {
                       src={deleteProducts}
                       alt="exclude user"
                       className="deleteProductsUserBtn"
-                      onClick={handleDeletingUserProducts}
+                      onClick={handleDeleteUserProducts}
                     />
                     <img
                       src={exclude}
                       alt="exclude user"
                       className="excludeUserBtn"
-                      onClick={handleExcludingUser}
+                      onClick={handleExcludeUser}
                     />
                     <img
                       src={deleteUser}
                       alt="delete user"
                       className="deleteUserBtn"
-                      onClick={handleDeletingUser}
+                      onClick={handleDeleteUser}
                     />
                   </div>
                 </form>

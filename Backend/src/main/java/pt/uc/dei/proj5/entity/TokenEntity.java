@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "Token.findIfAuthenticationTokenExists", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
 //find by username
 @NamedQuery(name = "Token.findTokenByUsername", query = "SELECT token FROM TokenEntity token WHERE token.user.username = :username")
+//Delete token
+@NamedQuery(name= "Token.deleteToken", query ="DELETE FROM TokenEntity WHERE username = :username")
 @Entity
 @Table(name="token")
 public class TokenEntity implements Serializable {

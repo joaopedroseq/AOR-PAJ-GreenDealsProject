@@ -1,34 +1,34 @@
 //Ficheiro de gestão de erros de operações com o backen
 const errorMessages = {
     // Erros gerais
-    network_error: "Sem resposta do servidor, verifique a sua conexão.",
-    unexpected_error: "Erro inesperado. Por favor tente novamente.",
+    errorNetwork_error: "Sem resposta do servidor, verifique a sua conexão.",
+    errorUnexpected: "Erro inesperado. Por favor tente novamente.",
   
     // Erros de produtos
-    invalid_data: "Dados inválidos.",
-    invalid_token: "Token inválido, por favor tente novamente.",
-    permission_denied: "Sem permissão para o fazer, por favor tente novamente.",
-    non_existant_category: "Categoria inexistente, por favor tente novamente.",
-    failed: "A operação falhou, por favor tente novamente.",
-    non_existant_product: "Produto inexistente, por favor tente novamente.",
-    conflict_category: "Categoria já existe",
-    non_existing_category: "Categoria não existe",
+    errorInvalidData: "Dados inválidos.",
+    errorInvalidToken: "Token inválido, por favor tente novamente.",
+    errorPermissionDenied: "Sem permissão para o fazer, por favor tente novamente.",
+    errorNonExistantCategory: "Categoria inexistente, por favor tente novamente.",
+    errorFailed: "A operação falhou, por favor tente novamente.",
+    errorNonExistantProduct: "Produto inexistente, por favor tente novamente.",
+    errorConflictCategory: "Categoria já existe",
+    errorNonExistingCategory: "Categoria não existe",
     
   
     // Erros de autenticação
-    same_username: "O nome de usuário já existe.",
+    errorSameUsername: "O nome de usuário já existe.",
     error: "Erro nos dados fornecidos.",
-    wrong_username_password: "O nome de utilizador ou palavra-passe estão incorretos",
-    wrong_password: "Palavra-passe incorreta",
-    forbidden: "Não tem permissão para essa operação",
-    account_excluded: "A sua conta foi excluída - contacte o administrador",
-    account_inactive: "A sua conta ainda não está ativada",
-    account_already_active: "A sua conta já está ativada",
-    expired_token: "O token para ativar a sua conta expirou",
+    errorWrongUsernamePassword: "O nome de utilizador ou palavra-passe estão incorretos",
+    errorWrongPassword: "Palavra-passe incorreta",
+    errorForbidden: "Não tem permissão para essa operação",
+    errorAccountExcluded: "A sua conta foi excluída - contacte o administrador",
+    errorAccountInactive: "A sua conta ainda não está ativada",
+    errorAccountAlreadyActive: "A sua conta já está ativada",
+    errorExpiredToken: "O token para ativar a sua conta expirou",
   
     // Erros de get
-    get_user_failed: "Falha ao obter informações do utilizador.",
-    register_failed: "Falha ao registrar o utilizador."
+    errorGetUsererrorFailed: "Falha ao obter informações do utilizador.",
+    errorRegistererrorFailed: "Falha ao registrar o utilizador."
   };
   
   export default errorMessages;

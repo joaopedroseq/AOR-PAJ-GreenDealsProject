@@ -27,10 +27,10 @@ export const fetchCategories = async (language) => {
       }
       if (error.request) {
         console.error("No response from server:", error.request);
-        throw new Error("network_error");
+        throw new Error("errorNetwork_error");
       }
       console.log(error.response);
-      throw new Error("unexpected_error");
+      throw new Error("errorUnexpected");
     }
   };
 
@@ -56,29 +56,29 @@ export const fetchCategories = async (language) => {
   
         if (status === 400) {
           console.log("Invalid data - adding category");
-          throw new Error("invalid_data");
+          throw new Error("errorInvalidData");
         }
         if (status === 401) {
           console.log("invalid token");
-          throw new Error("invalid_token");
+          throw new Error("errorInvalidToken");
         }
         if (status === 403) {
           console.log("permission denied");
-          throw new Error("permission_denied");
+          throw new Error("errorPermissionDenied");
         }
         if (status === 409) {
           console.log("category already exists");
-          throw new Error("conflict_category");
+          throw new Error("errorConflictCategory");
         }
-        console.log("adding category failed " + status);
-        throw new Error("failed");
+        console.log("adding category errorFailed " + status);
+        throw new Error("errorFailed");
       }
       if (error.request) {
         console.error("No response from server:", error.request);
-        throw new Error("network_error");
+        throw new Error("errorNetwork_error");
       }
       console.log(error.response);
-      throw new Error("unexpected_error");
+      throw new Error("errorUnexpected");
     }
   };
 
@@ -105,28 +105,28 @@ export const fetchCategories = async (language) => {
   
         if (status === 400) {
           console.log("Invalid data - adding category");
-          throw new Error("invalid_data");
+          throw new Error("errorInvalidData");
         }
         if (status === 401) {
           console.log("invalid token");
-          throw new Error("invalid_token");
+          throw new Error("errorInvalidToken");
         }
         if (status === 403) {
           console.log("permission denied");
-          throw new Error("permission_denied");
+          throw new Error("errorPermissionDenied");
         }
         if (status === 404) {
           console.log("category doesn't exist");
-          throw new Error("non_existing_category");
+          throw new Error("errorNonExistingCategory");
         }
-        console.log("adding category failed " + status);
-        throw new Error("failed");
+        console.log("adding category errorFailed " + status);
+        throw new Error("errorFailed");
       }
       if (error.request) {
         console.error("No response from server:", error.request);
-        throw new Error("network_error");
+        throw new Error("errorNetwork_error");
       }
       console.log(error.response);
-      throw new Error("unexpected_error");
+      throw new Error("errorUnexpected");
     }
   };

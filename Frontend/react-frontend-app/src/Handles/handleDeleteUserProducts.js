@@ -12,7 +12,7 @@ const handleDeleteUserProducts = async(token, username) => {
           }
         } catch (error) {
           const toastMessage =
-            errorMessages[error.message] || errorMessages.unexpected_error;
+            errorMessages[error.message] || errorMessages.errorUnexpected;
           showErrorToast(toastMessage);
         }
       }

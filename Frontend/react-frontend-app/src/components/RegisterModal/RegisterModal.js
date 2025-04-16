@@ -8,19 +8,18 @@ import {
   checkIfValidPassword,
 } from "../../Utils/utilityFunctions";
 import { useForm } from "react-hook-form";
-import {
-  showErrorToast,
-  showSuccessToast, showInfoToast
-} from "../../Utils/ToastConfig/toastConfig";
-import errorMessages from "../../Utils/constants/errorMessages";
+import { useIntl } from "react-intl";
 import ConfirmationModal from "../ConfirmationModal/ConfirmationModal";
+import handleNotification from "../../Handles/handleNotification";
 
-const RegisterModal = ({ toggleModal, isModalVisible }) => {
+const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
   //Modal de Registo de novo utilizador
   const { register, handleSubmit, watch, reset } = useForm();
   //Confirmation Modal
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const intl = useIntl();
 
   //Submissão do formulário (admin é sempre falso)
   const onSubmit = async (registerData) => {
@@ -33,32 +32,41 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
       phoneNumber: registerData.phoneNumber,
       url: registerData.urlPhoto,
     };
+
     try {
       const activationToken = await registerUser(newUser);
-      const activationLink = "localhost:3000/activate/token?" + activationToken
+      const activationLink = `localhost:3000/activate?token=${activationToken}`;
       navigator.clipboard.writeText(activationLink);
-      showSuccessToast(
-        "Novo registo com sucesso " +
-          newUser.firstName +
-          " falta apenas ativar a sua conta"
-      );
-      showInfoToast("O seu link de ativação foi copiado para o clipboard")
+
+      handleNotification(intl, "success", "registerModalSuccessMessage", {
+        firstName: newUser.firstName,
+      });
+
+      handleNotification(intl, "info", "registerModalActivationLinkCopied");
+
       reset();
       setModalConfig({
-        title: "Token de ativação de conta",
-        message1: `Utilize o endereço abaixo para ativar a sua conta`,
-        message2: "localhost:3000/activate/token?" + activationToken,
+        title: intl.formatMessage({ id: "registerModalActivationTokenTitle" }),
+        message1: intl.formatMessage({
+          id: "registerModalActivationInstruction",
+        }),
+        message2: activationLink,
         onConfirm: () => {
-          setModalConfig({})
+          setModalConfig({});
           setIsModalOpen(false);
           toggleModal();
         },
       });
+
       setIsModalOpen(true);
     } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
+      handleNotification(
+        intl,
+        "error",
+        `error${error.message}`,
+        {},
+        intl.formatMessage({ id: "errorUnexpected" })
+      );
       reset();
       toggleModal();
     }
@@ -66,30 +74,9 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
 
   // Apresentação de erros ao utilizador
   const onError = (errors) => {
-    if (errors.firstName) {
-      showErrorToast(errors.firstName.message);
-    }
-    if (errors.lastName) {
-      showErrorToast(errors.lastName.message);
-    }
-    if (errors.username) {
-      showErrorToast(errors.username.message);
-    }
-    if (errors.password) {
-      showErrorToast(errors.password.message);
-    }
-    if (errors.passwordConfirm) {
-      showErrorToast(errors.passwordConfirm.message);
-    }
-    if (errors.email) {
-      showErrorToast(errors.email.message);
-    }
-    if (errors.phoneNumber) {
-      showErrorToast(errors.phoneNumber.message);
-    }
-    if (errors.urlPhoto) {
-      showErrorToast(errors.urlPhoto.message);
-    }
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `registerModalError${errorKey}`);
+    });
   };
 
   return (
@@ -98,11 +85,14 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
         <div className="modal-content-id">
           {/* Header do modal */}
           <div className="modal-header-id" id="modal-header-id">
-            <p className="modal-header-id-title">Criar novo registo</p>
+            <p className="modal-header-id-title">
+              {intl.formatMessage({ id: "registerModalTitle" })}
+            </p>
             <p className="close-id" id="close-id" onClick={toggleModal}>
               &times;
             </p>
           </div>
+
           {/* Body do modal */}
           <div className="modal-body-id">
             <form
@@ -110,150 +100,130 @@ const RegisterModal = ({ toggleModal, isModalVisible }) => {
               id="edit-id-form"
               onSubmit={handleSubmit(onSubmit, onError)}
             >
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-nome">Primeiro Nome: </label>
-                <input
-                  type="text"
-                  id="new-name"
-                  name="new-name"
-                  placeholder="nome"
-                  maxLength="20"
-                  {...register("firstName", {
-                    required:
-                      "Para se registar terá de preencher o primeiro nome",
-                    validate: (value) =>
-                      checkIfValidName(value) ||
-                      "O primeiro nome não deverá conter caracteres especiais",
+              {[
+                {
+                  id: "firstName",
+                  label: "registerModalFirstNameLabel",
+                  placeholder: "registerModalFirstNamePlaceholder",
+                  maxLength: 20,
+                  validation: checkIfValidName,
+                },
+                {
+                  id: "lastName",
+                  label: "registerModalLastNameLabel",
+                  placeholder: "registerModalLastNamePlaceholder",
+                  maxLength: 20,
+                  validation: checkIfValidName,
+                },
+                {
+                  id: "username",
+                  label: "registerModalUsernameLabel",
+                  placeholder: "registerModalUsernamePlaceholder",
+                  maxLength: 30,
+                  validation: checkIfValidUsername,
+                },
+                {
+                  id: "email",
+                  label: "registerModalEmailLabel",
+                  placeholder: "registerModalEmailPlaceholder",
+                  maxLength: 40,
+                  validation: (val) => val.includes("@"),
+                },
+                {
+                  id: "phoneNumber",
+                  label: "registerModalPhoneLabel",
+                  placeholder: "registerModalPhonePlaceholder",
+                  maxLength: 20,
+                  validation: (val) => /^\d{9}$/.test(val),
+                },
+                {
+                  id: "urlPhoto",
+                  label: "registerModalPhotoUrlLabel",
+                  placeholder: "registerModalPhotoUrlPlaceholder",
+                },
+                {
+                  id: "password",
+                  label: "registerModalPasswordLabel",
+                  placeholder: "registerModalPasswordPlaceholder",
+                  maxLength: 30,
+                  validation: checkIfValidPassword,
+                  type: "password",
+                  autoComplete: "new-password",
+                }
+              ].map(({ id, label, placeholder, maxLength, validation }) => (
+                <div className="edit-id-form-field" key={id}>
+                  <label htmlFor={id}>
+                    {intl.formatMessage({ id: label })}
+                  </label>
+                  <input
+                    type={id === "password" ? "password" : "text"} // Ensures correct input type
+                    id={`new-${id}`}
+                    name={`new-${id}`}
+                    placeholder={intl.formatMessage({ id: placeholder })}
+                    autoComplete={id === "password" ? "new-password" : "off"}
+                    maxLength={maxLength}
+                    {...register(id, {
+                      required: intl.formatMessage({
+                        id: `registerModalError${id}Required`,
+                      }),
+                      validate: validation
+                        ? (value) =>
+                            validation(value) ||
+                            intl.formatMessage({
+                              id: `registerModalErrorInvalid${id}`,
+                            })
+                        : undefined,
+                    })}
+                  />
+                </div>
+              ))}
+
+              {/* Password Confirmation */}
+              <div className="edit-id-form-field">
+                <label htmlFor="passwordConfirm">
+                  {intl.formatMessage({
+                    id: "registerModalConfirmPasswordLabel",
                   })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-apelido">Apelido: </label>
-                <input
-                  type="text"
-                  id="new-lastname"
-                  name="new-lastname"
-                  placeholder="apelido"
-                  maxLength="20"
-                  {...register("lastName", {
-                    required: "Para se registar terá de preencher o apelido",
-                    validate: (value) =>
-                      checkIfValidName(value) ||
-                      "O apelido nome não deverá conter caracteres especiais",
-                  })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-username">Username: </label>
-                <input
-                  type="text"
-                  id="new-username"
-                  name="new-username"
-                  placeholder="username"
-                  maxLength="30"
-                  {...register("username", {
-                    required:
-                      "Para se registar terá de preencher o nome de utilizador",
-                    validate: (value) =>
-                      checkIfValidUsername(value) ||
-                      "O nome de utilizador pode conter - e _ mas não outros caracteres especiais",
-                  })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-password">Password: </label>
-                <input
-                  type="password"
-                  id="new-password"
-                  name="new-password"
-                  placeholder="password"
-                  maxLength="30"
-                  {...register("password", {
-                    required: "Para se registar terá de preencher a password",
-                    validate: (value) =>
-                      checkIfValidPassword(value) ||
-                      "A password não pode conter ' ou \"",
-                  })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-passwordConfirm">
-                  Confirmar Password:{" "}
                 </label>
                 <input
                   type="password"
                   id="new-passwordConfirm"
                   name="new-passwordConfirm"
-                  placeholder="password"
+                  placeholder={intl.formatMessage({
+                    id: "registerModalConfirmPasswordPlaceholder",
+                  })}
                   maxLength="30"
+                  autoComplete="new-password"
                   {...register("passwordConfirm", {
-                    required:
-                      "Para se registar terá de preencher a confirmação da password",
+                    required: intl.formatMessage({
+                      id: "registerModalErrorConfirmPasswordRequired",
+                    }),
                     validate: {
                       isValid: (value) =>
                         checkIfValidPassword(value) ||
-                        "A password não pode conter ' ou \"",
+                        intl.formatMessage({
+                          id: "registerModalErrorInvalidPassword",
+                        }),
                       isConfirmed: (value) =>
                         value === watch("password") ||
-                        "As passwords não correspondem",
+                        intl.formatMessage({
+                          id: "registerModalErrorPasswordMismatch",
+                        }),
                     },
                   })}
                 />
               </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-email">Email: </label>
-                <input
-                  type="text"
-                  id="new-email"
-                  name="new-email"
-                  placeholder="email"
-                  maxLength="40"
-                  {...register("email", {
-                    required: "Para se registar terá de preencher o seu email",
-                    validate: (value) =>
-                      value.includes("@") || "O seu email tem de conter um @",
-                  })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-phone">Número de Telefone: </label>
-                <input
-                  type="text"
-                  id="new-phone"
-                  name="new-phone"
-                  placeholder="contacto telefónico"
-                  maxLength="20"
-                  {...register("phoneNumber", {
-                    required:
-                      "Para se registar terá de preencher o seu contacto telefónico",
-                    validate: (value) =>
-                      /^\d{9}$/.test(value) ||
-                      "O seu número de telefone tem de conter pelo menos 9 digitos",
-                  })}
-                />
-              </div>
-              <div className="edit-id-form-field" id="edit-id-form-field">
-                <label htmlFor="edit-photo">Fotografia de Perfil (URL): </label>
-                <input
-                  type="text"
-                  id="new-photo"
-                  name="new-photo"
-                  placeholder="url de imagem"
-                  {...register("urlPhoto", {
-                    required:
-                      "Para se registar terá de preencher com o url da sua fotografia de perfil",
-                  })}
-                />
-              </div>
+
               <input
                 type="submit"
                 id="registerBtn"
                 className="registerBtn"
-                value="Register"
+                value={intl.formatMessage({ id: "registerModalSubmitButton" })}
               />
             </form>
           </div>
         </div>
+
         <ConfirmationModal
           title={modalConfig.title}
           message1={modalConfig.message1}

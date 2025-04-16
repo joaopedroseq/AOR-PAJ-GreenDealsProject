@@ -8,195 +8,197 @@ import {
 import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import { addProduct } from "../../Api/productApi";
 import { useCategoriesStore } from "../../Stores/useCategoriesStore";
-import errorMessages from "../../Utils/constants/errorMessages";
 import useProductStore from "../../Stores/useProductStore";
 import useUserStore from "../../Stores/useUserStore";
+import { useIntl } from "react-intl";
+import { renderCategoryDropdown } from "../../Handles/renderCategoryDropdown";
+import { productStateTranslations } from "../../Utils/translations/productStateTranslation";
+import handleNotification from "../../Handles/handleNotification";
 
-const ProductModal = ({ toggleProductModal, isProductModalVisible, token }) => {
+const ProductModal = ({
+  toggleProductModal,
+  isProductModalVisible,
+  token,
+  locale,
+}) => {
   const { register, handleSubmit, reset } = useForm();
   const { isAuthenticated } = useUserStore((state) => state);
 
-  //Utiliza as categorias disponíveis no CategoriesStore
-  const categories = useCategoriesStore((state) => state.categories);
+  //Intl
+  const intl = useIntl();
+  const displayedCategories = useCategoriesStore(
+    (state) => state.displayedCategories
+  );
 
   //Submissão do formulário para novo produto
   const onSubmit = async (registerProduct) => {
-    if(isAuthenticated){
-    const newProduct = {
-      name: registerProduct.productName,
-      description: registerProduct.productDescription,
-      price: registerProduct.productPrice,
-      category: registerProduct.productCategory,
-      location: registerProduct.productLocation,
-      urlImage: registerProduct.productUrlImage,
-    };
+    if (isAuthenticated) {
+      const newProduct = {
+        name: registerProduct.productName,
+        description: registerProduct.productDescription,
+        price: registerProduct.productPrice,
+        category: JSON.parse(registerProduct.productCategory),
+        location: registerProduct.productLocation,
+        urlImage: registerProduct.productUrlImage,
+        state: registerProduct.productState,
+      };
 
-    try {
-      await addProduct(newProduct, token);
-      showSuccessToast(
-        "O seu produto foi adicionado como RASCUNHO\nPara alterar, edite o produto na sua página pessoal"
-      );
-      useProductStore.getState().setProductAddedFlag(true);
-      reset();  //reset do form
-      toggleProductModal();   //fecho do modal
-    } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
-      reset();
-      return;
+      try {
+        await addProduct(newProduct, token);
+        handleNotification(intl, "success", "sellProductModalSuccessMessage");
+        useProductStore.getState().setProductAddedFlag(true);
+        reset(); // Reset form
+        toggleProductModal(); // Close modal
+      } catch (error) {
+        handleNotification(
+          intl,
+          "error",
+          `error${error.message}`,
+          {},
+          intl.formatMessage({ id: "errorUnexpected" })
+        );
+        reset();
+        return;
+      }
+    } else {
+      handleNotification(intl, "error", "sellProductModalAuthError");
     }
-  }
-  else {
-    showErrorToast("Não está autenticado para vender um produto");
-    }
-};
+  };
 
   // informação ao utilizador sobre erros
   const onError = (errors) => {
-    if (errors.productName) {
-      showErrorToast(errors.productName.message);
-    }
-    if (errors.productDescription) {
-      showErrorToast(errors.productDescription.message);
-    }
-    if (errors.productPrice) {
-      showErrorToast(errors.productPrice.message);
-    }
-    if (errors.category) {
-      showErrorToast(errors.productCategory.message);
-    }
-    if (errors.location) {
-      showErrorToast(errors.productLocation.message);
-    }
-    if (errors.urlImage) {
-      showErrorToast(errors.productUrlImage.message);
-    }
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `sellProductModalError${errorKey}`);
+    });
   };
 
   //Modal para adicionar produto - provavelmente mover para assets ou outro component
   return (
     isProductModalVisible && (
-    <div
-      id="modal-addProduct"
-      className="modal-addProduct"
-    >
-      {/*Modal content*/}
-      <div className="modal-content-addProduct">
-        <div className="modal-header-addProduct" id="modal-header-addProduct">
-          <p className="modal-header-addProduct-title">Vender um produto</p>
-          <p
-            className="close-addProduct"
-            id="close-addProduct"
-            onClick={toggleProductModal}
-          >
-            &times;
-          </p>
-        </div>
-        <div className="modal-body-addProduct">
-          <form
-            className="add-product-form"
-            id="add-product-form"
-            onSubmit={handleSubmit(onSubmit, onError)}
-          >
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-nome">Nome do Produto: </label>
-              <input
-                type="text"
-                id="add-nome"
-                name="add-nome"
-                maxLength="30"
-                placeholder="nome"
-                {...register("productName", {
-                  required: "Terá de preencher o nome do produto",
-                })}
-              />
-            </div>
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-descricao">Descrição: </label>
-              <input
-                type="text"
-                id="add-descricao"
-                name="add-descricao"
-                maxLength="100"
-                placeholder="descrição"
-                {...register("productDescription", {
-                  required: "Terá de preencher uma descrição do produto",
-                })}
-              />
-            </div>
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-preco">Preço do Produto: </label>
-              <input
-                type="text"
-                id="add-preco"
-                name="add-preco"
-                maxLength="10"
-                placeholder="preço"
-                {...register("productPrice", {
-                  required: "Terá de preencher o preço do produto",
-                  validate: (value) =>
-                    checkIfNumeric(value) ||
-                    "O preço apenas pode conter números",
-                })}
-              />
-            </div>
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-categoria">Categoria do Produto: </label>
-              <select
-                id="add-categoria"
-                name="add-categoria"
-                {...register("productCategory", {
-                  required: "Terá de escoher uma categoria",
-                })}
+      <div id="modal-addProduct" className="modal-addProduct">
+        {/*Modal content*/}
+        <div className="modal-content-addProduct">
+          <div className="modal-header-addProduct" id="modal-header-addProduct">
+            <p className="modal-header-addProduct-title">{intl.formatMessage({ id: 'sellProductModalTitle' })}</p>
+            <p
+              className="close-addProduct"
+              id="close-addProduct"
+              onClick={toggleProductModal}
+            >
+              &times;
+            </p>
+          </div>
+          <div className="modal-body-addProduct">
+            <form
+              className="add-product-form"
+              id="add-product-form"
+              onSubmit={handleSubmit(onSubmit, onError)}
+            >
+              {[
+                {
+                  id: "productName",
+                  label: "sellProductModalProductNameLabel",
+                  placeholder: "sellProductModalProductNamePlaceholder",
+                  maxLength: 30,
+                },
+                {
+                  id: "productDescription",
+                  label: "sellProductModalProductDescriptionLabel",
+                  placeholder: "sellProductModalProductDescriptionPlaceholder",
+                  maxLength: 100,
+                },
+                {
+                  id: "productPrice",
+                  label: "sellProductModalProductPriceLabel",
+                  placeholder: "sellProductModalProductPricePlaceholder",
+                  maxLength: 10,
+                  validation: checkIfNumeric,
+                },
+                {
+                  id: "productLocation",
+                  label: "sellProductModalProductLocationLabel",
+                  placeholder: "sellProductModalProductLocationPlaceholder",
+                  maxLength: 100,
+                },
+                {
+                  id: "productUrlImage",
+                  label: "sellProductModalProductImageUrlLabel",
+                  placeholder: "sellProductModalProductImageUrlPlaceholder",
+                },
+              ].map(({ id, label, placeholder, maxLength, validation }) => (
+                <div className="add-product-form-field" key={id}>
+                  <label htmlFor={id}>
+                    {intl.formatMessage({ id: label })}
+                  </label>
+                  <input
+                    type="text"
+                    id={`add-${id}`}
+                    name={`add-${id}`}
+                    placeholder={intl.formatMessage({ id: placeholder })}
+                    maxLength={maxLength}
+                    {...register(id, {
+                      required: intl.formatMessage({
+                        id: `sellProductModalError${id}Required`,
+                      }),
+                      validate: validation
+                        ? (value) =>
+                            validation(value) ||
+                            intl.formatMessage({
+                              id: `sellProductModalErrorInvalid${id}`,
+                            })
+                        : undefined,
+                    })}
+                  />
+                </div>
+              ))}
+              <div
+                className="add-product-form-field"
+                id="add-product-form-field"
               >
-                <option value="" disabled>
-                  Escolha uma categoria
-                </option>
-                {categories.map((category, index) => (
-                  <option key={index} value={category.name}>
-                    {category.name.charAt(0).toUpperCase() +
-                      category.name.slice(1)}{" "}
-                    {/* Display category.name */}
+                <label htmlFor="add-categoria">{intl.formatMessage({ id: 'sellProductModalProductCategoryLabel' })}</label>
+                <select
+                  id="add-categoria"
+                  name="add-categoria"
+                  {...register("productCategory", {
+                    required: "Terá de escoher uma categoria",
+                  })}
+                >
+                  <option value="" disabled>
+                  {intl.formatMessage({ id: 'sellProductModalProductCategoryPlaceholder' })}
                   </option>
-                ))}
-              </select>
-            </div>
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-localidade">Localização: </label>
+                  {renderCategoryDropdown(displayedCategories, locale)}
+                </select>
+              </div>
+              <div className="add-product-form-field">
+                <label htmlFor="add-imagem">{intl.formatMessage({ id: 'sellProductModalProductStateLabel' })}</label>
+                <select
+                  id="addState"
+                  name="addState"
+                  defaultValue=""
+                  {...register("productState")}
+                >
+                  <option value="" disabled>
+                    {intl.formatMessage({
+                      id: "sellProductModalSelectStatePlaceholder",
+                    })}
+                  </option>
+                  {["RASCUNHO", "DISPONIVEL"].map((state) => (
+                    <option key={state} value={state}>
+                      {productStateTranslations[locale][state]}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <input
-                type="text"
-                id="add-localidade"
-                name="add-localidade"
-                placeholder="morada"
-                maxLength="100"
-                {...register("productLocation", {
-                  required: "Tterá de preencher uma localidade",
-                })}
-              />
-            </div>
-            <div className="add-product-form-field" id="add-product-form-field">
-              <label htmlFor="add-imagem">url de imagem: </label>
-              <input
-                type="text"
-                id="add-imagem"
-                name="add-imagem"
-                placeholder="url"
-                {...register("productUrlImage", {
-                  required: "Terá de preencher o url da imagem do producto",
-                })}
-              />
-            </div>
-            <input
-              type="submit"
-              className="save-addProduct"
-              id="save-addProduct"
-              value="Guardar Alterações"
-            ></input>
-          </form>
+                type="submit"
+                className="save-addProduct"
+                id="save-addProduct"
+                value="Guardar Alterações"
+              ></input>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
     )
   );
 };

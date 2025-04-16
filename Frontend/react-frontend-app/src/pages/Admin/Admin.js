@@ -1,28 +1,22 @@
 import React, { useState, useEffect } from "react";
 import placeholder from "../../Assets/placeholder/item.png";
 import "./admin.css";
-import {
-  showSuccessToast,
-  showErrorToast,
-  showInfoToast,
-} from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useUserStore from "../../Stores/useUserStore";
 import CategoryCard from "../../Components/CategoryCard/CategoryCard";
-import ProductCard from '../../Components/ProductCard/productCard';
+import ProductCard from '../../Components/ProductCard/ProductCard';
 import useProductStore from "../../Stores/useProductStore";
 import useCategoriesStore from "../../Stores/useCategoriesStore";
-import errorMessages from "../../Utils/constants/errorMessages";
 import { useNavigate } from "react-router-dom";
 import handleGetAllUsers from "../../Handles/handleGetAllUsers";
 import UserCard from "../../Components/UserCard/UserCard";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
-import handleDeleteUserProducts from "../../Handles/handleDeleteUserProducts";
-import handleExcludeUser from "../../Handles/handleExcludeUser";
-import handleDeleteUser from "../../Handles/handleDeleteUser";
-import useLocaleStore from "../../Stores/useLocaleStore";
 import { useIntl } from "react-intl";
+import useLocaleStore from "../../Stores/useLocaleStore";
+import handleNotification from "./../../Handles/handleNotification";
+import { handleExcludingUser, handleDeletingUserProducts, handleDeletingUser } from '../../Handles/handleUserOperations';
+
 
 export const Admin = () => {
   const token = useUserStore((state) => state.token);
@@ -58,37 +52,32 @@ export const Admin = () => {
   const handleDeleteCategory = useCategoriesStore(
     (state) => state.handleDeleteCategory
   );
-   //Opções de língua
-    const locale = useLocaleStore((state) => state.locale);
-    const updateLocale = useLocaleStore((state) => state.updateLocale);
+   //Internacionalização
     const intl = useIntl();
+    const locale = useLocaleStore((state) => state.locale);
+
+
 
   //Chamada à entrada da página para verificar se utilizador autenticado é admin
   //E filtra e fazer fetch de todos os produtos
   useEffect(() => {
     const getProducts = async () => {
       try {
-        let userInformation = await getLoggedUserInformation(token);
-        if (userInformation.admin === false) {
-          showInfoToast(intl.formatMessage({ id: "adminNoPermission" }));
+        let userInformation = await getLoggedUserInformation(token, intl);
+        if (!userInformation.admin) {
+          handleNotification(intl, "info", "adminNoPermission");
           navigate("/");
         } else {
-          let username = null;
-          let excluded = null;
-          let category = null;
-          setFilters({ category, username, excluded });
+          setFilters({ category: null, username: null, excluded: null });
           await fetchProducts(token);
           const users = await handleGetAllUsers(token);
           setAllUsers(users);
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", `error${error.message}`);
         navigate("/");
       }
     };
-
     getProducts();
   }, []);
 
@@ -98,20 +87,20 @@ export const Admin = () => {
   const handleSubmittingNewCategory = (data) => {
     setModalConfig({
       title: intl.formatMessage({ id: "adminModalAddCategoryTitle" }),
-      message1: intl.formatMessage({ id: 'goodbye' }, { newCategoryName: data.newCategoryName }),
+      message1: intl.formatMessage({ id: "adminNewCategoryConfirm" }, { newCategoryName: data.newCategoryName }),
       message2: null,
       onConfirm: async () => {
-        const response = await handleAddCategory(token, data.newCategoryName);
-        if (response) {
-          showSuccessToast(intl.formatMessage({ id: "adminNewCategorySuccess" }));
-          fetchCategories();
-          setShowAddCategory(false);
+        try {
+          const response = await handleAddCategory(token, data.newCategoryName);
+          if (response) {
+            handleNotification(intl, "success", "adminNewCategorySuccess");
+            fetchCategories();
+          }
+        } catch (error) {
+          handleNotification(intl, "error", `error${error.message}`);
+        } finally {
           reset();
-          setIsModalOpen(false);
-        }
-        else{
           setShowAddCategory(false);
-          reset();
           setIsModalOpen(false);
         }
       },
@@ -120,9 +109,9 @@ export const Admin = () => {
   };
 
   const onError = (errors) => {
-    if (errors.newCategoryName) {
-      showErrorToast(errors.newCategoryName.message);
-    }
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `adminNewCategoryError${errorKey}`);
+    });
   };
 
 
@@ -130,17 +119,19 @@ export const Admin = () => {
   const handleRemovingCategory = (category) => {
     setModalConfig({
       title: intl.formatMessage({ id: "adminModalRemoveCategoryTitle" }),
-      message1: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { categoryName: category.name}),
-      message2: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { numberOfProducts: category.products.length}),
+      message1: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1" }, { categoryName: category.name }),
+      message2: intl.formatMessage({ id: "adminModalRemoveCategoryMessage2" }, { numberOfProducts: category.products.length }),
       onConfirm: async () => {
-        const response = await handleDeleteCategory(token, category);
-        if (response) {
-          showSuccessToast(intl.formatMessage({ id: "adminRemoveCategorySucess" }));
-          fetchCategories();
-          fetchProducts(token);
-          setIsModalOpen(false);
-        }
-        else{
+        try {
+          const response = await handleDeleteCategory(token, category);
+          if (response) {
+            handleNotification(intl, "success", "adminRemoveCategorySuccess");
+            fetchCategories();
+            fetchProducts(token);
+          }
+        } catch (error) {
+          handleNotification(intl, "error", `error${error.message}`);
+        } finally {
           setIsModalOpen(false);
         }
       },
@@ -150,71 +141,46 @@ export const Admin = () => {
 
   //Users
   //Apagar produtos de utilizador
-  const handleDeletingUserProducts = async(user) => {
+  const handleDeleteUserProducts = (user) => {
     setModalConfig({
-      title: intl.formatMessage({ id: "adminRemoveUserProductsTitle"}),
-      message1: intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { username: user.username}),
+      title: intl.formatMessage({ id: "adminRemoveUserProductsTitle"}, { user: user.username }),
+      message1: intl.formatMessage({ id: "adminRemoveUserProductsMessage1" }, { username: user.username }),
       message2: null,
       onConfirm: async () => {
-        const response = await handleDeleteUserProducts(token, user.username);
-        if (response) {
-          showSuccessToast(intl.formatMessage({ id: "adminModalRemoveCategoryMessage1"}, { username: user.username}))
-          fetchProducts(token);
-          setIsModalOpen(false);
-        }
-        else{
-          setIsModalOpen(false);
-        }
+        await handleDeletingUserProducts(token, user, setIsModalOpen, fetchProducts, intl);
       },
     });
+  
     setIsModalOpen(true);
-  }
+  };
+
 
   //Excluír utilizador
-  const handleExcludingUser = async(user) => {
+  const handleExcludeUser = async(user) => {
     setModalConfig({
       title: intl.formatMessage({ id: "adminExcludeUserTitle"}),
       message1: intl.formatMessage({ id: "adminExcludeUserMessage1"}, { username: user.username}),
       message2: intl.formatMessage({ id: "adminExcludeUserMessage2"}),
       onConfirm: async () => {
-        const response = await handleExcludeUser(token, user.username);
-        if (response) {
-          showSuccessToast(intl.formatMessage({ id: "adminExcludeUserSuccess"}, { username: user.username}));
-          const users = await handleGetAllUsers(token);
-          setAllUsers(users);
-          fetchProducts(token);
-          setIsModalOpen(false);
-        }
-        else{
-          setIsModalOpen(false);
-        }
+        await handleExcludingUser(token, user, setAllUsers, setIsModalOpen, fetchProducts, intl);
       },
     });
+  
     setIsModalOpen(true);
-  }
+  };
 
   //Apagar utilizador
-  const handleDeletingUser = async(user) => {
+  const handleDeleteUser = async(user) => {
     setModalConfig({
       title: intl.formatMessage({ id: "adminDeleteUserTitle"}),
       message1: intl.formatMessage({ id: "adminDeleteUserMessage1"}, { username: user.username}),
       message2: intl.formatMessage({ id: "adminDeleteUserMessage2"}),
       onConfirm: async () => {
-        const response = await handleDeleteUser(token, user.username);
-        if (response) {
-          showSuccessToast(intl.formatMessage({ id: "adminDeleteUserSuccess"}, { username: user.username}));
-          const users = await handleGetAllUsers(token);
-          setAllUsers(users);
-          fetchProducts(token);
-          setIsModalOpen(false);
-        }
-        else{
-          setIsModalOpen(false);
-        }
+        await handleDeletingUser(token, user, setAllUsers, setIsModalOpen, null, fetchProducts, intl);
       },
     });
     setIsModalOpen(true);
-  }
+  };
 
 
   return (
@@ -231,25 +197,25 @@ export const Admin = () => {
               </div>
             </div>
           ) : (
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
+            products.map((product) => <ProductCard key={product.id} product={product} locale={locale} />)
           )}
         </div>
       </section>
       <section className="users-section" id="users-section">
-        <h3>{intl.formatMessage({ id: "categoryManagementTitle"})}</h3>
+        <h3>{intl.formatMessage({ id: "UserManagementTitle"})}</h3>
         <div id="user-info-container" className="user-info-container">
           {allUsers.length === 0 ? (
             <p>{intl.formatMessage({ id: "noUsersToShow"})}</p>
           ) : (
-            allUsers.map((user) => <UserCard
-            key={user.id}
-            user={user}
-            onDeleteProducts={() => handleDeletingUserProducts(user)}
-            onExcludeUser={() => handleExcludingUser(user)}
-            onDeleteUser={() => handleDeletingUser(user)}
-            />)
+            allUsers.map((user, index) => (
+              <UserCard
+                key={user.id || index}
+                user={user}
+                onDeleteProducts={() => handleDeleteUserProducts(user)}
+                onExcludeUser={() => handleExcludeUser(user)}
+                onDeleteUser={() => handleDeleteUser(user)}
+              />
+            ))
           )}
         </div>
       </section>
@@ -263,11 +229,12 @@ export const Admin = () => {
               </div>
             </div>
           ) : (
-            categories.map((category) => (
+            categories.map((category, index) => (
               <CategoryCard
-                key={category.id}
+                key={category.nome || category.nameEng || index}
                 category={category}
                 onDelete={() => handleRemovingCategory(category)}
+                locale={locale}
               />
             ))
           )}

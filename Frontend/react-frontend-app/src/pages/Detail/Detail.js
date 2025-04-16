@@ -8,10 +8,6 @@ import {
 import useUserStore from "../../Stores/useUserStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  showErrorToast,
-  showSuccessToast,
-} from "../../Utils/ToastConfig/toastConfig";
-import {
   transformArrayDatetoDate,
   dateToFormattedDate,
 } from "../../Utils/utilityFunctions";
@@ -19,7 +15,7 @@ import { useIntl } from "react-intl";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import EditProductModal from "../../Components/EditProductModal/EditProductModal";
-import errorMessages from "../../Utils/constants/errorMessages";
+import handleNotification from "../../Handles/handleNotification";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleBuyingProduct from "../../Handles/handleBuyingProduct";
 
@@ -37,7 +33,7 @@ export const Detail = () => {
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  //Opções de língua
+  //Internacionalização
   const intl = useIntl();
   const locale = useLocaleStore((state) => state.locale);
 
@@ -54,54 +50,6 @@ export const Detail = () => {
 
   const handleProductUpdate = () => {
     setIsProductUpdated(true);
-  };
-
-  //Operação de excluir produto - operação de admin
-  const handleExcludeProduct = async () => {
-    const exclusion = {
-      excluded: !product.excluded,
-    };
-    try {
-      await updateProduct(exclusion, token, product.id);
-      if (!isAdmin) {
-        showSuccessToast(
-          intl.formatMessage({ id: "detailProductDeletedSuccess" })
-        );
-        navigate("/");
-      } else {
-        if (!product.excluded) {
-          showSuccessToast(
-            intl.formatMessage({ id: "detailProductExcludedSuccess" })
-          );
-        } else {
-          showSuccessToast(
-            intl.formatMessage({ id: "detailProductRecoveredSuccess" })
-          );
-        }
-      }
-      const updatedProduct = { ...product, excluded: exclusion.excluded };
-      setProduct(updatedProduct);
-      handleProductUpdate();
-    } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
-    }
-  };
-
-  // Operação de apagar produto - redireciona para a página principal
-  const handleDeleteProduct = async () => {
-    try {
-      await deleteProduct(token, product.id);
-      showSuccessToast(
-        intl.formatMessage({ id: "detailProductDeletedSuccess" })
-      );
-      navigate(-1);
-    } catch (error) {
-      const toastMessage =
-        errorMessages[error.message] || errorMessages.unexpected_error;
-      showErrorToast(toastMessage);
-    }
   };
 
   // Fetch das informações do produto após a entrada
@@ -121,13 +69,36 @@ export const Detail = () => {
           productData.date = transformArrayDatetoDate(productData.date);
           setProduct(productData);
         } catch (error) {
-          showErrorToast(
-            intl.formatMessage({ id: "detailErrorFetchingProduct" })
-          );
+          handleNotification(intl, "error", "detailErrorFetchingProduct");
+          navigate("/");
+        }
+      }
+    };
+    fetchProduct();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      if (id) {
+        let productData;
+        try {
+          let queryParam = {
+            id: id,
+          };
+          productData = await getProducts(queryParam, token);
+          if (productData.length > 1) {
+            throw new Error("Invalid product - non unique product Id");
+          }
+          productData = productData[INDEX_OF_PRODUCT];
+          productData.date = transformArrayDatetoDate(productData.date);
+          setProduct(productData);
+        } catch (error) {
+          handleNotification(intl, "error", "detailErrorFetchingProduct");
           navigate("/");
         }
         try {
-          const user = await getLoggedUserInformation(token);
+          const user = await getLoggedUserInformation(token, intl);
           if (user.admin) {
             setAdmin(true);
           }
@@ -135,32 +106,67 @@ export const Detail = () => {
             setOwner(true);
           }
         } catch (error) {
-          console.log("error in getting userlogged" + error);
-          showErrorToast(intl.formatMessage({ id: "detailErrorFetchingUser" }));
+          handleNotification(intl, "error", "errorUnexpected");
           setAdmin(false);
           setOwner(false);
         }
       }
     };
     fetchProduct();
-  }, [id, token, isProductUpdated]);
+  }, [isProductUpdated]);
+
+  //Operação de excluir produto - operação de admin
+  const handleExcludeProduct = async () => {
+    const exclusion = {
+      excluded: !product.excluded,
+    };
+    try {
+      await updateProduct(exclusion, token, product.id);
+      if (!isAdmin) {
+        handleNotification(intl, "success", "detailProductDeletedSuccess");
+        navigate("/");
+      } else {
+        if (!product.excluded) {
+          handleNotification(intl, "success", "detailProductExcludedSuccess");
+        } else {
+          handleNotification(intl, "success", "detailProductRecoveredSuccess");
+        }
+      }
+      const updatedProduct = { ...product, excluded: exclusion.excluded };
+      setProduct(updatedProduct);
+      handleProductUpdate();
+    } catch (error) {
+      handleNotification(intl, "error", "errorUnexpected");
+    }
+  };
+
+  // Operação de apagar produto - redireciona para a página principal
+  const handleDeleteProduct = async () => {
+    try {
+      await deleteProduct(token, product.id);
+      handleNotification(intl, "success", "detailProductDeletedSuccess");
+      navigate(-1);
+    } catch (error) {
+      handleNotification(intl, "error", "errorUnexpected");
+    }
+  };
 
   // Comprar produto
   const buyingProduct = async () => {
     setModalConfig({
       title: intl.formatMessage({ id: "detailBuyProductTitle" }),
-      message: intl.formatMessage(
+      message1: intl.formatMessage(
         { id: "detailBuyProductMessage" },
         { productName: product.name }
       ),
       onConfirm: async () => {
         const response = await handleBuyingProduct(id, token);
         if (response) {
-          showSuccessToast(intl.formatMessage({ id: "detailPurchaseSuccess" }));
+          handleNotification(intl, "success", "detailPurchaseSuccess");
           setIsProductUpdated(true);
           setIsModalOpen(false);
         } else {
-          showErrorToast(intl.formatMessage({ id: "detailPurchaseFailure" }));
+          handleNotification(intl, "error", "detailPurchaseFailure");
           setIsModalOpen(false);
         }
       },
@@ -307,14 +313,16 @@ export const Detail = () => {
             toggleEditProductModal={toggleEditProductModal}
             isEditProductModalVisible={isEditProductModalVisible}
             updatedProduct={handleProductUpdate}
+            locale={locale}
           />
 
           <ConfirmationModal
-            title={modalConfig.title}
-            message={modalConfig.message}
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            title={modalConfig.title}
+            message1={modalConfig.message1}
+            message2={modalConfig.message2}
             onConfirm={modalConfig.onConfirm}
+            onClose={() => setIsModalOpen(false)}
           />
         </div>
       </div>

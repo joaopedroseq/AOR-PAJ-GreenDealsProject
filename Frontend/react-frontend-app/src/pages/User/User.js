@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import placeholder from "../../Assets/placeholder/item.png";
 import "./user.css";
 import { useForm } from "react-hook-form";
-import {
-  showErrorToast,
-} from "../../Utils/ToastConfig/toastConfig.js";
-import { getLoggedUserInformation } from "../../Handles/handleLogin.js";
-import useUserStore from "../../Stores/useUserStore.js";
-import ProductCard from "../../Components/ProductCard/productCard.js";
-import useProductStore from "../../Stores/useProductStore.js";
-import errorMessages from "../../Utils/constants/errorMessages.js";
+import { getLoggedUserInformation } from "../../Handles/handleLogin";
+import useUserStore from "../../Stores/useUserStore";
+import ProductCard from "../../Components/ProductCard/ProductCard";
+import useProductStore from "../../Stores/useProductStore";
 import {
   checkIfValidName,
 } from "../../Utils/utilityFunctions.js";
-import ConfirmPasswordModal from "../../Components/ConfirmPasswordModal/ConfirmPasswordModal.js";
-import ChangePasswordModal from "../../Components/ChangePasswordModal/ChangePasswordModal.js";
+import ConfirmPasswordModal from "../../Components/ConfirmPasswordModal/ConfirmPasswordModal";
+import ChangePasswordModal from "../../Components/ChangePasswordModal/ChangePasswordModal";
+import useLocaleStore from "../../Stores/useLocaleStore";
 import { useIntl } from "react-intl";
+import handleNotification from "../../Handles/handleNotification.js";
 
 //Página de utilizador
 export const User = () => {
+  //Opções de língua
   const intl = useIntl();
+  const locale = useLocaleStore((state) => state.locale);
   const {
     register,
     handleSubmit,
@@ -46,83 +46,35 @@ export const User = () => {
 
   // Apresentação de erros no formulário ao utilizador
   const onError = (errors) => {
-    if (errors.firstName) {
-      showErrorToast(errors.firstName.message);
-    }
-    if (errors.lastName) {
-      showErrorToast(errors.lastName.message);
-    }
-    if (errors.username) {
-      showErrorToast(errors.username.message);
-    }
-    if (errors.password) {
-      showErrorToast(errors.password.message);
-    }
-    if (errors.passwordConfirm) {
-      showErrorToast(errors.passwordConfirm.message);
-    }
-    if (errors.email) {
-      showErrorToast(errors.email.message);
-    }
-    if (errors.phoneNumber) {
-      showErrorToast(errors.phoneNumber.message);
-    }
-    if (errors.urlPhoto) {
-      showErrorToast(errors.urlPhoto.message);
-    }
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `user${errorKey}Required`);
+    });
   };
 
   //Use effect na abertura da página - buscar todos os dados do utilizador(informações e produtos)
   useEffect(() => {
     const getUserProducts = async () => {
       try {
-        let userInformation = await getLoggedUserInformation(token);
+        let userInformation = await getLoggedUserInformation(token, intl);
         setUserInfo(userInformation);
+  
         let username = userInformation.username;
         let isAdmin = userInformation.admin;
-        let excluded;
-        if(!isAdmin){
-          excluded = false;
-        }
+        let excluded = !isAdmin ? false : null;
+  
         setFilters({ username, excluded });
         await fetchProducts(token);
-
+  
         if (addedProductFlag) {
           useProductStore.getState().setProductAddedFlag(false);
         }
       } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
+        handleNotification(intl, "error", `error${error.message}`);
       }
     };
+  
     getUserProducts();
-  }, []);
-
-  //Use effect na venda de um novo produto nesta página
-  useEffect(() => {
-    const getUserProducts = async () => {
-      try {
-        if (addedProductFlag || addedProductFlag === undefined) {
-          let userInformation = await getLoggedUserInformation(token);
-          let username = userInformation.username;
-          let isAdmin = userInformation.admin;
-          let excluded;
-          if(!isAdmin){
-          excluded = false;
-          }
-          setFilters({ username, excluded });
-          await fetchProducts(token);
-          useProductStore.getState().setProductAddedFlag(false);
-        }
-      } catch (error) {
-        const toastMessage =
-          errorMessages[error.message] || errorMessages.unexpected_error;
-        showErrorToast(toastMessage);
-      }
-    };
-    getUserProducts();
-  }, [addedProductFlag]);
+  }, [addedProductFlag]);  // Consolidated into a single effect
 
   return (
     <div className="user-main-content">
@@ -138,9 +90,7 @@ export const User = () => {
               </div>
             </div>
           ) : (
-            products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))
+            products.map((product) => <ProductCard key={product.id} product={product} locale={locale} />)
           )}
         </div>
       </section>

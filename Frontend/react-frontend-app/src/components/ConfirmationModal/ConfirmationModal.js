@@ -1,52 +1,48 @@
 import React from "react";
 import "./confirmationModal.css";
+import { useIntl } from "react-intl";
 
-const ConfirmationModal = ({ title, message1, message2, isOpen, onClose, onConfirm }) => {
-  const handleSubmit = async () => {
-    try {
-      await onConfirm();
-    } catch (error) {
-      console.error("Algo correu mal:", error);
-    }
-  };
-
+const ConfirmationModal = ({
+  isOpen,
+  title,
+  message1,
+  message2,
+  onConfirm,
+  onClose,
+}) => {
+  const intl = useIntl(); // Initialize intl for translations
 
   return (
     isOpen && (
-    <div
-      id="modal-addCategory"
-      className="modal-ConfirmModal"
-    >
-      <div className="modal-content-ConfirmModal">
-        <div
-          className="modal-header-ConfirmModal"
-          id="modal-header-ConfirmModal"
-        >
-          <p className="modal-header-ConfirmModal-title">
-            {title}
-          </p>
-        </div>
-        <div className="modal-body-ConfirmModal">
-          <p>{message1}</p>
-          <p>{message2}</p>
-          <div className="confirmationModalButtons">
-          <button
-            className="confirm-button"
-            onClick={handleSubmit}
+      <div id="modal-confirmation" className="modal-ConfirmModal">
+        <div className="modal-content-ConfirmModal">
+          <div
+            className="modal-header-ConfirmModal"
+            id="modal-header-ConfirmModal"
           >
-            Confirmar
-          </button>
-          <button
-            className="cancel-button"
-            onClick={onClose}
-          >
-            Cancelar
-          </button>
+            <p className="modal-title-ConfirmModal">{title}</p>
+            <p
+              className="close-ConfirmModal"
+              id="close-detail"
+              onClick={onClose}
+            >
+              &times;
+            </p>
+          </div>
+          <div className="modal-body-ConfirmModal">
+            <p className="modal-message1-confirmation">{message1}</p>
+            <p className="modal-message2-confirmation">{message2}</p>
+            <div className="confirmModalButtons">
+              <button className="confirm-button" type="button" onClick={onConfirm}>
+                {intl.formatMessage({ id: "confirmationModalConfirmButton" })}
+              </button>
+              <button className="cancel-button" type="button" onClick={onClose}>
+                {intl.formatMessage({ id: "confirmationModalCancelButton" })}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    
     )
   );
 };

@@ -1,7 +1,5 @@
 import { activateUserAccount } from "../Api/authenticationApi";
-import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
-import errorMessages from "../Utils/constants/errorMessages";
-import { useEffect } from "react";
+
 
 const handleActivateAccount = async (activationToken) => {
     try {

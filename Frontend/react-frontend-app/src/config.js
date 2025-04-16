@@ -8,7 +8,7 @@ export const httpStatusCodes = {
     noContent: 204, // No Content
     badRequest: 400, // Bad Request
     unauthorized: 401, // Unauthorized
-    forbidden: 403, // Forbidden
+    errorForbidden: 403, // errorForbidden
     notFound: 404, // Not Found
     methodNotAllowed: 405, // Method Not Allowed
     conflict: 409, // Conflict

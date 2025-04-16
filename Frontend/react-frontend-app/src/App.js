@@ -22,7 +22,7 @@ function App() {
   
   return (
     <IntlProvider locale={locale} messages={languages[locale]}>
-      
+
     <BrowserRouter>
     <RouteListener />
     <div className="GreenDealsApp">
@@ -31,7 +31,7 @@ function App() {
       <Route path="/" element={<Homepage />} />
       <Route path="/detail" element={
         <ProtectedRoute>
-        <Detail />
+        <Detail locale={locale}/>
       </ProtectedRoute>
       }/>
       <Route path="/user" element={

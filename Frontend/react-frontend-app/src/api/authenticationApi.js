@@ -21,21 +21,21 @@ export const registerUser = async (user) => {
 
       if (status === 400) {
         console.log('Invalid data - registering user');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 409) {
         console.log('username already exists');
-        throw new Error('same_username')
+        throw new Error('errorSameUsername')
       }
-      console.log('register failed ' + status)
-      throw new Error('failed')
+      console.log('register errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -64,31 +64,31 @@ export const login = async (username, password) => {
 
       if (status === 400) {
         console.log('Invalid data - login from user');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 401) {
         console.log('wrong username/password');
-        throw new Error('wrong_username_password')
+        throw new Error('errorWrongUsernamePassword')
       }
       if (status === 403) {
-        if (message === "Forbidden - inactive user") {
+        if (message === "errorForbidden - inactive user") {
           console.log('Account is inactive');
-          throw new Error('account_inactive');
+          throw new Error('errorAccountInactive');
         }
-        if (message === "Forbidden - excluded user") {
+        if (message === "errorForbidden - excluded user") {
           console.log('Account is excluded');
-          throw new Error('account_excluded');
+          throw new Error('errorAccountExcluded');
         }    
       }
-      console.log('login failed ' + status)
-      throw new Error('failed')
+      console.log('login errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -113,15 +113,15 @@ export const logout = async (token) => {
 
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
     }
   if (error.request) {
     console.error("No response from server:", error.request);
-    throw new Error("network_error");
+    throw new Error("errorNetwork_error");
   }
   console.log(error.response);
-  throw new Error("unexpected_error");
+  throw new Error("errorUnexpected");
 }
 };
 
@@ -150,21 +150,21 @@ export const checkPassword = async (username, password) => {
 
       if (status === 400) {
         console.log('Invalid data - login from user');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 401) {
         console.log('wrong password');
-        throw new Error('wrong_password')
+        throw new Error('errorWrongPassword')
       }
-      console.log('login failed ' + status)
-      throw new Error('failed')
+      console.log('login errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -185,17 +185,17 @@ export const getUserLogged = async (token) => {
       const status = error.response.status;
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -231,25 +231,25 @@ export const activateUserAccount = async (activationToken) => {
       if (status === 403) {
         if (message === "Bad request - already active account") {
           console.log('Account is already active');
-          throw new Error('account_already_active');
+          throw new Error('errorAccountAlreadyActive');
         }
         if (message === "Bad request - excluded account") {
           console.log('Account is excluded');
-          throw new Error('account_excluded');
+          throw new Error('errorAccountExcluded');
         }    
       }
       if (status === 401) {
         console.log('invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
-      console.log('failed ' + status)
-      throw new Error('failed')
+      console.log('errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };

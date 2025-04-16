@@ -63,7 +63,6 @@ public class ProductBean {
 
     public boolean updateProduct(ProductDto productDto) {
         try {
-            System.out.println("updating product.\nproduct: " + productDto);
             //check if the only diference is in product state
             ProductEntity productEntity = productDao.getProductById(productDto.getId());
             if (checkIfOnlyStateChanges(productDto, productEntity)) {
@@ -172,7 +171,7 @@ public class ProductBean {
         return true;
     }
 
-    private boolean checkIfOnlyStateChanges(ProductDto productDto, ProductEntity productEntity) {
+    public boolean checkIfOnlyStateChanges(ProductDto productDto, ProductEntity productEntity) {
         if((productDto.getName() == null) || (productDto.getName().equals(productEntity.getName()))) {
             if ((productDto.getDescription() == null) || (productDto.getDescription().equals(productEntity.getDescription()))) {
                 if ((productDto.getPrice() == 0) || ((productDto.getPrice() == productEntity.getPrice()) || (productDto.getPrice() == 0))) {

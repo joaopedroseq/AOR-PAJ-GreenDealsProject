@@ -26,15 +26,16 @@ export const getProducts = async (queryParams, token) => {
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
 //Add a product to the user
 export const addProduct = async (product, token) => {
+  console.log(product)
   try {
     const response = await axios.post(`${productsEndpoint}`, product, {
       headers: { "Content-Type": "application/json", token: token },
@@ -47,36 +48,36 @@ export const addProduct = async (product, token) => {
 
       if (status === 400) {
         console.log("Invalid data - adding product");
-        throw new Error("invalid_data");
+        throw new Error("errorInvalidData");
       }
       if (status === 401) {
         console.log("invalid token");
-        throw new Error("invalid_token");
+        throw new Error("errorInvalidToken");
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("non existant product");
-        throw new Error("non-non_existant_product");
+        throw new Error("non-errorNonExistantProduct");
       }
-      console.log("adding productc failed " + status);
-      throw new Error("failed");
+      console.log("adding productc errorFailed " + status);
+      throw new Error("errorFailed");
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
 export const buyProduct = async (productId, token) => {
   try {
-    const response = await axios.patch(`${productsEndpoint}${productId}/buy`,
-      {},
+    const response = await axios.patch(`${productsEndpoint}${productId}`,
+      {state: "COMPRADO"},
       {
       headers: { "Content-Type": "application/json", token: token },
     });
@@ -88,29 +89,29 @@ export const buyProduct = async (productId, token) => {
 
       if (status === 400) {
         console.log("Invalid data - buying product");
-        throw new Error("invalid_data");
+        throw new Error("errorInvalidData");
       }
       if (status === 401) {
         console.log("invalid token");
-        throw new Error("invalid_token");
+        throw new Error("errorInvalidToken");
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("non existant product");
-        throw new Error("non_existant_product");
+        throw new Error("errorNonExistantProduct");
       }
-      console.log("adding product failed " + status);
-      throw new Error("failed");
+      console.log("adding product errorFailed " + status);
+      throw new Error("errorFailed");
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -130,29 +131,29 @@ export const updateProduct = async (editedProduct, token, productId) => {
 
       if (status === 400) {
         console.log("Invalid data - adding product");
-        throw new Error("invalid_data");
+        throw new Error("errorInvalidData");
       }
       if (status === 401) {
         console.log("invalid token");
-        throw new Error("invalid_token");
+        throw new Error("errorInvalidToken");
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("non-existant category");
         throw new Error("non-existant_category");
       }
-      console.log("adding productc failed " + status);
-      throw new Error("failed");
+      console.log("adding productc errorFailed " + status);
+      throw new Error("errorFailed");
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -175,24 +176,24 @@ export const deleteProduct = async (token, productId) => {
       }
       if (status === 401) {
         console.log("invalid token");
-        throw new Error("invalid_token");
+        throw new Error("errorInvalidToken");
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("product not found");
         throw new Error("non-existant_product");
       }
-      console.log("adding productc failed " + status);
-      throw new Error("failed");
+      console.log("adding productc errorFailed " + status);
+      throw new Error("errorFailed");
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };

@@ -234,7 +234,20 @@ public class ProductService {
             if (product == null) {
                 logger.error("Updating product - Product with id {} not found", pathProductId);
                 return Response.status(404).entity("Product not found").build();
-            } else if ((!isOwner) && !user.getAdmin()) {
+            }
+            if(productDto.isBuying()) {
+                if(!isOwner){
+                    productDto.setId(product.getId());
+                    productBean.updateProduct(productDto);
+                    logger.info("User {} bought ", user.getUsername(), product.getSeller());
+                    return Response.status(200).entity("Bought product").build();
+                }
+                else{
+                    logger.error("Permission denied - {} tried to buy self product", user.getUsername());
+                    return Response.status(403).entity("Permission denied - buying owned product").build();
+                }
+            }
+            if ((!isOwner) && !user.getAdmin()) {
                 logger.error("Permission denied - {} updated  product of other user {} without admin privileges", user.getUsername(), product.getSeller());
                 return Response.status(403).entity("Permission denied - updating another user product").build();
             } else if (product.isExcluded() && (!user.getAdmin())) {

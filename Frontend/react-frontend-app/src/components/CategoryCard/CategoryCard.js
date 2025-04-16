@@ -1,20 +1,15 @@
-import React from "react";
 import excludeIcon from "../../Assets/icons/exclude.png";
 
-const CategoryCard = ({ category, onDelete }) => {
-  let numberOfProducts;
-  if (category.products != null) {
-    numberOfProducts = category.products.length;
-  } else {
-    numberOfProducts = 0;
-  }
+const CategoryCard = ({ category, onDelete, locale }) => {
+  const numberOfProducts = category.products;
+  const categoryName = locale === "pt" ? category.nome : category.nameEng;
 
   return (
     <div className="category-card">
       <div className="category-info">
-        <p className="category-name">{category.name}</p>
+        <p className="category-name">{categoryName}</p>
         <p className="category-numberOfProducts">
-          Nº produtos: {numberOfProducts}
+          {locale === "pt" ? 'Número de produtos: ' : 'Number of products: '}{numberOfProducts}
         </p>
         <img
           src={excludeIcon}
@@ -22,7 +17,7 @@ const CategoryCard = ({ category, onDelete }) => {
           className="remove-category-button"
           onClick={onDelete}
           data-category-numberofproducts={numberOfProducts}
-          data-category-name={category.name}
+          data-category-name={categoryName}
         />
       </div>
     </div>

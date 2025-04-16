@@ -21,29 +21,29 @@ export const getUserInformation = async (username, token) => {
       const status = error.response.status;
       if (status === 400) {
         console.log('Invalid data - get user information');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("non-existant user");
         throw new Error("non-existant_user");
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -66,25 +66,25 @@ export const updateUserInformation = async (token, username, userInformation) =>
   
         if (status === 401) {
           console.log("invalid token");
-          throw new Error("invalid_token");
+          throw new Error("errorInvalidToken");
         }
         if (status === 403) {
           console.log("permission denied");
-          throw new Error("permission_denied");
+          throw new Error("errorPermissionDenied");
         }
         if (status === 404) {
           console.log("non-existant user");
           throw new Error("non-existant_user");
         }
-        console.log("adding productc failed " + status);
-        throw new Error("failed");
+        console.log("adding productc errorFailed " + status);
+        throw new Error("errorFailed");
       }
       if (error.request) {
         console.error("No response from server:", error.request);
-        throw new Error("network_error");
+        throw new Error("errorNetwork_error");
       }
       console.log(error.response);
-      throw new Error("unexpected_error");
+      throw new Error("errorUnexpected");
     }
   };
 
@@ -106,21 +106,21 @@ export const getAllUsers = async (token) => {
       const status = error.response.status;
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -142,29 +142,29 @@ export const excludeUser = async (token, username) => {
       const status = error.response.status;
       if (status === 400) {
         console.log('Invalid data - excluding user');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 500) {
         console.log("server side exception");
-        throw new Error("failed");
+        throw new Error("errorFailed");
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -185,15 +185,15 @@ export const deleteUser = async (token, username) => {
       const status = error.response.status;
       if (status === 400) {
         console.log('Invalid data - excluding user');
-        throw new Error('invalid_data')
+        throw new Error('errorInvalidData')
       }
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 404) {
         console.log("non-existant user");
@@ -201,17 +201,17 @@ export const deleteUser = async (token, username) => {
       }
       if (status === 500) {
         console.log("server side exception");
-        throw new Error("failed");
+        throw new Error("errorFailed");
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 
@@ -232,25 +232,25 @@ export const deleteUserProducts = async (token, username) => {
       const status = error.response.status;
       if (status === 401) {
         console.log('Invalid token');
-        throw new Error('invalid_token')
+        throw new Error('errorInvalidToken')
       }
       if (status === 403) {
         console.log("permission denied");
-        throw new Error("permission_denied");
+        throw new Error("errorPermissionDenied");
       }
       if (status === 500) {
         console.log("server side exception");
-        throw new Error("failed");
+        throw new Error("errorFailed");
       }
-      console.log('get user information failed ' + status)
-      throw new Error('failed')
+      console.log('get user information errorFailed ' + status)
+      throw new Error('errorFailed')
     }
     if (error.request) {
       console.error("No response from server:", error.request);
-      throw new Error("network_error");
+      throw new Error("errorNetwork_error");
     }
     console.log(error.response);
-    throw new Error("unexpected_error");
+    throw new Error("errorUnexpected");
   }
 };
 

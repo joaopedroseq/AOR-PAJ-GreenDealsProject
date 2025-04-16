@@ -8,6 +8,8 @@ import useLocaleStore from "../../Stores/useLocaleStore";
 import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { Link } from "react-router-dom";
 import { renderCategoryList } from "../../Handles/renderCategoryList";
+import { useIntl } from "react-intl";
+import handleNotification from "../../Handles/handleNotification";
 
 const Aside = ({ isAsideVisible }) => {
   //User state
@@ -15,11 +17,14 @@ const Aside = ({ isAsideVisible }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const page = useLocation().pathname;
   //Categories load
-  const displayedCategories = useCategoriesStore((state) => state.displayedCategories);
+  const displayedCategories = useCategoriesStore(
+    (state) => state.displayedCategories
+  );
   const fetchCategories = useCategoriesStore((state) => state.fetchCategories);
   const { setFilters, fetchProducts } = useProductStore();
   //Locale
   const locale = useLocaleStore((state) => state.locale);
+  const intl = useIntl();
 
   //Para apresentação na página de profile
   const username = new URLSearchParams(useLocation().search).get("username");
@@ -27,46 +32,27 @@ const Aside = ({ isAsideVisible }) => {
   useEffect(() => {
     const getUserInfo = async () => {
       try {
-        let userInfo = await getLoggedUserInformation(token);
-        if (userInfo.admin) {
-          setIsAdmin(true);
-        }
-      } catch (error) {}
+        let userInfo = await getLoggedUserInformation(token, intl);
+        setIsAdmin(userInfo.admin);
+      } catch (error) {
+        handleNotification(intl, "error", `error${error.message}`);
+      }
     };
-    if (page === "/user") {
-      getUserInfo();
-    }
-    if (page === "/admin") {
-      getUserInfo();
-    }
-    if (page === "/profile") {
+  
+    if (["/user", "/admin", "/profile"].includes(page)) {
       getUserInfo();
     }
     fetchCategories();
-  }, [token, page]);
-  
-  useEffect(() => {
-    useLocaleStore.getState().setLocale("en"); // Change the locale manually
-  }, []);
-
-  const categories = useCategoriesStore((state) => state.displayedCategories);
+  }, [token, page, fetchCategories]);
 
   const handleCategoryClick = (category, edited, user = null) => {
-    if (category) {
-      setFilters({ category: category });
-    } else {
-      setFilters({ category: null });
-    }
-    if (edited) {
-      setFilters({ edited: true });
-    }
-    if (page === "/admin" || page === "/user" || page === "/profile") {
+    setFilters({ category: category || null, edited: edited || false });
+    if (["/user", "/admin", "/profile"].includes(page)) {
       fetchProducts(token);
     } else {
       fetchProducts();
     }
   };
-  
 
   const handleScrollToSection = (sectionId) => {
     const section = document.getElementById(sectionId);
@@ -74,7 +60,7 @@ const Aside = ({ isAsideVisible }) => {
       section.scrollIntoView();
     }
   };
-
+  
   return (
     <aside
       data-testid="aside-menu"
@@ -87,103 +73,65 @@ const Aside = ({ isAsideVisible }) => {
         </ul>
       )}
       {page === "/user" && (
-         <ul>
-         {renderCategoryList(displayedCategories, locale, handleCategoryClick)}
-
-       </ul>
+        <ul>
+          {renderCategoryList(displayedCategories, locale, handleCategoryClick)}
+        </ul>
       )}
       {page === "/user" && (
         <h3
           className="asideTitle"
           onClick={() => handleScrollToSection("profile-section")}
         >
-          Informações
+          {intl.formatMessage({ id: "asideUserInfo" })}
         </h3>
       )}
       {page === "/user" && isAdmin && (
         <Link to="/admin" className="link">
-          <h3 className="asideTitle">Página de Administrador</h3>
+          <h3 className="asideTitle">
+            {intl.formatMessage({ id: "asideAdminPage" })}
+          </h3>
         </Link>
       )}
       {page === "/admin" && isAdmin && (
         <ul>
           <h3 onClick={() => handleScrollToSection("products-section")}>
-            Gestão de Produtos
+            {intl.formatMessage({ id: "asideAdminProductManagement" })}
           </h3>
           <ul>
-            <li
-              id="category"
-              value="all"
-              onClick={() => handleCategoryClick(null)}
-            >
-              Todos os produtos
-            </li>
-            <li
-              id="category"
-              value="all"
-              onClick={() => handleCategoryClick(null, true)}
-            >
-              Editados
-            </li>
-            {displayedCategories.map((category, index) => (
-              <li
-                key={index}
-                value={category.name}
-                id={category.name}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-              </li>
-            ))}
+            {renderCategoryList(
+              displayedCategories,
+              locale,
+              handleCategoryClick
+            )}
           </ul>
           <h3
             className="asideTitle"
             onClick={() => handleScrollToSection("users-section")}
           >
-            Gestão de Utilizadores
+            {intl.formatMessage({ id: "asideAdminUserManagement" })}
           </h3>
           <h3
             className="asideTitle"
             onClick={() => handleScrollToSection("categories-section")}
           >
-            Gestão de Categorias
+            {intl.formatMessage({ id: "asideAdminCategoryManagement" })}
           </h3>
         </ul>
       )}
       {page === "/profile" && isAdmin && (
         <>
           <h2 onClick={() => handleScrollToSection("products-section")}>
-            Produtos de {username}
+            {intl.formatMessage({ id: "asideUserProducts" }, { username })}
           </h2>
           <ul>
-            <h3>Categorias</h3>
-            <li
-              id="category"
-              value="all"
-              onClick={() => handleCategoryClick(null)}
-            >
-              Todos os produtos
-            </li>
-            <li
-              id="category"
-              value="all"
-              onClick={() => handleCategoryClick(null, true)}
-            >
-              Editados
-            </li>
-            {displayedCategories.map((category, index) => (
-              <li
-                key={index}
-                value={category.name}
-                id={category.name}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-              </li>
-            ))}
+            {renderCategoryList(
+              displayedCategories,
+              locale,
+              handleCategoryClick
+            )}
           </ul>
           <h2 onClick={() => handleScrollToSection("profile-section")}>
-            Informações de {username}
+            {intl.formatMessage({ id: "asideUserInfoDetailed" }, { username })}
           </h2>
         </>
       )}
@@ -191,11 +139,4 @@ const Aside = ({ isAsideVisible }) => {
   );
 };
 
-useLocaleStore.subscribe(
-  (state) => state.locale,
-  (locale) => {
-    console.log("🔥 Locale changed to:", locale);
-    useCategoriesStore.getState().sortByLocale(locale); // ✅ Ensuring sorting updates store
-  }
-);
 export default Aside;

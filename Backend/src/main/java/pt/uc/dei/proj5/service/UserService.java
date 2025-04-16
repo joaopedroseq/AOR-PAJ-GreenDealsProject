@@ -307,7 +307,10 @@ public class UserService {
                 String lastName = null;
                 String email = null;
                 String phone = null;
-                UserAccountState state = UserAccountState.ACTIVE;
+                UserAccountState state = null;
+                if(!user.getAdmin()){
+                    state = UserAccountState.ACTIVE;
+                }
                 UserParameter parameter = UserParameter.USERNAME;
                 Order order = Order.asc;
                 if (usernameToSearch != null && !usernameToSearch.trim().equals("")) {

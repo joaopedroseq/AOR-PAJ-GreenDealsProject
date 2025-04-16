@@ -76,30 +76,22 @@
     gap: 5px;
   }
   
-  /* Estilo para o formulário de edição de produto */
-      .edit-ConfirmModal-form{
-          text-align: left;
-      }
-  
-      .edit-ConfirmModal-form-field{
-        display: block; /* Alinha os campos do formulário em bloco */
-      }
-  
-      /* Estilo para os rótulos e campos de entrada do formulário */
-      .edit-ConfirmModal-form-field label{
-          font-size: 18px;
-          font-family: "Montserrat";
-      }
-  
-      /* Efeito de sublinhado ao passar o mouse sobre o rótulo */
-      .edit-ConfirmModal-form-field label:hover{
-        text-decoration: underline;
-      }
-  
-      /* Estilo para os campos de entrada do formulário */
-      .edit-ConfirmModal-form-field input{
-        font-size: 14px;
-      }
+  /*Botão de fechar o Modal*/
+.close-ConfirmModal {
+  display: flex;
+  color: white;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/*Botão de fechar o Modal ao passar o mouse*/
+.close-ConfirmModal:hover,
+.close-ConfirmModal:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
       
   
       /* Estilo para o botão de guardar produto */

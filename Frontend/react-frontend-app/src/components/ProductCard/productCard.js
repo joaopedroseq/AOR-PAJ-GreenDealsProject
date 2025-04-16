@@ -1,8 +1,11 @@
 import React from "react";
 import excludedOverlay from '../../Assets/icons/excludedOverlay.png'
 import { Link } from "react-router-dom";
+import { useIntl } from "react-intl";
 
-const productCard = ({ product, locale }) => {
+const ProductCard = ({ product, locale }) => {
+  const intl = useIntl();
+
   return (
     <Link
       className="grid-item"
@@ -13,12 +16,12 @@ const productCard = ({ product, locale }) => {
       {product.excluded && <img src={excludedOverlay} className="excluded-overlay" alt="excluido" />}
       <div className="text-overlay">
         <h2>{product.name}</h2>
-        <p>Preço: €{product.price}</p>
-        <p>Categoria: {locale === "pt" ? product.category.nome : product.category.nameEng}</p>
-        <p>Vendedor: {product.seller}</p>
+        <p>{intl.formatMessage({ id: "productCardPrice" }, { price: product.price })}</p>
+        <p>{intl.formatMessage({ id: "productCardCategory" }, { category: locale === "pt" ? product.category.nome : product.category.nameEng })}</p>
+        <p>{intl.formatMessage({ id: "productCardSeller" }, { seller: product.seller })}</p>
       </div>
     </Link>
   );
 };
 
-export default productCard;
+export default ProductCard;

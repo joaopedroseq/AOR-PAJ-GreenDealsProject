@@ -53,20 +53,6 @@ public class wsChat {
         }
     }
 
-    @OnOpen
-    public void toDoOnOpen(Session session, @PathParam("token") String token) {
-        System.out.println("A new WebSocket session is opened for client with token: " + token);
-        System.out.println("session" + session);
-        try {
-            TokenDto tokenDto = new TokenDto();
-            tokenDto.setAuthenticationToken(token);
-            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-            sessions.put(user.getUsername(), session);
-        } catch (Exception e) {
-            System.out.println("Invalid token");
-        }
-    }
-
     @OnClose
     public void toDoOnClose(Session session, CloseReason reason) {
         System.out.println("Websocket session is closed with CloseCode: " +

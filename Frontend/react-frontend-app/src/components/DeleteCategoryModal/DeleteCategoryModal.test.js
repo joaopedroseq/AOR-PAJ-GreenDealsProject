@@ -74,7 +74,7 @@ describe("DeleteCategoryModal", () => {
   });
 
   test("shows an error toast if onConfirm throws an error", async () => {
-    const onConfirmMock = jest.fn().mockRejectedValue(new Error("Failed to confirm"));
+    const onConfirmMock = jest.fn().mockRejectedValue(new Error("errorFailed to confirm"));
     const { getByText } = render(
       <DeleteCategoryModal
         Category={sampleCategory}

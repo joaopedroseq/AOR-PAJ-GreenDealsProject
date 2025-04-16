@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { getProducts } from "../Api/productApi";
+import { useEffect } from "react";
 
 const useProductStore = create((set, get) => ({
   //Store para gestão de produtos
@@ -50,15 +51,17 @@ const useProductStore = create((set, get) => ({
   // Fetch dos produtos - que pode ser chamado após determinadas operações
   fetchProducts: async (token) => {
     const { filters } = get(); // Access the current filters from the state
+    console.log(filters);
 
     try {
       const products = await getProducts(filters, token);
       set({ products }); // Update dos produtos na store
       set({ refetchProducts: false})  //E remoção da flag de atualização
     } catch (error) {
-      console.error("Failed to fetch products:", error.message);
+      console.error("errorFailed to fetch products:", error.message);
     }
   },
 }));
+
 
 export default useProductStore;

@@ -58,7 +58,7 @@ public class ProductDto implements Serializable{
         this.category = productDto.category;
         this.location = productDto.location;
         this.urlImage = productDto.urlImage;
-        this.state = ProductStateId.RASCUNHO;
+        this.state = productDto.getState();
         this.date = LocalDateTime.now();
         this.id = generateHash(seller,name,description,price,category.getNome(),location,urlImage,date);
         this.excluded = productDto.excluded;
@@ -201,6 +201,21 @@ public class ProductDto implements Serializable{
                 && this.urlImage != null && !this.urlImage.isEmpty()
                 && this.state != null
                 && this.date != null;
+    }
+
+    public boolean isBuying(){
+        return this.id == null
+                && this.seller == null
+                && this.name == null
+                && this.description == null
+                && this.price == 0
+                && this.category == null
+                && this.location == null
+                && this.urlImage == null
+                && this.state == ProductStateId.COMPRADO
+                && this.date == null
+                && this.excluded == null
+                && this.edited == null;
     }
 
     @Override
