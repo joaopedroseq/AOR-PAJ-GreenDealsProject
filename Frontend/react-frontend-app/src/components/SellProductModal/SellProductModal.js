@@ -1,10 +1,7 @@
 import React from "react";
 import "./sellProductModal.css";
 import { useForm } from "react-hook-form";
-import {
-  showErrorToast,
-  showSuccessToast,
-} from "../../Utils/ToastConfig/toastConfig";
+
 import { checkIfNumeric } from "../../Utils/utilityFunctions";
 import { addProduct } from "../../Api/productApi";
 import { useCategoriesStore } from "../../Stores/useCategoriesStore";
@@ -67,8 +64,8 @@ const ProductModal = ({
 
   // informação ao utilizador sobre erros
   const onError = (errors) => {
-    Object.keys(errors).forEach((errorKey) => {
-      handleNotification(intl, "error", `sellProductModalError${errorKey}`);
+    Object.entries(errors).forEach(([errorKey, errorValue]) => {
+      handleNotification(intl, "error", errorValue.message);
     });
   };
 
@@ -94,74 +91,54 @@ const ProductModal = ({
               id="add-product-form"
               onSubmit={handleSubmit(onSubmit, onError)}
             >
-              {[
-                {
-                  id: "productName",
-                  label: "sellProductModalProductNameLabel",
-                  placeholder: "sellProductModalProductNamePlaceholder",
-                  maxLength: 30,
-                },
-                {
-                  id: "productDescription",
-                  label: "sellProductModalProductDescriptionLabel",
-                  placeholder: "sellProductModalProductDescriptionPlaceholder",
-                  maxLength: 100,
-                },
-                {
-                  id: "productPrice",
-                  label: "sellProductModalProductPriceLabel",
-                  placeholder: "sellProductModalProductPricePlaceholder",
-                  maxLength: 10,
-                  validation: checkIfNumeric,
-                },
-                {
-                  id: "productLocation",
-                  label: "sellProductModalProductLocationLabel",
-                  placeholder: "sellProductModalProductLocationPlaceholder",
-                  maxLength: 100,
-                },
-                {
-                  id: "productUrlImage",
-                  label: "sellProductModalProductImageUrlLabel",
-                  placeholder: "sellProductModalProductImageUrlPlaceholder",
-                },
-              ].map(({ id, label, placeholder, maxLength, validation }) => (
-                <div className="add-product-form-field" key={id}>
-                  <label htmlFor={id}>
-                    {intl.formatMessage({ id: label })}
-                  </label>
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-nome">{intl.formatMessage({ id: "sellProductModalProductNameLabel" })}</label>
                   <input
                     type="text"
-                    id={`add-${id}`}
-                    name={`add-${id}`}
-                    placeholder={intl.formatMessage({ id: placeholder })}
-                    maxLength={maxLength}
-                    {...register(id, {
-                      required: intl.formatMessage({
-                        id: `sellProductModalError${id}Required`,
-                      }),
-                      validate: validation
-                        ? (value) =>
-                            validation(value) ||
-                            intl.formatMessage({
-                              id: `sellProductModalErrorInvalid${id}`,
-                            })
-                        : undefined,
+                id="add-nome"
+                name="add-nome"
+                maxLength="30"
+                placeholder="nome"
+                {...register("productName", {
+                  required: "sellProductModalErrorproductNameRequired",
                     })}
                   />
                 </div>
-              ))}
-              <div
-                className="add-product-form-field"
-                id="add-product-form-field"
-              >
-                <label htmlFor="add-categoria">{intl.formatMessage({ id: 'sellProductModalProductCategoryLabel' })}</label>
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-descricao">{intl.formatMessage({ id: "sellProductModalProductDescriptionLabel" })}</label>
+              <input
+                type="text"
+                id="add-descricao"
+                name="add-descricao"
+                maxLength="100"
+                placeholder="descrição"
+                {...register("productDescription", {
+                  required: "sellProductModalErrorproductDescriptionRequired",
+                })}
+              />
+            </div>
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-preco">{intl.formatMessage({ id: "sellProductModalProductPriceLabel" })}</label>
+              <input
+                type="text"
+                id="add-preco"
+                name="add-preco"
+                maxLength="10"
+                placeholder="preço"
+                {...register("productPrice", {
+                  required: "sellProductModalErrorproductPriceRequired",
+                  validate: (value) =>
+                    checkIfNumeric(value) || "sellProductModalErrorInvalidProductPrice",
+                })}
+              />
+            </div>
+            
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-categoria">{intl.formatMessage({ id: "sellProductModalProductCategoryLabel" })}</label>
                 <select
                   id="add-categoria"
                   name="add-categoria"
-                  {...register("productCategory", {
-                    required: "Terá de escoher uma categoria",
-                  })}
+                  {...register("productCategory")}
                 >
                   <option value="" disabled>
                   {intl.formatMessage({ id: 'sellProductModalProductCategoryPlaceholder' })}
@@ -169,8 +146,34 @@ const ProductModal = ({
                   {renderCategoryDropdown(displayedCategories, locale)}
                 </select>
               </div>
+
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-localidade">{intl.formatMessage({ id: "sellProductModalProductLocationLabel" })}</label>
+              <input
+                type="text"
+                id="add-localidade"
+                name="add-localidade"
+                placeholder="morada"
+                maxLength="100"
+                {...register("productLocation", {
+                  required: "registerModalErrorfirstName",
+                })}
+              />
+            </div>
+            <div className="add-product-form-field" id="add-product-form-field">
+              <label htmlFor="add-imagem">{intl.formatMessage({ id: "sellProductModalProductImageUrlLabel" })}</label>
+              <input
+                type="text"
+                id="add-imagem"
+                name="add-imagem"
+                placeholder="url"
+                {...register("productUrlImage", {
+                  required: "sellProductModalErrorproductUrlImageRequired",
+                })}
+              />
+              </div>
               <div className="add-product-form-field">
-                <label htmlFor="add-imagem">{intl.formatMessage({ id: 'sellProductModalProductStateLabel' })}</label>
+              <label htmlFor="add-imagem">{intl.formatMessage({ id: "sellProductModalProductStateLabel" })}</label>
                 <select
                   id="addState"
                   name="addState"
@@ -179,14 +182,16 @@ const ProductModal = ({
                 >
                   <option value="" disabled>
                     {intl.formatMessage({
-                      id: "sellProductModalSelectStatePlaceholder",
+                                  id: "editProductModalSelectStatePlaceholder",
                     })}
                   </option>
-                  {["RASCUNHO", "DISPONIVEL"].map((state) => (
+                              {["RASCUNHO", "DISPONIVEL"].map(
+                                (state) => (
                     <option key={state} value={state}>
                       {productStateTranslations[locale][state]}
                     </option>
-                  ))}
+                                )
+                              )}
                 </select>
               </div>
               <input

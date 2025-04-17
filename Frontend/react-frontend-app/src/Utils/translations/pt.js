@@ -307,18 +307,18 @@ const pt = {
   registerModalEmailPlaceholder: "Insira o seu endereço de email",
   registerModalPhonePlaceholder: "Insira o seu número de telefone",
   registerModalPhotoUrlPlaceholder: "Insira o URL da sua fotografia de perfil",
-  registerModalErrorfirstNameRequired: "Tem de preencher o primeiro nome.",
-  registerModalErrorlastNameRequired: "Tem de preencher o apelido.",
-  registerModalErrorusernameRequired: "Tem de preencher o nome de utilizador.",
-  registerModalErrorpasswordRequired: "Tem de preencher a palavra-passe.",
-  registerModalErrorConfirmPasswordRequired:
+  registerModalErrorfirstName: "Tem de preencher o primeiro nome.",
+  registerModalErrorlastName: "Tem de preencher o apelido.",
+  registerModalErrorusername: "Tem de preencher o nome de utilizador.",
+  registerModalErrorpassword: "Tem de preencher a palavra-passe.",
+  registerModalErrorpasswordConfirm:
     "Tem de confirmar a palavra-passe.",
-  registerModalErroremailRequired: "Tem de preencher o email.",
-  registerModalErrorphoneNumberRequired:
+    registerModalErroremail: "Tem de preencher o email.",
+    registerModalErrorphoneNumber:
     "Tem de preencher o número de telefone.",
-  registerModalErrorurlPhotoRequired:
+    registerModalErrorurlPhoto:
     "Tem de preencher o URL da sua fotografia de perfil.",
-  registerModalErrorPasswordMismatch: "As palavras-passe não correspondem.",
+    registerModalErrorPasswordMismatch: "As palavras-passe não correspondem.",
   registerModalErrorInvalidName: "O nome não deve conter caracteres especiais.",
   registerModalErrorInvalidUsername:
     "Os nomes de utilizador podem conter '-' e '_', mas não outros caracteres especiais.",
@@ -363,6 +363,10 @@ const pt = {
     "O URL da imagem é obrigatório.",
   sellProductModalErrorInvalidProductPrice:
     "O preço apenas pode conter números.",
+
+
+    //RenderCategoryList
+    categoryListAllProducts: "Todos os produtos",
 
   //Handles
   //handleChangeUserInformation

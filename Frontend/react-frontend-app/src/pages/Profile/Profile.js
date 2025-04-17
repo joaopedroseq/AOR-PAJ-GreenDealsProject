@@ -51,7 +51,7 @@ export const Profile = () => {
 
   //Get das informações do utilizador
   const getProfileInformation = async () => {
-    let userInformation = await handleGetUserInformation(username, token);
+    let userInformation = await handleGetUserInformation(username, token, intl);
     setUserProfile(userInformation);
   };
 

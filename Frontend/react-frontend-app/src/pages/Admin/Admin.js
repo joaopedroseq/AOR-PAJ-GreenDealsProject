@@ -70,7 +70,7 @@ export const Admin = () => {
         } else {
           setFilters({ category: null, username: null, excluded: null });
           await fetchProducts(token);
-          const users = await handleGetAllUsers(token);
+          const users = await handleGetAllUsers(token, intl);
           setAllUsers(users);
         }
       } catch (error) {

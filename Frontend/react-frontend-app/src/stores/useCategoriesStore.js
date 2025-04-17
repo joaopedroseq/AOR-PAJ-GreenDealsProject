@@ -75,7 +75,6 @@ export const useCategoriesStore = create((set, get) => ({
 useLocaleStore.subscribe(
   (state) => state.locale,
   (locale) => {
-    console.log("🔥 Locale changed, resorting categories...");
     const sortedCategories = useCategoriesStore.getState().sortByLocale(locale);
     useCategoriesStore.setState({ displayedCategories: sortedCategories });
   }

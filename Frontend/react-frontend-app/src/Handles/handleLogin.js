@@ -1,8 +1,4 @@
 import { login, getUserLogged } from "../Api/authenticationApi";
-import {
-  showSuccessToast,
-  showErrorToast,
-} from "../Utils/ToastConfig/toastConfig";
 import handleNotification from "../Handles/handleNotification";
 
 
@@ -30,12 +26,9 @@ export const logUserInformation = async (token, useUserStoreUpdates, intl) => {
     const userInformation = await getUserLogged(token);
     updateToken(token);
     updateIsAuthenticated();
-    showSuccessToast(
-      `${intl.formatMessage(
-        { id: "welcomeNotification" },
-        { firstName: userInformation.firstName }
-      )}`
-    );
+    handleNotification(intl, "success", "welcomeNotification", {
+      firstName: userInformation.firstName,
+    });
   } catch (error) {
     handleNotification(intl, "error", `${error.message}`);
   }

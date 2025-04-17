@@ -307,14 +307,14 @@ const en = {
   registerModalEmailPlaceholder: "Enter your email address",
   registerModalPhonePlaceholder: "Enter your phone number",
   registerModalPhotoUrlPlaceholder: "Enter your profile photo URL",
-  registerModalErrorfirstNameRequired: "You must enter your first name.",
-  registerModalErrorlastNameRequired: "You must enter your last name.",
-  registerModalErrorusernameRequired: "You must enter a username.",
-  registerModalErrorpasswordRequired: "You must enter a password.",
-  registerModalErrorConfirmPasswordRequired: "You must confirm your password.",
-  registerModalErroremailRequired: "You must enter an email.",
-  registerModalErrorphoneNumberRequired: "You must enter your phone number.",
-  registerModalErrorurlPhotoRequired: "You must enter your profile photo URL.",
+  registerModalErrorfirstName: "You must enter your first name.",
+  registerModalErrorlastName: "You must enter your last name.",
+  registerModalErrorusername: "You must enter a username.",
+  registerModalErrorpassword: "You must enter a password.",
+  registerModalErrorpasswordConfirm: "You must confirm your password.",
+  registerModalErroremail: "You must enter an email.",
+  registerModalErrorphoneNumber: "You must enter your phone number.",
+  registerModalErrorurlPhoto: "You must enter your profile photo URL.",
   registerModalErrorPasswordMismatch: "Passwords do not match.",
   registerModalErrorInvalidName: "Names should not contain special characters.",
   registerModalErrorInvalidUsername:
@@ -356,6 +356,9 @@ const en = {
   //Handles
   //handleChangeUserInformation
   handleChangeUserInformationSucess: "Update successfull",
+
+  //RenderCategoryList
+  categoryListAllProducts: "All products",
 
   //Errors
   errorerrorNetwork_error:

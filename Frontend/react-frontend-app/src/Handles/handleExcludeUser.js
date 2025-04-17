@@ -1,9 +1,8 @@
 import { excludeUser } from "../Api/userApi";
-import errorMessages from "../Utils/constants/errorMessages";
-import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
+import handleNotification from "./handleNotification";
 
 //operação de excluir um utilizador
-const handleExcludeUser = async(token, username) => {
+const handleExcludeUser = async(token, username, intl) => {
         try{
           const response = await excludeUser(token, username);
           if(response.status === 200){
@@ -11,9 +10,7 @@ const handleExcludeUser = async(token, username) => {
           }
                 
         } catch (error) {
-          const toastMessage =
-            errorMessages[error.message] || errorMessages.errorUnexpected;
-          showErrorToast(toastMessage);
+          handleNotification(intl, "error", `${error.message}`);
         }
       }
 export default handleExcludeUser;

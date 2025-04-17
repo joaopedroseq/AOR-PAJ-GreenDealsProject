@@ -13,7 +13,7 @@ export const handleExcludingUser = async (
   intl
 ) => {
   try {
-    const response = await handleExcludeUser(token, user.username);
+    const response = await handleExcludeUser(token, user.username, intl);
     if (response) {
       handleNotification(intl, "success", "adminExcludeUserSuccess", {
         username: user.username,
@@ -41,7 +41,7 @@ export const handleDeletingUserProducts = async (
 ) => {
   console.log(user);
   try {
-    const response = await handleDeleteUserProducts(token, user.username);
+    const response = await handleDeleteUserProducts(token, user.username, intl);
     if (response) {
       handleNotification(intl, "success", "adminRemoveUserProductsSuccess", {
         username: user.username,
@@ -65,7 +65,7 @@ export const handleDeletingUser = async (
   intl
 ) => {
   try {
-    const response = await handleDeleteUser(token, user.username);
+    const response = await handleDeleteUser(token, user.username, intl);
     if (response) {
       handleNotification(intl, "success", "adminDeleteUserSuccess", {
         username: user.username,

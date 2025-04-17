@@ -1,16 +1,13 @@
 import { getUserInformation } from "../Api/userApi";
-import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
-import errorMessages from "../Utils/constants/errorMessages";
+import handleNotification from "./handleNotification";
 
 //operação de obter informações de um utilizador - frequentemente utilizado
-export const handleGetUserInformation = async (username, token) => {
+export const handleGetUserInformation = async (username, token, intl) => {
   try {
     const userInformation = await getUserInformation(username, token);
     return userInformation;
   } catch (error) {
-    const toastMessage =
-      errorMessages[error.message] || errorMessages.errorUnexpected;
-    showErrorToast(toastMessage);
+    handleNotification(intl, "error", `${error.message}`);
   }
 };
 

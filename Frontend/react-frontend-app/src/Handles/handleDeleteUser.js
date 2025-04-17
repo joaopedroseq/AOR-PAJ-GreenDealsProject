@@ -1,9 +1,8 @@
 import { deleteUser } from "../Api/userApi";
-import errorMessages from "../Utils/constants/errorMessages";
-import { showErrorToast } from "../Utils/ToastConfig/toastConfig";
+import handleNotification from "./handleNotification";
 
 //Operação de remoção permanente de utilizador
-const handleDeleteUser = async(token, username) => {
+const handleDeleteUser = async(token, username, intl) => {
         try{
           const response = await deleteUser(token, username);
           if(response.status === 200){
@@ -11,9 +10,7 @@ const handleDeleteUser = async(token, username) => {
           }
                 
         } catch (error) {
-          const toastMessage =
-            errorMessages[error.message] || errorMessages.errorUnexpected;
-          showErrorToast(toastMessage);
+          handleNotification(intl, "error", `${error.message}`);
         }
       }
 export default handleDeleteUser;
