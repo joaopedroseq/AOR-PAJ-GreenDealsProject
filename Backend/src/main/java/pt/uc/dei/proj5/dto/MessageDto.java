@@ -1,7 +1,5 @@
 package pt.uc.dei.proj5.dto;
 
-import jakarta.json.JsonObject;
-
 import java.time.LocalDateTime;
 
 public class MessageDto {
@@ -12,7 +10,7 @@ public class MessageDto {
     private Boolean isDeleted;
     private LocalDateTime timestamp;
     private String sender;
-    private String receiver;
+    private String recipient;
 
     //Constructor
     //Empty Constructor
@@ -20,14 +18,14 @@ public class MessageDto {
     }
 
     //Constuctor quando criada mensagem
-    public MessageDto(String message, String sender, String receiver, LocalDateTime timestamp) {
+    public MessageDto(String message, String sender, String recipient, LocalDateTime timestamp) {
         this.message = message;
         this.isRead = false;
         this.isDeleted = false;
         this.timestamp = timestamp;
         this.sender = sender;
-        this.receiver = receiver;
-        this.messageId = generateMessageHash(this.message, this.timestamp, this.sender, this.receiver);
+        this.recipient = recipient;
+        this.messageId = generateMessageHash(this.message, this.timestamp, this.sender, this.recipient);
     }
 
     public MessageDto(MessageDto messageDto) {
@@ -36,8 +34,8 @@ public class MessageDto {
         this.isDeleted = messageDto.isDeleted;
         this.timestamp = messageDto.timestamp;
         this.sender = messageDto.sender;
-        this.receiver = messageDto.receiver;
-        this.messageId = generateMessageHash(this.message, this.timestamp, this.sender, this.receiver);
+        this.recipient = messageDto.recipient;
+        this.messageId = generateMessageHash(this.message, this.timestamp, this.sender, this.recipient);
     }
 
     public int getMessageId() {
@@ -88,12 +86,12 @@ public class MessageDto {
         this.sender = sender;
     }
 
-    public String getReceiver() {
-        return receiver;
+    public String getRecipient() {
+        return recipient;
     }
 
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
     }
 
     private Integer generateMessageHash(String message, LocalDateTime dateSent, String senderUsername, String receiverUsername) {

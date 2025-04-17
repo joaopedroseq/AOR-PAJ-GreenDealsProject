@@ -8,11 +8,12 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dao.MessageDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.MessageDto;
+import pt.uc.dei.proj5.dto.MessageNotificationDto;
 import pt.uc.dei.proj5.dto.UserDto;
 import pt.uc.dei.proj5.entity.MessageEntity;
-import pt.uc.dei.proj5.service.UserService;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
 @Stateless
@@ -30,8 +31,16 @@ public class MessageBean implements Serializable {
 
     public Set<MessageDto> getMessagesForUser(UserDto userDto) {
         return null;
+    }
 
-
+    public List<MessageNotificationDto> getMessagesNotificationsForUser(String recipientUsername) {
+        try{
+            return messageDao.getMessageNotifications(recipientUsername);
+        }
+        catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
     }
 
     public boolean newMessage(MessageDto messageDto) {
@@ -61,7 +70,7 @@ public class MessageBean implements Serializable {
             return null;
         }
         try {
-            messageEntity.setReceiver(userDao.findUserByUsername(messageDto.getReceiver()));
+            messageEntity.setRecipient(userDao.findUserByUsername(messageDto.getRecipient()));
         }
         catch(Exception e) {
             return null;

@@ -5,6 +5,15 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+@NamedQuery(
+        name = "MessageEntity.getMessageNotifications",
+        query = "SELECT m.sender.username, COUNT(m), MAX(m.timestamp), u.url " +
+                "FROM MessageEntity m " +
+                "JOIN UserEntity u ON m.sender.username = u.username " +
+                "WHERE m.recipient.username = :recipient_username AND m.isRead = false " +
+                "GROUP BY m.sender, u.url " +
+                "ORDER BY MAX(m.timestamp) DESC"
+)
 @Entity
 @Table(name="message")
 public class MessageEntity implements Serializable {
@@ -33,7 +42,7 @@ public class MessageEntity implements Serializable {
     private UserEntity sender;
 
     @ManyToOne
-    private UserEntity receiver;
+    private UserEntity recipient;
 
     //Constructor
     //Empty constructor
@@ -88,12 +97,12 @@ public class MessageEntity implements Serializable {
         this.sender = sender;
     }
 
-    public UserEntity getReceiver() {
-        return receiver;
+    public UserEntity getRecipient() {
+        return recipient;
     }
 
-    public void setReceiver(UserEntity receiver) {
-        this.receiver = receiver;
+    public void setRecipient(UserEntity receiver) {
+        this.recipient = receiver;
     }
 
     public LocalDateTime getDateEdited() {
