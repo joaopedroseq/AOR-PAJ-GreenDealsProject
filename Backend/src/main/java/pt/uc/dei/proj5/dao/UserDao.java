@@ -97,15 +97,13 @@ public class UserDao extends AbstractDao<UserEntity> {
     }
 
     public boolean findIfUserExists(String username) {
-        try{
-            if (em.createNamedQuery("User.findIfUserExists").setParameter("username", username).getResultList().isEmpty()) {
-                return false;
-            }
-            else{
-                return true;
-            }
-        }
-        catch(NoResultException e){
+        try {
+            Long count = (Long) em.createNamedQuery("User.findIfUserExists")
+                    .setParameter("username", username)
+                    .getSingleResult();
+
+            return count > 0;  // If count is greater than 0, the user exists
+        } catch (NoResultException e) {
             logger.error("Exception {} in UserDao.findIfUserExists", e.getMessage());
             return false;
         }

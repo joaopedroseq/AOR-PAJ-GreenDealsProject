@@ -198,4 +198,20 @@ public class AuthenticationService {
             return Response.status(200).entity(user).build();
         }
     }
+
+    public UserDto validateToken(String authenticationToken) throws WebApplicationException {
+        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
+            throw new WebApplicationException(Response.status(401).entity("Missing token").build());
+        }
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAuthenticationToken(authenticationToken);
+        UserDto user = tokenbean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+        if (user == null) {
+            throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            throw new WebApplicationException(Response.status(403).entity("User has inactive or excluded account").build());
+        }
+        return user;
+    }
 }

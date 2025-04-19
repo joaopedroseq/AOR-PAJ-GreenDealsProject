@@ -1,14 +1,12 @@
 package pt.uc.dei.proj5.dto;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-public class ConversationDto {
+public class ChatDto {
     //Atributes
     private List<MessageDto> messages;
 
-    public ConversationDto(List<MessageDto> messages) {
+    public ChatDto(List<MessageDto> messages) {
         this.messages = messages;
     }
 

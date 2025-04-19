@@ -11,8 +11,10 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.MessageBean;
+import pt.uc.dei.proj5.beans.NotificationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.beans.UserBean;
+import pt.uc.dei.proj5.dao.NotificationDao;
 import pt.uc.dei.proj5.dto.*;
 
 import java.io.IOException;
@@ -35,6 +37,9 @@ public class wsChat {
 
     @Inject
     MessageBean messageBean;
+
+    @Inject
+    NotificationBean notificationBean;
 
     @Inject
     UserBean userBean;
@@ -80,6 +85,8 @@ public class wsChat {
                         if (recipientSession != null && recipientSession.isOpen()) {
                             recipientSession.getBasicRemote().sendText(messageJson.toString());
                             session.getBasicRemote().sendText("{ \"type\": \"SUCCESS\", \"message\": \"Sent message\" }");
+                        }else {
+                            notificationBean.newMessageNotification(sender, recipient);
                         }
                     }
                     else {

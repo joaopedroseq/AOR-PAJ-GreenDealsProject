@@ -14,6 +14,15 @@ import java.time.LocalDateTime;
                 "GROUP BY m.sender, u.url " +
                 "ORDER BY MAX(m.timestamp) DESC"
 )
+
+@NamedQuery(
+        name = "MessageEntity.getConversation",
+        query = "SELECT m " +
+                "FROM MessageEntity m " +
+                "WHERE (m.recipient.username = :user_username AND m.sender.username = :otherUser_username) " +
+                "OR (m.recipient.username = :otherUser_username AND m.sender.username = :user_username) " +
+                "ORDER BY m.timestamp ASC"
+)
 @Entity
 @Table(name="message")
 public class MessageEntity implements Serializable {

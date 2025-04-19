@@ -6,10 +6,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj5.beans.CategoryBean;
-import pt.uc.dei.proj5.beans.ProductBean;
-import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.beans.UserBean;
+import pt.uc.dei.proj5.beans.*;
 import pt.uc.dei.proj5.dto.*;
 
 import java.util.Set;
@@ -30,6 +27,9 @@ public class ProductService {
 
     @Inject
     TokenBean tokenBean;
+
+    @Inject
+    NotificationBean notificationBean;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -239,6 +239,7 @@ public class ProductService {
                 if(!isOwner){
                     productDto.setId(product.getId());
                     productBean.updateProduct(productDto);
+                    notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
                     logger.info("User {} bought ", user.getUsername(), product.getSeller());
                     return Response.status(200).entity("Bought product").build();
                 }
@@ -259,6 +260,9 @@ public class ProductService {
             } else {
                 productDto.setId(product.getId());
                 if (productBean.updateProduct(productDto)) {
+                    if(!isOwner){
+                        notificationBean.newProductNotification(NotificationType.PRODUCT_ALTERED, product.getSeller(), user.getUsername(), product);
+                    }
                     logger.info("{} updated product {}", user.getUsername(), product.getId());
                     return Response.status(200).entity("Updated product").build();
                 } else {

@@ -1,4 +1,8 @@
 package pt.uc.dei.proj5.dto;
 
-public class NotificationType {
+public enum NotificationType {
+    MESSAGE,
+    PRODUCT_BOUGHT,
+    PRODUCT_ALTERED
+
 }

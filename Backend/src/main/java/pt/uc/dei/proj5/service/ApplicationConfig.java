@@ -20,6 +20,8 @@ public class ApplicationConfig extends Application {
         resources.add(CategoryService.class);
         resources.add(AuthenticationService.class);
         resources.add(ConfigurationService.class);
+        resources.add(MessageService.class);
+        resources.add(NotificationService.class);
         return resources;
     }
 }

@@ -12,7 +12,10 @@ import java.util.Set;
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.username = :username")
 
 //to find if user exists
-@NamedQuery(name = "User.findIfUserExists", query = "SELECT username FROM UserEntity WHERE username = :username")
+@NamedQuery(
+        name = "User.findIfUserExists",
+        query = "SELECT COUNT(u) FROM UserEntity u WHERE u.username = :username"
+)
 
 //find if anonymous exists
 @NamedQuery(name = "User.findIfAnonymousExists", query = "SELECT username FROM UserEntity WHERE username = :anonymous")
