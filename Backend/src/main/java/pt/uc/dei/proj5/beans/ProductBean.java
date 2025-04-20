@@ -100,12 +100,11 @@ public class ProductBean {
             }
         } catch (Exception e) {
             logger.error("Error updating product {}", productDto.getId());
-            logger.error(e);
             return false;
         }
     }
 
-    public ProductDto findProductById(int id) {
+    public ProductDto findProductById(Long id) {
         try {
             ProductDto productDto = convertSingleProductEntitytoProductDto(productDao.getProductById(id));
             return productDto;
@@ -125,7 +124,7 @@ public class ProductBean {
         }
     }
 
-    public boolean deleteProduct(int productId) {
+    public boolean deleteProduct(Long productId) {
         try {
             productDao.deleteProduct(productId);
             return true;
@@ -144,7 +143,7 @@ public class ProductBean {
         produto.setName(productEntity.getName());
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
-        ProductStateId state = ProductStateId.RASCUNHO;
+        ProductStateId state = ProductStateId.DRAFT;
         produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(categoryBean.convertCategoryEntityToCategoryDto(productEntity.getCategory()));

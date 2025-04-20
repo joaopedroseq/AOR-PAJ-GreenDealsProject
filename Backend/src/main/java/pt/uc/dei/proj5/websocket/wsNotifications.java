@@ -12,6 +12,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.MessageBean;
+import pt.uc.dei.proj5.beans.NotificationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.beans.UserBean;
 import pt.uc.dei.proj5.dto.*;
@@ -34,10 +35,8 @@ public class wsNotifications {
     TokenBean tokenBean;
 
     @Inject
-    MessageBean messageBean;
+    NotificationBean notificationBean;
 
-    @Inject
-    UserBean userBean;
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
@@ -60,10 +59,11 @@ public class wsNotifications {
         switch (messageType) {
             case "AUTHENTICATION": {
                 if (WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions, sessionUser)) {
-                    String username = sessionUser.get(session.getId());
-                    List<MessageNotificationDto> messageNotifications = messageBean.getMessagesNotificationsForUser(username);
-                    JsonObject messageNotificationsJSON = buildMessageNotificationJSON(messageNotifications);
-                    session.getBasicRemote().sendText(messageNotificationsJSON.toString());
+                    UserDto user = new UserDto();
+                    user.setUsername(sessionUser.get(session.getId()));
+                    List<NotificationDto> notifications = notificationBean.getNotifications(user);
+                    JsonObject notificationsJSON = buildNotificationJSON(notifications);
+                    session.getBasicRemote().sendText(notificationsJSON.toString());
                 }
                 break;
             }
@@ -75,24 +75,44 @@ public class wsNotifications {
         }
     }
 
+    public void notifyUser(NotificationDto notificationDto) throws IOException {
+        String recipientUsername = notificationDto.getRecipientUsername();
+        String senderUsername = notificationDto.getSenderUsername();
+        Session recipientSession = sessions.get(recipientUsername);
+
+        if (recipientSession != null && recipientSession.isOpen()) {
+            String message = switch (notificationDto.getType()) {
+                case MESSAGE -> String.format("You have %d unread messages from %s",
+                        notificationDto.getMessageCount(), senderUsername);
+                case PRODUCT_ALTERED -> String.format("Admin %s has altered your product", senderUsername);
+                case PRODUCT_BOUGHT -> String.format("%s has bought your product", senderUsername);
+                default -> "Unknown notification type.";
+            };
+            recipientSession.getBasicRemote().sendText(message);
+        }
+    }
+
     @OnMessage
     public void handlePing(Session session, PongMessage pongMessage) {
         logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
     }
 
-    private JsonObject buildMessageNotificationJSON(List<MessageNotificationDto> messageNotifications) {
+    private JsonObject buildNotificationJSON(List<NotificationDto> notifications) {
         JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
 
-        for (MessageNotificationDto messageNotificationDto : messageNotifications) {
+        for (NotificationDto notificationDto : notifications) {
             jsonArrayBuilder.add(Json.createObjectBuilder()
-                    .add("senderUsername", messageNotificationDto.getSenderUsername())
-                    .add("senderPhoto", messageNotificationDto.getSenderPhoto())
-                    .add("unreadCount", messageNotificationDto.getUnreadCount())
-                    .add("latestMessageTimestamp", messageNotificationDto.getLatestMessageTimestamp().toString()));
+                    .add("id", notificationDto.getId())
+                    .add("type", notificationDto.getType().toString())
+                    .add("content", notificationDto.getContent())
+                    .add("recipientUsername", notificationDto.getRecipientUsername())
+                    .add("senderUsername", notificationDto.getSenderUsername())
+                    .add("senderProfileUrl", notificationDto.getSenderProfileUrl())
+                    .add("messageCount", notificationDto.getMessageCount() != null ? notificationDto.getMessageCount() : 0));
         }
 
         return Json.createObjectBuilder()
-                .add("messageNotifications", jsonArrayBuilder)
+                .add("notificationJSON", jsonArrayBuilder)
                 .build();
     }
 

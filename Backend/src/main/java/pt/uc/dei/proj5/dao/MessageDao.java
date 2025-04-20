@@ -32,6 +32,18 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
+    public int getUnreadMessageCount(String recipientUsername, String senderUsername) {
+        try {
+            return ((Long) em.createNamedQuery("MessageEntity.getUnreadMessages")
+                    .setParameter("recipient_username", recipientUsername)
+                    .setParameter("sender_username", senderUsername)
+                    .getSingleResult()).intValue();
+        } catch (Exception e) {
+            logger.error("Error fetching unread messages count: ", e);
+            return -1;
+        }
+    }
+
     public List<MessageNotificationDto> getMessageNotifications(String recipientUsername) {
         try {
             List<MessageNotificationDto> results = em.createNamedQuery("MessageEntity.getMessageNotifications", MessageNotificationDto.class).setParameter("recipient_username", recipientUsername).getResultList();

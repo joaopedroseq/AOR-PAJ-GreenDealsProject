@@ -30,7 +30,6 @@ IMPORTANTE:
 - implementar timer para apagar utilizadores expirados;
 - ver uma forma de haver apenas uma autenticação para vários websockets
 - mudar query the if exists para COUNT em vez de select
-- implementar indexação;
 - implementar refresh the autenticação;
 
 Features:

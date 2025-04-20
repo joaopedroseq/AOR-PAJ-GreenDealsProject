@@ -82,11 +82,12 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         }
     }
 
-    public boolean updateMessageNotification(String senderUsername, String recipientUsername) {
+    public boolean updateMessageNotification(String senderUsername, String recipientUsername, int numberUnreadMessages) {
         try {
             if (em.createNamedQuery("NotificationEntity.updateMessageNotification")
                     .setParameter("senderUsername", senderUsername)
                     .setParameter("recipientUsername", recipientUsername)
+                    .setParameter("numberUnreadMessages", numberUnreadMessages)
                     .setParameter("newDate", LocalDateTime.now())  // Use LocalDateTime instead of LocalTime
                     .executeUpdate() > 0) {
                 return true;

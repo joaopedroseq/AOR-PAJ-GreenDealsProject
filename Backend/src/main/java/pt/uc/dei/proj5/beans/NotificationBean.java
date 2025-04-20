@@ -4,6 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pt.uc.dei.proj5.dao.MessageDao;
 import pt.uc.dei.proj5.dao.NotificationDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.NotificationDto;
@@ -11,6 +12,7 @@ import pt.uc.dei.proj5.dto.NotificationType;
 import pt.uc.dei.proj5.dto.ProductDto;
 import pt.uc.dei.proj5.dto.UserDto;
 import pt.uc.dei.proj5.entity.NotificationEntity;
+import pt.uc.dei.proj5.websocket.wsNotifications;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -25,7 +27,13 @@ public class NotificationBean {
     NotificationDao notificationDao;
 
     @Inject
+    wsNotifications wsNotifications;
+
+    @Inject
     UserDao userDao;
+
+    @Inject
+    MessageDao messageDao;
 
     public NotificationBean() {
     }
@@ -67,6 +75,7 @@ public class NotificationBean {
             };
             notificationEntity.setContent(notificationContent);
             notificationDao.persist(notificationEntity);
+            wsNotifications.notifyUser(convertNotificationEntityToNotificationDto(notificationEntity));
             return true;
         } catch (Exception e) {
             logger.error("Error setting new notification", e);
@@ -76,8 +85,9 @@ public class NotificationBean {
 
     public boolean newMessageNotification(String senderUsername, String recipientUsername) {
         try {
+            int numberUnreadMessages = messageDao.getUnreadMessageCount(recipientUsername, senderUsername);
             if (hasRecipientBeenNotified(senderUsername, recipientUsername)) {
-                return notificationDao.updateMessageNotification(senderUsername, recipientUsername);
+                return notificationDao.updateMessageNotification(senderUsername, recipientUsername, numberUnreadMessages);
             } else {
                 NotificationEntity notificationEntity = new NotificationEntity();
                 notificationEntity.setType(NotificationType.MESSAGE);
@@ -85,9 +95,10 @@ public class NotificationBean {
                 notificationEntity.setSender(userDao.findUserByUsername(senderUsername));
                 notificationEntity.setRead(false);
                 notificationEntity.setTimestamp(LocalDateTime.now());
-                notificationEntity.setMessageCount(1);
+                notificationEntity.setMessageCount(numberUnreadMessages);
                 notificationEntity.setContent("new message");
                 notificationDao.persist(notificationEntity);
+                wsNotifications.notifyUser(convertNotificationEntityToNotificationDto(notificationEntity));
                 return true;
             }
         } catch (Exception e) {
@@ -112,6 +123,7 @@ public class NotificationBean {
         notificationDto.setContent(notificationEntity.getContent());
         notificationDto.setRead(notificationEntity.isRead());
         notificationDto.setTimestamp(notificationEntity.getTimestamp());
+        notificationDto.setMessageCount(notificationEntity.getMessageCount());
         notificationDto.setRecipientUsername(notificationEntity.getRecipient().getUsername());
         notificationDto.setSenderUsername(notificationEntity.getSender().getUsername());
         notificationDto.setSenderProfileUrl(notificationEntity.getSender().getUrl());

@@ -28,18 +28,6 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         }
     }
 
-
-    public TokenEntity findTokenByAuthenticationToken(String authenticationToken) {
-        try {
-            return (TokenEntity) em.createNamedQuery("Token.findTokenByAuthenticationToken").setParameter("token", authenticationToken)
-                    .getSingleResult();
-
-        } catch (NoResultException e) {
-            logger.error("Exception {} in TokenDao.findTokenByAuthenticationToken", e.getMessage());
-            return null;
-        }
-    }
-
     //Talvez para apagar
     public boolean findIfAuthenticationTokenExists(String authenticationToken) {
         try{

@@ -5,15 +5,19 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="configuration")
+
 @NamedQuery(name = "Configuration.getLatestConfiguration", query = "SELECT configuration FROM ConfigurationEntity configuration ORDER BY configuration.id DESC")
+@Entity
+@Table(name="configuration", indexes = {
+        @Index(name = "idx_latest_configuration", columnList = "id DESC"),
+        @Index(name = "idx_admin_updates", columnList = "updatedByAdmin")
+})
 public class ConfigurationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     //Em minutos
     @Column(name="authenticationExpirationTime", nullable=false)
@@ -34,11 +38,11 @@ public class ConfigurationEntity implements Serializable {
     @Column(name="dateOfUpdate", nullable=false)
     private LocalDateTime dateOfUpdate;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -11,8 +11,9 @@ public class NotificationDto {
     private String recipientUsername;
     private String senderUsername;
     private String senderProfileUrl; // New field
+    private Integer messageCount;
 
-    public NotificationDto(Long id, NotificationType type, String content, boolean isRead, LocalDateTime timestamp, String recipientUsername, String senderUsername, String senderProfileUrl) {
+    public NotificationDto(Long id, NotificationType type, String content, boolean isRead, LocalDateTime timestamp, String recipientUsername, String senderUsername, String senderProfileUrl, int messageCount) {
         this.id = id;
         this.type = type;
         this.content = content;
@@ -21,6 +22,7 @@ public class NotificationDto {
         this.recipientUsername = recipientUsername;
         this.senderUsername = senderUsername;
         this.senderProfileUrl = senderProfileUrl;
+        this.messageCount = messageCount;
     }
 
     public NotificationDto() {
@@ -88,5 +90,13 @@ public class NotificationDto {
 
     public void setSenderProfileUrl(String senderProfileUrl) {
         this.senderProfileUrl = senderProfileUrl;
+    }
+
+    public Integer getMessageCount() {
+        return messageCount;
+    }
+
+    public void setMessageCount(Integer messageCount) {
+        this.messageCount = messageCount;
     }
 }

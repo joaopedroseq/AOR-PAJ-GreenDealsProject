@@ -66,7 +66,7 @@ public class ProductService {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         } else if (user == null) {
-            Set<ProductDto> products = productBean.getProducts(null, null, name, ProductStateId.DISPONIVEL, false, category, false, parameter, order);
+            Set<ProductDto> products = productBean.getProducts(null, null, name, ProductStateId.AVAILABLE, false, category, false, parameter, order);
             if (products != null) {
                 logger.info("Getting all products for unlogged user");
                 return Response.status(200).entity(products).build();
@@ -112,7 +112,7 @@ public class ProductService {
                 productStateId = null;
             }
             else {
-                productStateId = ProductStateId.DISPONIVEL;
+                productStateId = ProductStateId.AVAILABLE;
             }
         }
         Set<ProductDto> products = productBean.getProducts(username, id, name, productStateId, excluded, category, edited, parameter, order);
@@ -170,7 +170,7 @@ public class ProductService {
 
     @PATCH
     @Path("{ProductId}/buy")
-    public Response buyProduct(@HeaderParam("token") String authenticationToken, @PathParam("ProductId") int pathProductId) {
+    public Response buyProduct(@HeaderParam("token") String authenticationToken, @PathParam("ProductId") Long pathProductId) {
         if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - buying product - {}");
             return Response.status(401).entity("Invalid token").build();
@@ -193,7 +193,7 @@ public class ProductService {
             } else if (product.getSeller().equals(user.getUsername())) {
                 logger.error("Permission denied - {} buying own product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - buying own product").build();
-            } else if (product.getState().equals(ProductStateId.COMPRADO)) {
+            } else if (product.getState().equals(ProductStateId.BOUGHT)) {
                 logger.error("Permission denied - {} buying already bought product with id: {}", user.getUsername(), pathProductId);
                 return Response.status(403).entity("Permission denied - buying already bought product").build();
             } else if (product.isExcluded()) {
@@ -213,7 +213,7 @@ public class ProductService {
     @PATCH
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") int pathProductId, ProductDto productDto) {
+    public Response updateProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") Long pathProductId, ProductDto productDto) {
         if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - updating product id - {}", pathProductId);
             return Response.status(401).entity("Missing token").build();
@@ -237,11 +237,23 @@ public class ProductService {
             }
             if(productDto.isBuying()) {
                 if(!isOwner){
-                    productDto.setId(product.getId());
-                    productBean.updateProduct(productDto);
-                    notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
-                    logger.info("User {} bought ", user.getUsername(), product.getSeller());
-                    return Response.status(200).entity("Bought product").build();
+                    if(product.getState() == ProductStateId.AVAILABLE || product.getState() == ProductStateId.RESERVED) {
+                        productDto.setId(product.getId());
+                        if(productBean.updateProduct(productDto)){
+                            notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
+                            logger.info("User {} bought ", user.getUsername(), product.getSeller());
+                            return Response.status(200).entity("Bought product").build();
+                        }
+                        else {
+                            logger.error("Permission denied - {} tried to buy already bought or excluded product", user.getUsername());
+                            return Response.status(403).entity("Permission denied - buying already bought or excluded product").build();
+                        }
+
+                    }
+                    else {
+                        logger.error("Permission denied - {} tried to buy already bought or excluded product", user.getUsername());
+                        return Response.status(403).entity("Permission denied - buying already bought or excluded product").build();
+                    }
                 }
                 else{
                     logger.error("Permission denied - {} tried to buy self product", user.getUsername());
@@ -278,7 +290,7 @@ public class ProductService {
     //Deleting products
     @DELETE
     @Path("{id}")
-    public Response deleteProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") int pathProductId) {
+    public Response deleteProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") Long pathProductId) {
         if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
             logger.error("Invalid token (null) - deleting product id - {}", pathProductId);
             return Response.status(401).entity("Missing token").build();

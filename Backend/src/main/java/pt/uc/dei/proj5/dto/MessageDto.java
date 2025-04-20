@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class MessageDto {
     //Atributes
-    private int messageId;
+    private Long messageId;
     private String message;
     private Boolean isRead;
     private Boolean isDeleted;
@@ -38,11 +38,11 @@ public class MessageDto {
         this.messageId = generateMessageHash(this.message, this.timestamp, this.sender, this.recipient);
     }
 
-    public int getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(int messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 
@@ -94,14 +94,16 @@ public class MessageDto {
         this.recipient = recipient;
     }
 
-    private Integer generateMessageHash(String message, LocalDateTime dateSent, String senderUsername, String receiverUsername) {
-        int hash = 0;
+    private Long generateMessageHash(String message, LocalDateTime dateSent, String senderUsername, String receiverUsername) {
+        long hash = 0L;
         String string = message.concat(dateSent.toString()).concat(senderUsername).concat(receiverUsername);
+
         for (int i = 0; i < string.length(); i++) {
             int chr = Character.codePointAt(string, i);
             hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
+            hash |= 0L;
         }
+
         return hash;
     }
 

@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@Entity
-@Table(name="category")
+
 
 //get all categorie's names
 @NamedQuery(name = "Category.getAllCategoriesNames", query = "SELECT nome FROM CategoryEntity c WHERE c.nameEng != :empty ORDER BY nome")
@@ -17,6 +16,10 @@ import java.util.Set;
 // to delete a category by name
 @NamedQuery(name = "Category.deleteCategory", query = "DELETE FROM CategoryEntity c WHERE c.nome = :nome")
 
+@Entity
+@Table(name="category", indexes = {
+        @Index(name = "idx_category_nome", columnList = "nome")
+})
 public class CategoryEntity implements Serializable {
     @Id
     @Column(name="nome", nullable=false, unique = true, updatable = false)

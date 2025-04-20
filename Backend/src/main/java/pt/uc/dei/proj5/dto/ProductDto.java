@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @XmlRootElement
 public class ProductDto implements Serializable{
-    private Integer id;
+    private Long id;
     private String seller;
     private String name;
     private String description;
@@ -37,7 +37,7 @@ public class ProductDto implements Serializable{
     }
 
     //CONSTRUTOR QUANDO É BUSCADO UM PRODUTO
-    public ProductDto(String seller, String name, String description, double price, CategoryDto category, String location, String urlImage, ProductStateId state, LocalDateTime date, int id) {
+    public ProductDto(String seller, String name, String description, double price, CategoryDto category, String location, String urlImage, ProductStateId state, LocalDateTime date, Long id) {
         this.seller = seller;
         this.name = name;
         this.description = description;
@@ -120,7 +120,7 @@ public class ProductDto implements Serializable{
     }
 
     @XmlElement
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -128,7 +128,7 @@ public class ProductDto implements Serializable{
         this.seller = seller;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -168,15 +168,19 @@ public class ProductDto implements Serializable{
         this.edited = edited;
     }
 
-    private Integer generateHash(String seller, String name, String description, double price, String category, String location, String urlImage, LocalDateTime date) {
-        int hash = 0;
-        String string = seller.concat(name).concat(description).concat(String.valueOf(price)).concat(category).concat(location).concat(urlImage).concat(date.toString());
+    private Long generateHash(String seller, String name, String description, double price, String category, String location, String urlImage, LocalDateTime date) {
+        long hash = 0; // Change to `long`
+        String string = seller.concat(name).concat(description)
+                .concat(String.valueOf(price))
+                .concat(category).concat(location)
+                .concat(urlImage).concat(date.toString());
+
         for (int i = 0; i < string.length(); i++) {
             int chr = Character.codePointAt(string, i);
             hash = ((hash << 5) - hash) + chr;
-            hash |= 0; // Convert to 32bit integer
+            hash |= 0L; // Ensure 64-bit conversion
         }
-        return hash;
+        return hash; // Now correctly returns a `Long`
     }
 
     public boolean newProductIsValid(){
@@ -212,7 +216,7 @@ public class ProductDto implements Serializable{
                 && this.category == null
                 && this.location == null
                 && this.urlImage == null
-                && this.state == ProductStateId.COMPRADO
+                && this.state == ProductStateId.BOUGHT
                 && this.date == null
                 && this.excluded == null
                 && this.edited == null;

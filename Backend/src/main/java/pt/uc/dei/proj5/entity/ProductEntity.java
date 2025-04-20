@@ -6,40 +6,30 @@ import pt.uc.dei.proj5.dto.ProductStateId;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="product")
+
 
 //Rever quais são para apagar
-@NamedQuery(name = "Product.getAllProducts", query = "SELECT p FROM ProductEntity p")
-
-@NamedQuery(name = "Product.getActiveProducts", query = "SELECT p FROM ProductEntity p WHERE excluded = false")
-
-@NamedQuery(name = "Product.getEditedProducts", query = "SELECT p FROM ProductEntity p WHERE editedDate != date")
-
-@NamedQuery(name = "Product.getAvailableProducts", query = "SELECT p FROM ProductEntity p WHERE state = 'DISPONIVEL' AND excluded = false")
-
-@NamedQuery(name = "Product.getActiveProductsByUser", query = "SELECT p FROM ProductEntity p WHERE p.seller.username LIKE :username AND p.excluded = false")
-
-@NamedQuery(name = "Product.getAllProductsByUser", query = "SELECT p FROM ProductEntity p WHERE p.seller.username LIKE :username")
-
-@NamedQuery(name = "Product.getProductsByCategory", query = "SELECT p FROM ProductEntity p WHERE p.category.nome LIKE :category AND p.excluded = false AND state = 'DISPONIVEL'")
-
 @NamedQuery(name = "Product.getProductById", query = "SELECT p FROM ProductEntity p WHERE p.id = :id")
+
+@NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 'COMPRADO' WHERE id = :id")
 
 @NamedQuery(name = "Product.setProductsOfUserToExcluded", query = "UPDATE ProductEntity p SET excluded = true WHERE p.seller = :seller")
 
 @NamedQuery(name = "Product.setProductsOfUserToAnonymous", query = "UPDATE ProductEntity p SET p.seller = :anonymous WHERE p.seller = :seller")
 
-@NamedQuery(name = "Product.buyProduct", query = "UPDATE ProductEntity SET state = 'COMPRADO' WHERE id = :id")
-
-@NamedQuery(name = "Product.excludeProduct", query = "UPDATE ProductEntity SET excluded = true WHERE id = :id")
+@NamedQuery(name = "Product.deleteProductsOfUser", query = "DELETE FROM ProductEntity WHERE seller = :seller")
 
 @NamedQuery(name = "Product.deleteProduct", query = "DELETE FROM ProductEntity WHERE id = :id")
 
 @NamedQuery(name = "Product.setAllProductsCategoryToEmpty", query = "UPDATE ProductEntity SET category = :empty WHERE category = :category")
 
-@NamedQuery(name = "Product.deleteProductsOfUser", query = "DELETE FROM ProductEntity WHERE seller = :seller")
-
+@Entity
+@Table(name="product", indexes = {
+        @Index(name = "idx_product_id", columnList = "id"),
+        @Index(name = "idx_product_seller", columnList = "seller"),
+        @Index(name = "idx_product_category", columnList = "category"),
+        @Index(name = "idx_filtered_products", columnList = "seller, state, excluded, category, date")
+})
 public class ProductEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -47,7 +37,7 @@ public class ProductEntity implements Serializable {
     //product unique has ID - not updatable, unique, not null
     @Id
     @Column(name="id", nullable=false, unique = true, updatable = false)
-    private int id;
+    private Long id;
 
     //name
     @Column(name="name", nullable=false, unique = false, updatable = true)
@@ -70,7 +60,7 @@ public class ProductEntity implements Serializable {
     private ProductStateId state;
 
     //publishing date
-    @Column(name="pubdate", nullable=false, unique = false, updatable = true)
+    @Column(name="date", nullable=false, unique = false, updatable = true)
     private LocalDateTime date;
 
     //Edited - time of last edit
@@ -86,10 +76,16 @@ public class ProductEntity implements Serializable {
     private Boolean excluded;
 
     @ManyToOne
+    @JoinColumn(name = "seller", nullable = false)
     private UserEntity seller;
 
     @ManyToOne
+    @JoinColumn(name = "category", nullable = false)
     private CategoryEntity category;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer", nullable = true)
+    private UserEntity buyer;
 
 
     //Constructors
@@ -137,11 +133,11 @@ public class ProductEntity implements Serializable {
         this.excluded = excluded;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -191,6 +187,14 @@ public class ProductEntity implements Serializable {
 
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
+    }
+
+    public UserEntity getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(UserEntity buyer) {
+        this.buyer = buyer;
     }
 
     @Override

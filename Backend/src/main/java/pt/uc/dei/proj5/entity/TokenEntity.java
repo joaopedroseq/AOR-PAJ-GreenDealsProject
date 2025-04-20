@@ -17,19 +17,20 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "Token.findUserByActivationToken", query = "SELECT token.user FROM TokenEntity token WHERE token.activationToken = :token")
 //to change password
 @NamedQuery(name = "Token.findUserByPasswordChangeToken", query = "SELECT token.user FROM TokenEntity token WHERE token.passwordChangeToken = :token")
-
-//find Token by AutenticationToken
-@NamedQuery(name = "Token.findTokenByAuthenticationToken", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
-//find Token by AutenticationToken
-@NamedQuery(name = "Token.findTokenByActivationToken", query = "SELECT token FROM TokenEntity token WHERE token.activationToken = :token")
 //to find if authentication token exists
 @NamedQuery(name = "Token.findIfAuthenticationTokenExists", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
 //find by username
 @NamedQuery(name = "Token.findTokenByUsername", query = "SELECT token FROM TokenEntity token WHERE token.user.username = :username")
 //Delete token
 @NamedQuery(name= "Token.deleteToken", query ="DELETE FROM TokenEntity WHERE username = :username")
+
 @Entity
-@Table(name="token")
+@Table(name = "token", indexes = {
+        @Index(name = "idx_auth_token", columnList = "authenticationToken"),
+        @Index(name = "idx_activation_token", columnList = "activationToken"),
+        @Index(name = "idx_password_change_token", columnList = "passwordChangeToken"),
+        @Index(name = "idx_token_username", columnList = "username")
+})
 public class TokenEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 

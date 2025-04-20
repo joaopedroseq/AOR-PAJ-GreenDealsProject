@@ -28,16 +28,8 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         super(ProductEntity.class);
     }
 
-    public List<ProductEntity> getAllProducts() {
-        try {
-            return (List<ProductEntity>) em.createNamedQuery("Product.getAllProducts").getResultList();
 
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-
-    public ProductEntity getProductById(int id) {
+    public ProductEntity getProductById(Long id) {
         try {
             return (ProductEntity) em.createNamedQuery("Product.getProductById").setParameter("id", id).getSingleResult();
         } catch (NoResultException e) {
@@ -45,20 +37,11 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         }
     }
 
-    public void buyProduct(int id) {
+    public void buyProduct(Long id) {
         try {
             em.createNamedQuery("Product.buyProduct").setParameter("id", id).executeUpdate();
         } catch (NoResultException e) {
             logger.error("Error buying product");
-            //logger.error(e);
-        }
-    }
-
-    public void excludeProduct(int id) {
-        try {
-            em.createNamedQuery("Product.excludeProduct").setParameter("id", id).executeUpdate();
-        } catch (NoResultException e) {
-            logger.error("Error excluding product in product dao");
             //logger.error(e);
         }
     }
@@ -92,7 +75,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
 
-    public void deleteProduct(int id) {
+    public void deleteProduct(Long id) {
         try {
             em.createNamedQuery("Product.deleteProduct").setParameter("id", id).executeUpdate();
         } catch (NoResultException e) {

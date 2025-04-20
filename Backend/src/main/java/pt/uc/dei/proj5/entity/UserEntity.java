@@ -6,8 +6,6 @@ import pt.uc.dei.proj5.dto.UserAccountState;
 import java.io.Serializable;
 import java.util.Set;
 
-@Entity
-@Table(name="userAccount")
 //to find if username is avaiable
 @NamedQuery(name = "User.findUserByUsername", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.username = :username")
 
@@ -26,6 +24,15 @@ import java.util.Set;
 @NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET state = 'EXCLUDED' WHERE username = :username")
 //get all non-admin users
 @NamedQuery(name="User.getAllUsers", query = "SELECT u FROM UserEntity u WHERE u.admin = false ORDER BY username")
+
+
+@Entity
+@Table(name = "userAccount", indexes = {
+        @Index(name = "idx_user_username", columnList = "username"),
+        @Index(name = "idx_user_email", columnList = "email"),
+        @Index(name = "idx_user_state", columnList = "state"),
+        @Index(name = "idx_user_phone", columnList = "phonenumber")
+})
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;

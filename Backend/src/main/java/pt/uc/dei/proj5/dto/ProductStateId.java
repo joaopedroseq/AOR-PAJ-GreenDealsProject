@@ -1,27 +1,27 @@
 package pt.uc.dei.proj5.dto;
 
 public enum ProductStateId {
-    DISPONIVEL,
-    RESERVADO,
-    COMPRADO,
-    RASCUNHO;
+    AVAILABLE,
+    RESERVED,
+    BOUGHT,
+    DRAFT;
 
     public ProductStateId stateIdFromInt(int stateId) {
         switch (stateId) {
-            case 1: return DISPONIVEL;
-            case 2: return RESERVADO;
-            case 3: return COMPRADO;
-            case 4: return RASCUNHO;
+            case 1: return AVAILABLE;
+            case 2: return RESERVED;
+            case 3: return BOUGHT;
+            case 4: return DRAFT;
         }
         return null;
     }
 
     static public int intFromStateId(ProductStateId productStateId) {
         switch (productStateId) {
-            case DISPONIVEL: return 1;
-            case RESERVADO: return 2;
-            case COMPRADO: return 3;
-            case RASCUNHO: return 4;
+            case AVAILABLE: return 1;
+            case RESERVED: return 2;
+            case BOUGHT: return 3;
+            case DRAFT: return 4;
         }
         return -1;
     }

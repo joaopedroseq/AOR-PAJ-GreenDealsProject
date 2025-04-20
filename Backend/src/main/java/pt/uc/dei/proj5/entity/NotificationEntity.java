@@ -39,14 +39,19 @@ import java.time.LocalDateTime;
 @NamedQuery(
         name = "NotificationEntity.updateMessageNotification",
         query = "UPDATE NotificationEntity n " +
-                "SET n.messageCount = n.messageCount + 1, " +
+                "SET n.messageCount = :numberUnreadMessages, " +
                 "n.timestamp = :newDate " +
                 "WHERE n.recipient.username = :recipientUsername " +
                 "AND n.sender.username = :senderUsername " +
                 "AND n.type = 'MESSAGE'"
 )
 @Entity
-@Table(name = "notification")
+@Table(name = "notification", indexes = {
+        @Index(name = "idx_notifications_recipient", columnList = "recipient"),
+        @Index(name = "idx_notification_recipient_id", columnList = "recipient, id"),
+        @Index(name = "idx_unread_messages", columnList = "recipient, sender, type, isRead"),
+        @Index(name = "idx_message_notification_update", columnList = "recipient, sender, type")
+})
 public class NotificationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -55,9 +60,11 @@ public class NotificationEntity implements Serializable {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "recipient", nullable = false)
     private UserEntity recipient; // User receiving the notification
 
     @ManyToOne
+    @JoinColumn(name = "sender", nullable = false)
     private UserEntity sender; // User triggering the notification (for messages or purchases)
 
     @Enumerated(EnumType.STRING)

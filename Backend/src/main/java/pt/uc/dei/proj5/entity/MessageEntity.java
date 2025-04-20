@@ -16,6 +16,15 @@ import java.time.LocalDateTime;
 )
 
 @NamedQuery(
+        name = "MessageEntity.getUnreadMessages",
+        query = "SELECT COUNT(m) " +
+                "FROM MessageEntity m " +
+                "WHERE m.recipient.username = :recipient_username " +
+                "AND m.sender.username = :sender_username " +
+                "AND m.isRead = false"
+)
+
+@NamedQuery(
         name = "MessageEntity.getConversation",
         query = "SELECT m " +
                 "FROM MessageEntity m " +
@@ -24,13 +33,16 @@ import java.time.LocalDateTime;
                 "ORDER BY m.timestamp ASC"
 )
 @Entity
-@Table(name="message")
+@Table(name="message", indexes = {
+        @Index(name = "idx_recipient_sender_unread", columnList = "recipient, sender, isRead"),
+        @Index(name = "idx_conversation_pair", columnList = "recipient, sender, timestamp"),
+})
 public class MessageEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Column(name="messageId", nullable = false, unique = true, updatable = false)
-    private int messageId;
+    @Column(name="id", nullable = false, unique = true, updatable = false)
+    private Long messageId;
 
     @Column(name="message", nullable = false, unique = false, updatable = true)
     private String message;
@@ -48,9 +60,11 @@ public class MessageEntity implements Serializable {
     private LocalDateTime dateEdited;
 
     @ManyToOne
+    @JoinColumn(name = "sender", nullable = false)
     private UserEntity sender;
 
     @ManyToOne
+    @JoinColumn(name = "recipient", nullable = false)
     private UserEntity recipient;
 
     //Constructor
@@ -58,11 +72,11 @@ public class MessageEntity implements Serializable {
     public MessageEntity() {
     }
 
-    public int getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(int messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 

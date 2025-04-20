@@ -294,7 +294,6 @@ public class UserBean implements Serializable {
         product.setDate(productDto.getDate());
         product.setEditedDate(productDto.getEdited());
         product.setLocation(productDto.getLocation());
-        System.out.println("STATE:" + productDto.getState().toString());
         product.setState(productDto.getState());
         product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
         product.setCategory(categoryBean.convertCategoryDtoToCategoryEntity(productDto.getCategory()));
