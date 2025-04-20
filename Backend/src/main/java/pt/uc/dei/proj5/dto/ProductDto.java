@@ -1,5 +1,7 @@
 package pt.uc.dei.proj5.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 
@@ -9,6 +11,7 @@ import java.util.Objects;
 
 @XmlRootElement
 public class ProductDto implements Serializable{
+    @JsonSerialize(using = ToStringSerializer.class)        //garantir lossless para long
     private Long id;
     private String seller;
     private String name;
@@ -21,6 +24,7 @@ public class ProductDto implements Serializable{
     private LocalDateTime date;
     private Boolean excluded;
     private LocalDateTime edited;
+    private String buyer;
 
     public ProductDto() {
     }
@@ -168,6 +172,14 @@ public class ProductDto implements Serializable{
         this.edited = edited;
     }
 
+    public String getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(String buyer) {
+        this.buyer = buyer;
+    }
+
     private Long generateHash(String seller, String name, String description, double price, String category, String location, String urlImage, LocalDateTime date) {
         long hash = 0; // Change to `long`
         String string = seller.concat(name).concat(description)
@@ -207,7 +219,8 @@ public class ProductDto implements Serializable{
                 && this.date != null;
     }
 
-    public boolean isBuying(){
+
+    public boolean checkIfOnlyBuying(){
         return this.id == null
                 && this.seller == null
                 && this.name == null

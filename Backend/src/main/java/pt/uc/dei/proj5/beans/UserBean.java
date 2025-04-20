@@ -6,6 +6,7 @@ import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import jakarta.inject.Inject;
 import jakarta.jws.soap.SOAPBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +20,7 @@ import pt.uc.dei.proj5.entity.CategoryEntity;
 import pt.uc.dei.proj5.entity.ProductEntity;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
+import pt.uc.dei.proj5.websocket.wsProducts;
 
 @Stateless
 public class UserBean implements Serializable {
@@ -29,10 +31,13 @@ public class UserBean implements Serializable {
     UserDao userDao;
 
     @EJB
-    CategoryBean categoryBean;
+    ProductBean productBean;
 
     @EJB
     ProductDao productDao;
+
+    @Inject
+    wsProducts wsProducts;
 
     public UserBean() {
     }
@@ -216,12 +221,12 @@ public class UserBean implements Serializable {
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
             ProductDto completeProductDto = new ProductDto(newProductDto);
-            ProductEntity product = convertSingleProductDtotoProductEntity(completeProductDto);
+            ProductEntity product = productBean.convertSingleProductDtotoProductEntity(completeProductDto);
             productDao.persist(product);
+            wsProducts.broadcastProduct(completeProductDto, "NEW");
             return true;
         } catch (Exception e) {
             logger.error("Error while adding product to user {}", userDto.getUsername());
-            //logger.error(e.getMessage());
             return false;
         }
     }
@@ -269,7 +274,7 @@ public class UserBean implements Serializable {
     public Set<ProductDto> convertGroupProductEntityToGroupProductDto(Set<ProductEntity> products) {
         Set<ProductDto> productDtos = new HashSet<>();
         for (ProductEntity productEntity : products) {
-            ProductDto produto = convertSingleProductEntitytoProductDto(productEntity);
+            ProductDto produto = productBean.convertSingleProductEntitytoProductDto(productEntity);
             productDtos.add(produto);
         }
         return productDtos;
@@ -278,49 +283,13 @@ public class UserBean implements Serializable {
     private Set<ProductEntity> convertGroupProductDtoToGroupProductEntity(Set<ProductDto> products) {
         Set<ProductEntity> productEntities = new HashSet<>();
         for (ProductDto productDto : products) {
-            ProductEntity productEntity = convertSingleProductDtotoProductEntity(productDto);
+            ProductEntity productEntity = productBean.convertSingleProductDtotoProductEntity(productDto);
             productEntities.add(productEntity);
         }
         return productEntities;
     }
 
-    public ProductEntity convertSingleProductDtotoProductEntity(ProductDto productDto) {
-        ProductEntity product = new ProductEntity();
-        product.setId(productDto.getId());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        product.setName(productDto.getName());
-        product.setExcluded(productDto.isExcluded());
-        product.setDate(productDto.getDate());
-        product.setEditedDate(productDto.getEdited());
-        product.setLocation(productDto.getLocation());
-        product.setState(productDto.getState());
-        product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
-        product.setCategory(categoryBean.convertCategoryDtoToCategoryEntity(productDto.getCategory()));
-        product.setUrlImage(productDto.getUrlImage());
-        return product;
-    }
 
-    public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
-        ProductDto produto = new ProductDto();
-        produto.setId(productEntity.getId());
-        produto.setDescription(productEntity.getDescription());
-        produto.setPrice(productEntity.getPrice());
-        produto.setName(productEntity.getName());
-        produto.setDate(productEntity.getDate());
-        produto.setLocation(productEntity.getLocation());
-        produto.setState(productEntity.getState());
-        produto.setSeller(productEntity.getSeller().getUsername());
-        if (productEntity.getCategory() != null) {
-            CategoryDto categoryDto = new CategoryDto();
-            categoryDto.setNome(productEntity.getCategory().getNome());
-            categoryDto.setNameEng(productEntity.getCategory().getNameEng());
-        }
-        produto.setUrlImage(productEntity.getUrlImage());
-        produto.setEdited(productEntity.getEditedDate());
-        produto.setExcluded(productEntity.getExcluded());
-        return produto;
-    }
 
 
 

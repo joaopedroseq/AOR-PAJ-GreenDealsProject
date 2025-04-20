@@ -119,6 +119,14 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         if (productStateId != null) {
             predicates.add(cb.equal(root.get("state"), productStateId));
         }
+        else {
+            Predicate stateSearchPredicate = cb.or(
+                    cb.equal(root.get("state"), ProductStateId.AVAILABLE.toString()),
+                    cb.equal(root.get("state"), ProductStateId.RESERVED.toString()),
+                    cb.equal(root.get("state"), ProductStateId.BOUGHT.toString())
+            );
+            predicates.add(stateSearchPredicate);
+        }
         if (excluded != null) {
             predicates.add(cb.equal(root.get("excluded"), excluded));
         }

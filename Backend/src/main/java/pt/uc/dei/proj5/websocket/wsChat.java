@@ -86,7 +86,7 @@ public class wsChat {
                             recipientSession.getBasicRemote().sendText(messageJson.toString());
                             session.getBasicRemote().sendText("{ \"type\": \"SUCCESS\", \"message\": \"Sent message\" }");
                         }else {
-                            notificationBean.newMessageNotification(sender, recipient);
+                            notificationBean.newMessageNotification(message, sender, recipient);
                         }
                     }
                     else {

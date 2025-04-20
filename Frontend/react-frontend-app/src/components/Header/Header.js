@@ -5,10 +5,6 @@ import logo from "../../Assets/logo/logo.png";
 import loginPhoto from "../../Assets/icons/login.png";
 import LoginForm from "../LoginForm/LoginForm";
 import { logout } from "../../Api/authenticationApi";
-import {
-  showSuccessToast,
-  showErrorToast,
-} from "../../Utils/ToastConfig/toastConfig";
 import RegisterModal from "../RegisterModal/RegisterModal";
 import SellProductModal from "../SellProductModal/SellProductModal";
 import Aside from "../Aside/Aside";

@@ -70,8 +70,8 @@ public class NotificationBean {
             notificationEntity.setTimestamp(LocalDateTime.now());
             String notificationContent = switch (type) {
                 case MESSAGE -> "new message";
-                case PRODUCT_BOUGHT -> product.getId() + "has been bought";
-                case PRODUCT_ALTERED -> product.getId() + "has been altered";
+                case PRODUCT_BOUGHT -> product.getId().toString();
+                case PRODUCT_ALTERED -> product.getId().toString();
             };
             notificationEntity.setContent(notificationContent);
             notificationDao.persist(notificationEntity);
@@ -83,7 +83,7 @@ public class NotificationBean {
         }
     }
 
-    public boolean newMessageNotification(String senderUsername, String recipientUsername) {
+    public boolean newMessageNotification(String message, String senderUsername, String recipientUsername) {
         try {
             int numberUnreadMessages = messageDao.getUnreadMessageCount(recipientUsername, senderUsername);
             if (hasRecipientBeenNotified(senderUsername, recipientUsername)) {
@@ -96,7 +96,7 @@ public class NotificationBean {
                 notificationEntity.setRead(false);
                 notificationEntity.setTimestamp(LocalDateTime.now());
                 notificationEntity.setMessageCount(numberUnreadMessages);
-                notificationEntity.setContent("new message");
+                notificationEntity.setContent(message);
                 notificationDao.persist(notificationEntity);
                 wsNotifications.notifyUser(convertNotificationEntityToNotificationDto(notificationEntity));
                 return true;

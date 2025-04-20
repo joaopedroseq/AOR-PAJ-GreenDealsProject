@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { getProducts } from "../Api/productApi";
-import { useEffect } from "react";
 
 const useProductStore = create((set, get) => ({
   //Store para gestão de produtos

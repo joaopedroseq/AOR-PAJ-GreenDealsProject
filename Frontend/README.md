@@ -12,7 +12,6 @@ IMPORTANTE:
 - Websockets;
 - session timeout: implementar da seguinte forma, assim que houver um pedido ao backend com authentication token, e este devolver expirado - então o frontend faz logout. Pensar numa forma de avisar o utilizador que este tem X minutos até o token expirar e perguntar se pretende renovar o token...
 - compartimentalizar componentes e funções - handles, renders, etc para tudo!!!Muito importante;
-- nos erros implementar loop em vez de conjunt de if's;
 - implementar em condições [ condição && ...]
 
 

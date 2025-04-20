@@ -65,6 +65,7 @@ export const Detail = () => {
           if (productData.length > 1) {
             throw new Error("Invalid product - non unique product Id");
           }
+          console.log(productData);
           productData = productData[INDEX_OF_PRODUCT];
           productData.date = transformArrayDatetoDate(productData.date);
           setProduct(productData);

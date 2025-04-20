@@ -8,11 +8,9 @@ import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
 import pt.uc.dei.proj5.dao.UserDao;
-import pt.uc.dei.proj5.dto.Order;
-import pt.uc.dei.proj5.dto.ProductParameter;
-import pt.uc.dei.proj5.dto.ProductDto;
-import pt.uc.dei.proj5.dto.ProductStateId;
+import pt.uc.dei.proj5.dto.*;
 import pt.uc.dei.proj5.entity.ProductEntity;
+import pt.uc.dei.proj5.websocket.wsProducts;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashSet;
@@ -37,6 +35,9 @@ public class ProductBean {
 
     @Inject
     CategoryBean categoryBean;
+
+    @Inject
+    wsProducts wsProducts;
 
     public ProductBean() {
     }
@@ -67,6 +68,12 @@ public class ProductBean {
             ProductEntity productEntity = productDao.getProductById(productDto.getId());
             if (checkIfOnlyStateChanges(productDto, productEntity)) {
                 productEntity.setState(productDto.getState());
+                if(productDto.getState()==ProductStateId.BOUGHT){
+                    productEntity.setBuyer(userDao.findUserByUsername(productDto.getBuyer()));
+                }
+                else {
+                    productEntity.setBuyer(null);
+                }
                 return true;
             } else {
                 if (productDto.getName() != null) {
@@ -90,12 +97,21 @@ public class ProductBean {
                 if ((productDto.getState() != null)) {
                     if(productDto.getState() != productEntity.getState()) {
                         productEntity.setState(productDto.getState());
+                        if(productDto.getState()==ProductStateId.BOUGHT){
+                            productEntity.setBuyer(userDao.findUserByUsername(productDto.getBuyer()));
+                        }
+                        else {
+                            productEntity.setBuyer(null);
+                        }
                     }
                 }
                 if(productDto.isExcluded() != null) {
                     productEntity.setExcluded(productDto.isExcluded());
                 }
                 productEntity.setEditedDate(LocalDateTime.now());
+                if (productDto.getBuyer()!= null){
+                    productEntity.setBuyer(userDao.findUserByUsername(productDto.getBuyer()));
+                }
                 return true;
             }
         } catch (Exception e) {
@@ -112,18 +128,6 @@ public class ProductBean {
             return null;
         }
     }
-
-    public boolean buyProduct(ProductDto productDto) {
-        try {
-            productDao.buyProduct(productDto.getId());
-            return true;
-        } catch (Exception e) {
-            logger.error("Erro ao comprar produto {}", productDto.getId());
-            //logger.error(e);
-            return false;
-        }
-    }
-
     public boolean deleteProduct(Long productId) {
         try {
             productDao.deleteProduct(productId);
@@ -135,6 +139,7 @@ public class ProductBean {
         }
     }
 
+
     public ProductDto convertSingleProductEntitytoProductDto(ProductEntity productEntity) {
         ProductDto produto = new ProductDto();
         produto.setId(productEntity.getId());
@@ -143,13 +148,36 @@ public class ProductBean {
         produto.setName(productEntity.getName());
         produto.setDate(productEntity.getDate());
         produto.setLocation(productEntity.getLocation());
-        ProductStateId state = ProductStateId.DRAFT;
         produto.setState(productEntity.getState());
         produto.setSeller(productEntity.getSeller().getUsername());
         produto.setCategory(categoryBean.convertCategoryEntityToCategoryDto(productEntity.getCategory()));
+        if(productEntity.getBuyer() != null) {
+            produto.setBuyer(productEntity.getBuyer().getUsername());
+        }
         produto.setUrlImage(productEntity.getUrlImage());
+        produto.setEdited(productEntity.getEditedDate());
         produto.setExcluded(productEntity.getExcluded());
         return produto;
+    }
+
+    public ProductEntity convertSingleProductDtotoProductEntity(ProductDto productDto) {
+        ProductEntity product = new ProductEntity();
+        product.setSeller(userDao.findUserByUsername(productDto.getSeller()));
+        product.setId(productDto.getId());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setName(productDto.getName());
+        product.setExcluded(productDto.isExcluded());
+        product.setDate(productDto.getDate());
+        product.setEditedDate(productDto.getEdited());
+        product.setLocation(productDto.getLocation());
+        product.setState(productDto.getState());
+        if(productDto.getBuyer() != null) {
+            product.setBuyer(userDao.findUserByUsername(productDto.getBuyer()));
+        }
+        product.setCategory(categoryBean.convertCategoryDtoToCategoryEntity(productDto.getCategory()));
+        product.setUrlImage(productDto.getUrlImage());
+        return product;
     }
 
     //Method para validar se um Id é um número válido

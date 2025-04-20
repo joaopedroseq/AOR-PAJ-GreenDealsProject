@@ -50,14 +50,18 @@ public class WebSocketAuthentication {
                 sendErrorMessage(session, "Excluded or inactive user");
                 return false;
             }
-            // Successfully authenticated, store session
-            sessions.put(user.getUsername(), session);
-            sessionUser.put(session.getId(), user.getUsername());
-
-            logger.info("User {} authenticated in WebSocket", user.getUsername());
-            sendSuccessMessage(session, user.getUsername());
-
-            return true;
+            if (!sessions.containsKey(user.getUsername())) {
+                sessions.put(user.getUsername(), session);
+                sessionUser.put(session.getId(), user.getUsername());
+                logger.info("User {} authenticated in WebSocket", user.getUsername());
+                sendSuccessMessage(session, user.getUsername());
+                return true;
+            }
+            else {
+                logger.info("User {} is already authenticated in WebSocket", user.getUsername());
+                sendInfoMessage(session, "User already authenticated");
+                return true;
+            }
         } catch (Exception e) {
             logger.info("Authentication failed with token: {}", token);
             sendErrorMessage(session, "Invalid token");
@@ -71,6 +75,14 @@ public class WebSocketAuthentication {
             session.close();
         } catch (IOException e) {
             logger.error("Failed to close session after authentication failure", e);
+        }
+    }
+
+    private static void sendInfoMessage(Session session, String message) {
+        try {
+            session.getBasicRemote().sendText("{ \"type\": \"AUTH_INFO\", \"message\": \"" + message + "\" }");
+        } catch (IOException e) {
+            logger.error("Failed to inform user", e);
         }
     }
 
