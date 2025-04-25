@@ -18,10 +18,13 @@ import EditProductModal from "../../Components/EditProductModal/EditProductModal
 import handleNotification from "../../Handles/handleNotification";
 import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 import handleBuyingProduct from "../../Handles/handleBuyingProduct";
+import { Link } from "react-router-dom";
+import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
 
 export const Detail = () => {
   const INDEX_OF_PRODUCT = 0;
   const navigate = useNavigate();
+  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const token = useUserStore((state) => state.token);
   const id = new URLSearchParams(useLocation().search).get("id");
   const [product, setProduct] = useState(null);
@@ -48,73 +51,62 @@ export const Detail = () => {
   //Flag para update das informações após alterações destas
   const [isProductUpdated, setIsProductUpdated] = useState(false);
 
-  const handleProductUpdate = () => {
-    setIsProductUpdated(true);
-  };
+  //WebSocketProducts
+  // WebSocket for real-time product updates
+  const { websocket } = useWebSocketProducts();
 
-  // Fetch das informações do produto após a entrada
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (id) {
-        let productData;
-        try {
-          let queryParam = {
-            id: id,
-          };
-          productData = await getProducts(queryParam, token);
-          if (productData.length > 1) {
+  const fetchProduct = async () => {
+    if (!id) return;
+    try {
+        const queryParam = { id: id };
+        let productData = await getProducts(queryParam, token);
+        if (productData.length > 1) {
             throw new Error("Invalid product - non unique product Id");
-          }
-          console.log(productData);
-          productData = productData[INDEX_OF_PRODUCT];
-          productData.date = transformArrayDatetoDate(productData.date);
-          setProduct(productData);
-        } catch (error) {
-          handleNotification(intl, "error", "detailErrorFetchingProduct");
-          navigate("/");
         }
-      }
-    };
-    fetchProduct();
-  }, []);
+        productData = productData[INDEX_OF_PRODUCT];
+        productData.date = transformArrayDatetoDate(productData.date);
+        setProduct(productData);
+    } catch (error) {
+        handleNotification(intl, "error", "detailErrorFetchingProduct");
+    }
+};
 
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (id) {
-        let productData;
-        try {
-          let queryParam = {
-            id: id,
-          };
-          productData = await getProducts(queryParam, token);
-          if (productData.length > 1) {
-            throw new Error("Invalid product - non unique product Id");
-          }
-          productData = productData[INDEX_OF_PRODUCT];
-          productData.date = transformArrayDatetoDate(productData.date);
-          setProduct(productData);
-        } catch (error) {
-          handleNotification(intl, "error", "detailErrorFetchingProduct");
-          navigate("/");
-        }
-        try {
+useEffect(() => {
+  fetchProduct();
+}, []); // Runs only when the component mounts
+
+useEffect(() => {
+  if (product) {
+    fetchUserData();
+  }
+}, [product, isAuthenticated]); // Runs when product or authentication changes
+
+useEffect(() => {
+    if (isProductUpdated) {
+        fetchProduct();
+        setIsProductUpdated(false); // Reset state after updating
+    }
+}, [isProductUpdated]);
+
+const fetchUserData = async () => {
+  if (isAuthenticated) {
+      try {
           const user = await getLoggedUserInformation(token, intl);
           if (user.admin) {
-            setAdmin(true);
+              setAdmin(true);
           }
-          if (user.username === productData.seller) {
-            setOwner(true);
+          if (user.username === product?.seller) { // Ensure `product` is defined
+              setOwner(true);
           }
-        } catch (error) {
+      } catch (error) {
+          console.error("Error fetching user:", error);
           handleNotification(intl, "error", "errorUnexpected");
           setAdmin(false);
           setOwner(false);
-        }
       }
-    };
-    fetchProduct();
-  }, [isProductUpdated]);
+  }
+};
 
   //Operação de excluir produto - operação de admin
   const handleExcludeProduct = async () => {
@@ -125,7 +117,6 @@ export const Detail = () => {
       await updateProduct(exclusion, token, product.id);
       if (!isAdmin) {
         handleNotification(intl, "success", "detailProductDeletedSuccess");
-        navigate("/");
       } else {
         if (!product.excluded) {
           handleNotification(intl, "success", "detailProductExcludedSuccess");
@@ -135,7 +126,7 @@ export const Detail = () => {
       }
       const updatedProduct = { ...product, excluded: exclusion.excluded };
       setProduct(updatedProduct);
-      handleProductUpdate();
+      setIsProductUpdated(true);
     } catch (error) {
       handleNotification(intl, "error", "errorUnexpected");
     }
@@ -161,11 +152,12 @@ export const Detail = () => {
         { productName: product.name }
       ),
       onConfirm: async () => {
-        const response = await handleBuyingProduct(id, token);
+        const response = await handleBuyingProduct(id, token, intl);
         if (response) {
           handleNotification(intl, "success", "detailPurchaseSuccess");
           setIsProductUpdated(true);
           setIsModalOpen(false);
+          setIsProductUpdated(true);
         } else {
           handleNotification(intl, "error", "detailPurchaseFailure");
           setIsModalOpen(false);
@@ -175,7 +167,7 @@ export const Detail = () => {
     setIsModalOpen(true);
   };
 
-  return (
+  return  (
     <div className="container">
       <div className="main-content">
         {/* Título da categoria do produto */}
@@ -234,9 +226,20 @@ export const Detail = () => {
               <strong>
                 {intl.formatMessage({ id: "detailProductSellerLabel" })}:{" "}
               </strong>
-              {product
-                ? product.seller
-                : intl.formatMessage({ id: "detailDefaultProductSeller" })}
+              {product ? (
+                <Link
+                  data-category={
+                    locale === "pt"
+                      ? product.category.nome
+                      : product.category.nameEng
+                  }
+                  to={`/profile?username=${product.seller}`}
+                >
+                  {product.seller}
+                </Link>
+              ) : (
+                intl.formatMessage({ id: "detailDefaultProductSeller" })
+              )}
             </p>
             <p id="product-location">
               <strong>
@@ -256,76 +259,84 @@ export const Detail = () => {
             </p>
           </div>
         </div>
-        <div className="productButtons">
-          {/* Se for admin, mostrar botão de excluir produto */}
-          {isAdmin ? (
-            <input
-              type="button"
-              id="exclude-product-button"
-              className="exclude-product-button"
-              value={intl.formatMessage({
-                id: "detailDeleteProductButtonLabel",
-              })}
-              onClick={handleDeleteProduct}
-            />
-          ) : null}
 
-          {/* Se for admin ou dono do produto, mostrar botões de apagar e editar produto */}
-          {(isAdmin || isOwner) && (
-            <input
-              type="button"
-              id="edit-product"
-              value={intl.formatMessage({ id: "detailEditProductButtonLabel" })}
-              onClick={toggleEditProductModal}
-            />
-          )}
-          {(isAdmin || isOwner) && (
-            <input
-              type="button"
-              id="delete-product"
-              value={
-                isAdmin
-                  ? product.excluded
+        {isAuthenticated && (
+          <div className="productButtons">
+            {/* Se for admin, mostrar botão de excluir produto */}
+            {isAdmin ? (
+              <input
+                type="button"
+                id="exclude-product-button"
+                className="exclude-product-button"
+                value={intl.formatMessage({
+                  id: "detailDeleteProductButtonLabel",
+                })}
+                onClick={handleDeleteProduct}
+              />
+            ) : null}
+
+            {/* Se for admin ou dono do produto, mostrar botões de apagar e editar produto */}
+            {(isAdmin || isOwner) && (
+              <input
+                type="button"
+                id="edit-product"
+                value={intl.formatMessage({
+                  id: "detailEditProductButtonLabel",
+                })}
+                onClick={toggleEditProductModal}
+              />
+            )}
+            {(isAdmin || isOwner) && product && (
+              <input
+                type="button"
+                id="delete-product"
+                value={
+                  isAdmin
+                    ? product.excluded
+                      ? intl.formatMessage({
+                          id: "detailRecoverProductButtonLabel",
+                        })
+                      : intl.formatMessage({
+                          id: "detailExcludeProductButtonLabel",
+                        })
+                    : isOwner && !isAdmin
                     ? intl.formatMessage({
-                        id: "detailRecoverProductButtonLabel",
+                        id: "detailDeleteProductButtonLabel",
                       })
-                    : intl.formatMessage({
-                        id: "detailExcludeProductButtonLabel",
-                      })
-                  : isOwner && !isAdmin
-                  ? intl.formatMessage({ id: "detailDeleteProductButtonLabel" })
-                  : ""
-              }
-              onClick={handleExcludeProduct}
+                    : ""
+                }
+                onClick={handleExcludeProduct}
+              />
+            )}
+            {/* Se não for dono, não mostrar botão de comprar produto */}
+            {isOwner ? null : (
+              <input
+                type="button"
+                id="buy-button"
+                value={intl.formatMessage({
+                  id: "detailBuyProductButtonLabel",
+                })}
+                onClick={buyingProduct}
+              />
+            )}
+            <EditProductModal
+              product={product}
+              toggleEditProductModal={toggleEditProductModal}
+              isEditProductModalVisible={isEditProductModalVisible}
+              setIsProductUpdated={setIsProductUpdated}
+              locale={locale}
             />
-          )}
-          {/* Se não for dono, não mostrar botão de comprar produto */}
-          {isOwner ? null : (
-            <input
-              type="button"
-              id="buy-button"
-              value={intl.formatMessage({ id: "detailBuyProductButtonLabel" })}
-              onClick={buyingProduct}
+
+            <ConfirmationModal
+              isOpen={isModalOpen}
+              title={modalConfig.title}
+              message1={modalConfig.message1}
+              message2={modalConfig.message2}
+              onConfirm={modalConfig.onConfirm}
+              onClose={() => setIsModalOpen(false)}
             />
-          )}
-
-          <EditProductModal
-            product={product}
-            toggleEditProductModal={toggleEditProductModal}
-            isEditProductModalVisible={isEditProductModalVisible}
-            updatedProduct={handleProductUpdate}
-            locale={locale}
-          />
-
-          <ConfirmationModal
-            isOpen={isModalOpen}
-            title={modalConfig.title}
-            message1={modalConfig.message1}
-            message2={modalConfig.message2}
-            onConfirm={modalConfig.onConfirm}
-            onClose={() => setIsModalOpen(false)}
-          />
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

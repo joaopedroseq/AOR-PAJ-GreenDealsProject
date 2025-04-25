@@ -108,6 +108,7 @@ public class ProductBean {
                 if(productDto.isExcluded() != null) {
                     productEntity.setExcluded(productDto.isExcluded());
                 }
+                productEntity.setEdited(true);
                 productEntity.setEditedDate(LocalDateTime.now());
                 if (productDto.getBuyer()!= null){
                     productEntity.setBuyer(userDao.findUserByUsername(productDto.getBuyer()));
@@ -155,7 +156,10 @@ public class ProductBean {
             produto.setBuyer(productEntity.getBuyer().getUsername());
         }
         produto.setUrlImage(productEntity.getUrlImage());
-        produto.setEdited(productEntity.getEditedDate());
+        produto.setEdited(productEntity.getEdited());
+        if(productEntity.getEdited()) {
+            produto.setEditedDate(productEntity.getEditedDate());
+        }
         produto.setExcluded(productEntity.getExcluded());
         return produto;
     }
@@ -169,7 +173,10 @@ public class ProductBean {
         product.setName(productDto.getName());
         product.setExcluded(productDto.isExcluded());
         product.setDate(productDto.getDate());
-        product.setEditedDate(productDto.getEdited());
+        product.setEdited(productDto.getEdited());
+        if(productDto.getEdited()) {
+            product.setEditedDate(productDto.getEditedDate());
+        }
         product.setLocation(productDto.getLocation());
         product.setState(productDto.getState());
         if(productDto.getBuyer() != null) {

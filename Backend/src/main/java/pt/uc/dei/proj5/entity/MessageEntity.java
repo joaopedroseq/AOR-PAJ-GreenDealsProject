@@ -32,6 +32,16 @@ import java.time.LocalDateTime;
                 "OR (m.recipient.username = :otherUser_username AND m.sender.username = :user_username) " +
                 "ORDER BY m.timestamp ASC"
 )
+
+@NamedQuery(
+        name = "MessageEntity.getAllChats",
+        query = "SELECT DISTINCT u.username, u.url " +
+                "FROM MessageEntity m " +
+                "JOIN UserEntity u ON (u.username = m.sender.username OR u.username = m.recipient.username) " +
+                "WHERE (m.recipient.username = :user_username OR m.sender.username = :user_username) " +
+                "AND u.username != :user_username " + // Exclude the current user
+                "ORDER BY u.username ASC"
+)
 @Entity
 @Table(name="message", indexes = {
         @Index(name = "idx_recipient_sender_unread", columnList = "recipient, sender, isRead"),

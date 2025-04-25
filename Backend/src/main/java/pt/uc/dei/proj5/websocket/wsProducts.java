@@ -14,84 +14,51 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj5.beans.MessageBean;
-import pt.uc.dei.proj5.beans.NotificationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.beans.UserBean;
+import pt.uc.dei.proj5.dto.JsonCreate;
 import pt.uc.dei.proj5.dto.ProductDto;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 @Singleton
 @ServerEndpoint("/websocket/products/")
 public class wsProducts {
     private static final Logger logger = LogManager.getLogger(wsProducts.class);
-    private HashMap<String, Session> sessions = new HashMap<String, Session>();
-    private HashMap<String, String> sessionUser = new HashMap<>();
+    private Set<Session> sessions = new HashSet<>(); // Store all sessions
 
-    @Inject
-    TokenBean tokenBean;
-
-    @Inject
-    MessageBean messageBean;
-
-    @Inject
-    NotificationBean notificationBean;
-
-    @Inject
-    UserBean userBean;
+    @OnOpen
+    public void onOpen(Session session) {
+        sessions.add(session);
+        logger.info("New connection: session {}", session.getId());
+    }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        String username = sessionUser.remove(session.getId()); // Remove mapping for session ID
-        if (username != null) {
-            sessions.remove(username); // Remove session entry
-            logger.info("User {} disconnected from chat. Reason: {}", username, reason.getReasonPhrase());
-        } else {
-            logger.info("Unknown WebSocket session closed: {}", reason.getReasonPhrase());
-        }
-    }
-
-    @OnMessage
-    public void toDoOnMessage(Session session, String msg) throws IOException {
-        JsonReader jsonReader = Json.createReader(new StringReader(msg));
-        JsonObject jsonMessage = jsonReader.readObject();
-        String messageType = jsonMessage.getString("type");
-        switch (messageType) {
-            case "AUTHENTICATION": {
-                WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions, sessionUser);
-                break;
-            }
-            default:
-                logger.info("Received unknown message type: " + messageType);
-        }
+        sessions.remove(session);
+        logger.info("Session {} disconnected: {}", session.getId(), reason.getReasonPhrase());
     }
 
     public void broadcastProduct(ProductDto productDto, String type) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
-            String productJson = "{"
-                    + "\"type\": \"" + type + "\","
-                    + "\"product\": " + objectMapper.writeValueAsString(productDto)
-                    + "}";
-            for(Session session : sessions.values()) {
-                if(session.isOpen()) {
+        System.out.println(productDto);
+        JsonObject productJson = JsonCreate.createJson(type, "product", productDto);
+        if (productJson != null) {
+            String productJsonString = productJson.toString();
+            for (Session session : sessions) {
+                if (session.isOpen()) {
                     try {
-                        session.getBasicRemote().sendText(productJson);
-                    }
-                    catch (IOException e) {
-                        logger.error("Failed to send product: " + productJson, e);
+                        session.getBasicRemote().sendText(productJsonString);
+                    } catch (IOException e) {
+                        logger.error("Failed to send product update to session {}", session.getId(), e);
                     }
                 }
             }
-        }
-        catch (JsonProcessingException e) {
-            logger.error("Failed to build object: " + e);
+        } else {
+            logger.info("No product to update");
         }
     }
 
@@ -100,28 +67,16 @@ public class wsProducts {
         logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
     }
 
-    private boolean checkIfValidNewProduct(JsonObject jsonProduct) {
-        return jsonProduct.containsKey("recipient") &&
-                jsonProduct.containsKey("message") &&
-                jsonProduct.get("recipient") != null &&
-                jsonProduct.get("message") != null &&
-                jsonProduct.getString("recipient") != null &&
-                jsonProduct.getString("message") != null &&
-                !jsonProduct.getString("recipient").trim().isEmpty() &&
-                !jsonProduct.getString("message").trim().isEmpty();
-    }
-
-    @Schedule(second = "*/30", minute = "*", hour = "*")
+    @Schedule(second = "*/60", minute = "*", hour = "*")
     private void pingUsers() {
-        for (Session session : sessions.values()) {
+        for (Session session : sessions) {
             if (session.isOpen()) {
                 try {
-                    session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Sending an actual WebSocket PING frame
+                    session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0]));
                 } catch (IOException e) {
-                    logger.error("Failed to send WebSocket PING", e);
+                    logger.error("Failed to send WebSocket PING to session {}", session.getId(), e);
                 }
             }
         }
     }
-
 }

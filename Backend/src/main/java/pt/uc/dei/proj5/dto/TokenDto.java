@@ -3,71 +3,53 @@ package pt.uc.dei.proj5.dto;
 import java.time.LocalDateTime;
 
 public class TokenDto {
-    //Atributes
-    private String usernmame;
-    private String authenticationToken;
-    private LocalDateTime authenticationTokenDate;
-    private String activationToken;
-    private LocalDateTime activationTokenDate;
-    private String passwordChangeToken;
-    private LocalDateTime passwordChangeTokenDate;
+    private String username;
+    private String tokenValue;
+    private TokenType tokenType;
+    private LocalDateTime createdAt;
+    private boolean revoked;
+
 
     public TokenDto() {
     }
 
-    public String getUsernmame() {
-        return usernmame;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUsernmame(String usernmame) {
-        this.usernmame = usernmame;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getAuthenticationToken() {
-        return authenticationToken;
+    public String getTokenValue() {
+        return tokenValue;
     }
 
-    public void setAuthenticationToken(String authenticationToken) {
-        this.authenticationToken = authenticationToken;
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
-    public String getActivationToken() {
-        return activationToken;
+    public TokenType getTokenType() {
+        return tokenType;
     }
 
-    public void setActivationToken(String activationToken) {
-        this.activationToken = activationToken;
+    public void setTokenType(TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
-    public LocalDateTime getActivationTokenDate() {
-        return activationTokenDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setActivationTokenDate(LocalDateTime activationTokenDate) {
-        this.activationTokenDate = activationTokenDate;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
-    public String getPasswordChangeToken() {
-        return passwordChangeToken;
+    public boolean isRevoked() {
+        return revoked;
     }
 
-    public void setPasswordChangeToken(String passwordChangeToken) {
-        this.passwordChangeToken = passwordChangeToken;
-    }
-
-    public LocalDateTime getPasswordChangeTokenDate() {
-        return passwordChangeTokenDate;
-    }
-
-    public void setPasswordChangeTokenDate(LocalDateTime passwordChangeTokenDate) {
-        this.passwordChangeTokenDate = passwordChangeTokenDate;
-    }
-
-    public LocalDateTime getAuthenticationTokenDate() {
-        return authenticationTokenDate;
-    }
-
-    public void setAuthenticationTokenDate(LocalDateTime authenticationTokenDate) {
-        this.authenticationTokenDate = authenticationTokenDate;
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
     }
 }

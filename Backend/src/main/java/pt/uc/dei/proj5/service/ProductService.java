@@ -24,6 +24,9 @@ public class ProductService {
     UserBean userbean;
 
     @Inject
+    AuthenticationService authenticationService;
+
+    @Inject
     CategoryBean categoryBean;
 
     @Inject
@@ -53,11 +56,11 @@ public class ProductService {
         ProductParameter parameter;
         Order order;
         UserDto user = null;
-        if(authenticationToken != null) {
+        if (authenticationToken != null) {
             TokenDto tokenDto = new TokenDto();
-            tokenDto.setAuthenticationToken(authenticationToken);
-            user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-            if (user==null || user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            tokenDto.setTokenValue(authenticationToken);
+            user = tokenBean.checkToken(tokenDto);
+            if (user == null || user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
                 logger.error("Permission denied - user {} trying to get products with inactive or excluded account", user.getUsername());
                 return Response.status(403).entity("User has inactive or excluded account").build();
             }
@@ -66,7 +69,7 @@ public class ProductService {
         parameter = resolveParameter(param);
         //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
         // apenas poderá procurar productos DISPONÍVEL, produtos não excluídos e não editados (edited == true)
-        if (user == null && (username != null ||  (state != null && !state.equals("AVAILABLE")) || excluded != null || edited)) {
+        if (user == null && (username != null || excluded != null || edited)) {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         } else if (user == null) {
@@ -111,14 +114,6 @@ public class ProductService {
                 return Response.status(400).entity("Invalid State Id").build();
             }
         }
-        else {
-            if((user.getUsername().equals(username)) || user.getAdmin()){
-                productStateId = null;
-            }
-            else {
-                productStateId = ProductStateId.AVAILABLE;
-            }
-        }
         Set<ProductDto> products = productBean.getProducts(username, id, name, productStateId, excluded, category, edited, parameter, order);
         if (products != null) {
             logger.info("{} getting all products of user {} ", user.getUsername(), username);
@@ -133,42 +128,32 @@ public class ProductService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addProduct(@HeaderParam("token") String authenticationToken, ProductDto newProductDto) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - adding new product - {}", newProductDto.getName());
-            return Response.status(401).entity("Missing token").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (user == null) {
-            logger.error("Invalid token - adding new product");
-            return Response.status(401).entity("Invalid token").build();
+        if (newProductDto.getCategory() == null) {
+            logger.error("Invalid data - adding new product");
+            return Response.status(400).entity("Invalid data").build();
         }
-        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-            logger.error("Permission denied - user {} tried add new products with inactive or excluded account", user.getUsername());
-            return Response.status(403).entity("User has inactive or excluded account").build();
+        CategoryDto category = categoryBean.getCategoryDto(newProductDto.getCategory().getNome());
+        newProductDto.setCategory(category);
+        newProductDto.setExcluded(false);
+        newProductDto.setSeller(user.getUsername());
+        if (!newProductDto.newProductIsValid()) {
+            logger.error("Invalid data - adding new product");
+            return Response.status(400).entity("Invalid data").build();
+        } else if (!categoryBean.checkIfCategoryExists(category)) {
+            logger.error("Category {} does not exist", category.getNome());
+            return Response.status(404).entity("Category " + category.getNome() + " does not exist").build();
+        } else if (userbean.addProduct(user, newProductDto)) {
+            logger.info("Added new product to {}", user.getUsername());
+            return Response.status(200).entity("Added product").build();
         } else {
-            if(newProductDto.getCategory() == null){
-                logger.error("Invalid data - adding new product");
-                return Response.status(400).entity("Invalid data").build();
-            }
-            CategoryDto category = categoryBean.getCategoryDto(newProductDto.getCategory().getNome());
-            newProductDto.setCategory(category);
-            newProductDto.setExcluded(false);
-            newProductDto.setSeller(user.getUsername());
-            if (!newProductDto.newProductIsValid()) {
-                logger.error("Invalid data - adding new product");
-                return Response.status(400).entity("Invalid data").build();
-            } else if (!categoryBean.checkIfCategoryExists(category)) {
-                logger.error("Category {} does not exist", category.getNome());
-                return Response.status(404).entity("Category " + category.getNome() + " does not exist").build();
-            } else if (userbean.addProduct(user, newProductDto)) {
-                logger.info("Added new product to {}", user.getUsername());
-                return Response.status(200).entity("Added product").build();
-            } else {
-                logger.info("Error : Product not added by {}", user.getUsername());
-                return Response.status(400).entity("Error").build();
-            }
+            logger.info("Error : Product not added by {}", user.getUsername());
+            return Response.status(400).entity("Error").build();
         }
     }
 
@@ -177,115 +162,91 @@ public class ProductService {
     @Path("{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updateProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") Long pathProductId, ProductDto productDto) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - updating product id - {}", pathProductId);
-            return Response.status(401).entity("Missing token").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (user == null) {
-            logger.error("Invalid token - updateProduct");
-            return Response.status(401).entity("Invalid token").build();
+        ProductDto product = productBean.findProductById(pathProductId);
+        boolean isOwner = user.getUsername().equals(product.getSeller());
+        if (product == null) {
+            logger.error("Updating product - Product with id {} not found", pathProductId);
+            return Response.status(404).entity("Product not found").build();
         }
-        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-            logger.error("Permission denied - user {} tried updated product id {} with inactive or excluded account", user.getUsername(), pathProductId);
-            return Response.status(403).entity("User has inactive or excluded account").build();
-        } else {
-            ProductDto product = productBean.findProductById(pathProductId);
-            boolean isOwner = user.getUsername().equals(product.getSeller());
-            if (product == null) {
-                logger.error("Updating product - Product with id {} not found", pathProductId);
-                return Response.status(404).entity("Product not found").build();
-            }
-            if(productDto.checkIfOnlyBuying()) {
-                if(!isOwner){
-                    if(product.getState() == ProductStateId.AVAILABLE && !product.getExcluded()) {
-                        productDto.setId(product.getId());
-                        productDto.setBuyer(user.getUsername());
-                        if(productBean.updateProduct(productDto)){
-                            notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
-                            wsProducts.broadcastProduct(productDto, "UPDATE");
-                            logger.info("User {} bought ", user.getUsername(), product.getSeller());
-                            return Response.status(200).entity("Bought product").build();
-                        }
-                        else {
-                            logger.error("Permission denied - {} tried to buy already bought or excluded product", user.getUsername());
-                            return Response.status(403).entity("Permission denied - buying already bought or excluded product").build();
-                        }
-
-                    }
-                    else {
+        if (productDto.checkIfOnlyBuying()) {
+            if (!isOwner) {
+                if (product.getState() == ProductStateId.AVAILABLE && !product.getExcluded()) {
+                    productDto.setId(product.getId());
+                    productDto.setBuyer(user.getUsername());
+                    if (productBean.updateProduct(productDto)) {
+                        notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
+                        wsProducts.broadcastProduct(productDto, "UPDATE");
+                        logger.info("User {} bought ", user.getUsername(), product.getSeller());
+                        return Response.status(200).entity("Bought product").build();
+                    } else {
                         logger.error("Permission denied - {} tried to buy already bought or excluded product", user.getUsername());
                         return Response.status(403).entity("Permission denied - buying already bought or excluded product").build();
                     }
-                }
-                else{
-                    logger.error("Permission denied - {} tried to buy self product", user.getUsername());
-                    return Response.status(403).entity("Permission denied - buying owned product").build();
-                }
-            }
-            if ((!isOwner) && !user.getAdmin()) {
-                logger.error("Permission denied - {} updated  product of other user {} without admin privileges", user.getUsername(), product.getSeller());
-                return Response.status(403).entity("Permission denied - updating another user product").build();
-            } else if (product.isExcluded() && (!user.getAdmin())) {
-                logger.error("Permission denied - {} trying to recuperate product of {} without admin privileges", user.getUsername(), product.getSeller());
-                return Response.status(403).entity("Permission denied - recuperate excluded products").build();
-            } else if ((productDto.isExcluded() != product.isExcluded()) && (!isOwner && !user.getAdmin())) {
-                logger.error("Permission denied - {} changing excluding state of product of {} without admin privileges or not owner", user.getUsername(), product.getSeller());
-                return Response.status(403).entity("Permission denied").build();
-            } else {
-                productDto.setId(product.getId());
-                if (productBean.updateProduct(productDto)) {
-                    if(!isOwner){
-                        notificationBean.newProductNotification(NotificationType.PRODUCT_ALTERED, product.getSeller(), user.getUsername(), product);
-                    }
-                    wsProducts.broadcastProduct(productDto, "UPDATE");
-                    logger.info("{} updated product {}", user.getUsername(), product.getId());
-                    return Response.status(200).entity("Updated product").build();
+
                 } else {
-                    logger.info("Error : Product with id {} not updated by {}", product.getId(), user.getUsername());
-                    return Response.status(400).entity("Error").build();
+                    logger.error("Permission denied - {} tried to buy already bought or excluded product", user.getUsername());
+                    return Response.status(403).entity("Permission denied - buying already bought or excluded product").build();
                 }
+            } else {
+                logger.error("Permission denied - {} tried to buy self product", user.getUsername());
+                return Response.status(403).entity("Permission denied - buying owned product").build();
+            }
+        }
+        if ((!isOwner) && !user.getAdmin()) {
+            logger.error("Permission denied - {} updated  product of other user {} without admin privileges", user.getUsername(), product.getSeller());
+            return Response.status(403).entity("Permission denied - updating another user product").build();
+        } else if (product.isExcluded() && (!user.getAdmin())) {
+            logger.error("Permission denied - {} trying to recuperate product of {} without admin privileges", user.getUsername(), product.getSeller());
+            return Response.status(403).entity("Permission denied - recuperate excluded products").build();
+        } else if ((productDto.isExcluded() != product.isExcluded()) && (!isOwner && !user.getAdmin())) {
+            logger.error("Permission denied - {} changing excluding state of product of {} without admin privileges or not owner", user.getUsername(), product.getSeller());
+            return Response.status(403).entity("Permission denied").build();
+        } else {
+            productDto.setId(product.getId());
+            if (productBean.updateProduct(productDto)) {
+                if (!isOwner) {
+                    notificationBean.newProductNotification(NotificationType.PRODUCT_ALTERED, product.getSeller(), user.getUsername(), product);
+                }
+                wsProducts.broadcastProduct(productDto, "UPDATE");
+                logger.info("{} updated product {}", user.getUsername(), product.getId());
+                return Response.status(200).entity("Updated product").build();
+            } else {
+                logger.info("Error : Product with id {} not updated by {}", product.getId(), user.getUsername());
+                return Response.status(400).entity("Error").build();
             }
         }
     }
-
 
 
     //Deleting products
     @DELETE
     @Path("{id}")
     public Response deleteProduct(@HeaderParam("token") String authenticationToken, @PathParam("id") Long pathProductId) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - deleting product id - {}", pathProductId);
-            return Response.status(401).entity("Missing token").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (user == null) {
-            logger.error("Invalid token - deleteProduct");
-            return Response.status(401).entity("Invalid token").build();
-        }
-        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-            logger.error("Permission denied - user {} tried to delete product {} with inactive or excluded account", user.getUsername(), pathProductId);
-            return Response.status(403).entity("User has inactive or excluded account").build();
+        ProductDto product = productBean.findProductById(pathProductId);
+        if (product == null) {
+            logger.error("Deleting product - Product with id {} not found", pathProductId);
+            return Response.status(404).entity("Product not found").build();
+        } else if (!user.getAdmin()) {
+            logger.error("Permission denied - {} deleting product {} belonging to {}", user.getUsername(), pathProductId, product.getSeller());
+            return Response.status(403).entity("Permission denied").build();
+        } else if (productBean.deleteProduct(pathProductId)) {
+            logger.info("deleting product -  {} deleted Product {} belonging to {}", user.getUsername(), pathProductId, product.getSeller());
+            return Response.status(200).entity("Product deleted").build();
         } else {
-            ProductDto product = productBean.findProductById(pathProductId);
-            if (product == null) {
-                logger.error("Deleting product - Product with id {} not found", pathProductId);
-                return Response.status(404).entity("Product not found").build();
-            } else if (!user.getAdmin()) {
-                logger.error("Permission denied - {} deleting product {} belonging to {}", user.getUsername(), pathProductId, product.getSeller());
-                return Response.status(403).entity("Permission denied").build();
-            } else if (productBean.deleteProduct(pathProductId)) {
-                logger.info("deleting product -  {} deleted Product {} belonging to {}", user.getUsername(), pathProductId, product.getSeller());
-                return Response.status(200).entity("Product deleted").build();
-            } else {
-                logger.error("Error : Product with id {} not deleted by {}", pathProductId, user.getUsername());
-                return Response.status(400).entity("Error").build();
-            }
+            logger.error("Error : Product with id {} not deleted by {}", pathProductId, user.getUsername());
+            return Response.status(400).entity("Error").build();
         }
     }
 

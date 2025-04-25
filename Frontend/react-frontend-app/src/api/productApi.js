@@ -42,7 +42,6 @@ export const addProduct = async (product, token) => {
     });
     return response.data;
   } catch (error) {
-    console.log(error.response);
     if (error.response) {
       const status = error.response.status;
 
@@ -77,13 +76,12 @@ export const addProduct = async (product, token) => {
 export const buyProduct = async (productId, token) => {
   try {
     const response = await axios.patch(`${productsEndpoint}${productId}`,
-      {state: "COMPRADO"},
+      {state: "BOUGHT"},
       {
       headers: { "Content-Type": "application/json", token: token },
     });
     return response;
   } catch (error) {
-    console.log(error.response);
     if (error.response) {
       const status = error.response.status;
 

@@ -4,9 +4,10 @@ import { getProducts } from "../Api/productApi";
 const useProductStore = create((set, get) => ({
   //Store para gestão de produtos
   products: [],
+  setProducts: (updatedProducts) => set({ products: updatedProducts }),
   //Base de filtros
   filters: {          //os filtros são utilizados para fetch dos produtos do backend
-    username: null,
+    seller: null,
     excluded: null,
     edited: null,
     category: null,
@@ -30,7 +31,7 @@ const useProductStore = create((set, get) => ({
     clearFilters: () => {
       set({
         filters: {
-          username: null,
+          seller: null,
           excluded: null,
           edited: null,
           category: null,
@@ -45,13 +46,9 @@ const useProductStore = create((set, get) => ({
       set({ refetchProducts: value }); // Update the refetch flag
     },
   
-    
-
   // Fetch dos produtos - que pode ser chamado após determinadas operações
   fetchProducts: async (token) => {
     const { filters } = get(); // Access the current filters from the state
-    console.log(filters);
-
     try {
       const products = await getProducts(filters, token);
       set({ products }); // Update dos produtos na store
@@ -61,6 +58,5 @@ const useProductStore = create((set, get) => ({
     }
   },
 }));
-
 
 export default useProductStore;

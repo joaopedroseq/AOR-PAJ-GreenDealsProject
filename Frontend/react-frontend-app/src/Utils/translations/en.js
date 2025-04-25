@@ -9,9 +9,9 @@ const en = {
   goodbye: "Goodbye {firstName}",
 
   // Header
-  sellProductButton: "Sell a product",
-  profileButton: "My profile",
-  logoutButton: "Log out",
+  sellProductButton: "Sell product",
+  profileButton: "Profile",
+  logoutButton: "Logout",
   welcomeMessage: "Welcome ",
 
   // Login Form
@@ -245,7 +245,7 @@ const en = {
   editProductModalSelectCategoryPlaceholder: "Choose a category",
   editProductModalSelectStatePlaceholder: "Choose a state",
   editProductModalSaveButton: "Save Changes",
-  editProductModaleNoChanges: "No changes to be made",
+  editProductModalNoChanges: "No changes to be made",
   //EditProductModalError
   editProductModalErrorEditName: "You must enter the product name.",
   editProductModalErrorEditDescription:
@@ -359,6 +359,11 @@ const en = {
 
   //RenderCategoryList
   categoryListAllProducts: "All products",
+
+  //NotificationsWebsockets
+  wsNotificationsUnreadMessages: "You have {numMessages} messages to read from {username}",
+  wsNotificationsProductAltered: "Admin {username} changed your product",
+  wsNotificationsProductBought: "User {username} has bought one of your products",
 
   //Errors
   errorerrorNetwork_error:

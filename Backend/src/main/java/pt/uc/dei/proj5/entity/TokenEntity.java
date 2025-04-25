@@ -1,68 +1,68 @@
 package pt.uc.dei.proj5.entity;
 
-import jakarta.jws.soap.SOAPBinding;
 import jakarta.persistence.*;
+import pt.uc.dei.proj5.dto.TokenType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 
-
-//to login
-@NamedQuery(name = "Token.findUserByAuthenticationToken", query = "SELECT token.user FROM TokenEntity token WHERE token.authenticationToken = :token")
-//to logout
-@NamedQuery(name = "Token.removeAuthenticationToken", query = "UPDATE TokenEntity token " +
-        "SET token.authenticationToken = NULL, token.authenticationTokenDate = NULL WHERE token.authenticationToken = :authenticationToken")
-//to activate account
-@NamedQuery(name = "Token.findUserByActivationToken", query = "SELECT token.user FROM TokenEntity token WHERE token.activationToken = :token")
-//to change password
-@NamedQuery(name = "Token.findUserByPasswordChangeToken", query = "SELECT token.user FROM TokenEntity token WHERE token.passwordChangeToken = :token")
-//to find if authentication token exists
-@NamedQuery(name = "Token.findIfAuthenticationTokenExists", query = "SELECT token FROM TokenEntity token WHERE token.authenticationToken = :token")
-//find by username
-@NamedQuery(name = "Token.findTokenByUsername", query = "SELECT token FROM TokenEntity token WHERE token.user.username = :username")
-//Delete token
-@NamedQuery(name= "Token.deleteToken", query ="DELETE FROM TokenEntity WHERE username = :username")
-
 @Entity
 @Table(name = "token", indexes = {
-        @Index(name = "idx_auth_token", columnList = "authenticationToken"),
-        @Index(name = "idx_activation_token", columnList = "activationToken"),
-        @Index(name = "idx_password_change_token", columnList = "passwordChangeToken"),
-        @Index(name = "idx_token_username", columnList = "username")
+        @Index(name = "idx_token_value", columnList = "tokenValue"),
+        @Index(name = "idx_token_user", columnList = "user_id")
+})
+@NamedQueries({
+        @NamedQuery(name = "Token.findUserByToken",
+                query = "SELECT token.user FROM TokenEntity token WHERE token.tokenValue = :token AND token.revoked = false"),
+        @NamedQuery(name = "Token.revokeToken", query = "UPDATE TokenEntity token SET token.revoked = true WHERE token.tokenValue = :token"),
+        @NamedQuery(name = "Token.findTokensByUser", query = "SELECT token FROM TokenEntity token WHERE token.user.username = :username"),
+        @NamedQuery(name = "Token.findTokenByValue", query = "SELECT token FROM TokenEntity token WHERE token.tokenValue = :value"),
+        @NamedQuery(name = "Token.deleteTokensByUser", query = "DELETE FROM TokenEntity token WHERE token.user.username = :username")
 })
 public class TokenEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    private String username;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Unique ID per token
+    private Long id;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "username")
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false) // Allow multiple tokens per user
     private UserEntity user;
 
-    @Column(name = "authenticationToken")
-    private String authenticationToken;
+    @Column(name = "tokenValue", unique = true, nullable = false)
+    private String tokenValue;
 
-    @Column(name = "authenticationTokenDate")
-    private LocalDateTime authenticationTokenDate;
+    @Column(name = "tokenType", nullable = false)
+    @Enumerated(EnumType.STRING) // Defines the type of token
+    private TokenType tokenType;
 
-    @Column(name = "activationToken")
-    private String activationToken;
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
 
-    @Column(name = "activationTokenDate")
-    private LocalDateTime activationTokenDate;
+    @Column(name = "revoked", nullable = false)
+    private boolean revoked = false;
 
-    @Column(name = "passwordChangeToken")
-    private String passwordChangeToken;
-
-    @Column(name = "passwordChangeTokenDate")
-    private LocalDateTime passwordChangeTokenDate;
-
-    //Constructor
-    //Empty constructor
+    // Empty constructor
     public TokenEntity() {
+    }
+
+    public TokenEntity(UserEntity user, String tokenValue, TokenType tokenType) {
+        this.user = user;
+        this.tokenValue = tokenValue;
+        this.tokenType = tokenType;
+        this.date = LocalDateTime.now();
+    }
+
+    // Getters and Setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public UserEntity getUser() {
@@ -73,67 +73,35 @@ public class TokenEntity implements Serializable {
         this.user = user;
     }
 
-    public String getAuthenticationToken() {
-        return authenticationToken;
+    public String getTokenValue() {
+        return tokenValue;
     }
 
-    public void setAuthenticationToken(String authenticationToken) {
-        this.authenticationToken = authenticationToken;
+    public void setTokenValue(String tokenValue) {
+        this.tokenValue = tokenValue;
     }
 
-    public String getUsername() {
-        return username;
+    public TokenType getTokenType() {
+        return tokenType;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setTokenType(TokenType tokenType) {
+        this.tokenType = tokenType;
     }
 
-    public LocalDateTime getAuthenticationTokenDate() {
-        return authenticationTokenDate;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setAuthenticationTokenDate(LocalDateTime authenticationTokenDate) {
-        this.authenticationTokenDate = authenticationTokenDate;
+    public void setDate(LocalDateTime createdAt) {
+        this.date = createdAt;
     }
 
-    public String getConfirmationToken() {
-        return activationToken;
+    public boolean isRevoked() {
+        return revoked;
     }
 
-    public void setConfirmationToken(String activationToken) {
-        this.activationToken = activationToken;
-    }
-
-    public String getActivationToken() {
-        return activationToken;
-    }
-
-    public void setActivationToken(String activationToken) {
-        this.activationToken = activationToken;
-    }
-
-    public LocalDateTime getActivationTokenDate() {
-        return activationTokenDate;
-    }
-
-    public void setActivationTokenDate(LocalDateTime activationTokenDate) {
-        this.activationTokenDate = activationTokenDate;
-    }
-
-    public String getPasswordChangeToken() {
-        return passwordChangeToken;
-    }
-
-    public void setPasswordChangeToken(String passwordChangeToken) {
-        this.passwordChangeToken = passwordChangeToken;
-    }
-
-    public LocalDateTime getPasswordChangeTokenDate() {
-        return passwordChangeTokenDate;
-    }
-
-    public void setPasswordChangeTokenDate(LocalDateTime passwordChangeTokenDate) {
-        this.passwordChangeTokenDate = passwordChangeTokenDate;
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
     }
 }

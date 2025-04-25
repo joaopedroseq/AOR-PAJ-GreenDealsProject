@@ -1,26 +1,24 @@
 package pt.uc.dei.proj5.beans;
 
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import jakarta.inject.Inject;
-import jakarta.jws.soap.SOAPBinding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
+import pt.uc.dei.proj5.dao.TokenDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.*;
-import pt.uc.dei.proj5.entity.CategoryEntity;
 import pt.uc.dei.proj5.entity.ProductEntity;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
 import pt.uc.dei.proj5.websocket.wsProducts;
+import pt.uc.dei.proj5.websocket.WsUsers;
 
 @Stateless
 public class UserBean implements Serializable {
@@ -38,6 +36,12 @@ public class UserBean implements Serializable {
 
     @Inject
     wsProducts wsProducts;
+
+    @Inject
+    WsUsers wsUsers;
+
+    @Inject
+    TokenBean tokenBean;
 
     public UserBean() {
     }
@@ -61,19 +65,21 @@ public class UserBean implements Serializable {
         }
     }
 
-    public boolean registerNormalUser(UserDto userDto) {
+    public String registerNormalUser(UserDto userDto) {
         UserEntity user = userDao.findUserByUsername(userDto.getUsername());
         if (user == null) {
             UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             newUserEntity.setAdmin(false);
             newUserEntity.setState(UserAccountState.INACTIVE);
-            TokenEntity tokenEntity = new TokenEntity();
-            tokenEntity.setUser(newUserEntity);
-            newUserEntity.setToken(tokenEntity);
+            newUserEntity.setTokens(new HashSet<>()); // Initialize empty set
+            String newActivationToken = tokenBean.generateNewToken();
+            TokenEntity activationToken = new TokenEntity(newUserEntity, newActivationToken, TokenType.ACTIVATION);
+            // Ensure the user has a token list, then add the new activation token
+            newUserEntity.getTokens().add(activationToken);
             userDao.persist(newUserEntity);
-            return true;
+            return newActivationToken;
         } else
-            return false;
+            return null;
     }
 
     public boolean registerAdmin(UserDto userDto) {
@@ -82,8 +88,7 @@ public class UserBean implements Serializable {
             UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             newUserEntity.setAdmin(true);
             newUserEntity.setState(UserAccountState.ACTIVE);
-            TokenEntity tokenEntity = new TokenEntity();
-            tokenEntity.setUser(newUserEntity);
+            newUserEntity.setTokens(new HashSet<>());
             userDao.persist(newUserEntity);
             return true;
         } else
@@ -123,7 +128,6 @@ public class UserBean implements Serializable {
             return false;
         } else {
             try {
-                //não é feito set de username, admin ou excluded
                 if (userDto.getPassword() != null) {
                     userToUpdate.setPassword(userDto.getPassword());
                 }
@@ -148,6 +152,7 @@ public class UserBean implements Serializable {
                 if (userDto.getProducts() != null) {
                     userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
                 }
+                wsUsers.broadcastUser(userDto, "UPDATE");
                 //adicionar evaluations
                 return true;
             } catch (Exception e) {

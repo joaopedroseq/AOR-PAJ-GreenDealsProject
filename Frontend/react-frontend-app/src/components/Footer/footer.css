@@ -1,3 +1,32 @@
+:root{
+  --green: #B0B9A2;
+  --beige: #f1f3eb;
+  --darkGreen: #132a0e;
+}
+
+.montserrat-Montserrat {
+font-family: "Montserrat", serif;
+font-optical-sizing: auto;
+font-weight: 100;
+font-style: normal;
+}
+
+.playfair-display-Playfair Display {
+font-family: "Playfair Display", serif;
+font-optical-sizing: auto;
+font-weight: 100;
+font-style: normal;
+}
+
+.custom-container {
+  background-color: var(--green) 
+}
+
+.mb-4 h3{
+  font-family: "Playfarer";
+      color: var(--darkGreen);
+}
+
 /* Estilo para o rodapé */
 .footer{
     margin: 0;

@@ -1,5 +1,8 @@
 package pt.uc.dei.proj5.websocket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -11,25 +14,24 @@ import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj5.beans.MessageBean;
 import pt.uc.dei.proj5.beans.NotificationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.beans.UserBean;
 import pt.uc.dei.proj5.dto.*;
 
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Singleton
 @ServerEndpoint("/websocket/notifications/")
 public class wsNotifications {
     private static final Logger logger = LogManager.getLogger(wsNotifications.class);
-    private HashMap<String, Session> sessions = new HashMap<String, Session>();
-    private HashMap<String, String> sessionUser = new HashMap<>();
+    private HashMap<String, Set<Session>> sessions = new HashMap<>();
+
 
     @Inject
     TokenBean tokenBean;
@@ -40,10 +42,16 @@ public class wsNotifications {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        String username = sessionUser.remove(session.getId()); // Remove mapping for session ID
+        String username = WebSocketAuthentication.findUsernameBySession(sessions, session);
 
         if (username != null) {
-            sessions.remove(username); // Remove session entry
+            Set<Session> userSessions = sessions.get(username);
+            if (userSessions != null) {
+                userSessions.remove(session); // Remove only this session
+                if (userSessions.isEmpty()) {
+                    sessions.remove(username); // Remove user if no active sessions remain
+                }
+            }
             logger.info("User {} disconnected from chat. Reason: {}", username, reason.getReasonPhrase());
         } else {
             logger.info("Unknown WebSocket session closed: {}", reason.getReasonPhrase());
@@ -58,75 +66,83 @@ public class wsNotifications {
         String messageType = jsonMessage.getString("type");
         switch (messageType) {
             case "AUTHENTICATION": {
-                if (WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions, sessionUser)) {
+                if (WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions)) {
                     UserDto user = new UserDto();
-                    user.setUsername(sessionUser.get(session.getId()));
-                    List<NotificationDto> notifications = notificationBean.getNotifications(user);
-                    JsonObject notificationsJSON = buildNotificationJSON(notifications);
+                    user.setUsername(WebSocketAuthentication.findUsernameBySession(sessions, session));
+                    int notificationsCount = notificationBean.getTotalNotifications(user);
+                    JsonObject notificationsJSON = Json.createObjectBuilder()
+                            .add("type", "NOTIFICATION_COUNT")
+                            .add("count", notificationsCount)
+                            .build();
                     session.getBasicRemote().sendText(notificationsJSON.toString());
                 }
                 break;
-            }
-            case "NOTIFICATION": {
-
             }
             default:
                 logger.info("Received unknown message type: " + messageType);
         }
     }
 
-    public void notifyUser(NotificationDto notificationDto) throws IOException {
+    public void notifyUser(NotificationDto notificationDto) throws Exception {
         String recipientUsername = notificationDto.getRecipientUsername();
-        String senderUsername = notificationDto.getSenderUsername();
-        Session recipientSession = sessions.get(recipientUsername);
+        Set<Session> recipientSessions = sessions.get(recipientUsername);
 
-        if (recipientSession != null && recipientSession.isOpen()) {
-            String message = switch (notificationDto.getType()) {
-                case MESSAGE -> String.format("You have %d unread messages from %s",
-                        notificationDto.getMessageCount(), senderUsername);
-                case PRODUCT_ALTERED -> String.format("Admin %s has altered your product", senderUsername);
-                case PRODUCT_BOUGHT -> String.format("%s has bought your product", senderUsername);
-                default -> "Unknown notification type.";
-            };
-            recipientSession.getBasicRemote().sendText(message);
+        if (recipientSessions == null || recipientSessions.isEmpty()) {
+            logger.info("No active sessions for user {}", recipientUsername);
+            return;
+        }
+        try {
+            int notificationsCount = notificationBean.getTotalNotifications(new UserDto(recipientUsername));
+            JsonObject notificationsJson = JsonCreate.createJson("NOTIFICATION_COUNT", "count", notificationsCount);
+            String notificationJsonString = notificationsJson.toString();
+            // Send notifications to all active sessions
+            for (Session session : recipientSessions) {
+                if (session.isOpen()) {
+                    session.getBasicRemote().sendText(notificationJsonString);
+                }
+            }
+        } catch (IOException e) {
+            logger.error("Failed to send notification to user {}", recipientUsername, e);
+        } catch (Exception e) {
+            logger.error("Error while creating JSON object", e);
         }
     }
+
+
+    private Map<String, Object> buildMessageData(NotificationDto notificationDto) {
+        Map<String, Object> messageData = new HashMap<>();
+        messageData.put("id", notificationDto.getId());
+        messageData.put("type", notificationDto.getType());
+        messageData.put("content", notificationDto.getContent());
+        messageData.put("timestamp", notificationDto.getTimestamp());
+        messageData.put("recipientUsername", notificationDto.getRecipientUsername());
+        messageData.put("senderUsername", notificationDto.getSenderUsername());
+        messageData.put("senderProfileUrl", notificationDto.getSenderProfileUrl());
+
+        if (notificationDto.getType() == NotificationType.MESSAGE) {
+            messageData.put("messageCount", notificationDto.getMessageCount());
+        }
+        return messageData;
+    }
+
 
     @OnMessage
     public void handlePing(Session session, PongMessage pongMessage) {
         logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
     }
 
-    private JsonObject buildNotificationJSON(List<NotificationDto> notifications) {
-        JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-
-        for (NotificationDto notificationDto : notifications) {
-            jsonArrayBuilder.add(Json.createObjectBuilder()
-                    .add("id", notificationDto.getId())
-                    .add("type", notificationDto.getType().toString())
-                    .add("content", notificationDto.getContent())
-                    .add("recipientUsername", notificationDto.getRecipientUsername())
-                    .add("senderUsername", notificationDto.getSenderUsername())
-                    .add("senderProfileUrl", notificationDto.getSenderProfileUrl())
-                    .add("messageCount", notificationDto.getMessageCount() != null ? notificationDto.getMessageCount() : 0));
-        }
-
-        return Json.createObjectBuilder()
-                .add("notificationJSON", jsonArrayBuilder)
-                .build();
-    }
-
-    @Schedule(second = "*/30", minute = "*", hour = "*")
+    @Schedule(second = "*/60", minute = "*", hour = "*")
     private void pingUsers() {
-        for (Session session : sessions.values()) {
-            if (session.isOpen()) {
-                try {
-                    session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Sending an actual WebSocket PING frame
-                } catch (IOException e) {
-                    logger.error("Failed to send WebSocket PING", e);
+        for (Set<Session> userSessions : sessions.values()) { // Iterate over session sets
+            for (Session session : userSessions) { // Iterate over individual sessions
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Send WebSocket PING frame
+                    } catch (IOException e) {
+                        logger.error("Failed to send WebSocket PING to session {}", session.getId(), e);
+                    }
                 }
             }
         }
     }
-
 }

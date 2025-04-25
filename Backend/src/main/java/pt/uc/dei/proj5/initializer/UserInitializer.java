@@ -38,9 +38,6 @@ public class UserInitializer {
             admin.setState(UserAccountState.ACTIVE);
             admin.setAdmin(true);
             admin.setUrl("https://icon-icons.com/icons2/508/PNG/512/macintosh_icon-icons.com_49902.png");
-            TokenEntity tokenAdmin = new TokenEntity();
-            tokenAdmin.setUser(admin);
-            admin.setToken(tokenAdmin);
             userDao.persist(admin);
         }
         if (!userDao.findIfUserExists("anonymous")) {
@@ -56,9 +53,6 @@ public class UserInitializer {
             anonymous.setLastName("-");
             anonymous.setPhoneNumber("-1");
             anonymous.setUrl("https://b.thumbs.redditmedia.com/n40D3mkLHMt42LU5vbk23qPKpBT4TeWVcrdNxVoqIvA.png");
-            TokenEntity tokenAnonymous = new TokenEntity();
-            tokenAnonymous.setUser(anonymous);
-            anonymous.setToken(tokenAnonymous);
             userDao.persist(anonymous);
         }
     }

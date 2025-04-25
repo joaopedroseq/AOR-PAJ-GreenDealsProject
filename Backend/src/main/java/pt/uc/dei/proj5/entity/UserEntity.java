@@ -84,8 +84,8 @@ public class UserEntity implements Serializable {
     @OneToMany(mappedBy = "seller")
     private Set<EvaluationEntity> evaluationsReceived;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private TokenEntity token;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TokenEntity> tokens;
 
 
     //Constructors
@@ -190,12 +190,12 @@ public class UserEntity implements Serializable {
         this.state = state;
     }
 
-    public TokenEntity getToken() {
-        return token;
+    public Set<TokenEntity> getTokens() {
+        return tokens;
     }
 
-    public void setToken(TokenEntity token) {
-        this.token = token;
+    public void setTokens(Set<TokenEntity> tokens) {
+        this.tokens = tokens;
     }
 
     @Override
@@ -213,7 +213,7 @@ public class UserEntity implements Serializable {
                 ", products=" + products +
                 ", evaluationsWritten=" + evaluationsWritten +
                 ", evaluationsReceived=" + evaluationsReceived +
-                ", token=" + token +
+                ", token=" + tokens +
                 '}';
     }
 }

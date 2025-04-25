@@ -23,7 +23,8 @@ public class ProductDto implements Serializable{
     private ProductStateId state;
     private LocalDateTime date;
     private Boolean excluded;
-    private LocalDateTime edited;
+    private boolean edited;
+    private LocalDateTime editedDate;
     private String buyer;
 
     public ProductDto() {
@@ -66,7 +67,8 @@ public class ProductDto implements Serializable{
         this.date = LocalDateTime.now();
         this.id = generateHash(seller,name,description,price,category.getNome(),location,urlImage,date);
         this.excluded = productDto.excluded;
-        this.edited = date;
+        this.edited = productDto.edited;
+        this.editedDate = date;
     }
 
 
@@ -165,11 +167,20 @@ public class ProductDto implements Serializable{
     public void setExcluded(Boolean exclude) {
         this.excluded = exclude;
     }
-    public LocalDateTime getEdited() {
+
+    public boolean getEdited() {
         return edited;
     }
-    public void setEdited(LocalDateTime edited) {
+
+    public void setEdited(boolean edited) {
         this.edited = edited;
+    }
+
+    public LocalDateTime getEditedDate() {
+        return editedDate;
+    }
+    public void setEditedDate(LocalDateTime editedDate) {
+        this.editedDate = editedDate;
     }
 
     public String getBuyer() {
@@ -232,7 +243,7 @@ public class ProductDto implements Serializable{
                 && this.state == ProductStateId.BOUGHT
                 && this.date == null
                 && this.excluded == null
-                && this.edited == null;
+                && this.editedDate == null;
     }
 
     @Override

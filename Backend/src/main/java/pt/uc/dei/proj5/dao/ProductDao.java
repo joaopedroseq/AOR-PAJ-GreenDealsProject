@@ -116,8 +116,15 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             );
             predicates.add(nameSearchPredicate);
         }
-        if (productStateId != null) {
-            predicates.add(cb.equal(root.get("state"), productStateId));
+
+        if(productStateId == ProductStateId.DRAFT) {
+            Predicate stateSearchPredicate = cb.or(
+                    cb.equal(root.get("state"), ProductStateId.AVAILABLE.toString()),
+                    cb.equal(root.get("state"), ProductStateId.RESERVED.toString()),
+                    cb.equal(root.get("state"), ProductStateId.BOUGHT.toString()),
+                    cb.equal(root.get("state"), ProductStateId.DRAFT.toString())
+            );
+            predicates.add(stateSearchPredicate);
         }
         else {
             Predicate stateSearchPredicate = cb.or(
@@ -127,19 +134,27 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             );
             predicates.add(stateSearchPredicate);
         }
-        if (excluded != null) {
-            predicates.add(cb.equal(root.get("excluded"), excluded));
+        if (excluded == null || excluded) {
+            Predicate excludedSearchPredicate = cb.or(
+                    cb.equal(root.get("excluded"), true),
+                    cb.equal(root.get("excluded"), false)
+            );
+            predicates.add(excludedSearchPredicate);
+        }
+        else {
+            Predicate excludedSearchPredicate = cb.equal(root.get("excluded"), false);
+            predicates.add(excludedSearchPredicate);
         }
         if (category != null) {
             predicates.add(cb.equal(root.get("category").get("nome"), category));
         }
         if (edited) {
-            predicates.add(cb.notEqual(root.get("date"), root.get("editedDate")));
+            Predicate editedSearchPredicate = cb.equal(root.get("edited"), true);
+            predicates.add(editedSearchPredicate);
         }
         // Combina os predicados para a query - o toArray(new Predicate[0]) transforma o arrayList num array
         query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
         if(orderId.equals("asc")) {
-
             query.orderBy(cb.asc(root.get(param)));
         }
         else if(orderBy.equals("desc")) {

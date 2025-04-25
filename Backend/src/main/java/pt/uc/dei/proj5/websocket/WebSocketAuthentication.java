@@ -10,8 +10,12 @@ import pt.uc.dei.proj5.dto.TokenDto;
 import pt.uc.dei.proj5.dto.TokenType;
 import pt.uc.dei.proj5.dto.UserDto;
 import pt.uc.dei.proj5.dto.UserAccountState;
+
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 /*
 {
     "type" : "AUTHENTICATION",
@@ -32,44 +36,41 @@ public class WebSocketAuthentication {
 
 
     public static boolean authenticate(Session session, JsonObject jsonMessage,
-                                       TokenBean tokenBean, HashMap<String, Session> sessions,
-                                       HashMap<String, String> sessionUser) {
+                                       TokenBean tokenBean, HashMap<String, Set<Session>> sessions) {
         if (!jsonMessage.containsKey("token") || jsonMessage.isNull("token")) {
             sendErrorMessage(session, "Missing authentication token");
             return false;
         }
-
         String token = jsonMessage.getString("token");
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(token);
+        tokenDto.setTokenValue(token);
 
         try {
-            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+            UserDto user = tokenBean.checkToken(tokenDto);
+            if(user == null) {
+                logger.error("Invalid authentication token");
+                sendErrorMessage(session, "Invalid authentication token");
+                return false;
+            }
             if (user.getState().equals(UserAccountState.EXCLUDED) || user.getState().equals(UserAccountState.INACTIVE)) {
                 logger.info("Authentication failed: User {} has inactive or excluded account", user.getUsername());
                 sendErrorMessage(session, "Excluded or inactive user");
                 return false;
             }
-            if (!sessions.containsKey(user.getUsername())) {
-                sessions.put(user.getUsername(), session);
-                sessionUser.put(session.getId(), user.getUsername());
-                logger.info("User {} authenticated in WebSocket", user.getUsername());
-                sendSuccessMessage(session, user.getUsername());
-                return true;
-            }
-            else {
-                logger.info("User {} is already authenticated in WebSocket", user.getUsername());
-                sendInfoMessage(session, "User already authenticated");
-                return true;
-            }
-        } catch (Exception e) {
-            logger.info("Authentication failed with token: {}", token);
-            sendErrorMessage(session, "Invalid token");
+            sessions.computeIfAbsent(user.getUsername(), k -> new HashSet<>()).add(session);
+            logger.info("User {} authenticated in WebSocket", user.getUsername());
+            sendSuccessMessage(session, user.getUsername());
+            return true;
+        }
+        catch (Exception e) {
+            logger.error("Authentication failed", e);
+            sendErrorMessage(session, e.getMessage());
             return false;
         }
     }
 
-    private static void sendErrorMessage(Session session, String message) {
+
+        private static void sendErrorMessage(Session session, String message) {
         try {
             session.getBasicRemote().sendText("{ \"type\": \"AUTH_FAILED\", \"message\": \"" + message + "\" }");
             session.close();
@@ -93,4 +94,14 @@ public class WebSocketAuthentication {
             logger.error("Failed to send authentication success message", e);
         }
     }
+
+    public static String findUsernameBySession(HashMap<String, Set<Session>> sessions, Session session) {
+        for (Map.Entry<String, Set<Session>> entry : sessions.entrySet()) {
+            if (entry.getValue().contains(session)) {
+                return entry.getKey(); // Return the username associated with the session
+            }
+        }
+        return null; // Return null if no match found
+    }
+
 }

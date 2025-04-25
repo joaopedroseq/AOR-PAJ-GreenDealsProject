@@ -1,4 +1,4 @@
-import React, {  useEffect } from "react";
+import React, {  use, useEffect } from "react";
 import "./homepage.css";
 import leaf from "../../Assets/icons/leaf.png";
 import placeholder from '../../Assets/placeholder/item.png';
@@ -7,6 +7,7 @@ import ProductCard from "../../Components/ProductCard/ProductCard";
 import useProductStore from "../../Stores/useProductStore";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { FormattedMessage } from "react-intl";
+import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
 
 
 //Homepage
@@ -18,12 +19,15 @@ const Homepage = () => {
   //Opções de língua
   const locale = useLocaleStore((state) => state.locale);
 
+  //WebSocketProducts
+  // WebSocket for real-time product updates
+  const { websocket } = useWebSocketProducts();
+
   //Popular a página com produtos
   useEffect(() => {
-    clearFilters()
+    clearFilters();
     fetchProducts(); // Fetch products on component mount
   }, [clearFilters, fetchProducts]);
-
 
   return (
     <div className="main-content-index">

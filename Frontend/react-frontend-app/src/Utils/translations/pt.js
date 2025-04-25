@@ -7,8 +7,8 @@ const pt = {
   goodbye: "Até à próxima {firstName}",
 
   //Header
-  sellProductButton: "Vender um produto",
-  profileButton: "O meu perfil",
+  sellProductButton: "Vender produto",
+  profileButton: "Perfil",
   logoutButton: "Sair",
   welcomeMessage: "Bem-Vindo ",
 
@@ -242,7 +242,7 @@ const pt = {
   editProductModalSelectCategoryPlaceholder: "Escolha uma categoria",
   editProductModalSelectStatePlaceholder: "Escolha um estado",
   editProductModalSaveButton: "Guardar Alterações",
-  editProductModaleNoChanges: "Sem alterações a serem feitas",
+  editProductModalNoChanges: "Sem alterações a serem feitas",
   //EditProductModalError
   editProductModalErrorEditName: "Terá de preencher o nome do produto.",
   editProductModalErrorEditDescription:
@@ -371,6 +371,13 @@ const pt = {
   //Handles
   //handleChangeUserInformation
   handleChangeUserInformationSucess: "Alterações efetuadas com sucesso",
+
+  //NotificationsWebsockets
+  wsNotificationsUnreadMessages: "Tem {numMessages} mensagens de {username} por ler",
+  wsNotificationsProductAltered: "Administrador {username} alterou o seu produto",
+  wsNotificationsProductBought: "Utilizador {username} comprou um produto seu",
+
+
 
   //General Errors
   errorerrorNetwork_error: "Sem resposta do servidor, verifique a sua conexão.",

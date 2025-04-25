@@ -7,8 +7,6 @@ import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.CategoryBean;
-import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.beans.UserBean;
 import pt.uc.dei.proj5.dto.*;
 
 import java.util.List;
@@ -21,10 +19,7 @@ public class CategoryService {
     CategoryBean categoryBean;
 
     @Inject
-    UserBean userbean;
-
-    @Inject
-    TokenBean tokenBean;
+    AuthenticationService authenticationService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -51,23 +46,15 @@ public class CategoryService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerNewCategory(@HeaderParam("token") String authenticationToken, CategoryDto categoryDto) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token(null) - adding new category - {}", categoryDto.getNome());
-            return Response.status(401).entity("Invalid token").build();
-        } else if (!categoryDto.hasValidValues()) {
+        if (!categoryDto.hasValidValues()) {
             logger.error("Invalid data - register new category");
             return Response.status(400).entity("Invalid data").build();
         } else {
-            TokenDto tokenDto = new TokenDto();
-            tokenDto.setAuthenticationToken(authenticationToken);
-            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-            if (user == null) {
-                logger.error("Invalid token - adding new category - {}", categoryDto.getNome());
-                return Response.status(401).entity("Invalid token").build();
-            }
-            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-                logger.error("Permission denied - user {} tried to add new category {} with inactive or excluded account", user.getUsername(), categoryDto.getNome());
-                return Response.status(403).entity("User has inactive or excluded account").build();
+            UserDto user;
+            try {
+                user = authenticationService.validateAuthenticationToken(authenticationToken);
+            } catch (WebApplicationException e) {
+                return e.getResponse();
             }
             if (!user.getAdmin()) {
                 logger.error("Permission denied - not admin privileges - {} adding new category - {}", user.getUsername(), categoryDto.getNome());
@@ -88,38 +75,28 @@ public class CategoryService {
     @Path("/{categoryName}")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteCategory(@HeaderParam("token") String authenticationToken, @PathParam("categoryName") String categoryName) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - deleting category - {}", categoryName);
-            return Response.status(401).entity("Missing token").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
+        }
+        if (!user.getAdmin()) {
+            logger.error("User {} tried to delete category {} without admin permissions", user.getUsername(), categoryName);
+            return Response.status(403).entity("User does not have admin permission to delete categories").build();
         } else {
-            TokenDto tokenDto = new TokenDto();
-            tokenDto.setAuthenticationToken(authenticationToken);
-            UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-            if (user == null) {
-                logger.error("Invalid token when trying to delete category {}", categoryName);
-                return Response.status(401).entity("Invalid token").build();
-            }
-            if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-                logger.error("Permission denied - user {} tried to delete category {} information with inactive or excluded account", user.getUsername(), categoryName);
-                return Response.status(403).entity("User has inactive or excluded account").build();
-            }
-            if (!user.getAdmin()) {
-                logger.error("User {} tried to delete category {} without admin permissions", user.getUsername(), categoryName);
-                return Response.status(403).entity("User does not have admin permission to delete categories").build();
+            CategoryDto categoryDto = new CategoryDto();
+            categoryDto.setNome(categoryName.toLowerCase().trim());
+            if (!categoryBean.checkIfCategoryExists(categoryDto)) {
+                logger.info("User {} tried to delete category {} non-existent", categoryDto.getNome(), user.getUsername());
+                return Response.status(404).entity("Category " + categoryDto.getNome() + " doesn't exist").build();
             } else {
-                CategoryDto categoryDto = new CategoryDto();
-                categoryDto.setNome(categoryName.toLowerCase().trim());
-                if (!categoryBean.checkIfCategoryExists(categoryDto)) {
-                    logger.info("User {} tried to delete category {} non-existent", categoryDto.getNome(), user.getUsername());
-                    return Response.status(404).entity("Category " + categoryDto.getNome() + " doesn't exist").build();
+                if (categoryBean.deleteCategory(categoryDto)) {
+                    logger.info("Deleted category - {} - by {}", categoryDto.getNome(), user.getUsername());
+                    return Response.status(200).entity("Deleted category " + categoryDto.getNome()).build();
                 } else {
-                    if (categoryBean.deleteCategory(categoryDto)) {
-                        logger.info("Deleted category - {} - by {}", categoryDto.getNome(), user.getUsername());
-                        return Response.status(200).entity("Deleted category " + categoryDto.getNome()).build();
-                    } else {
-                        logger.error("Failed to delete {} by {}", categoryDto.getNome(), user.getUsername());
-                        return Response.status(404).entity("Failed to delete " + categoryDto.getNome()).build();
-                    }
+                    logger.error("Failed to delete {} by {}", categoryDto.getNome(), user.getUsername());
+                    return Response.status(404).entity("Failed to delete " + categoryDto.getNome()).build();
                 }
             }
         }

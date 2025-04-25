@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dto.*;
 
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -23,9 +22,6 @@ public class UserService {
 
     @Inject
     UserBean userbean;
-
-    @Inject
-    TokenBean tokenBean;
 
     @Inject
     AuthenticationService authenticationService;
@@ -45,23 +41,17 @@ public class UserService {
         }
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
-        }// Directly return HTTP response
-        userToGetInformation = userToGetInformation.trim();
-        if (!user.getAdmin() && !(user.getUsername().equals(userToGetInformation))) {
-            logger.error("Permission denied - user {} tried to get user {} information without admin permissions", user.getUsername(), userToGetInformation);
-            return Response.status(403).entity("User does not have admin permission to access other users information").build();
+        }
+        if (!userbean.checkIfUserExists(userToGetInformation)) {
+            logger.error("User {} does not exist", userToGetInformation);
+            return Response.status(404).entity("Invalid data").build();
         } else {
-            if (!userbean.checkIfUserExists(userToGetInformation)) {
-                logger.error("User {} does not exist", userToGetInformation);
-                return Response.status(404).entity("Invalid data").build();
-            } else {
-                UserDto userDto = userbean.getUserInformation(userToGetInformation);
-                logger.info("User {} got user {} information", user.getUsername(), userDto.getUsername());
-                return Response.status(200).entity(userDto).build();
-            }
+            UserDto userDto = userbean.getUserInformation(userToGetInformation);
+            logger.info("User {} got user {} information", user.getUsername(), userDto.getUsername());
+            return Response.status(200).entity(userDto).build();
         }
     }
 
@@ -73,7 +63,7 @@ public class UserService {
     public Response updateUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String username, UserDto userDto) {
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
         }// Directly return HTTP response
@@ -99,7 +89,7 @@ public class UserService {
     public Response getAllUsers(@HeaderParam("token") String authenticationToken) {
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
         }// Directly return HTTP response
@@ -124,7 +114,7 @@ public class UserService {
         }
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
         }// Directly return HTTP response
@@ -155,7 +145,7 @@ public class UserService {
         }
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
         }// Directly return HTTP response
@@ -188,7 +178,7 @@ public class UserService {
         }
         UserDto user = new UserDto();
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();  // Directly return HTTP response
         }
@@ -225,7 +215,7 @@ public class UserService {
                                        @QueryParam("order") String orderBy) {
         UserDto user;
         try {
-            user = authenticationService.validateToken(authenticationToken);
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
             return e.getResponse();
         }// Directly return HTTP response

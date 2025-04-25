@@ -63,8 +63,11 @@ public class ProductEntity implements Serializable {
     @Column(name="date", nullable=false, unique = false, updatable = true)
     private LocalDateTime date;
 
-    //Edited - time of last edit
     @Column(name="edited", nullable=false, unique = false, updatable = true)
+    private Boolean edited;
+
+    //Edited - time of last edit
+    @Column(name="editedDate", nullable=true, unique = false, updatable = true)
     private LocalDateTime editedDate;
 
     //Url image
@@ -117,6 +120,12 @@ public class ProductEntity implements Serializable {
         this.description = description;
     }
 
+    public Boolean getEdited() {
+        return edited;
+    }
+    public void setEdited(Boolean edited) {
+        this.edited = edited;
+    }
     public LocalDateTime getEditedDate() {
         return editedDate;
     }

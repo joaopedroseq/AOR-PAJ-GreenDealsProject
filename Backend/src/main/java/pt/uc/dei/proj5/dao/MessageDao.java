@@ -32,6 +32,19 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
+    public List<UserDto> getAllConversations(String userUsername) {
+        try {
+            List<UserDto> usersWithChat = em.createNamedQuery("MessageEntity.getAllChats", UserDto.class)
+                    .setParameter("user_username", userUsername)
+                    .getResultList();
+            return usersWithChat;
+        }
+        catch (Exception e) {
+            logger.error("Error fetching conversation: ", e);
+            return Collections.emptyList();
+        }
+    }
+
     public int getUnreadMessageCount(String recipientUsername, String senderUsername) {
         try {
             return ((Long) em.createNamedQuery("MessageEntity.getUnreadMessages")

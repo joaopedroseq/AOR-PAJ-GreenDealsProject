@@ -14,6 +14,12 @@ import java.time.LocalDateTime;
                 "WHERE n.recipient.username = :username")
 
 @NamedQuery(
+        name = "NotificationEntity.getTotalNotifications",
+        query = "SELECT COUNT(n) " +
+                "FROM NotificationEntity n " +
+                "WHERE n.recipient.username = :username")
+
+@NamedQuery(
         name = "NotificationEntity.readNotification",
         query = "UPDATE NotificationEntity n " +
                 "SET isRead = true " +
@@ -41,6 +47,14 @@ import java.time.LocalDateTime;
         query = "UPDATE NotificationEntity n " +
                 "SET n.messageCount = :numberUnreadMessages, " +
                 "n.timestamp = :newDate " +
+                "WHERE n.recipient.username = :recipientUsername " +
+                "AND n.sender.username = :senderUsername " +
+                "AND n.type = 'MESSAGE'"
+)
+
+@NamedQuery(
+        name = "NotificationEntity.getChatNotificationBetween",
+        query = "SELECT DISTINCT n FROM NotificationEntity n JOIN FETCH n.sender " +
                 "WHERE n.recipient.username = :recipientUsername " +
                 "AND n.sender.username = :senderUsername " +
                 "AND n.type = 'MESSAGE'"

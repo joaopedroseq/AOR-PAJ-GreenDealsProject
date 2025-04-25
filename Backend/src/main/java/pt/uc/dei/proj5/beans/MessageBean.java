@@ -31,13 +31,23 @@ public class MessageBean implements Serializable {
     @Inject
     NotificationDao notificationDao;
 
-    public ChatDto getChatBetween (UserDto user, UserDto otherUser) {
+    public List<MessageDto> getMessagesBetween (UserDto user, UserDto otherUser) {
         try {
             List<MessageEntity> messageEntities = messageDao.getListOfMessagesBetween(user.getUsername(), otherUser.getUsername());
             List<MessageDto> messageDtos = messageEntities.stream()
                     .map(this::convertMessageEntityToMessageDto)
                     .collect(Collectors.toList());
-            return new ChatDto(messageDtos);
+            return messageDtos;
+        }
+        catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
+    }
+
+    public List<UserDto> getAllChats (UserDto user) {
+        try {
+            return messageDao.getAllConversations(user.getUsername());
         }
         catch (Exception e) {
             logger.error(e);

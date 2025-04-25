@@ -8,7 +8,7 @@ export const productStateTranslations = {
     en: {
       DISPONIVEL: "Available",
       RESERVADO: "Reserved",
-      COMPRADO: "Purchased",
+      COMPRADO: "Bought",
       RASCUNHO: "Draft",
     },
   };

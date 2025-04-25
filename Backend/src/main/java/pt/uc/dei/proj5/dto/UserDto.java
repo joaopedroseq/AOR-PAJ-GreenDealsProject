@@ -27,6 +27,16 @@ public class UserDto implements Serializable {
     public UserDto() {
     }
 
+    //Construtor para buscar informação para conversa
+    public UserDto(String username, String url) {
+        this.username = username;
+        this.url = url;
+    }
+
+    public UserDto(String username) {
+        this.username = username;
+    }
+
     //Construtor para criar novo user ou update do user
     public UserDto(String firstName, String lastName, String username, String password, String email, String phoneNumber, String url) {
         this.firstName = firstName;

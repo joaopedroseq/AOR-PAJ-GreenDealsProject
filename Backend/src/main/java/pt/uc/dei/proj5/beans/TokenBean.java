@@ -43,39 +43,50 @@ public class TokenBean {
             BCrypt.Result result = BCrypt.verifyer().verify(user.getPassword().toCharArray(), userEntity.getPassword());
             if (result.verified) {
                 String newAuthenticationToken = generateNewToken();
-                TokenEntity tokenEntity = tokenDao.findTokenByUsername(userEntity.getUsername());
-                tokenEntity.setAuthenticationToken(newAuthenticationToken);
-                tokenEntity.setAuthenticationTokenDate(LocalDateTime.now());
+                TokenEntity tokenEntity = new TokenEntity();
+                tokenEntity.setTokenValue(newAuthenticationToken);
+                tokenEntity.setTokenType(TokenType.AUTHENTICATION);
+                tokenEntity.setUser(userEntity);
+                tokenEntity.setDate(LocalDateTime.now());
+                tokenEntity.setRevoked(false);
+                tokenDao.persist(tokenEntity);
                 return newAuthenticationToken;
             }
         }
         return null;
     }
 
-    public TokenDto getAuthenticationToken(String username){
-        return null;
-    }
-
     public boolean logout(TokenDto tokenDto) {
-        if (tokenDao.removeAuthenticationToken(tokenDto.getAuthenticationToken())) {
+        if (tokenDao.revokeToken(tokenDto.getTokenValue())) {
             return true;
         }
         return false;
     }
 
-    public UserDto checkToken(TokenDto tokenDto, TokenType tokenType) {
+    public TokenDto getTokenByValue(String tokenValue) {
         try {
-            UserEntity userEntity = switch (tokenType) {
-                case AUTHENTICATION -> tokenDao.findUserByAuthenticationToken(tokenDto.getAuthenticationToken());
-                case ACTIVATION -> tokenDao.findUserByActivationToken(tokenDto.getActivationToken());
-                case PASSWORD_CHANGE -> tokenDao.findUserByPasswordChangeToken(tokenDto.getPasswordChangeToken());
-            };
+            TokenEntity tokenEntity = tokenDao.findTokenByValue(tokenValue);
+            TokenDto tokenDto = new TokenDto();
+            tokenDto.setTokenValue(tokenEntity.getTokenValue());
+            tokenDto.setTokenType(tokenEntity.getTokenType());
+            tokenDto.setCreatedAt(tokenEntity.getDate());
+            tokenDto.setUsername(tokenEntity.getUser().getUsername());
+            return tokenDto;
+        }
+        catch (NullPointerException e) {
+            logger.error("NullPointerException in TokenDao.findTokenByValue");
+            return null;
+        }
+    }
+
+    public UserDto checkToken(TokenDto tokenDto) {
+        try {
+            UserEntity userEntity = tokenDao.findUserByToken(tokenDto.getTokenValue());
             if (userEntity == null) {
                 return null;
             }
             //Mudanças - Em vez de converter completamente o userEntity, é apenas enviado o username, o state, e o admin
             UserDto userDto = userBean.convertUserEntitytoUserDto(userEntity);
-            userDto.setToken(convertTokenEntityToTokenDto(userEntity.getToken(), tokenType));
             return userDto;
             //return userBean.convertUserEntitytoUserDto(userEntity);
         } catch (Exception e) {
@@ -86,80 +97,61 @@ public class TokenBean {
 
     public boolean isTokenExpired(TokenDto tokenDto, TokenType tokenType) {
         try {
-            switch (tokenType) {
-                case AUTHENTICATION:
-                    return LocalDateTime.now().isAfter(getExpirationDate(tokenDto, TokenType.AUTHENTICATION));
-                case ACTIVATION:
-                    return LocalDateTime.now().isAfter(getExpirationDate(tokenDto, TokenType.ACTIVATION));
-                case PASSWORD_CHANGE:
-                    return LocalDateTime.now().isAfter(getExpirationDate(tokenDto, TokenType.PASSWORD_CHANGE));
+            LocalDateTime expirationDate = getExpirationDate(tokenDto, tokenType);
+
+            if (expirationDate == null) {
+                logger.error("Expiration date is null for token type: " + tokenType);
+                return false;
             }
-            return true;
+
+            boolean isExpired = LocalDateTime.now().isAfter(expirationDate);
+
+            if (isExpired) {
+                revokeToken(tokenDto);
+            }
+
+            return isExpired;
         } catch (Exception e) {
-            logger.error(e);
-            return true;
+            logger.error("Error checking token expiration: ", e);
+            return false;
         }
     }
 
-    public boolean checkIfAuthenticationTokenValid(String authenticationToken) {
-        return tokenDao.findIfAuthenticationTokenExists(authenticationToken);
-    }
-
-
-    public String generateNewActivationToken(UserDto userDto) {
-        try {
-            UserEntity userEntity = userDao.findUserByUsername(userDto.getUsername());
-            if (userEntity != null) {
-                String newActivationToken = generateNewToken();
-                TokenEntity tokenEntity = tokenDao.findTokenByUsername(userEntity.getUsername());
-                tokenEntity.setActivationToken(newActivationToken);
-                tokenEntity.setActivationTokenDate(LocalDateTime.now());
-                return newActivationToken;
-            }
-            return null;
-        } catch (Exception e) {
-            logger.error(e);
-            return null;
-        }
-    }
-
-    private TokenDto convertTokenEntityToTokenDto(TokenEntity tokenEntity, TokenType tokenType) {
-        TokenDto tokenDto = new TokenDto();
-        switch (tokenType) {
-            case AUTHENTICATION -> {
-                tokenDto.setAuthenticationToken(tokenEntity.getAuthenticationToken());
-                tokenDto.setAuthenticationTokenDate(tokenEntity.getAuthenticationTokenDate());
-            }
-            case ACTIVATION -> {
-                tokenDto.setActivationToken(tokenEntity.getActivationToken());
-                tokenDto.setActivationTokenDate(tokenEntity.getActivationTokenDate());
-            }
-            case PASSWORD_CHANGE -> {
-                tokenDto.setPasswordChangeToken(tokenEntity.getPasswordChangeToken());
-                tokenDto.setPasswordChangeTokenDate(tokenEntity.getPasswordChangeTokenDate());
-            }
-        }
-        return tokenDto;
+    public void revokeToken (TokenDto tokenDto) {
+        tokenDao.revokeToken(tokenDto.getTokenValue());
     }
 
     private LocalDateTime getExpirationDate(TokenDto tokenDto, TokenType tokenType) {
         ConfigurationEntity latestConfiguration = configurationDao.getLatestConfiguration();
         switch (tokenType) {
             case AUTHENTICATION -> {
-                return tokenDto.getAuthenticationTokenDate().plusMinutes(latestConfiguration.getAuthenticationExpirationTime());
+                return tokenDto.getCreatedAt().plusMinutes(latestConfiguration.getAuthenticationExpirationTime());
             }
             case ACTIVATION -> {
-                return tokenDto.getActivationTokenDate().plusMinutes(latestConfiguration.getActivationExpirationTime());
+                return tokenDto.getCreatedAt().plusMinutes(latestConfiguration.getActivationExpirationTime());
             }
-            case PASSWORD_CHANGE -> {
-                return tokenDto.getPasswordChangeTokenDate().plusMinutes(latestConfiguration.getPasswordChangeExpirationTime());
+            case PASSWORD_RESET -> {
+                return tokenDto.getCreatedAt().plusMinutes(latestConfiguration.getPasswordChangeExpirationTime());
             }
         }
         return null;
     }
 
+    public String generateNewActivationToken(UserDto userDto){
+        UserEntity userEntity = userDao.findUserByUsername(userDto.getUsername());
+        String newActivationToken = generateNewToken();
+        TokenEntity tokenEntity = new TokenEntity();
+        tokenEntity.setUser(userEntity);
+        tokenEntity.setTokenValue(newActivationToken);
+        tokenEntity.setTokenType(TokenType.ACTIVATION);
+        tokenEntity.setDate(LocalDateTime.now());
+        tokenEntity.setRevoked(false);
+        tokenDao.persist(tokenEntity);
+        return newActivationToken;
+    }
 
-    private String generateNewToken() {
+
+    public String generateNewToken() {
         SecureRandom secureRandom = new SecureRandom(); //threadsafe
         Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
         byte[] randomBytes = new byte[24];

@@ -14,7 +14,6 @@ import pt.uc.dei.proj5.beans.MessageBean;
 import pt.uc.dei.proj5.beans.NotificationBean;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.beans.UserBean;
-import pt.uc.dei.proj5.dao.NotificationDao;
 import pt.uc.dei.proj5.dto.*;
 
 import java.io.IOException;
@@ -22,15 +21,14 @@ import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-
+import java.util.Set;
 
 
 @Singleton
 @ServerEndpoint("/websocket/chat/")
 public class wsChat {
     private static final Logger logger = LogManager.getLogger(wsChat.class);
-    private HashMap<String, Session> sessions = new HashMap<String, Session>();
-    private HashMap<String, String> sessionUser = new HashMap<>();
+    private HashMap<String, Set<Session>> sessions = new HashMap<>();
 
     @Inject
     TokenBean tokenBean;
@@ -46,10 +44,17 @@ public class wsChat {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        String username = sessionUser.remove(session.getId()); // Remove mapping for session ID
+        String username = WebSocketAuthentication.findUsernameBySession(sessions, session);
 
         if (username != null) {
-            sessions.remove(username); // Remove session entry
+            Set<Session> userSessions = sessions.get(username);
+            if (userSessions != null) {
+                userSessions.remove(session); // Remove only this session
+
+                if (userSessions.isEmpty()) {
+                    sessions.remove(username); // Remove user if no active sessions remain
+                }
+            }
             logger.info("User {} disconnected from chat. Reason: {}", username, reason.getReasonPhrase());
         } else {
             logger.info("Unknown WebSocket session closed: {}", reason.getReasonPhrase());
@@ -59,50 +64,49 @@ public class wsChat {
     //Quando o servidor recebe uma mensagem...
     @OnMessage
     public void toDoOnMessage(Session session, String msg) throws IOException {
-        logger.info("Received message: {}", msg);
         JsonReader jsonReader = Json.createReader(new StringReader(msg));
         JsonObject jsonMessage = jsonReader.readObject();
         String messageType = jsonMessage.getString("type");
         switch (messageType) {
             case "AUTHENTICATION": {
-                WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions, sessionUser);
+                WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions);
                 break;
             }
             case "MESSAGE": {
                 if (!checkIfValidMessage(jsonMessage)) {
-                    session.getBasicRemote().sendText("{ \"type\": \"ERROR\", \"message\": \"Invalid message format\" }");
+                    session.getBasicRemote().sendText(JsonCreate.createJson("ERROR", "message", "Invalid message format").toString());
                 } else {
                     String recipient = jsonMessage.getString("recipient").trim();
                     String message = jsonMessage.getString("message").trim();
-                    String sender = sessionUser.get(session.getId());
+                    String sender = WebSocketAuthentication.findUsernameBySession(sessions, session);
                     if (sender == null) {
                         session.close();
                         return;
                     }
-                    if(userBean.checkIfUserExists(recipient)){
+                    if (userBean.checkIfUserExists(recipient)) {
                         JsonObject messageJson = archiveNewMessage(message, sender, recipient);
-                        Session recipientSession = sessions.get(recipient);
-                        if (recipientSession != null && recipientSession.isOpen()) {
-                            recipientSession.getBasicRemote().sendText(messageJson.toString());
-                            session.getBasicRemote().sendText("{ \"type\": \"SUCCESS\", \"message\": \"Sent message\" }");
-                        }else {
+                        Set<Session> recipientSessions = sessions.get(recipient);
+                        if (recipientSessions != null) {
+                            for (Session recipientSession : recipientSessions) {
+                                if (recipientSession.isOpen()) {
+                                    recipientSession.getBasicRemote().sendText(messageJson.toString());
+                                }
+                            }
+                            JsonObject confirmationJson = JsonCreate.createJson("SUCESS", "message", new String("Sent message sucessfully"));
+                            session.getBasicRemote().sendText(confirmationJson.toString());
+                        } else {
                             notificationBean.newMessageNotification(message, sender, recipient);
                         }
-                    }
-                    else {
+                    } else {
                         logger.info("Recipient {} does not exist", recipient);
-                        session.getBasicRemote().sendText("{ \"type\": \"ERROR\", \"message\": \"User recipient does not exist\" }");
+                        JsonObject errorJson = JsonCreate.createJson("ERROR", "message", new String("User recipient does not exist"));
+                        session.getBasicRemote().sendText(errorJson.toString());
                     }
-                    }
+                }
             }
             default:
                 logger.info("Received unknown message type: " + messageType);
         }
-    }
-
-    @OnMessage
-    public void handlePing(Session session, PongMessage pongMessage) {
-        logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
     }
 
     private JsonObject archiveNewMessage(String message, String sender, String recipient) {
@@ -136,14 +140,21 @@ public class wsChat {
                 !jsonMessage.getString("message").trim().isEmpty();
     }
 
-    @Schedule(second = "*/30", minute = "*", hour = "*")
+    @OnMessage
+    public void handlePing(Session session, PongMessage pongMessage) {
+        logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
+    }
+
+    @Schedule(second = "*/60", minute = "*", hour = "*")
     private void pingUsers() {
-        for (Session session : sessions.values()) {
-            if (session.isOpen()) {
-                try {
-                    session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Sending an actual WebSocket PING frame
-                } catch (IOException e) {
-                    logger.error("Failed to send WebSocket PING", e);
+        for (Set<Session> userSessions : sessions.values()) { // Iterate over session sets
+            for (Session session : userSessions) { // Iterate over individual sessions
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Send WebSocket PING frame
+                    } catch (IOException e) {
+                        logger.error("Failed to send WebSocket PING to session {}", session.getId(), e);
+                    }
                 }
             }
         }

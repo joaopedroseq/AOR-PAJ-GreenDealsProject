@@ -68,7 +68,7 @@ export const Admin = () => {
           handleNotification(intl, "info", "adminNoPermission");
           navigate("/");
         } else {
-          setFilters({ category: null, username: null, excluded: null });
+          setFilters({ category: null, username: null, excluded: null, state: "DRAFT" });
           await fetchProducts(token);
           const users = await handleGetAllUsers(token, intl);
           setAllUsers(users);

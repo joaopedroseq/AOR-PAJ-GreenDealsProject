@@ -34,6 +34,32 @@ public class NotificationDao extends AbstractDao<NotificationEntity> {
         }
     }
 
+    public NotificationEntity getChatNotificationBetween (String recipientUsername, String senderUsername) {
+        try {
+            NotificationEntity notificationEntity = em.createNamedQuery("NotificationEntity.getChatNotificationBetween", NotificationEntity.class)
+                    .setParameter("recipientUsername", recipientUsername)
+                    .setParameter("senderUsername", senderUsername)
+                    .getSingleResult();
+            return notificationEntity;
+        }
+        catch (Exception e) {
+            logger.error("Error fetching notifications: ", e);
+            return null;
+        }
+    }
+
+    public int getTotalNotifications(String username) {
+        try {
+            Long totalNotifications = em.createNamedQuery("NotificationEntity.getTotalNotifications", Long.class)
+                    .setParameter("username", username)
+                    .getSingleResult(); // Since COUNT always returns one value
+            return totalNotifications.intValue(); // Convert to int
+        } catch (Exception e) {
+            logger.error("Error fetching notifications: ", e);
+            return 0; // Return 0 in case of failure
+        }
+    }
+
     public boolean readNotification (Long notificationId, String recipientUsername) {
         try {
             if (em.createNamedQuery("NotificationEntity.readNotification")

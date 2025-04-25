@@ -54,7 +54,7 @@ function useWebSocketChat() {
     if (websocket) {
       const payload = JSON.stringify({
         type: "MESSAGE",
-        receiver: username,
+        recipient: username,
         message: message,
       });
       websocket.send(payload);

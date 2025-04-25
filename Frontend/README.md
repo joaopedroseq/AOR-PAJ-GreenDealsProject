@@ -27,9 +27,9 @@ IMPORTANTE:
 - websockets
 - paginação de produtos;
 - implementar timer para apagar utilizadores expirados;
-- ver uma forma de haver apenas uma autenticação para vários websockets
 - mudar query the if exists para COUNT em vez de select
 - implementar refresh the autenticação;
+- implementar a possibildiade de várias sessões nos sockets;
 
 Features:
 - implementar recuperar (contrário de exluir) utilizador

@@ -3,10 +3,8 @@ import placeholder from "../../Assets/placeholder/item.png";
 import exclude from "../../Assets/icons/exclude.png";
 import deleteProducts from "../../Assets/icons/deleteProducts.png";
 import deleteUser from "../../Assets/icons/deleteUser.png";
+import chatButton from "../../Assets/icons/chat.png";
 import "./profile.css";
-import {
-  showInfoToast,
-} from "../../Utils/ToastConfig/toastConfig";
 import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,6 +25,9 @@ export const Profile = () => {
   const username = new URLSearchParams(useLocation().search).get("username");
   const navigate = useNavigate();
   const [userProfile, setUserProfile] = useState({});
+  const [isOwner, setOwner] = useState(false);
+  const [isAdmin, setAdmin] = useState(false);
+
 
  //Opções de língua
   const intl = useIntl();
@@ -55,54 +56,42 @@ export const Profile = () => {
     setUserProfile(userInformation);
   };
 
-  //Get dos produtos do utilizador (requer token para aceder aos produtos excluídos (apenas para admins))
-  const getUserProducts = async () => {
-    try {
-      if (userProfile?.username) {
-        let username = userProfile.username;
-        let excluded = false;
-        setFilters({ username, excluded });
-        await fetchProducts(token);
-      }
-    } catch (error) {
-      handleNotification(intl, "error", `error${error.message}`);
-    }
-  
-  };
-
   useEffect(() => {
-    const checkIfAdmin = async () => {
+    const checkIfAdminAndOwner = async () => {
       try {
         let userInformation = await getLoggedUserInformation(token, intl);
-        if (userInformation.admin === false) {
-          showInfoToast(intl.formatMessage({ id: "profileNoPermission" }));
-          navigate("/");
+        if (userInformation.admin === true) {
+          console.log("isAdmin")
+          setAdmin(true);
+        }
+        if(userInformation.username === username){
+          console.log("isOwner")
+          setOwner(true);
         }
       } catch (error) {
         handleNotification(intl, "error", `error${error.message}`);  
         navigate("/");
       }
     };
-    checkIfAdmin();
+    checkIfAdminAndOwner();
     getProfileInformation();
-    getUserProducts();
   }, []);
 
   //useEffect de refresh de todos os dados do utilizador (informações e produtos) caso este não seja admin
   useEffect(() => {
-    const getUserProducts = async () => {
-      try {
-        if (userProfile?.username) {
-          let username = userProfile.username;
-          setFilters({ username });
-          await fetchProducts(token);
-        }
-      } catch (error) {
-        handleNotification(intl, "error", `error${error.message}`);
-      }
-    };
-    getUserProducts();
-  }, [userProfile]);
+    try {
+    if (userProfile?.username) {
+      let username = userProfile.username;
+      let excluded = isAdmin ? true : false;
+      let state = isAdmin || isOwner ? "DRAFT" : undefined;
+      setFilters({ username, excluded, state });
+      fetchProducts(token);
+    }
+   } catch (error) {
+      handleNotification(intl, "error", `error${error.message}`);
+    }
+  }, [isAdmin, isOwner, userProfile]);
+  
 
   const onSubmit = async (newUserInformation) => {
     setModalConfig({
@@ -331,12 +320,15 @@ export const Profile = () => {
                       })}
                     />
                   </div>
+                  {(isOwner || isAdmin) && 
                   <input
                     type="submit"
                     id="guardarAlteracoesUser-btn"
                     className="guardarAlteracoesUser-btn"
                     value="Guardar Alterações"
                   />
+                  }
+                  {isAdmin && (
                   <div>
                     <img
                       src={deleteProducts}
@@ -357,6 +349,16 @@ export const Profile = () => {
                       onClick={handleDeleteUser}
                     />
                   </div>
+                  )}
+                  {!isOwner && (
+                  <div>
+                    <img
+                      src={chatButton}
+                      alt="chat with user"
+                      className="chatWithUserBtn"
+                    />
+                  </div>
+                  )}
                 </form>
               </div>
             )}

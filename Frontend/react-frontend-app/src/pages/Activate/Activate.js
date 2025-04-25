@@ -39,7 +39,7 @@ export const Activate = () => {
           });
           setIsModalOpen(true);
         } else if (response.status === 409) {
-          const newToken = response.data.activationToken;
+          const newToken = response.data;
           const activationLink = "localhost:3000/activate?token=" + newToken;
           try {
             navigator.clipboard.writeText(activationLink);

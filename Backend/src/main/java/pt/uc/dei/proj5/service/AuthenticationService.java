@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dto.*;
+import pt.uc.dei.proj5.websocket.WsUsers;
 
 
 @Path("/auth")
@@ -21,6 +22,9 @@ public class AuthenticationService {
     @Inject
     TokenBean tokenbean;
 
+    @Inject
+    WsUsers wsUsers;
+
     //Regular user register
     @POST
     @Path("/register")
@@ -31,10 +35,11 @@ public class AuthenticationService {
             logger.error("Invalid data - missing params - Registering user");
             return Response.status(400).entity("Invalid data").build();
         }
-        if (userbean.registerNormalUser(userDto)) {
+        String activationToken = userbean.registerNormalUser(userDto);
+        if(activationToken != null) {
+            wsUsers.broadcastUser(userDto, "NEW");
             logger.info("Registered user: " + userDto);
-            String newActivationToken = tokenbean.generateNewActivationToken(userDto);
-            return Response.status(200).entity(newActivationToken).build();
+            return Response.status(200).entity(activationToken).build();
         } else {
             logger.error("Same username conflict - Registering user");
             return Response.status(409).entity("There is a user with the same username!").build();
@@ -96,7 +101,7 @@ public class AuthenticationService {
     @Path("/logout")
     public Response logout(@HeaderParam("token") String token) {
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(token);
+        tokenDto.setTokenValue(token);
         if (tokenbean.logout(tokenDto)) {
             logger.info("Logout successful");
             return Response.status(200).entity("Logout Successful!").build();
@@ -142,8 +147,8 @@ public class AuthenticationService {
             return Response.status(401).entity("Missing token").build();
         }
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setActivationToken(activationToken);
-        UserDto user = tokenbean.checkToken(tokenDto, TokenType.ACTIVATION);
+        tokenDto.setTokenValue(activationToken);
+        UserDto user = tokenbean.checkToken(tokenDto);
         if (user == null) {
             logger.error("Invalid token");
             return Response.status(401).entity("Invalid token").build();
@@ -156,7 +161,7 @@ public class AuthenticationService {
             logger.error("User {} tried activate excluded account", user.getUsername());
             return Response.status(403).entity("Bad request - excluded account").build();
         } else {
-            tokenDto = user.getToken();
+            tokenDto = tokenbean.getTokenByValue(activationToken);
             if (!tokenbean.isTokenExpired(tokenDto, TokenType.ACTIVATION)) {
                 user.setState(UserAccountState.ACTIVE);
                 if (userbean.updateUser(user.getUsername(), user)) {
@@ -167,8 +172,8 @@ public class AuthenticationService {
                     return Response.status(500).entity("User " + user.getUsername() + " account not activated").build();
                 }
             } else {
-                TokenDto newActivationToken = new TokenDto();
-                newActivationToken.setActivationToken(tokenbean.generateNewActivationToken(user));
+                //Mudar por um método para adicionar um activation token
+                String newActivationToken = tokenbean.generateNewActivationToken(user);
                 logger.error("User {} tried to activate account with expired token. New activation token generated", user.getUsername());
                 return Response.status(409).entity(newActivationToken).build();
             }
@@ -180,8 +185,8 @@ public class AuthenticationService {
     @Path("/me")
     public Response getUserLogged(@HeaderParam("token") String token) {
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(token);
-        UserDto user = tokenbean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+        tokenDto.setTokenValue(token);
+        UserDto user = tokenbean.checkToken(tokenDto);
         if (user == null) {
             logger.error("Invalid token");
             return Response.status(401).entity("Invalid token").build();
@@ -199,13 +204,18 @@ public class AuthenticationService {
         }
     }
 
-    public UserDto validateToken(String authenticationToken) throws WebApplicationException {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
+    public UserDto validateAuthenticationToken(String token) throws WebApplicationException {
+        if (token == null || token.trim().isEmpty()) {
             throw new WebApplicationException(Response.status(401).entity("Missing token").build());
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenbean.checkToken(tokenDto, TokenType.AUTHENTICATION);
+        TokenDto tokenDto = tokenbean.getTokenByValue(token);
+        if(tokenDto == null){
+            throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
+        }
+        if(tokenbean.isTokenExpired(tokenDto, TokenType.AUTHENTICATION)) {
+            throw new WebApplicationException(Response.status(401).entity("Expired token").build());
+        }
+        UserDto user = tokenbean.checkToken(tokenDto);
         if (user == null) {
             throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
         }

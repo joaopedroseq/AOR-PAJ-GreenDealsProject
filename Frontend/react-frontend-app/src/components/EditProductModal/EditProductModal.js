@@ -1,11 +1,7 @@
 import { React } from "react";
 import "./editProductModal.css";
 import { useCategoriesStore } from "../../Stores/useCategoriesStore";
-import { useForm } from "react-hook-form";
-import {
-  showErrorToast,
-} from "../../Utils/ToastConfig/toastConfig";
-import { updateProduct } from "../../Api/productApi";
+import { useForm } from "react-hook-form";import { updateProduct } from "../../Api/productApi";
 import useUserStore from "../../Stores/useUserStore";
 import { renderCategoryDropdown } from "../../Handles/renderCategoryDropdown";
 import { useIntl } from "react-intl";
@@ -16,7 +12,7 @@ const EditProductModal = ({
   product,
   toggleEditProductModal,
   isEditProductModalVisible,
-  updatedProduct,
+  setIsProductUpdated,
   locale,
 }) => {
   const intl = useIntl();
@@ -26,13 +22,12 @@ const EditProductModal = ({
   const token = useUserStore((state) => state.token);
   const { register, handleSubmit, reset } = useForm();
 
-
   const onSubmit = async (editedInformation) => {
     const parsedCategory =
       typeof editedInformation.editCategory === "string"
         ? JSON.parse(editedInformation.editCategory)
         : editedInformation.editCategory;
-  
+
     const editedProduct = {
       name: editedInformation.editName,
       description: editedInformation.editDescription,
@@ -42,7 +37,7 @@ const EditProductModal = ({
       urlImage: editedInformation.editUrlImage,
       state: editedInformation.editState,
     };
-  
+
     const updates = {};
     for (const attribute in editedProduct) {
       if (attribute === "category") {
@@ -54,7 +49,7 @@ const EditProductModal = ({
       }
     }
     if (Object.keys(updates).length === 0) {
-      handleNotification(intl, "error", "editProductModalNoChanges");
+      handleNotification(intl, "info", "editProductModalNoChanges");
       reset();
       toggleEditProductModal();
     } else {
@@ -62,7 +57,7 @@ const EditProductModal = ({
         await updateProduct(updates, token, product.id);
         handleNotification(intl, "success", "editProductModalSuccessMessage");
         reset();
-        updatedProduct();
+        setIsProductUpdated(true);
         toggleEditProductModal();
       } catch (error) {
         handleNotification(intl, "error", `error${error.message}`);
@@ -70,11 +65,11 @@ const EditProductModal = ({
     }
   };
 
-const onError = (errors) => {
-  Object.keys(errors).forEach((errorKey) => {
-    handleNotification(intl, "error", `editProductModalError${errorKey}`);
-  });
-};
+  const onError = (errors) => {
+    Object.keys(errors).forEach((errorKey) => {
+      handleNotification(intl, "error", `editProductModalError${errorKey}`);
+    });
+  };
 
   if (!product) {
     return null;
@@ -189,13 +184,15 @@ const onError = (errors) => {
                       id: "editProductModalSelectStatePlaceholder",
                     })}
                   </option>
-                  {["RASCUNHO", "DISPONIVEL", "RESERVADO", "COMPRADO"].map(
-                    (state) => (
-                      <option key={state} value={state}>
-                        {productStateTranslations[locale][state]}
-                      </option>
-                    )
-                  )}
+                  {[
+                    { label: "RASCUNHO", value: "DRAFT" },
+                    { label: "DISPONIVEL", value: "AVAILABLE" },
+                    { label: "RESERVADO", value: "RESERVED" },
+                  ].map((state) => (
+                    <option key={state.value} value={state.value}>
+                      {productStateTranslations[locale][state.label]}
+                    </option>
+                  ))}
                 </select>
               </div>
 

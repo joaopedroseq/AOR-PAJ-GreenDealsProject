@@ -13,10 +13,8 @@
   text-align: left;
   font-family: "Montserrat";
   color: var(--darkGreen);
+  font-size: 38px;
 }
-
-
-
 
 .product-image {
   max-width: 100%; /* Image scales responsively to fit within column */
@@ -53,12 +51,12 @@
   text-align: start; /* Align text content to the left */
   flex: 1; /* Allow this column to fill the remaining space */
 }
-
-
   
 .product-details p {
   text-align:left; /* Center-align text content */
   margin: 10px 0; /* Maintain vertical spacing */
+  font-size: 25px; /* Tamanho maior */
+  line-height: 2; /* Espaçamento entre linhas */
 }
 
 
@@ -74,8 +72,6 @@
   padding: 100px;
   width: 100vw;
   margin-left: 0;
-  font-size: 25px; /* Tamanho maior */
-  line-height: 2; /* Espaçamento entre linhas */
   margin-bottom: 100px; /* Espaço adicional entre o conteúdo e o rodapé */
   text-align: center; /* Centraliza o texto */
 }

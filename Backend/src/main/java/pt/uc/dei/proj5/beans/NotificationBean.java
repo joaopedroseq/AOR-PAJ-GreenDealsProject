@@ -51,6 +51,15 @@ public class NotificationBean {
         }
     }
 
+    public int getTotalNotifications(UserDto user) {
+        try {
+            return notificationDao.getTotalNotifications(user.getUsername());
+        } catch (Exception e) {
+            logger.error("Failed to get notifications from user " + user.getUsername());
+            return 0;
+        }
+    }
+
     public boolean readNotification(NotificationDto notificationDto, UserDto recipient) {
         try {
             return notificationDao.readNotification(notificationDto.getId(), recipient.getUsername());
@@ -87,7 +96,14 @@ public class NotificationBean {
         try {
             int numberUnreadMessages = messageDao.getUnreadMessageCount(recipientUsername, senderUsername);
             if (hasRecipientBeenNotified(senderUsername, recipientUsername)) {
-                return notificationDao.updateMessageNotification(senderUsername, recipientUsername, numberUnreadMessages);
+                if(notificationDao.updateMessageNotification(senderUsername, recipientUsername, numberUnreadMessages)) {
+                    NotificationEntity notification = notificationDao.getChatNotificationBetween(recipientUsername, senderUsername);
+                    wsNotifications.notifyUser(convertNotificationEntityToNotificationDto(notification));
+                    return true;
+                }
+                else {
+                    return false;
+                }
             } else {
                 NotificationEntity notificationEntity = new NotificationEntity();
                 notificationEntity.setType(NotificationType.MESSAGE);

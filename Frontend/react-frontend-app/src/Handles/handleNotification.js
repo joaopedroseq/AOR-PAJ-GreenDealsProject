@@ -1,4 +1,4 @@
-import { showSuccessToast, showErrorToast } from "../Utils/ToastConfig/toastConfig";
+import { showSuccessToast, showErrorToast, showInfoToast } from "../Utils/ToastConfig/toastConfig";
 
 const handleNotification = (intl, type, messageId, params = {}) => {
 
@@ -8,6 +8,8 @@ const handleNotification = (intl, type, messageId, params = {}) => {
     showSuccessToast(translatedMessage);
   } else if (type === "error") {
     showErrorToast(translatedMessage);
+  } else if (type === "info") {
+    showInfoToast(translatedMessage)
   }
 };
 

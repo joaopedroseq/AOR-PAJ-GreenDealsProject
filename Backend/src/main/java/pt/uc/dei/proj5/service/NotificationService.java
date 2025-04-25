@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.NotificationBean;
-import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.dto.*;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class NotificationService {
     private static final Logger logger = LogManager.getLogger(NotificationService.class);
 
     @Inject
-    TokenBean tokenBean;
+    AuthenticationService authenticationService;
 
     @Inject
     NotificationBean notificationBean;
@@ -25,22 +24,13 @@ public class NotificationService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getNotifications(@HeaderParam("token") String authenticationToken) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - getting notifications");
-            return Response.status(401).entity("Missing token").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
         }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (user == null) {
-            logger.error("Invalid token - getting notifications");
-            return Response.status(401).entity("Invalid token").build();
-        }
-        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-            logger.error("Permission denied - user {} tried get notifications with inactive or excluded account", user.getUsername());
-            return Response.status(403).entity("User has inactive or excluded account").build();
-        } else {
-            List<NotificationDto> notificationDtos = notificationBean.getNotifications(user);
+        List<NotificationDto> notificationDtos = notificationBean.getNotifications(user);
             if (notificationDtos == null) {
                 logger.error("No notifications - getting notifications - user {} tried get notifications", user.getUsername());
                 return Response.status(404).entity("No notifications - getting notifications").build();
@@ -49,7 +39,6 @@ public class NotificationService {
                 return Response.status(200).entity(notificationDtos).build();
             }
         }
-    }
 
     @PATCH
     @Produces(MediaType.APPLICATION_JSON)
@@ -57,20 +46,11 @@ public class NotificationService {
     public Response readNotification(
             @HeaderParam("token") String authenticationToken,
             @PathParam("notificationId") Long notificationId) {
-        if (authenticationToken == null || authenticationToken.trim().isEmpty()) {
-            logger.error("Invalid token (null) - getting notifications");
-            return Response.status(401).entity("Missing token").build();
-        }
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setAuthenticationToken(authenticationToken);
-        UserDto user = tokenBean.checkToken(tokenDto, TokenType.AUTHENTICATION);
-        if (user == null) {
-            logger.error("Invalid token - getting notifications");
-            return Response.status(401).entity("Invalid token").build();
-        }
-        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-            logger.error("Permission denied - user {} tried get notifications with inactive or excluded account", user.getUsername());
-            return Response.status(403).entity("User has inactive or excluded account").build();
+        UserDto user;
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();
         }
         if(notificationId == null) {
             logger.error("Invalid notification id - getting notifications");

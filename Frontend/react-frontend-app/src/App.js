@@ -7,6 +7,7 @@ import Footer from './Components/Footer/Footer';
 import User from './Pages/User/User';
 import Admin from './Pages/Admin/Admin';
 import Profile from './Pages/Profile/Profile';
+import Chat from './Pages/Chat/Chat';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
@@ -14,7 +15,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
 import useLocaleStore from './Stores/useLocaleStore';
-import ChatBox from './Components/ChatBox/chatBox';
 import Activate from './Pages/Activate/Activate';
 
 function App() {
@@ -30,9 +30,7 @@ function App() {
       <Routes>
       <Route path="/" element={<Homepage />} />
       <Route path="/detail" element={
-        <ProtectedRoute>
         <Detail locale={locale}/>
-      </ProtectedRoute>
       }/>
       <Route path="/user" element={
         <ProtectedRoute>
@@ -45,15 +43,17 @@ function App() {
         </ProtectedRoute>
       }/>
       <Route path="/profile" element={
-        <ProtectedRoute>
           <Profile />
+      }/>
+      <Route path="/chat" element={
+        <ProtectedRoute>
+          <Chat />
         </ProtectedRoute>
       }/>
       <Route path="/activate" element={
           <Activate />
       }/>
       </Routes>
-      <ChatBox/>
       <Footer/>
      <ToastContainer limit={3}/>
     </div>

@@ -15,6 +15,7 @@ import { getUserLogged } from "../../Api/authenticationApi";
 import { useIntl } from "react-intl";
 import handleLocaleChange from "../../Handles/handleLocaleChange";
 import handleNotification from "../../Handles/handleNotification";
+import useWebSocketNotifications from "../../Websockets/useWebSocketNotifications";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
@@ -28,7 +29,11 @@ const Header = () => {
   const [urlPhoto, setUrlPhoto ] = useState(null);
   //Toggle do login form
   const [ showLoginForm, setShowLoginForm] = useState(false);
+  //notifications
+  const { notificationCount } = useWebSocketNotifications(isAuthenticated);
 
+
+  
   //Toggle do aside (através do botão hamburguer)
     const [isAsideVisible, setAsideVisible] =
       useState(false);
@@ -52,10 +57,11 @@ const Header = () => {
         }
       };
       getUserInfo();
+
     }
   }, [isAuthenticated, token]);
 
-  
+
   //operação de logout - chamada ao cleardo user store
   const handleLogout = async (event) => {
     event.preventDefault();
@@ -113,68 +119,56 @@ const Header = () => {
       </div>
       {/*Logo GreenDeals*/}
       <div className="logo">
-        <nav>
           <Link to="/">
             <img className="logo-img" src={logo} alt="logo" />
           </Link>
-        </nav>
       </div>
 
-      {/*Verifica se há um utilizador autenticado para renderizar estes botões, caso contrário não os renderiza*/}
-      {isAuthenticated ? (
-        <>
-          <div className="headerDiv">
-              <input
-                type="button"
-                className="sellProductButton"
-                id="add-product-btn"
-                value={intl.formatMessage({ id: 'sellProductButton' })}
-                onClick={toggleProductModal}
-              ></input>
-            </div>
-          <div className="headerDiv">
-            <Link to="/user">
-              <input
-                type="button"
-                className="userPageButton"
-                id="userAreaBtn"
-                value={intl.formatMessage({ id: 'profileButton' })}
-              />
-            </Link>
-          </div>
-          <div className="headerDiv">            
-              <input
-                type="submit"
-                className="logoutButton"
-                id="logoutButton"
-                value={intl.formatMessage({ id: 'logoutButton' })}
-                size="12px"
-                onClick={handleLogout}
-              ></input>
-            </div>
-
-          {/*Mensagem de boas vindas e botão de logout - não apresentado a menos que utilizador faça login*/}
-            <div className="headerDiv">
-            <h4 className="loginMessage" id="mensagem_boasVindas">
-            {intl.formatMessage({ id: 'welcomeMessage' }, { firstName })}
-            </h4>
-              <img
-                id="loginPhoto"
-                className="loginPhoto"
-                src={urlPhoto}
-                alt="loginPhoto"
-              />
-          </div>
-          <SellProductModal
-            toggleProductModal={toggleProductModal}
-            isProductModalVisible={isProductModalVisible}
-            token={token}
-            locale={locale}
-          />
-        </>
-      ) : (
-        <>
-          {/*Botão de login- não apresentado se o utilizado fizer login
+          
+  {isAuthenticated ? (
+    <>
+    <div className="headerDiv">
+      <input
+        type="button"
+        className="sellProductButton"
+        id="add-product-btn"
+        value={intl.formatMessage({ id: 'sellProductButton' })}
+        onClick={toggleProductModal}
+      ></input>
+    </div>
+    <div className="headerDiv">
+      <Link to="/user">
+        <input
+          type="button"
+          className="userPageButton"
+          id="userAreaBtn"
+          value={intl.formatMessage({ id: 'profileButton' })}
+        />
+      </Link>
+    </div>
+    <div className="headerDiv">      
+      <input
+        type="submit"
+        className="logoutButton"
+        id="logoutButton"
+        value={intl.formatMessage({ id: 'logoutButton' })}
+        size="12px"
+        onClick={handleLogout}
+      ></input>
+    </div>
+    <div className="headerDiv">
+      <img
+        id="loginPhoto"
+        className="loginPhoto"
+        src={urlPhoto}
+        alt="loginPhoto"
+      />
+    <span className="notificationBadge">{notificationCount}</span>
+    </div>
+    </>
+  ) : (
+    <>
+       {/*Botão de login- não apresentado se o utilizado fizer login
           é também utilizado para mostrar o login form*/}
           <div className="login" id="loginButton">
             <img src={loginPhoto} height="50px" alt='user logged'
@@ -192,11 +186,18 @@ const Header = () => {
               locale={locale}
             />
           </div>
-        </>
-      )}
+          </>
+  )}
+
+          <SellProductModal
+            toggleProductModal={toggleProductModal}
+            isProductModalVisible={isProductModalVisible}
+            token={token}
+            locale={locale}
+          />
       <Aside
       isAsideVisible={isAsideVisible}/>
-    </div>
+      </div>
   );
 };
 
