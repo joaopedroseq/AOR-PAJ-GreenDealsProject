@@ -74,7 +74,7 @@ public class wsChat {
             }
             case "MESSAGE": {
                 if (!checkIfValidMessage(jsonMessage)) {
-                    session.getBasicRemote().sendText(JsonCreate.createJson("ERROR", "message", "Invalid message format").toString());
+                    session.getBasicRemote().sendText(JsonCreator.createJson("ERROR", "message", "Invalid message format").toString());
                 } else {
                     String recipient = jsonMessage.getString("recipient").trim();
                     String message = jsonMessage.getString("message").trim();
@@ -92,14 +92,14 @@ public class wsChat {
                                     recipientSession.getBasicRemote().sendText(messageJson.toString());
                                 }
                             }
-                            JsonObject confirmationJson = JsonCreate.createJson("SUCESS", "message", new String("Sent message sucessfully"));
+                            JsonObject confirmationJson = JsonCreator.createJson("SUCESS", "message", new String("Sent message sucessfully"));
                             session.getBasicRemote().sendText(confirmationJson.toString());
                         } else {
                             notificationBean.newMessageNotification(message, sender, recipient);
                         }
                     } else {
                         logger.info("Recipient {} does not exist", recipient);
-                        JsonObject errorJson = JsonCreate.createJson("ERROR", "message", new String("User recipient does not exist"));
+                        JsonObject errorJson = JsonCreator.createJson("ERROR", "message", new String("User recipient does not exist"));
                         session.getBasicRemote().sendText(errorJson.toString());
                     }
                 }

@@ -63,7 +63,6 @@ export const Detail = () => {
         if (productData.length > 1) {
             throw new Error("Invalid product - non unique product Id");
         }
-        productData = productData[INDEX_OF_PRODUCT];
         productData.date = transformArrayDatetoDate(productData.date);
         setProduct(productData);
     } catch (error) {
@@ -74,7 +73,7 @@ export const Detail = () => {
 
 useEffect(() => {
   fetchProduct();
-}, []); // Runs only when the component mounts
+}, []);
 
 useEffect(() => {
   if (product) {

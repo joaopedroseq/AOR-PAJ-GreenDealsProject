@@ -57,19 +57,36 @@ public class ProductService {
         Order order;
         UserDto user = null;
         if (authenticationToken != null) {
-            TokenDto tokenDto = new TokenDto();
-            tokenDto.setTokenValue(authenticationToken);
-            user = tokenBean.checkToken(tokenDto);
-            if (user == null || user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
-                logger.error("Permission denied - user {} trying to get products with inactive or excluded account", user.getUsername());
-                return Response.status(403).entity("User has inactive or excluded account").build();
+            try {
+                user = authenticationService.validateAuthenticationToken(authenticationToken);
+            } catch (WebApplicationException e) {
+                return e.getResponse();
+            }
+        }
+        //Caso o request é para um produto especifico (tem um id)
+        if (id != null && !id.isEmpty()) {
+            if (!ProductBean.checkIfValidId(id)) {
+                logger.error("Error - {} getting all products of id {} because it's invalid", user.getUsername(), id);
+                return Response.status(404).entity("Invalid Product Id").build();
+            } else {
+                ProductDto product = productBean.findProductById(Long.parseLong(id));
+                if (product.getState() == ProductStateId.DRAFT) {
+                    if ((product.getSeller() != user.getUsername()) && !user.getAdmin()) {
+                        logger.info("Forbidden getting a draft");
+                        return Response.status(403).entity("Permission denied").build();
+                    }
+                }
+                if (product != null) {
+                    logger.info("Getting specific product");
+                    return Response.status(200).entity(product).build();
+                }
             }
         }
         order = resolveOrder(ordering);
         parameter = resolveParameter(param);
         //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
         // apenas poderá procurar productos DISPONÍVEL, produtos não excluídos e não editados (edited == true)
-        if (user == null && (username != null || excluded != null || edited)) {
+        if (user == null && (username != null || edited)) {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         } else if (user == null) {
@@ -77,11 +94,6 @@ public class ProductService {
             if (products != null) {
                 logger.info("Getting all products for unlogged user");
                 return Response.status(200).entity(products).build();
-            }
-        } else if (id != null && !id.isEmpty()) {
-            if (!ProductBean.checkIfValidId(id)) {
-                logger.error("Error - {} getting all products of id {} because it's invalid", user.getUsername(), id);
-                return Response.status(404).entity("Invalid Product Id").build();
             }
         }
         if (username != null) {
@@ -181,7 +193,7 @@ public class ProductService {
                     productDto.setBuyer(user.getUsername());
                     if (productBean.updateProduct(productDto)) {
                         notificationBean.newProductNotification(NotificationType.PRODUCT_BOUGHT, product.getSeller(), user.getUsername(), product);
-                        wsProducts.broadcastProduct(productDto, "UPDATE");
+                        wsProducts.broadcastProduct(productBean.findProductById(pathProductId), "UPDATE");
                         logger.info("User {} bought ", user.getUsername(), product.getSeller());
                         return Response.status(200).entity("Bought product").build();
                     } else {
@@ -213,7 +225,7 @@ public class ProductService {
                 if (!isOwner) {
                     notificationBean.newProductNotification(NotificationType.PRODUCT_ALTERED, product.getSeller(), user.getUsername(), product);
                 }
-                wsProducts.broadcastProduct(productDto, "UPDATE");
+                wsProducts.broadcastProduct(productBean.findProductById(pathProductId), "UPDATE");
                 logger.info("{} updated product {}", user.getUsername(), product.getId());
                 return Response.status(200).entity("Updated product").build();
             } else {

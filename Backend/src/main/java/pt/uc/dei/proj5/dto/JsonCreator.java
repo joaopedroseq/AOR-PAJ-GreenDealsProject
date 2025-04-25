@@ -8,7 +8,7 @@ import jakarta.json.JsonReader;
 
 import java.io.StringReader;
 
-public class JsonCreate {
+public class JsonCreator {
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     static {

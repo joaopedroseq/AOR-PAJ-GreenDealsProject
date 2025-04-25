@@ -1,7 +1,5 @@
 package pt.uc.dei.proj5.websocket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -13,7 +11,7 @@ import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.dto.JsonCreate;
+import pt.uc.dei.proj5.dto.JsonCreator;
 import pt.uc.dei.proj5.dto.UserDto;
 
 import java.io.IOException;
@@ -65,7 +63,7 @@ public class WsUsers {
     }
 
     public void broadcastUser(UserDto userDto, String type) {
-        JsonObject userJson = JsonCreate.createJson(type, "user", userDto);
+        JsonObject userJson = JsonCreator.createJson(type, "user", userDto);
         if (userJson != null) {
             String userJsonString = userJson.toString(); // Convert once
             // Send product update to all active sessions

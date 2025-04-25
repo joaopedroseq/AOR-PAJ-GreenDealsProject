@@ -32,7 +32,7 @@ const useProductStore = create((set, get) => ({
       set({
         filters: {
           seller: null,
-          excluded: null,
+          excluded: false,
           edited: null,
           category: null,
           state: null,

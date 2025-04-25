@@ -134,17 +134,20 @@ public class ProductDao extends AbstractDao<ProductEntity> {
             );
             predicates.add(stateSearchPredicate);
         }
-        if (excluded == null || excluded) {
-            Predicate excludedSearchPredicate = cb.or(
+        Predicate excludedSearchPredicate = null;
+        if(excluded == null) {
+            excludedSearchPredicate = cb.or(
                     cb.equal(root.get("excluded"), true),
                     cb.equal(root.get("excluded"), false)
             );
-            predicates.add(excludedSearchPredicate);
         }
-        else {
-            Predicate excludedSearchPredicate = cb.equal(root.get("excluded"), false);
-            predicates.add(excludedSearchPredicate);
+        else if(excluded) {
+            excludedSearchPredicate = cb.equal(root.get("excluded"), true);
         }
+        else if(!excluded) {
+            excludedSearchPredicate = cb.equal(root.get("excluded"), false);
+        }
+        predicates.add(excludedSearchPredicate);
         if (category != null) {
             predicates.add(cb.equal(root.get("category").get("nome"), category));
         }

@@ -45,8 +45,8 @@ const Aside = ({ isAsideVisible }) => {
     fetchCategories();
   }, [token, page, fetchCategories]);
 
-  const handleCategoryClick = (category, edited, user = null) => {
-    setFilters({ category: category || null, edited: edited || false });
+  const handleCategoryClick = (category, edited, user = null, ) => {
+    setFilters({ category: category || null, edited: edited || null});
     if (["/user", "/admin", "/profile"].includes(page)) {
       fetchProducts(token);
     } else {

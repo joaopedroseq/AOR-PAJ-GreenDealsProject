@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import pt.uc.dei.proj5.dao.ProductDao;
-import pt.uc.dei.proj5.dao.TokenDao;
 import pt.uc.dei.proj5.dao.UserDao;
 import pt.uc.dei.proj5.dto.*;
 import pt.uc.dei.proj5.entity.ProductEntity;

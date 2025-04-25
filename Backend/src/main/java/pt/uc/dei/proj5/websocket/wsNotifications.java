@@ -1,13 +1,9 @@
 package pt.uc.dei.proj5.websocket;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 import jakarta.json.Json;
-import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import jakarta.websocket.*;
@@ -22,7 +18,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -93,7 +88,7 @@ public class wsNotifications {
         }
         try {
             int notificationsCount = notificationBean.getTotalNotifications(new UserDto(recipientUsername));
-            JsonObject notificationsJson = JsonCreate.createJson("NOTIFICATION_COUNT", "count", notificationsCount);
+            JsonObject notificationsJson = JsonCreator.createJson("NOTIFICATION_COUNT", "count", notificationsCount);
             String notificationJsonString = notificationsJson.toString();
             // Send notifications to all active sessions
             for (Session session : recipientSessions) {

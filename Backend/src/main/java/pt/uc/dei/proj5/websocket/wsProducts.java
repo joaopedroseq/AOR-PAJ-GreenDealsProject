@@ -1,27 +1,17 @@
 package pt.uc.dei.proj5.websocket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
-import jakarta.inject.Inject;
-import jakarta.json.Json;
 import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
 import jakarta.websocket.*;
 import jakarta.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import pt.uc.dei.proj5.beans.TokenBean;
-import pt.uc.dei.proj5.dto.JsonCreate;
+import pt.uc.dei.proj5.dto.JsonCreator;
 import pt.uc.dei.proj5.dto.ProductDto;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.ByteBuffer;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +35,7 @@ public class wsProducts {
 
     public void broadcastProduct(ProductDto productDto, String type) {
         System.out.println(productDto);
-        JsonObject productJson = JsonCreate.createJson(type, "product", productDto);
+        JsonObject productJson = JsonCreator.createJson(type, "product", productDto);
         if (productJson != null) {
             String productJsonString = productJson.toString();
             for (Session session : sessions) {
