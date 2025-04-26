@@ -373,9 +373,14 @@ const pt = {
   handleChangeUserInformationSucess: "Alterações efetuadas com sucesso",
 
   //NotificationsWebsockets
-  wsNotificationsUnreadMessages: "Tem {numMessages} mensagens de {username} por ler",
+  wsNotificationsLastMessage: "{sender} está a tentar falar consigo: \"{message}\" a {timestamp}",
+  wsNotificationsUnreadMessages: "Tem {numMessages} mensagens de {sender} por ler",
   wsNotificationsProductAltered: "Administrador {username} alterou o seu produto",
   wsNotificationsProductBought: "Utilizador {username} comprou um produto seu",
+
+  //Chat
+  chatWsClosedMessageSent:"Houve um problema mas a sua mensagem foi enviada",
+  chatWsClosedMessageNotSent:"Houve um problema e a sua mensagem não foi enviada. Tente outra vez",
 
 
 

@@ -92,14 +92,10 @@ export const updateUserInformation = async (token, username, userInformation) =>
 //GET de todas as informações de todos os utilizadores regulares (não admin)
 export const getAllUsers = async (token) => {
   try {
-    const response = await axios.get(`${userEndpoint}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          'token': token
-        }
-      },
-    );
+    const headers = token 
+      ? { headers: { "Content-Type": "application/json", "token": token } } 
+      : { headers: { "Content-Type": "application/json" } };
+    const response = await axios.get(`${userEndpoint}`, headers);
     return response.data;
   } catch (error) {
     if (error.response) {

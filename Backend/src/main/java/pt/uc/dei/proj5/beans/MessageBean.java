@@ -31,49 +31,46 @@ public class MessageBean implements Serializable {
     @Inject
     NotificationDao notificationDao;
 
-    public List<MessageDto> getMessagesBetween (UserDto user, UserDto otherUser) {
+    public List<MessageDto> getMessagesBetween(UserDto user, UserDto otherUser) {
         try {
             List<MessageEntity> messageEntities = messageDao.getListOfMessagesBetween(user.getUsername(), otherUser.getUsername());
             List<MessageDto> messageDtos = messageEntities.stream()
                     .map(this::convertMessageEntityToMessageDto)
                     .collect(Collectors.toList());
             return messageDtos;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e);
             return null;
         }
     }
 
-    public List<UserDto> getAllChats (UserDto user) {
+    public List<UserDto> getAllChats(UserDto user) {
         try {
             return messageDao.getAllConversations(user.getUsername());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error(e);
             return null;
         }
     }
 
-    public List<MessageNotificationDto> getMessagesNotificationsForUser(String recipientUsername) {
-        try{
-            return messageDao.getMessageNotifications(recipientUsername);
-        }
-        catch (Exception e) {
+    public boolean readAllConversation(String recipient, String sender) {
+        try {
+            messageDao.readConversation(recipient, sender);
+            return true;
+        } catch (Exception e) {
             logger.error(e);
-            return null;
+            return false;
         }
     }
 
-    public boolean newMessage(MessageDto messageDto) {
+    public MessageDto newMessage(MessageDto messageDto) {
         try {
             MessageEntity newMessageEntity = convertMessageDtoToMessageEntity(messageDto);
             messageDao.persist(newMessageEntity);
-            return true;
-        }
-        catch(Exception e) {
+            return convertMessageEntityToMessageDto(newMessageEntity);
+        } catch (Exception e) {
             logger.error(e);
-            return false;
+            return null;
         }
     }
 

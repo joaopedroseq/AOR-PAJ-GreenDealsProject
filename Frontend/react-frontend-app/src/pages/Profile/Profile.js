@@ -3,7 +3,7 @@ import placeholder from "../../Assets/placeholder/item.png";
 import exclude from "../../Assets/icons/exclude.png";
 import deleteProducts from "../../Assets/icons/deleteProducts.png";
 import deleteUser from "../../Assets/icons/deleteUser.png";
-import chatButton from "../../Assets/icons/chat.png";
+import { FaPaperPlane } from "react-icons/fa";
 import "./profile.css";
 import { useForm } from "react-hook-form";
 import handleGetUserInformation from "../../Handles/handleGetUserInformation";
@@ -19,8 +19,12 @@ import ProductCard from "../../Components/ProductCard/ProductCard";
 import { useIntl } from "react-intl";
 import handleNotification from "../../Handles/handleNotification.js";
 import { handleExcludingUser, handleDeletingUserProducts, handleDeletingUser } from '../../Handles/handleUserOperations';
+import useWebSocketProducts from '../../Websockets/useWebSocketProducts';
+
 
 export const Profile = () => {
+  //Websocket
+  const { websocket } = useWebSocketProducts();
   const token = useUserStore((state) => state.token);
   const username = new URLSearchParams(useLocation().search).get("username");
   const navigate = useNavigate();
@@ -81,10 +85,10 @@ export const Profile = () => {
   useEffect(() => {
     try {
     if (userProfile?.username) {
-      let username = userProfile.username;
-      let excluded = isAdmin ? true : false;
+      let seller = userProfile.username;
+      let excluded = isAdmin ? null : false;
       let state = isAdmin || isOwner ? "DRAFT" : undefined;
-      setFilters({ username, excluded, state });
+      setFilters({ seller, excluded, state });
       fetchProducts(token);
     }
    } catch (error) {
@@ -352,11 +356,7 @@ export const Profile = () => {
                   )}
                   {!isOwner && (
                   <div>
-                    <img
-                      src={chatButton}
-                      alt="chat with user"
-                      className="chatWithUserBtn"
-                    />
+                    <FaPaperPlane />
                   </div>
                   )}
                 </form>

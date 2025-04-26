@@ -45,7 +45,6 @@ public class wsChat {
     @OnClose
     public void onClose(Session session, CloseReason reason) {
         String username = WebSocketAuthentication.findUsernameBySession(sessions, session);
-
         if (username != null) {
             Set<Session> userSessions = sessions.get(username);
             if (userSessions != null) {
@@ -73,25 +72,16 @@ public class wsChat {
                 break;
             }
             case "MESSAGE": {
+                System.out.println(msg);
                 if (!checkIfValidMessage(jsonMessage)) {
                     session.getBasicRemote().sendText(JsonCreator.createJson("ERROR", "message", "Invalid message format").toString());
                 } else {
                     String recipient = jsonMessage.getString("recipient").trim();
                     String message = jsonMessage.getString("message").trim();
                     String sender = WebSocketAuthentication.findUsernameBySession(sessions, session);
-                    if (sender == null) {
-                        session.close();
-                        return;
-                    }
                     if (userBean.checkIfUserExists(recipient)) {
                         JsonObject messageJson = archiveNewMessage(message, sender, recipient);
-                        Set<Session> recipientSessions = sessions.get(recipient);
-                        if (recipientSessions != null) {
-                            for (Session recipientSession : recipientSessions) {
-                                if (recipientSession.isOpen()) {
-                                    recipientSession.getBasicRemote().sendText(messageJson.toString());
-                                }
-                            }
+                        if(sendMessageToUser(messageJson, recipient)) {
                             JsonObject confirmationJson = JsonCreator.createJson("SUCESS", "message", new String("Sent message sucessfully"));
                             session.getBasicRemote().sendText(confirmationJson.toString());
                         } else {
@@ -104,25 +94,50 @@ public class wsChat {
                     }
                 }
             }
+            case "CONVERSATION_READ": {
+                String sender = jsonMessage.getString("sender").trim();
+                String recipient = session.getId();
+                JsonObject conversationRead = JsonCreator.createJson("CONVERSATION_READ", "sender", sender);
+                sendMessageToUser(conversationRead, recipient);
+            }
             default:
                 logger.info("Received unknown message type: " + messageType);
         }
     }
 
-    private JsonObject archiveNewMessage(String message, String sender, String recipient) {
+    public boolean sendMessageToUser(JsonObject messageJson, String recipientUsername){
+        Set<Session> recipientSessions = sessions.get(recipientUsername);
+        if (recipientSessions != null) {
+            for (Session recipientSession : recipientSessions) {
+                if (recipientSession.isOpen()) {
+                    try {
+                        recipientSession.getBasicRemote().sendText(messageJson.toString());
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public JsonObject archiveNewMessage(String message, String sender, String recipient) {
         LocalDateTime timestamp = LocalDateTime.now();
         MessageDto messageDto = new MessageDto(message, sender, recipient, timestamp);
-
-        if (messageBean.newMessage(messageDto)) {
+        messageDto = messageBean.newMessage(messageDto);
+        if(messageDto != null) {
             return Json.createObjectBuilder()
                     .add("type", "MESSAGE")
+                    .add("id", messageDto.getMessageId())
                     .add("sender", sender)
                     .add("recipient", recipient)
                     .add("message", message)
                     .add("timestamp", timestamp.toString())
                     .build();
         }
-
         return Json.createObjectBuilder()
                 .add("type", "ERROR")
                 .add("message", "Message failed to archive")
@@ -144,6 +159,7 @@ public class wsChat {
     public void handlePing(Session session, PongMessage pongMessage) {
         logger.info("Received WebSocket PONG from session {}: {}", session.getId(), pongMessage);
     }
+
 
     @Schedule(second = "*/60", minute = "*", hour = "*")
     private void pingUsers() {

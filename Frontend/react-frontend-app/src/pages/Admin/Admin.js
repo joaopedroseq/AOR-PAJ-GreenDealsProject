@@ -16,9 +16,13 @@ import { useIntl } from "react-intl";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import handleNotification from "./../../Handles/handleNotification";
 import { handleExcludingUser, handleDeletingUserProducts, handleDeletingUser } from '../../Handles/handleUserOperations';
+import useWebSocketProducts from '../../Websockets/useWebSocketProducts';
 
 
 export const Admin = () => {
+  //Websocket
+  const { websocket } = useWebSocketProducts();
+
   const token = useUserStore((state) => state.token);
   const navigate = useNavigate();
 
@@ -68,7 +72,7 @@ export const Admin = () => {
           handleNotification(intl, "info", "adminNoPermission");
           navigate("/");
         } else {
-          setFilters({ category: null, username: null, excluded: null, state: "DRAFT" }); //excluded null to get both excluded and not
+          setFilters({ category: null, seller: null, excluded: null, state: "DRAFT" }); //excluded null to get both excluded and not
           await fetchProducts(token);
           const users = await handleGetAllUsers(token, intl);
           setAllUsers(users);

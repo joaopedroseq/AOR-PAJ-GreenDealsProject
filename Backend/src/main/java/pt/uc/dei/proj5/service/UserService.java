@@ -84,26 +84,6 @@ public class UserService {
         }
     }
 
-    //Get All Regular Users
-    @GET
-    public Response getAllUsers(@HeaderParam("token") String authenticationToken) {
-        UserDto user;
-        try {
-            user = authenticationService.validateAuthenticationToken(authenticationToken);
-        } catch (WebApplicationException e) {
-            return e.getResponse();
-        }// Directly return HTTP response
-        if (!user.getAdmin()) {
-            logger.error("User {} tried to get all user's information without admin permissions", user.getUsername());
-            return Response.status(403).entity("User does not have admin permission to views other user's information").build();
-        } else {
-            ArrayList<UserDto> users = userbean.getAllUsers();
-            logger.info("User {} accessed to get all user's information", user.getUsername());
-            return Response.status(200).entity(users).build();
-        }
-    }
-
-
     @PATCH
     @Path("/{username}/exclude")
     public Response excludeUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserExclude) {
@@ -213,20 +193,22 @@ public class UserService {
                                        @QueryParam("state") String stateToSearch,
                                        @QueryParam("parameter") String parameterToOrder,
                                        @QueryParam("order") String orderBy) {
-        UserDto user;
-        try {
-            user = authenticationService.validateAuthenticationToken(authenticationToken);
-        } catch (WebApplicationException e) {
-            return e.getResponse();
-        }// Directly return HTTP response
+        UserDto user = null;
         String username = null;
         String firstName = null;
         String lastName = null;
         String email = null;
         String phone = null;
         UserAccountState state = null;
-        if (!user.getAdmin()) {
-            state = UserAccountState.ACTIVE;
+        if(authenticationToken!=null && !authenticationToken.isEmpty()) {
+            try {
+                user = authenticationService.validateAuthenticationToken(authenticationToken);
+            } catch (WebApplicationException e) {
+                return e.getResponse();
+            }
+            if (user.getAdmin()) {
+                state = UserAccountState.EXCLUDED;
+            }
         }
         UserParameter parameter = UserParameter.USERNAME;
         Order order = Order.asc;
@@ -265,10 +247,8 @@ public class UserService {
         }
         Set<UserDto> users = userbean.getUsers(username, firstName, lastName, email, phone, state, parameter, order);
         if (users != null) {
-            logger.info("{} getting users", user.getUsername(), username);
             return Response.status(200).entity(users).build();
         } else {
-            logger.info("Error - {} getting users", user.getUsername(), username);
             return Response.status(404).entity("Error getting users").build();
         }
     }

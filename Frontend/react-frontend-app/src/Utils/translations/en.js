@@ -361,9 +361,14 @@ const en = {
   categoryListAllProducts: "All products",
 
   //NotificationsWebsockets
-  wsNotificationsUnreadMessages: "You have {numMessages} messages to read from {username}",
+  wsNotificationsLastMessage: "{sender} wants to talk to you:\"{message}\" at {timestamp}",
+  wsNotificationsUnreadMessages: "You have {numMessages} messages from {sender} to read",
   wsNotificationsProductAltered: "Admin {username} changed your product",
   wsNotificationsProductBought: "User {username} has bought one of your products",
+
+  //Chat
+  chatWsClosedMessageSent:"There was a problem but your message was sent",
+  chatWsClosedMessageNotSent:"There was a problem. Your message wasn't sent. Try again",
 
   //Errors
   errorerrorNetwork_error:

@@ -57,6 +57,19 @@ public class MessageDao extends AbstractDao<MessageEntity> {
         }
     }
 
+    public boolean readConversation(String recipient, String sender) {
+        try {
+            em.createNamedQuery("MessageEntity.readConversation")
+                    .setParameter("recipient_username", recipient)
+                    .setParameter("sender_username", sender)
+                    .executeUpdate();
+            return true;
+        } catch (Exception e) {
+            logger.error("Error reading conversation", e);
+            return false;
+        }
+    }
+
     public List<MessageNotificationDto> getMessageNotifications(String recipientUsername) {
         try {
             List<MessageNotificationDto> results = em.createNamedQuery("MessageEntity.getMessageNotifications", MessageNotificationDto.class).setParameter("recipient_username", recipientUsername).getResultList();

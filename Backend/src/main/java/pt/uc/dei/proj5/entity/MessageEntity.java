@@ -42,6 +42,13 @@ import java.time.LocalDateTime;
                 "AND u.username != :user_username " + // Exclude the current user
                 "ORDER BY u.username ASC"
 )
+
+@NamedQuery(
+        name = "MessageEntity.readConversation",
+        query = "UPDATE MessageEntity m " +
+                "SET m.isRead = true " +
+                "WHERE m.recipient.username = :recipient_username AND m.sender.username = :sender_username"
+)
 @Entity
 @Table(name="message", indexes = {
         @Index(name = "idx_recipient_sender_unread", columnList = "recipient, sender, isRead"),

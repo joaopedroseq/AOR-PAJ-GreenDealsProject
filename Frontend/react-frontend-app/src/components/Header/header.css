@@ -12,7 +12,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidade */
   position: fixed;
   width: 100%;
-  height: auto;
+  height: 8vh;
   top: 0;
   z-index: 2; /*Index Z é 998 e deverá ser 999 para janelas abertas*/
 }

@@ -92,7 +92,7 @@ public class ProductDao extends AbstractDao<ProductEntity> {
     }
 
     //Criteria API query's
-    public List<ProductEntity> getFilteredProducts(String username, String id, String productName,
+    public List<ProductEntity> getFilteredProducts(String seller, String id, String productName,
                                                    ProductStateId productStateId, Boolean excluded, String category,
                                                    Boolean edited, ProductParameter paramId, Order orderId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
@@ -102,8 +102,8 @@ public class ProductDao extends AbstractDao<ProductEntity> {
         String orderBy = orderId.toString();
         String param = paramId.toString();
         //Adicionar predicados à query
-        if (username != null) {
-            predicates.add(cb.equal(root.get("seller").get("username"), username));
+        if (seller != null) {
+            predicates.add(cb.equal(root.get("seller").get("username"), seller));
         }
         if (id != null) {
             predicates.add(cb.equal(root.get("id"), id));

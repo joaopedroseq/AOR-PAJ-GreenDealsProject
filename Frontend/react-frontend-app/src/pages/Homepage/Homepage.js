@@ -1,4 +1,4 @@
-import React, {  use, useEffect } from "react";
+import React, {  useState, useEffect } from "react";
 import "./homepage.css";
 import leaf from "../../Assets/icons/leaf.png";
 import placeholder from '../../Assets/placeholder/item.png';
@@ -8,6 +8,9 @@ import useProductStore from "../../Stores/useProductStore";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { FormattedMessage } from "react-intl";
 import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
+import UserCard from "../../Components/UserCard/UserCard";
+import handleGetAllUsers from "../../Handles/handleGetAllUsers";
+import { useIntl } from "react-intl";
 
 
 //Homepage
@@ -16,18 +19,29 @@ const Homepage = () => {
   const fetchProducts = useProductStore((state) => state.fetchProducts);
   const { clearFilters } = useProductStore(); //talvez seja ainda necessário
 
+  //Users
+  const [allUsers, setAllUsers] = useState([]);
+
   //Opções de língua
+  //Internacionalização
+  const intl = useIntl();
   const locale = useLocaleStore((state) => state.locale);
 
   //WebSocketProducts
   // WebSocket for real-time product updates
-  const { websocket } = useWebSocketProducts();
+  const { websocketProducts } = useWebSocketProducts();
 
   //Popular a página com produtos
   useEffect(() => {
-    clearFilters();
-    fetchProducts(); // Fetch products on component mount
-  }, [clearFilters, fetchProducts]);
+    const gatherInformation = async() => {
+      clearFilters();
+      await fetchProducts(); // Fetch products on component mount
+      const users = await handleGetAllUsers(null, intl);
+      console.log(users);
+      setAllUsers(users);
+    };
+    gatherInformation();    
+  }, [clearFilters, fetchProducts, intl]);
 
   return (
     <div className="main-content-index">
@@ -57,6 +71,20 @@ const Homepage = () => {
           ))
         )}
       </div>
+      <section className="homepage-user-section" id="homepage-user-section">
+        <div id="homepage-user-container" className="homepage-user-container">
+          {allUsers.length === 0 ? (
+            <p>{intl.formatMessage({ id: "noUsersToShow"})}</p>
+          ) : (
+            allUsers.map((user, index) => (
+              <UserCard
+                key={user.id || index}
+                user={user}
+              />
+            ))
+          )}
+        </div>
+      </section>
       <div className="sustentabilityBannerSpan">
         <img
           className="sustentabilityBanner"

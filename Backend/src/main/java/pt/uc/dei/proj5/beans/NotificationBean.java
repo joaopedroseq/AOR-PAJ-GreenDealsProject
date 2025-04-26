@@ -79,8 +79,8 @@ public class NotificationBean {
             notificationEntity.setTimestamp(LocalDateTime.now());
             String notificationContent = switch (type) {
                 case MESSAGE -> "new message";
-                case PRODUCT_BOUGHT -> product.getId().toString();
-                case PRODUCT_ALTERED -> product.getId().toString();
+                case PRODUCT_BOUGHT -> product.getName();
+                case PRODUCT_ALTERED -> product.getName();
             };
             notificationEntity.setContent(notificationContent);
             notificationDao.persist(notificationEntity);
@@ -96,7 +96,7 @@ public class NotificationBean {
         try {
             int numberUnreadMessages = messageDao.getUnreadMessageCount(recipientUsername, senderUsername);
             if (hasRecipientBeenNotified(senderUsername, recipientUsername)) {
-                if(notificationDao.updateMessageNotification(senderUsername, recipientUsername, numberUnreadMessages)) {
+                if(notificationDao.updateMessageNotification(senderUsername, recipientUsername, numberUnreadMessages, message)) {
                     NotificationEntity notification = notificationDao.getChatNotificationBetween(recipientUsername, senderUsername);
                     wsNotifications.notifyUser(convertNotificationEntityToNotificationDto(notification));
                     return true;

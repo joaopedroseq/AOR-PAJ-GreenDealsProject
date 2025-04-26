@@ -43,9 +43,9 @@ public class ProductBean {
     }
 
     //Novo fetch
-    public Set<ProductDto> getProducts(String username, String id, String name, ProductStateId state, Boolean excluded, String category, Boolean edited, ProductParameter param, Order order) {
+    public Set<ProductDto> getProducts(String seller, String id, String name, ProductStateId state, Boolean excluded, String category, Boolean edited, ProductParameter param, Order order) {
         try{
-            List<ProductEntity> productEntities = productDao.getFilteredProducts(username, id, name, state, excluded, category, edited, param, order);
+            List<ProductEntity> productEntities = productDao.getFilteredProducts(seller, id, name, state, excluded, category, edited, param, order);
             Set<ProductDto> productSet = new LinkedHashSet<>();
             for(ProductEntity productEntity : productEntities){
                 ProductDto productDto = convertSingleProductEntitytoProductDto(productEntity);

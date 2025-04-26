@@ -22,6 +22,10 @@ function useWebSocketProducts() {
         if (key === "state" && product[key] === "DRAFT") {
           return false; // If state is null, product is DRAFT
         }
+        if(key === "excluded") {
+          console.log("comparing exclusion");
+          return false; //if the excluded is null, product exclusion must be false
+        }
         continue; // Skip filters that are not set
       }
       if (product[key] !== value) {
@@ -69,7 +73,6 @@ function useWebSocketProducts() {
   useEffect(() => {
     const ws = new WebSocket(WS_URL);
     ws.onopen = () => {
-      console.log("WebSocket connection established");
     };
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -78,7 +81,6 @@ function useWebSocketProducts() {
           handleProduct(data.product); // Call function instead of a hook
           break;
         case "UPDATE":
-          console.log("Product update:", data);
           handleProduct(data.product);
           break;
         case "PING":

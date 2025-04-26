@@ -1,91 +1,179 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
+import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import useMessageStore from "../../Stores/useMessageStore";
 import useUserStore from "../../Stores/useUserStore";
+import { FaPaperPlane } from "react-icons/fa";
+import { useIntl } from "react-intl";
+import useWebSocketChat from "../../Websockets/useWebSocketChat";
+import { sendMessageApi, readConversationApi } from "../../Api/messagesApi";
 import "./chat.css";
+import handleNotification from "../../Handles/handleNotification";
 
 export const Chat = () => {
+  const webSocketChat = useWebSocketChat();
+  const { sendMessage } = useWebSocketChat();
   const token = useUserStore((state) => state.token);
-  const { conversations, fetchAllConversations, messages, fetchUserConversation, resetMessages } = useMessageStore();
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [userUsername, setUsername ] = useState(null)
+  const { conversations, selectedUser, setSelectedUser, fetchAllConversations, messages, fetchUserConversation, addLocalMessage, updateMessageStatus  } = useMessageStore();
   const [messageInput, setMessageInput] = useState("");
+  const intl = useIntl();
 
   useEffect(() => {
+    const getUserInformation = async() =>{
       fetchAllConversations(token);
+      let userInformation = await getLoggedUserInformation(token, intl);
+      setUsername(userInformation.username);
+    }
+    getUserInformation();      
   }, [token]);
 
   useEffect(() => {
       if (selectedUser) {
-          fetchUserConversation(token, selectedUser.username);
+        readConversationApi(token, selectedUser.username);
+        fetchUserConversation(token, selectedUser.username);
       }
   }, [selectedUser]);
 
-  const handleSendMessage = () => {
+  useEffect(() => {
+    console.log(messages)
+}, [messages]);
+
+  const handleSendMessage = async () => {
       if (messageInput.trim() !== "") {
-          // Here you'd integrate WebSocket or API call to send the message
-          console.log(`Sending message to ${selectedUser.username}:`, messageInput);
-          setMessageInput(""); // Clear input after sending
+        // Create a temporary message with a local ID
+        const localId = `localId-${Date.now()}`;
+        const newMessage = {
+          messageId: localId,
+          message: messageInput,
+          sender: userUsername,
+          formattedTimestamp: new Date(),
+          status: 'sending'
+        };
+        addLocalMessage(newMessage);
+        setMessageInput(""); // Clear input after sending
+
+          if(sendMessage(selectedUser.username, messageInput)) {
+            updateMessageStatus(localId, 'not_read');
+          }
+          else {
+            try {
+              const response = await sendMessageApi(token, messageInput, selectedUser.username);
+              handleNotification(intl, "success", "chatWsClosedMessageSent");
+              updateMessageStatus(localId, 'sent');
+              setMessageInput(""); // Clear input after sending
+            }
+            catch(error) {
+              handleNotification(intl, "error", "chatWsClosedMessageSent");
+              updateMessageStatus(localId, 'failed');
+            }
+          }
+          
       }
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
-      <div className="chat-container">
-          {/* Sidebar */}
-          <aside className="chat-sidebar">
-              <h2>Messages</h2>
-              <ul>
-                  {conversations.map((user) => (
-                      <li
-                          key={user.username}
-                          onClick={() => {
-                              resetMessages();
-                              setSelectedUser(user);
-                          }}
-                          className={`chat-user ${selectedUser?.username === user.username ? "active" : ""}`}
-                      >
-                          <img src={user.url} alt={user.username} className="profile-image" />
-                          <span>{user.username}</span>
-                      </li>
-                  ))}
-              </ul>
-          </aside>
-
-          {/* Chat Body */}
-          <section className="chat-body">
-              {selectedUser ? (
-                  <>
-                      <div className="chat-header">
-                          <img src={selectedUser.url} alt={selectedUser.username} className="profile-image" />
-                          <h2>{selectedUser.username}</h2>
-                      </div>
-
-                      <div className="messages">
-                          {messages.length > 0 ? (
-                              messages.map((msg, index) => (
-                                  <div key={index} className={`message ${msg.sender === token ? "sent" : "received"}`}>
-                                      <p>{msg.message}</p>
-                                  </div>
-                              ))
-                          ) : (
-                              <p className="empty-chat">Start chatting!</p>
-                          )}
-                      </div>
-
-                      {/* Message Input */}
-                      <div className="chat-input">
-                          <input
-                              type="text"
-                              placeholder="Type a message..."
-                              value={messageInput}
-                              onChange={(e) => setMessageInput(e.target.value)}
-                          />
-                          <button onClick={handleSendMessage}>Send</button>
-                      </div>
-                  </>
-              ) : (
-                  <p className="empty-chat">Select a conversation to view messages</p>
-              )}
-          </section>
+    <div className="chat-container">
+      {/* Left sidebar - User list */}
+      <div className="user-list">
+        <h2 className="user-list-header">Conversations</h2>
+        <div className="user-list-items">
+          {conversations.map((user) => (
+            <div 
+              key={user.username} 
+              className={`user-item ${selectedUser?.username === user.username ? 'selected' : ''}`}
+              onClick={() => setSelectedUser(user)}
+            >
+              <div className="user-avatar">
+                {user.url ? (
+                  <img src={user.url} alt={user.username} />
+                ) : (
+                  <div className="avatar-placeholder">{user.username.charAt(0).toUpperCase()}</div>
+                )}
+              </div>
+              <div className="user-info">
+                <h3>{user.username}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Main chat area */}
+      <div className="chat-area">
+        {selectedUser ? (
+          <>
+            {/* Chat header */}
+            <div className="chat-header">
+              <div className="chat-user">
+                {selectedUser.url ? (
+                  <img src={selectedUser.url} alt={selectedUser.username} className="chat-user-avatar" />
+                ) : (
+                  <div className="chat-avatar-placeholder">
+                    {selectedUser.username.charAt(0).toUpperCase()}
+                  </div>
+                )}
+                <h2>{selectedUser.username}</h2>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="messages-container">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`message ${message.sender === selectedUser.username ? 'received' : 'sent'}`}
+                >
+                  <div className="message-content">
+                    <p>{message.message}</p>
+                    <div className="message-meta">
+                      <span className="message-time">
+                        {new Date(message.formattedTimestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      <span className={`status-icon-${message.status}`}>
+                        {message.status === 'sending' && '⏳'}
+                        {message.status === 'failed' && '❌'}
+                        {message.status === 'sent' && '✓'}
+                        {message.status === 'read' && '✓✓'}
+                        {message.status === 'not_read' && '✓✓'}
+                      </span>
+                      </span>
+                  </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Message input */}
+            <div className="message-input-container">
+              <textarea
+                value={messageInput}
+                onChange={(e) => setMessageInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Type a message..."
+                rows={1}
+              />
+              <button
+                onClick={handleSendMessage}
+                disabled={!messageInput.trim()}
+                className="send-button"
+              >
+                <FaPaperPlane />
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="empty-chat">
+            <h3>Select a conversation to start chatting</h3>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

@@ -41,7 +41,7 @@ public class ProductService {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getProducts(@HeaderParam("token") String authenticationToken,
-                                @QueryParam("username") String username,
+                                @QueryParam("seller") String seller,
                                 @QueryParam("id") String id,
                                 @QueryParam("name") String name,
                                 @QueryParam("state") String state,
@@ -86,7 +86,7 @@ public class ProductService {
         parameter = resolveParameter(param);
         //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
         // apenas poderá procurar productos DISPONÍVEL, produtos não excluídos e não editados (edited == true)
-        if (user == null && (username != null || edited)) {
+        if (user == null && (seller != null || edited)) {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         } else if (user == null) {
@@ -96,18 +96,18 @@ public class ProductService {
                 return Response.status(200).entity(products).build();
             }
         }
-        if (username != null) {
-            username = username.trim();
+        if (seller != null) {
+            seller = seller.trim();
         }
-        if (username != null && !user.getAdmin() && !username.equals(user.getUsername())) {
-            logger.error("Permision denied - {} getting all products of user {} ", user.getUsername(), username);
+        if (seller != null && !user.getAdmin() && !seller.equals(user.getUsername())) {
+            logger.error("Permision denied - {} getting all products of user {} ", user.getUsername(), seller);
             return Response.status(403).entity("Permission denied").build();
         }
-        if (username != null && !userbean.checkIfUserExists(username)) {
-            logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), username);
+        if (seller != null && !userbean.checkIfUserExists(seller)) {
+            logger.error("Error - {} getting all products of user {} that doesn't exist", user.getUsername(), seller);
             return Response.status(404).entity("Error getting all products of inexistent user").build();
         }
-        if (username != null || !user.getAdmin()) {
+        if (seller != null || !user.getAdmin()) {
             excluded = false;
         }
         if (category != null) {
@@ -126,12 +126,12 @@ public class ProductService {
                 return Response.status(400).entity("Invalid State Id").build();
             }
         }
-        Set<ProductDto> products = productBean.getProducts(username, id, name, productStateId, excluded, category, edited, parameter, order);
+        Set<ProductDto> products = productBean.getProducts(seller, id, name, productStateId, excluded, category, edited, parameter, order);
         if (products != null) {
-            logger.info("{} getting all products of user {} ", user.getUsername(), username);
+            logger.info("{} getting all products of user {} ", user.getUsername(), seller);
             return Response.status(200).entity(products).build();
         } else {
-            logger.info("Error - {} getting all products of user {} ", user.getUsername(), username);
+            logger.info("Error - {} getting all products of user {} ", user.getUsername(), seller);
             return Response.status(404).entity("Error getting product by category").build();
         }
     }

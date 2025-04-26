@@ -73,7 +73,6 @@ public class WebSocketAuthentication {
         private static void sendErrorMessage(Session session, String message) {
         try {
             session.getBasicRemote().sendText("{ \"type\": \"AUTH_FAILED\", \"message\": \"" + message + "\" }");
-            session.close();
         } catch (IOException e) {
             logger.error("Failed to close session after authentication failure", e);
         }

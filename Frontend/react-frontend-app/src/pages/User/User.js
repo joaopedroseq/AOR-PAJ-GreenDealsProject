@@ -58,12 +58,12 @@ export const User = () => {
         let userInformation = await getLoggedUserInformation(token, intl);
         setUserInfo(userInformation);
   
-        let username = userInformation.username;
+        let seller = userInformation.username;
         let isAdmin = userInformation.admin;
         let excluded = !isAdmin ? false : null;
         let state = "DRAFT";
   
-        setFilters({ username, excluded, state });
+        setFilters({ seller, excluded, state });
         await fetchProducts(token);
   
         if (addedProductFlag) {

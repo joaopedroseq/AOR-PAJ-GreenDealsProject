@@ -72,8 +72,15 @@ public class UserDao extends AbstractDao<UserEntity> {
             );
             predicates.add(phonePredicate);
         }
-        if (state != null) {
-            predicates.add(cb.equal(root.get("state"), state));
+        if (state == null) {
+            predicates.add(cb.equal(root.get("state"), UserAccountState.ACTIVE.toString()));
+        }
+        else {
+            Predicate statePredicate = cb.or(
+                    cb.equal(root.get("state"), UserAccountState.ACTIVE.toString()),
+                    cb.equal(root.get("state"), UserAccountState.INACTIVE.toString()),
+                    cb.equal(root.get("state"), UserAccountState.EXCLUDED.toString()));
+            predicates.add(statePredicate);
         }
         query.select(root).where(cb.and(predicates.toArray(new Predicate[0])));
         if(order.equals(Order.asc)) {
@@ -163,6 +170,16 @@ public class UserDao extends AbstractDao<UserEntity> {
     public List<UserEntity> getAllUsers() {
         try{
             return em.createNamedQuery("User.getAllUsers").getResultList();
+        }
+        catch(NoResultException e){
+            logger.error("Exception {} in UserDao.getAllUsers", e.getMessage());
+            return null;
+        }
+    }
+
+    public List<UserEntity> getAllActiveUsers() {
+        try{
+            return em.createNamedQuery("User.getAllActiveUsers").getResultList();
         }
         catch(NoResultException e){
             logger.error("Exception {} in UserDao.getAllUsers", e.getMessage());

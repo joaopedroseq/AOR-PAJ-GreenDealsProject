@@ -23,9 +23,13 @@ import java.util.Set;
 //exclude user
 @NamedQuery(name="User.excludeUser", query = "UPDATE UserEntity SET state = 'EXCLUDED' WHERE username = :username")
 //get all non-admin users
-@NamedQuery(name="User.getAllUsers", query = "SELECT u FROM UserEntity u WHERE u.admin = false ORDER BY username")
-
-
+@NamedQuery(name="User.getAllUsers", query = "SELECT u FROM UserEntity u ORDER BY username")
+//get all non-admin users
+@NamedQuery(name="User.getAllActiveUsers", query =
+        "SELECT u FROM UserEntity u " +
+                "WHERE u.admin = false " +
+                "AND u.state = 'ACTIVE' " +
+                "ORDER BY username")
 @Entity
 @Table(name = "userAccount", indexes = {
         @Index(name = "idx_user_username", columnList = "username"),

@@ -2,14 +2,13 @@ package pt.uc.dei.proj5.dto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
-import jakarta.json.JsonReader;
+import jakarta.json.*;
 
 import java.io.StringReader;
 
 public class JsonCreator {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
     static {
         objectMapper.registerModule(new JavaTimeModule());
@@ -27,13 +26,17 @@ public class JsonCreator {
 
     public static JsonObject createJson(String type, String objectName, Object object) {
         try {
-            String jsonString = objectMapper.writeValueAsString(object);
-            JsonObject jsonObject = parseJsonString(jsonString); // Use static method
-
-            return Json.createObjectBuilder()
-                    .add("type", type)
-                    .add(objectName, jsonObject) // Properly formatted JSON object
-                    .build();
+            JsonObjectBuilder jsonBuilder = jsonObjectBuilder.add("type", type);
+            if (object instanceof Integer) {
+                jsonBuilder.add(objectName, (Integer) object);
+            } else if (object instanceof String) {
+                jsonBuilder.add(objectName, (String) object);
+            } else {
+                String jsonString = objectMapper.writeValueAsString(object);
+                JsonObject jsonObject = parseJsonString(jsonString);
+                jsonBuilder.add(objectName, jsonObject);
+            }
+            return jsonBuilder.build();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

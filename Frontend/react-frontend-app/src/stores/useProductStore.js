@@ -49,6 +49,7 @@ const useProductStore = create((set, get) => ({
   // Fetch dos produtos - que pode ser chamado após determinadas operações
   fetchProducts: async (token) => {
     const { filters } = get(); // Access the current filters from the state
+    console.log(filters);
     try {
       const products = await getProducts(filters, token);
       set({ products }); // Update dos produtos na store

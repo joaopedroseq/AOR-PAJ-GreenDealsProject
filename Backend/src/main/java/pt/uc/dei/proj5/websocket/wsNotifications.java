@@ -78,46 +78,41 @@ public class wsNotifications {
         }
     }
 
-    public void notifyUser(NotificationDto notificationDto) throws Exception {
-        String recipientUsername = notificationDto.getRecipientUsername();
-        Set<Session> recipientSessions = sessions.get(recipientUsername);
-
-        if (recipientSessions == null || recipientSessions.isEmpty()) {
-            logger.info("No active sessions for user {}", recipientUsername);
-            return;
-        }
+    public boolean notifyUser(NotificationDto notificationDto) throws Exception {
         try {
-            int notificationsCount = notificationBean.getTotalNotifications(new UserDto(recipientUsername));
-            JsonObject notificationsJson = JsonCreator.createJson("NOTIFICATION_COUNT", "count", notificationsCount);
+            JsonObject notificationsJson = JsonCreator.createJson(notificationDto.getType().toString().toUpperCase(), "notification", notificationDto);
             String notificationJsonString = notificationsJson.toString();
-            // Send notifications to all active sessions
-            for (Session session : recipientSessions) {
-                if (session.isOpen()) {
-                    session.getBasicRemote().sendText(notificationJsonString);
-                }
+            if(sendNotificationToUserSessions(notificationDto.getRecipientUsername(), notificationJsonString)){
+                return true;
             }
-        } catch (IOException e) {
-            logger.error("Failed to send notification to user {}", recipientUsername, e);
+            else {
+                return false;
+            }
         } catch (Exception e) {
             logger.error("Error while creating JSON object", e);
+              return false;
         }
     }
 
+    private boolean sendNotificationToUserSessions(String recipientUsername, String notification) throws Exception {
+        try {
+            Set<Session> recipientSessions = sessions.get(recipientUsername);
+            if(recipientSessions != null && !recipientSessions.isEmpty()) {
+                for (Session session : recipientSessions) {
+                    if (session.isOpen()) {
+                        session.getBasicRemote().sendText(notification);
+                    }
+                }
+                return true;
+            }
+            else {
+                return false;
+            }
 
-    private Map<String, Object> buildMessageData(NotificationDto notificationDto) {
-        Map<String, Object> messageData = new HashMap<>();
-        messageData.put("id", notificationDto.getId());
-        messageData.put("type", notificationDto.getType());
-        messageData.put("content", notificationDto.getContent());
-        messageData.put("timestamp", notificationDto.getTimestamp());
-        messageData.put("recipientUsername", notificationDto.getRecipientUsername());
-        messageData.put("senderUsername", notificationDto.getSenderUsername());
-        messageData.put("senderProfileUrl", notificationDto.getSenderProfileUrl());
-
-        if (notificationDto.getType() == NotificationType.MESSAGE) {
-            messageData.put("messageCount", notificationDto.getMessageCount());
+        } catch (IOException e) {
+            logger.error("Failed to send notification to user {}", recipientUsername, e);
+            return false;
         }
-        return messageData;
     }
 
 

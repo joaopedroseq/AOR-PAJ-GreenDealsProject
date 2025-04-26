@@ -46,6 +46,7 @@ import java.time.LocalDateTime;
         name = "NotificationEntity.updateMessageNotification",
         query = "UPDATE NotificationEntity n " +
                 "SET n.messageCount = :numberUnreadMessages, " +
+                "n.content = :lastMessage, " +
                 "n.timestamp = :newDate " +
                 "WHERE n.recipient.username = :recipientUsername " +
                 "AND n.sender.username = :senderUsername " +

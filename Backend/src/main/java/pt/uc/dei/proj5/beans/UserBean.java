@@ -49,18 +49,21 @@ public class UserBean implements Serializable {
         try{
             List<UserEntity> userEntities = userDao.getFilteredUsers(username, firstName, lastName, email, phone, state, parameter, order);
             Set<UserDto> userDtos = new HashSet<>();
+            if (userEntities == null) {
+                return Collections.emptySet();
+            }
             for (UserEntity userEntity : userEntities) {
                 UserDto userDto = convertUserEntitytoUserDto(userEntity);
                 userDtos.add(userDto);
             }
             for (UserDto userDto : userDtos) {
-                System.out.println(userDto);
+                logger.info("User DTO: " + userDto);
             }
             return userDtos;
         }
         catch(Exception e){
-            logger.error(e);
-            return null;
+            logger.error("Error fetching users: ", e);
+            return Collections.emptySet();
         }
     }
 
@@ -209,18 +212,6 @@ public class UserBean implements Serializable {
             return false;
         }
     }
-
-    public ArrayList<UserDto> getAllUsers() {
-        try{
-            List<UserEntity> userEntityList = userDao.getAllUsers();
-            return convertGroupUserEntityToUserDto(userEntityList);
-        }
-        catch(Exception e) {
-            logger.error("Error in UserBean.getAllUsers - error {}", e.getMessage());
-            return null;
-        }
-    }
-
 
     public boolean addProduct(UserDto userDto, ProductDto newProductDto) {
         try {
