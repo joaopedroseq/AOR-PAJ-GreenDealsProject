@@ -46,7 +46,7 @@ const en = {
 
   // Admin
   adminNoPermission: "You do not have permission to access this page.",
-  adminModalAddCategoryTitle: "Add Category {newCategoryName}?",
+  adminModalAddCategoryTitle: "Add Category?",
   adminNewCategorySuccess: "Category successfully added!",
   adminModalRemoveCategoryTitle: "Remove Category?",
   adminModalRemoveCategoryMessage1:
@@ -75,7 +75,8 @@ const en = {
   categoryManagementTitle: "Category Management",
   noCategoriesToShow: "No categories created",
   createNewCategory: "Create new category",
-  categoryNameLabel: "Category name",
+  categoryNameLabel: "portuguese name",
+  categoryNameEnglishLabel: "name",
   addCategoryButtonLabel: "Add",
 
   // Detail
@@ -381,7 +382,7 @@ const en = {
    passwordResetInstruction: "Use the following link to change the password",
    passwordResetConfirmTitleMessage: "Password changed sucessfully",
    passwordResetFailed: "Invalid or expired token",
-   
+
   //Errors
   errorerrorNetwork_error:
     "No response from the server, please check your connection.",

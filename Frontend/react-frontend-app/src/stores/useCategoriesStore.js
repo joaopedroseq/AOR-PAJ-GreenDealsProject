@@ -34,9 +34,11 @@ export const useCategoriesStore = create((set, get) => ({
 },
 
   //Operação de Admin para adicionar categoria
-  handleAddCategory: async (token, newCategoryName) => {
+  handleAddCategory: async (token, category) => {
+    console.log(category);
     const newCategory = {
-      nome: newCategoryName,
+      nome: category.nome,
+      nameEng: category.nameEng
     };
     try {
       const response = await addCategory(token, newCategory);

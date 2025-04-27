@@ -74,7 +74,8 @@ export const Admin = () => {
         } else {
           setFilters({ category: null, seller: null, excluded: null, state: "DRAFT" }); //excluded null to get both excluded and not
           await fetchProducts(token);
-          const users = await handleGetAllUsers(token, intl);
+          const users = await handleGetAllUsers(token, null, intl);
+          console.log(users)
           setAllUsers(users);
         }
       } catch (error) {
@@ -89,13 +90,14 @@ export const Admin = () => {
   //Categorias
   //Adicionar Nova Categoria
   const handleSubmittingNewCategory = (data) => {
+    console.log(data);
     setModalConfig({
       title: intl.formatMessage({ id: "adminModalAddCategoryTitle" }),
-      message1: intl.formatMessage({ id: "adminNewCategoryConfirm" }, { newCategoryName: data.newCategoryName }),
-      message2: null,
+      message1: `Nome: ${data.nome}`,
+      message2: `Name: ${data.nameEng}`,
       onConfirm: async () => {
         try {
-          const response = await handleAddCategory(token, data.newCategoryName);
+          const response = await handleAddCategory(token, data);
           if (response) {
             handleNotification(intl, "success", "adminNewCategorySuccess");
             fetchCategories();
@@ -243,9 +245,7 @@ export const Admin = () => {
             ))
           )}
           <div className="category-card" id="addCategory-card">
-            {/* Adicionar Nova Categoria - Form */}
-            <div className="category-info">
-              <button
+          <button
                 className="showAddCategory"
                 id="showAddCategory"
                 onClick={() => {
@@ -254,28 +254,44 @@ export const Admin = () => {
               >
                 {intl.formatMessage({ id: "createNewCategory"})}
               </button>
-              <form
-                className={`newCategoryName ${
-                  showAddCategory ? "slide-in" : "slide-out"
-                }`}
-                id="newCategoryName"
-                onSubmit={handleSubmit(handleSubmittingNewCategory, onError)}
-              >
-                <label>{intl.formatMessage({ id: "categoryNameLabel"})}</label>
-                <input
-                  type="text"
-                  className="newCategoryNameBox"
-                  id="newCategoryNameBox"
-                  maxLength="20"
-                  placeholder="nome da nova categoria"
-                  {...register("newCategoryName", {
-                    required: "Terá de preencher com o nome da nova categoria",
-                  })}
-                />
-                <button type="submit" className="addCategory" id="addCategory">
-                {intl.formatMessage({ id: "addCategoryButtonLabel"})}
-                </button>
-              </form>
+            {/* Adicionar Nova Categoria - Form */}
+            <div className="category-info">
+            <form
+  className={`newCategoryName ${showAddCategory ? "slide-in" : "slide-out"}`}
+  id="newCategoryName"
+  onSubmit={handleSubmit(handleSubmittingNewCategory, onError)}
+>
+  <div className="form-group">
+    <label>{intl.formatMessage({ id: "categoryNameLabel" })}</label>
+    <input
+      type="text"
+      className="newCategoryNameBox"
+      id="newCategoryNameBox"
+      maxLength="20"
+      placeholder="Nome da nova categoria"
+      {...register("nome", {
+        required: "Terá de preencher com o nome da nova categoria",
+      })}
+    />
+  </div>
+
+  <div className="form-group">
+    <label>{intl.formatMessage({ id: "categoryNameEnglishLabel" })}</label>
+    <input
+      type="text"
+      className="newCategoryNameBox"
+      id="newCategoryNameEnglishBox"
+      maxLength="20"
+      placeholder="English category name"
+      {...register("nameEng", {
+        required: "You must enter the English category name",
+      })}
+    />
+  </div>
+  <button type="submit" className="addCategory" id="addCategory">
+    {intl.formatMessage({ id: "addCategoryButtonLabel"})}
+  </button>
+</form>
             </div>
           </div>
         </div>

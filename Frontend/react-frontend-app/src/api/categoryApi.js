@@ -36,6 +36,7 @@ export const fetchCategories = async (language) => {
 
   //Adicionar categoria
   export const addCategory = async (token, newCategory) => {
+    console.log(newCategory)
     try {
       const response = await axios.post(
         `${categoriesEndpoint}`,

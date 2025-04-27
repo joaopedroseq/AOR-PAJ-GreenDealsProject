@@ -44,7 +44,7 @@ const pt = {
 
   //Admin
   adminNoPermission: "Não tem permissão para aceder a esta página",
-  adminModalAddCategoryTitle: "Adicionar Categoria {newCategoryName}?",
+  adminModalAddCategoryTitle: "Adicionar Categoria?",
   adminNewCategorySuccess: "Categoria adicionada com sucesso!",
   adminModalRemoveCategoryTitle: "Remover categoria??",
   adminModalRemoveCategoryMessage1: "Deseja remover categoria {categoryName}?",
@@ -71,7 +71,8 @@ const pt = {
   categoryManagementTitle: "Gestão de Categorias",
   noCategoriesToShow: "Não existem categorias criadas",
   createNewCategory: "Criar nova categoria",
-  categoryNameLabel: "nome da categoria",
+  categoryNameLabel: "nome",
+  categoryNameEnglishLabel: "nome em inglês",
   addCategoryButtonLabel: "Adicionar",
 
   //Detail

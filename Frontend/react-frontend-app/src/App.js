@@ -1,4 +1,5 @@
 import './App.css';
+import  React from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import Header from './Components/Header/Header';
 import Homepage from './Pages/Homepage/Homepage';
@@ -21,7 +22,8 @@ import PasswordReset from './Pages/PasswordReset/PasswordReset';
 
 function App() {
   const locale = useLocaleStore((state) => state.locale);
-  
+
+
   return (
     <IntlProvider locale={locale} messages={languages[locale]}>
 

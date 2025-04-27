@@ -16,10 +16,17 @@ import java.util.ArrayList;
 import java.util.Set;
 
 
+/**
+ * Serviço REST responsável por gerenciar as operações relacionadas a usuários.
+ * Inclui operações como consultar, atualizar, excluir usuários e gerenciar permissões.
+ */
 @Path("/users")
 public class UserService {
+
+    // Logger para registrar informações, erros e ações realizadas no serviço
     private final Logger logger = LogManager.getLogger(UserService.class);
 
+    // Injeção dos beans necessários para a lógica do sistema
     @Inject
     UserBean userbean;
 
@@ -30,24 +37,33 @@ public class UserService {
     private HttpServletRequest request;
 
 
-    //Utilizar este para a maior parte das operações
+    /**
+     * Obtém as informações de um usuário específico.
+     *
+     * @param authenticationToken Token de autenticação do usuário realizando a requisição.
+     * @param userToGetInformation Nome de usuário para buscar suas informações.
+     * @return Response com as informações do usuário ou o status de erro apropriado.
+     */
     @GET
     @Path("/{username}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUserInformation(@HeaderParam("token") String authenticationToken, @PathParam("username") String userToGetInformation) {
-        if (userToGetInformation.trim().equals("")) {
+    public Response getUserInformation(@HeaderParam("token") String authenticationToken,
+                                       @PathParam("username") String userToGetInformation) {
+        if (userToGetInformation.trim().isEmpty()) {
             logger.error("Invalid data - missing params - Getting another user information");
             return Response.status(400).entity("Invalid data").build();
         }
+
         UserDto user;
         try {
             user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
-            return e.getResponse();
+            return e.getResponse(); // Retorna o erro diretamente
         }
+
         if (!userbean.checkIfUserExists(userToGetInformation)) {
             logger.error("User {} does not exist", userToGetInformation);
-            return Response.status(404).entity("Invalid data").build();
+            return Response.status(404).entity("User does not exist").build();
         } else {
             UserDto userDto = userbean.getUserInformation(userToGetInformation);
             logger.info("User {} got user {} information", user.getUsername(), userDto.getUsername());
@@ -56,25 +72,38 @@ public class UserService {
     }
 
 
-    //update user information
+    /**
+     * Atualiza as informações de um usuário.
+     *
+     * @param authenticationToken Token de autenticação.
+     * @param username            Nome de usuário a ser atualizado.
+     * @param userDto             Dados atualizados do usuário para persistência.
+     * @return Response indicando sucesso ou falha da operação.
+     */
     @PATCH
     @Path("/{username}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updateUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String username, UserDto userDto) {
+    public Response updateUser(@HeaderParam("token") String authenticationToken,
+                               @PathParam("username") String username, UserDto userDto) {
         UserDto user;
         try {
             user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
-            return e.getResponse();
-        }// Directly return HTTP response
+            return e.getResponse(); // Retorna o erro diretamente
+        }
+
+        // Permissão de atualização para administradores ou o próprio usuário
         if (!user.getUsername().equals(username) && !user.getAdmin()) {
-            logger.info("Permission denied - user {} tried to update another user {} without admin privileges", user.getUsername(), username);
+            logger.info("Permission denied - user {} tried to update another user {} without admin privileges",
+                    user.getUsername(), username);
             return Response.status(403).entity("Permission denied").build();
         }
+
         if (!userbean.checkIfUserExists(username)) {
             logger.info("User {} tried to update non-existent user {}", username, userDto.getUsername());
             return Response.status(404).entity("User does not exist").build();
         }
+
         if (userbean.updateUser(username, userDto)) {
             logger.info("User {} updated successfully", user.getUsername());
             return Response.status(200).entity("Updated user " + user.getUsername() + " successfully").build();
@@ -84,104 +113,108 @@ public class UserService {
         }
     }
 
+
+    /**
+     * Exclui um usuário, alterando seu estado no banco de dados.
+     *
+     * @param authenticationToken Token de autenticação.
+     * @param usernameUserExclude Nome do usuário a ser excluído.
+     * @return Response indicando o sucesso ou falha da operação.
+     */
     @PATCH
     @Path("/{username}/exclude")
-    public Response excludeUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserExclude) {
+    public Response excludeUser(@HeaderParam("token") String authenticationToken,
+                                @PathParam("username") String usernameUserExclude) {
         usernameUserExclude = usernameUserExclude.trim();
-        if (usernameUserExclude.trim().equals("")) {
+        if (usernameUserExclude.isEmpty()) {
             logger.error("Invalid data - missing params - Excluding user");
             return Response.status(400).entity("Invalid data").build();
         }
+
         UserDto user;
         try {
             user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
-            return e.getResponse();
-        }// Directly return HTTP response
+            return e.getResponse(); // Retorna o erro diretamente
+        }
+
         if (!user.getAdmin()) {
             logger.error("User {} tried to exclude {} without admin permissions", user.getUsername(), usernameUserExclude);
             return Response.status(403).entity("User does not have admin permission to exclude other users").build();
         }
+
         if (!userbean.checkIfUserExists(usernameUserExclude)) {
             logger.error("User {} tried to exclude a user - {} - not found", user.getUsername(), usernameUserExclude);
-            return Response.status(404).entity("User " + usernameUserExclude + " to exclude not found").build();
+            return Response.status(404).entity("User not found").build();
         }
+
         if (userbean.excludeUser(usernameUserExclude)) {
             logger.info("User {} excluded {} successfully", user.getUsername(), usernameUserExclude);
-            return Response.status(200).entity("Excluded user " + usernameUserExclude + " successfully").build();
+            return Response.status(200).entity("User excluded successfully").build();
         } else {
             logger.error("User {} not excluded due to exception", usernameUserExclude);
-            return Response.status(500).entity("User " + usernameUserExclude + " not excluded").build();
+            return Response.status(500).entity("Error while excluding user").build();
         }
     }
 
 
+    /**
+     * Deleta um usuário completamente do sistema.
+     *
+     * @param authenticationToken Token de autenticação.
+     * @param usernameUserDelete  Nome do usuário a ser deletado.
+     * @return Response indicando sucesso ou falha da operação.
+     */
     @DELETE
     @Path("/{username}")
-    public Response deleteUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserDelete) {
-        if (usernameUserDelete.trim().equals("")) {
+    public Response deleteUser(@HeaderParam("token") String authenticationToken,
+                               @PathParam("username") String usernameUserDelete) {
+        if (usernameUserDelete.trim().isEmpty()) {
             logger.error("Invalid data - missing params - Deleting user");
             return Response.status(400).entity("Invalid data").build();
         }
+
         UserDto user;
         try {
             user = authenticationService.validateAuthenticationToken(authenticationToken);
         } catch (WebApplicationException e) {
-            return e.getResponse();
-        }// Directly return HTTP response
+            return e.getResponse(); // Retorna o erro diretamente
+        }
+
         if (!user.getAdmin()) {
             logger.error("User {} tried to delete {} without admin permissions", user.getUsername(), usernameUserDelete);
             return Response.status(403).entity("User does not have admin permission to delete other users").build();
+        }
+
+        if (!userbean.checkIfUserExists(usernameUserDelete.trim())) {
+            logger.error("User {} tried to delete a user - {} - not found", user.getUsername(), usernameUserDelete);
+            return Response.status(404).entity("User not found").build();
+        }
+
+        if (userbean.deleteUser(usernameUserDelete.trim())) {
+            logger.info("User {} deleted {} successfully", user.getUsername(), usernameUserDelete);
+            return Response.status(200).entity("User deleted successfully").build();
         } else {
-            if (!userbean.checkIfUserExists(usernameUserDelete.trim())) {
-                logger.error("User {} tried to delete a user - {} - not found", user.getUsername(), usernameUserDelete);
-                return Response.status(404).entity("User " + usernameUserDelete + " to delete not found").build();
-            } else {
-                if (userbean.deleteUser(usernameUserDelete.trim())) {
-                    logger.info("User {} deleted {} successfully", user.getUsername(), usernameUserDelete);
-                    return Response.status(200).entity("Deleted user " + usernameUserDelete + " successfully").build();
-                } else {
-                    logger.error("User {} not deleted due to exception", usernameUserDelete);
-                    return Response.status(500).entity("User " + usernameUserDelete + " not deleted").build();
-                }
-            }
+            logger.error("Failed to delete user due to internal exception");
+            return Response.status(500).entity("Error while deleting user").build();
         }
     }
 
 
-    @DELETE
-    @Path("/{username}/products/")
-    public Response deleteProductsOfUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserDeleteProducts) {
-        if (usernameUserDeleteProducts.trim().equals("")) {
-            logger.error("Invalid data - missing params - Deleting products of user");
-            return Response.status(400).entity("Invalid data").build();
-        }
-        UserDto user = new UserDto();
-        try {
-            user = authenticationService.validateAuthenticationToken(authenticationToken);
-        } catch (WebApplicationException e) {
-            return e.getResponse();  // Directly return HTTP response
-        }
-        if (!user.getAdmin()) {
-            logger.error("User {} tried to delete products of user {} without admin permissions", user.getUsername(), usernameUserDeleteProducts);
-            return Response.status(403).entity("User does not have admin permission to delete products of other users").build();
-        } else {
-            usernameUserDeleteProducts = usernameUserDeleteProducts.trim();
-            if (!userbean.checkIfUserExists(usernameUserDeleteProducts)) {
-                logger.error("User {} tried to delete products of user - {} - not found", user.getUsername(), usernameUserDeleteProducts);
-                return Response.status(404).entity("User " + usernameUserDeleteProducts + " to delete products not found").build();
-            } else {
-                if (userbean.deleteProductsOfUser(usernameUserDeleteProducts)) {
-                    logger.info("User {} deleted products of user {} successfully", user.getUsername(), usernameUserDeleteProducts);
-                    return Response.status(200).entity("Deleted products of user " + usernameUserDeleteProducts + " successfully").build();
-                } else {
-                    logger.error("Products of user {} not deleted due to exception", usernameUserDeleteProducts);
-                    return Response.status(500).entity("Products of user " + usernameUserDeleteProducts + " not deleted").build();
-                }
-            }
-        }
-    }
-
+    /**
+     * Obtém uma lista de usuários com base em parâmetros de pesquisa.
+     *
+     * @param authenticationToken Token do cliente.
+     * @param usernameToSearch    Nome do usuário a buscar.
+     * @param firstNameToSearch   Nome (primeiro) do usuário.
+     * @param lastNameToSearch    Sobrenome.
+     * @param emailToSearch       E-mail.
+     * @param phoneToSearch       Telefone.
+     * @param stateToSearch       Estado do usuário (ativo, excluído, etc.).
+     * @param parameterToOrder    Parâmetro para ordenação.
+     * @param orderBy             Ordem da ordenação (ascendente ou descendente).
+     * @return Lista dos usuários encontrados (ou erro, se aplicável).
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserInformation(@HeaderParam("token") String authenticationToken,

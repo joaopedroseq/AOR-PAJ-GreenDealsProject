@@ -538,3 +538,16 @@ p {
 .modal-body p {
   white-space: pre-wrap;
 }
+
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* Adds spacing */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center; /* Centers the button */
+  margin-top: 10px;
+}
