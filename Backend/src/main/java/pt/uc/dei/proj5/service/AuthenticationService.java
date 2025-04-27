@@ -139,6 +139,54 @@ public class AuthenticationService {
     }
 
     @POST
+    @Path("/request-password-reset")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response requestPasswordReset(@HeaderParam("token") String authenticationToken) {
+        UserDto user = null;
+        if (authenticationToken != null) {
+            try {
+                user = validateAuthenticationToken(authenticationToken);
+            } catch (WebApplicationException e) {
+                return e.getResponse();
+            }
+        }
+        String passwordResetToken = userbean.generateNewPasswordResetToken(user);
+        if(passwordResetToken != null) {
+            logger.info("Password reset requested for user {}", user.getUsername());
+            return Response.status(200).entity(passwordResetToken).build();
+        } else {
+            logger.error("Password reset requested for user {} but failed", user.getUsername());
+            return Response.status(404).entity("Password reset requested but failed").build();
+        }
+    }
+
+    @POST
+    @Path("/reset-password")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response resetPassword(@HeaderParam("token") String passwordResetToken, String password) {
+        UserDto user = null;
+        if (passwordResetToken != null) {
+            try {
+                user = validatePasswordResetToken(passwordResetToken);
+            } catch (WebApplicationException e) {
+                return e.getResponse();
+            }
+        }
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setTokenValue(passwordResetToken);
+        tokenbean.revokeToken(tokenDto);
+        user.setPassword(password);
+        if (userbean.updateUser(user.getUsername(), user)) {
+            logger.info("Password reset for user {} successful", user.getUsername());
+            return Response.status(200).entity("Password reset successful").build();
+        } else {
+            logger.error("Password reset for user {} failed", user.getUsername());
+            return Response.status(404).entity("Password reset failed").build();
+        }
+    }
+
+    @POST
     @Path("/activate")
     @Produces(MediaType.APPLICATION_JSON)
     public Response activateAccount(@HeaderParam("token") String activationToken) {
@@ -213,6 +261,30 @@ public class AuthenticationService {
             throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
         }
         if(tokenbean.isTokenExpired(tokenDto, TokenType.AUTHENTICATION)) {
+            throw new WebApplicationException(Response.status(401).entity("Expired token").build());
+        }
+        UserDto user = tokenbean.checkToken(tokenDto);
+        if (user == null) {
+            throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
+        }
+        if (user.getState() == UserAccountState.INACTIVE || user.getState() == UserAccountState.EXCLUDED) {
+            throw new WebApplicationException(Response.status(403).entity("User has inactive or excluded account").build());
+        }
+        else {
+            tokenbean.renovateToken(tokenDto);
+            return user;
+        }
+    }
+
+    public UserDto validatePasswordResetToken(String token) throws WebApplicationException {
+        if (token == null || token.trim().isEmpty()) {
+            throw new WebApplicationException(Response.status(401).entity("Missing token").build());
+        }
+        TokenDto tokenDto = tokenbean.getTokenByValue(token);
+        if(tokenDto == null){
+            throw new WebApplicationException(Response.status(401).entity("Invalid token").build());
+        }
+        if(tokenbean.isTokenExpired(tokenDto, TokenType.PASSWORD_RESET)) {
             throw new WebApplicationException(Response.status(401).entity("Expired token").build());
         }
         UserDto user = tokenbean.checkToken(tokenDto);

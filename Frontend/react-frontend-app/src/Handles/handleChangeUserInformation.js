@@ -20,7 +20,6 @@ const handleChangeUserInformation = async (
         updatesToUser[key] = updatedInfo[key];
       }
     }
-
     //check da password CASO o utilizador requisitante não seja admin
     let isPasswordValid;
     if (!isAdmin) {
@@ -40,6 +39,7 @@ const handleChangeUserInformation = async (
         );
         if (response.status === 200) {
           handleNotification(intl, "success", "handleChangeUserInformationSucess")
+          console.log("STOPPED");
           return true;
         }
       } catch (error) {

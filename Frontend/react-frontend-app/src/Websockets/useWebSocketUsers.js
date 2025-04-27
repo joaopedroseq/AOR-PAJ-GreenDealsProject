@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import useStatsStore from "../Stores/useStatsStore";
+import useUsersDataStore from "../Stores/useUsersDataStore";
 
 function useWebSocketUsers() {
   const WS_URL = "ws://localhost:8080/sequeira-proj5/websocket/users/";
   const [websocket, setWebSocket] = useState(null);
 
-  const handleUpdateStats = (user) => {
-    console.log(user);
-  
+
+  const handleUpdateStats = (user) => {  
     useStatsStore.setState((state) => ({
       userStats: {
         ...state.userStats, // Preserve existing stats
@@ -24,10 +24,37 @@ function useWebSocketUsers() {
       },
     }));
   };
+
+  const handleUserUpdate = (user) => {
+    if (!user || !user.username) return; // Ensure valid user
   
-
-
-
+    useUsersDataStore.setState((state) => {
+      const existsInFiltered = state.filteredUsers.some((u) => u.username === user.username);
+      const existsInAllUsers = state.allUsers.some((u) => u.username === user.username);
+  
+      // Helper function to merge non-null fields
+      const mergeUserData = (existingUser) => ({
+        ...existingUser,
+        ...Object.fromEntries(Object.entries(user).filter(([key, value]) => value !== null)),
+      });
+  
+      const updatedFilteredUsers = existsInFiltered
+        ? state.filteredUsers.map((u) => (u.username === user.username ? mergeUserData(u) : u))
+        : state.filteredUsers;
+  
+      const updatedAllUsers = existsInAllUsers
+        ? state.allUsers.map((u) => (u.username === user.username ? mergeUserData(u) : u))
+        : [...state.allUsers, user]; // Add user if not found
+  
+      console.log("Updated filtered users list:", updatedFilteredUsers);
+      console.log("Updated all users list:", updatedAllUsers);
+  
+      return { filteredUsers: updatedFilteredUsers, allUsers: updatedAllUsers };
+    });
+  
+    console.log("Users Data Store:", useUsersDataStore.getState()); // ✅ Debug log
+  };
+  
   useEffect(() => {
     const ws = new WebSocket(WS_URL);
     ws.onopen = () => {
@@ -37,6 +64,10 @@ function useWebSocketUsers() {
       switch (data.type) {
         case "NEW":
             handleUpdateStats(data.user);
+          break;
+        case "UPDATE":
+          console.log(data);
+          handleUserUpdate(data.user);
           break;
         case "PING":
           ws.send(JSON.stringify({ type: "PONG" }));

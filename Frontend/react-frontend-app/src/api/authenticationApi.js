@@ -2,12 +2,12 @@ import axios from "axios";
 import { apiBaseUrl } from "../config";
 //axios - ordem: url, body, headers
 
-const userAutenticationEndpoint = `${apiBaseUrl}auth/`;
+const userAuthenticationEndpoint = `${apiBaseUrl}auth/`;
 
 //Registo de novo utilizador
 export const registerUser = async (user) => {
   try {
-    const response = await axios.post(`${userAutenticationEndpoint}register`,
+    const response = await axios.post(`${userAuthenticationEndpoint}register`,
       user,
       {
         headers: {"Content-Type": "application/json"}
@@ -43,7 +43,7 @@ export const registerUser = async (user) => {
 export const login = async (username, password) => {
   try {
     const response = await axios.post(
-      `${userAutenticationEndpoint}login`,
+      `${userAuthenticationEndpoint}login`,
       {
         username: username,
         password: password,
@@ -96,7 +96,7 @@ export const login = async (username, password) => {
 export const logout = async (token) => {
   try {
     const response = await axios.post(
-      `${userAutenticationEndpoint}logout`,
+      `${userAuthenticationEndpoint}logout`,
       {},
       {
         headers: {
@@ -130,7 +130,7 @@ export const logout = async (token) => {
 export const checkPassword = async (username, password) => {
   try {
     const response = await axios.post(
-      `${userAutenticationEndpoint}confirm-password/`,
+      `${userAuthenticationEndpoint}confirm-password/`,
       {
         username: username,
         password: password,
@@ -171,7 +171,7 @@ export const checkPassword = async (username, password) => {
 //GET informações do utilizador logged
 export const getUserLogged = async (token) => {
   try {
-    const response = await axios.get(`${userAutenticationEndpoint}me`,
+    const response = await axios.get(`${userAuthenticationEndpoint}me`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -202,7 +202,7 @@ export const getUserLogged = async (token) => {
 //Activar conta de utilizador
 export const activateUserAccount = async (activationToken) => {
   try {
-    const response = await axios.post(`${userAutenticationEndpoint}activate`,
+    const response = await axios.post(`${userAuthenticationEndpoint}activate`,
       {},
       {
         headers: {
@@ -250,6 +250,79 @@ export const activateUserAccount = async (activationToken) => {
       throw new Error("errorNetwork_error");
     }
     console.log(error.response);
+    throw new Error("errorUnexpected");
+  }
+};
+
+export const requestPasswordReset = async (token) => {
+  if (!token) {
+    console.error("Missing authentication token");
+    throw new Error("errorMissingToken");
+  }
+
+  try {
+    const response = await axios.post(`${userAuthenticationEndpoint}request-password-reset`, 
+      {},
+      { headers: { "Content-Type": "application/json", "token": token } }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 401) {
+        console.error("Invalid or expired authentication token");
+        throw new Error("errorInvalidToken");
+      }
+      console.error("Password reset request failed:", status);
+      throw new Error("errorRequestFailed");
+    }
+
+    console.error("Network error:", error.request || error.message);
+    throw new Error("errorUnexpected");
+  }
+};
+
+
+export const resetPassword = async (token, newPassword) => {
+  if (!token) {
+    console.error("Missing password reset token");
+    throw new Error("errorMissingToken");
+  }
+
+  try {
+    const response = await axios.post(`${userAuthenticationEndpoint}reset-password`,
+      newPassword, // ✅ Send password as raw text (not `{ newPassword }`)
+      {
+        headers: {
+          "Content-Type": "text/plain", // ✅ Matches backend expectation
+          "token": token // ✅ Token remains in header
+        }
+      }
+    );
+
+    return response.data;
+
+  } catch (error) {
+    if (error.response) {
+      const status = error.response.status;
+
+      if (status === 400) {
+        console.error("Invalid password format");
+        throw new Error("errorInvalidPassword");
+      }
+      if (status === 401) {
+        console.error("Invalid or expired token");
+        throw new Error("errorInvalidToken");
+      }
+      
+      console.error("Password reset failed:", status);
+      throw new Error("errorResetFailed");
+    }
+
+    console.error("Network error:", error.request || error.message);
     throw new Error("errorUnexpected");
   }
 };

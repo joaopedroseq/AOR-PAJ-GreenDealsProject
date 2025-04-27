@@ -128,6 +128,8 @@ public class UserBean implements Serializable {
 
     public boolean updateUser(String username, UserDto userDto) {
         UserEntity userToUpdate = userDao.findUserByUsername(username);
+        UserDto userToBroadcast = new UserDto();
+        userToBroadcast.setUsername(username);
         if (userToUpdate == null) {
             return false;
         } else {
@@ -137,9 +139,11 @@ public class UserBean implements Serializable {
                 }
                 if (userDto.getFirstName() != null) {
                     userToUpdate.setFirstName(userDto.getFirstName());
+                    userToBroadcast.setFirstName(userDto.getFirstName());
                 }
                 if (userDto.getLastName() != null) {
                     userToUpdate.setLastName(userDto.getLastName());
+                    userToBroadcast.setLastName(userDto.getLastName());
                 }
                 if (userDto.getState() != null) {
                     userToUpdate.setState(userDto.getState());
@@ -149,17 +153,21 @@ public class UserBean implements Serializable {
                 }
                 if (userDto.getEmail() != null) {
                     userToUpdate.setEmail(userDto.getEmail());
+                    userToBroadcast.setEmail(userDto.getEmail());
                 }
                 if (userDto.getPhoneNumber() != null) {
                     userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
+                    userToBroadcast.setPhoneNumber(userDto.getPhoneNumber());
                 }
                 if (userDto.getUrl() != null) {
                     userToUpdate.setUrl(userDto.getUrl());
+                    userToBroadcast.setUrl(userDto.getUrl());
                 }
                 if (userDto.getProducts() != null) {
                     userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
                 }
-                wsUsers.broadcastUser(userDto, "UPDATE");
+                userDao.persist(userToUpdate);
+                wsUsers.broadcastUser(userToBroadcast, "UPDATE");
                 //adicionar evaluations
                 return true;
             } catch (Exception e) {
@@ -231,16 +239,16 @@ public class UserBean implements Serializable {
         }
     }
 
-
-    //Converts
-    private ArrayList<UserDto> convertGroupUserEntityToUserDto(List<UserEntity> userEntities) {
-        ArrayList<UserDto> userDtos = new ArrayList<>();
-        for (UserEntity userEntity : userEntities) {
-            userDtos.add(convertUserEntitytoUserDto(userEntity));
-        }
-        return userDtos;
+    public String generateNewPasswordResetToken(UserDto userDto) {
+        UserEntity user = userDao.findUserByUsername(userDto.getUsername());
+        String passwordResetToken = tokenBean.generateNewToken();
+        TokenEntity token = new TokenEntity(user, passwordResetToken, TokenType.PASSWORD_RESET);
+        user.getTokens().add(token);
+        userDao.persist(user);
+        return passwordResetToken;
     }
 
+    //Converts
     public UserEntity convertUserDtotoUserEntity(UserDto user) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(user.getUsername());

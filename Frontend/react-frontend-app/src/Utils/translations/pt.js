@@ -203,6 +203,7 @@ const pt = {
   changePasswordModalErrorSamePassword: "A nova password é igual à antiga",
   changePasswordModalConfirmButton: "Confirmar",
   changePasswordModalCancelButton: "Cancelar",
+  confirmPasswordModalErrorpasswordConfirm: "Erro, confirmação de passowrd sem sucesso",
 
   //ConfirmationModal
   confirmationModalConfirmButton: "Confirmar",
@@ -384,6 +385,15 @@ const pt = {
   //Chat
   chatWsClosedMessageSent:"Houve um problema mas a sua mensagem foi enviada",
   chatWsClosedMessageNotSent:"Houve um problema e a sua mensagem não foi enviada. Tente outra vez",
+
+  //PasswordReset
+  passwordResetRequestTitle: "Aleração de password",
+  passwordResetRequestMessage: "Utilize o link abaixo para alterar a sua password",
+  passwordResetConfirmTitle: "Alteração de password",
+  passwordResetInstruction: "Utilize o endereço abaixo para alterar a sua password",
+  passwordResetConfirmTitleMessage: "Password alterada com sucesso",
+  passwordResetFailed: "Token inválido ou expirado",
+
 
 
 

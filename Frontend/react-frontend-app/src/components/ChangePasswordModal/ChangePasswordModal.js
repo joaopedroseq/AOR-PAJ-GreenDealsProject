@@ -98,7 +98,6 @@ const ChangePasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose}) => {
                   })}
                 />
               </div>
-
               <div className="changePasswordButtons">
                 <input type="submit" className="submit" id="submit" value={intl.formatMessage({ id: "changePasswordModalConfirmButton" })} />
                 <button className="cancel" type="button" onClick={handleCancel}>

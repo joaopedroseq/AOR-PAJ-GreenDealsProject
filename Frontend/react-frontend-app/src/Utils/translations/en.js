@@ -223,6 +223,7 @@ const en = {
   confirmPasswordModalErrorPasswordMismatch: "Passwords do not match",
   confirmPasswordModalConfirmButton: "Confirm",
   confirmPasswordModalCancelButton: "Cancel",
+  confirmPasswordModalErrorpasswordConfirm: "Error, password confirm unsuccessful",
 
   //DeleteCategoryModal
   deleteCategoryModalTitle: "Delete category",
@@ -373,6 +374,14 @@ const en = {
   chatWsClosedMessageSent:"There was a problem but your message was sent",
   chatWsClosedMessageNotSent:"There was a problem. Your message wasn't sent. Try again",
 
+   //PasswordReset
+   passwordResetRequestTitle: "Password change",
+   passwordResetRequestMessage: "Use the following link to change the password",
+   passwordResetConfirmTitle: "Password change",
+   passwordResetInstruction: "Use the following link to change the password",
+   passwordResetConfirmTitleMessage: "Password changed sucessfully",
+   passwordResetFailed: "Invalid or expired token",
+   
   //Errors
   errorerrorNetwork_error:
     "No response from the server, please check your connection.",

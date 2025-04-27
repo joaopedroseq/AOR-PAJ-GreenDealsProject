@@ -17,6 +17,7 @@ import { IntlProvider } from "react-intl";
 import languages from "./Utils/translations";
 import useLocaleStore from './Stores/useLocaleStore';
 import Activate from './Pages/Activate/Activate';
+import PasswordReset from './Pages/PasswordReset/PasswordReset';
 
 function App() {
   const locale = useLocaleStore((state) => state.locale);
@@ -53,6 +54,9 @@ function App() {
       }/>
       <Route path="/activate" element={
           <Activate />
+      }/>
+      <Route path="/reset" element={
+          <PasswordReset />
       }/>
       <Route path="/dashboard" element={
         <ProtectedRoute>

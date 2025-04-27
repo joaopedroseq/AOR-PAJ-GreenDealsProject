@@ -121,6 +121,14 @@ public class TokenBean {
         tokenDao.revokeToken(tokenDto.getTokenValue());
     }
 
+    public void renovateToken (TokenDto tokenDto) {
+        TokenEntity tokenEntity = tokenDao.findTokenByValue(tokenDto.getTokenValue());
+        if (tokenEntity != null) {
+            tokenEntity.setDate(LocalDateTime.now());
+            tokenDao.merge(tokenEntity);
+        }
+    }
+
     private LocalDateTime getExpirationDate(TokenDto tokenDto, TokenType tokenType) {
         ConfigurationEntity latestConfiguration = configurationDao.getLatestConfiguration();
         switch (tokenType) {

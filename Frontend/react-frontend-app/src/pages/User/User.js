@@ -14,6 +14,8 @@ import ChangePasswordModal from "../../Components/ChangePasswordModal/ChangePass
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { useIntl } from "react-intl";
 import handleNotification from "../../Handles/handleNotification.js";
+import { requestPasswordReset } from "../../Api/authenticationApi.js";
+import ConfirmationModal from "../../Components/ConfirmationModal/ConfirmationModal";
 
 //Página de utilizador
 export const User = () => {
@@ -35,13 +37,36 @@ export const User = () => {
   const [isConfirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
   const [isChangePasswordOpen, setChangePasswordOpen] = useState(false);
 
+  //Confirmation Modal
+  const [modalConfig, setModalConfig] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const onSubmit = async (editedInformation) => {
     setUpdatedUserInfo(editedInformation);
     setConfirmPasswordOpen(true);
   };
 
-  const handleChangePassword = () =>{
-    setChangePasswordOpen(true);
+  const handleChangePassword = async () =>{
+    const passwordResetToken = await requestPasswordReset(token);
+    const passwordResetLink = `localhost:3000/reset?token=${passwordResetToken}`;
+    if (!document.hasFocus()) {
+      console.error("Document not focused, clipboard write aborted.");
+    }
+    navigator.clipboard.writeText(passwordResetLink)
+      .then(() => handleNotification(intl, "info", "registerModalActivationLinkCopied"))
+      .catch((err) => console.error("Clipboard error:", err));    
+    setModalConfig({
+      title: intl.formatMessage({ id: "passwordResetRequestTitle" }),
+      message1: intl.formatMessage({
+        id: "passwordResetRequestMessage",
+      }),
+      message2: passwordResetLink,
+      onConfirm: () => {
+        setModalConfig({});
+        setIsModalOpen(false);
+      },
+    });
+  setIsModalOpen(true);
   }
 
   // Apresentação de erros no formulário ao utilizador
@@ -188,11 +213,13 @@ export const User = () => {
           </div>
         )}
       </section>
-      <ConfirmPasswordModal
-        userInfo={userInfo}
-        updatedUserInfo={updatedUserInfo}
-        isOpen={isConfirmPasswordOpen}
-        onClose={() => setConfirmPasswordOpen(false)}
+      <ConfirmationModal
+        title={modalConfig.title}
+        message1={modalConfig.message1}
+        message2={modalConfig.message2}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={modalConfig.onConfirm}
       />
       <ChangePasswordModal
         userInfo={userInfo}

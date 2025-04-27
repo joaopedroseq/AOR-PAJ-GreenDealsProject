@@ -16,8 +16,7 @@ const ConfirmPasswordModal = ({ userInfo, updatedUserInfo, isOpen, onClose }) =>
     const password = passwordData.password;
 
     try {
-      await handleChangeUserInformation(userInfo, updatedUserInfo, password, token, false);
-      handleNotification(intl, "success", "confirmPasswordModalSuccessMessage");
+      await handleChangeUserInformation(userInfo, updatedUserInfo, password, token, false, intl);
       reset();
       onClose();
     } catch (error) {

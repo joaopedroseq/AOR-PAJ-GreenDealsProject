@@ -56,5 +56,4 @@ public class TokenDao extends AbstractDao<TokenEntity> {
         }
     }
 
-
 }

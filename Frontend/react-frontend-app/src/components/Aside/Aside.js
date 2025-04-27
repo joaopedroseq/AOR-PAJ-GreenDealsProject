@@ -117,6 +117,11 @@ const Aside = ({ isAsideVisible }) => {
           >
             {intl.formatMessage({ id: "asideAdminCategoryManagement" })}
           </h3>
+          <Link to="/dashboard" className="link">
+          <h3 className="asideTitle">
+            Dashboard
+          </h3>
+        </Link>
         </ul>
       )}
       {page === "/profile" && isAdmin && (
