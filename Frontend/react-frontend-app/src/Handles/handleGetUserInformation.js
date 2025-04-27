@@ -1,10 +1,12 @@
-import { getUserInformation } from "../Api/userApi";
+import { getAllUsers } from "../Api/userApi";
 import handleNotification from "./handleNotification";
 
 //operação de obter informações de um utilizador - frequentemente utilizado
-export const handleGetUserInformation = async (username, token, intl) => {
+export const handleGetUserInformation = async (token, username, intl) => {
   try {
-    const userInformation = await getUserInformation(username, token);
+    console.log(token);
+    console.log(username);
+    const userInformation = await getAllUsers(token, username);
     return userInformation;
   } catch (error) {
     handleNotification(intl, "error", `${error.message}`);

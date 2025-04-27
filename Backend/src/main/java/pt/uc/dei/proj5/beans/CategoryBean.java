@@ -24,10 +24,6 @@ import java.util.Set;
 public class CategoryBean implements Serializable {
     private static final Logger logger = LogManager.getLogger(CategoryBean.class);
 
-
-    @Inject
-    UserBean userBean;
-
     @Inject
     ProductDao productDao;
 
@@ -130,6 +126,13 @@ public class CategoryBean implements Serializable {
         categoryDto.setNome(categoryEntity.getNome());
         categoryDto.setNameEng(categoryEntity.getNameEng());
         categoryDto.setProducts(categoryEntity.getProduct().size());
+        return categoryDto;
+    }
+
+    public CategoryDto lazyConvertCategoryEntityToCategoryDto(CategoryEntity categoryEntity) {
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setNome(categoryEntity.getNome());
+        categoryDto.setNameEng(categoryEntity.getNameEng());
         return categoryDto;
     }
 

@@ -1,6 +1,7 @@
 package pt.uc.dei.proj5.dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Set;
 
 public class CategoryDto implements Serializable {
@@ -44,5 +45,17 @@ public class CategoryDto implements Serializable {
         return this.nome != null && !this.nome.isEmpty() && this.nameEng != null && !this.nameEng.isEmpty();
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, nameEng);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        CategoryDto other = (CategoryDto) obj;
+        return Objects.equals(this.nome, other.nome) && Objects.equals(this.nameEng, other.nameEng);
+    }
 
 }

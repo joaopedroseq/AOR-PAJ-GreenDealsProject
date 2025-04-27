@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import pt.uc.dei.proj5.dto.UserAccountState;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 //to find if username is avaiable
@@ -30,6 +31,8 @@ import java.util.Set;
                 "WHERE u.admin = false " +
                 "AND u.state = 'ACTIVE' " +
                 "ORDER BY username")
+//For statistical purpose
+@NamedQuery(name="User.getNumberOfUsers", query = "SELECT COUNT(u) FROM UserEntity u")
 @Entity
 @Table(name = "userAccount", indexes = {
         @Index(name = "idx_user_username", columnList = "username"),
@@ -78,6 +81,12 @@ public class UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "state", nullable = false, unique = false, updatable = true)
     private UserAccountState state;
+
+    @Column(name = "registrationDate", nullable = false, unique = false, updatable = true)
+    private LocalDateTime registrationDate;
+
+    @Column(name = "activationDate", nullable = true, unique = false, updatable = true)
+    private LocalDateTime activationDate;
 
     @OneToMany(mappedBy = "seller")
     private Set<ProductEntity> products;
@@ -200,6 +209,22 @@ public class UserEntity implements Serializable {
 
     public void setTokens(Set<TokenEntity> tokens) {
         this.tokens = tokens;
+    }
+
+    public LocalDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(LocalDateTime registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public LocalDateTime getActivationDate() {
+        return activationDate;
+    }
+
+    public void setActivationDate(LocalDateTime activationDate) {
+        this.activationDate = activationDate;
     }
 
     @Override

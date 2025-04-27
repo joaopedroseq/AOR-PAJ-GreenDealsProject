@@ -1,6 +1,7 @@
 package pt.uc.dei.proj5.beans;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -72,8 +73,9 @@ public class UserBean implements Serializable {
         if (user == null) {
             UserEntity newUserEntity = convertUserDtotoUserEntity(userDto);
             newUserEntity.setAdmin(false);
+            newUserEntity.setRegistrationDate(LocalDateTime.now());
             newUserEntity.setState(UserAccountState.INACTIVE);
-            newUserEntity.setTokens(new HashSet<>()); // Initialize empty set
+            newUserEntity.setTokens(new HashSet<>());
             String newActivationToken = tokenBean.generateNewToken();
             TokenEntity activationToken = new TokenEntity(newUserEntity, newActivationToken, TokenType.ACTIVATION);
             // Ensure the user has a token list, then add the new activation token
@@ -141,6 +143,9 @@ public class UserBean implements Serializable {
                 }
                 if (userDto.getState() != null) {
                     userToUpdate.setState(userDto.getState());
+                    if(userDto.getState() == UserAccountState.ACTIVE){
+                        userToUpdate.setActivationDate(LocalDateTime.now());
+                    }
                 }
                 if (userDto.getEmail() != null) {
                     userToUpdate.setEmail(userDto.getEmail());

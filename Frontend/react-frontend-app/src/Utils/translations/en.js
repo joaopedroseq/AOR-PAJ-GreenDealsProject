@@ -1,6 +1,9 @@
 import handleChangeUserInformation from "../../Handles/handleChangeUserInformation";
 
 const en = {
+  //ProtectedRoute
+  protectedRoute: "To access this page, please login",
+
   // Notifications
   // Errors
   noUsername: "Please enter the username.",

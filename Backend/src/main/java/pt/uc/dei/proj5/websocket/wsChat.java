@@ -93,15 +93,18 @@ public class wsChat {
                         session.getBasicRemote().sendText(errorJson.toString());
                     }
                 }
+                break;
             }
             case "CONVERSATION_READ": {
                 String sender = jsonMessage.getString("sender").trim();
                 String recipient = session.getId();
                 JsonObject conversationRead = JsonCreator.createJson("CONVERSATION_READ", "sender", sender);
                 sendMessageToUser(conversationRead, recipient);
+                break;
             }
             default:
                 logger.info("Received unknown message type: " + messageType);
+                break;
         }
     }
 

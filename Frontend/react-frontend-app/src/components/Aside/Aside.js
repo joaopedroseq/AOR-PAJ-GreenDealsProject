@@ -15,6 +15,7 @@ const Aside = ({ isAsideVisible }) => {
   //User state
   const token = useUserStore((state) => state.token);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const page = useLocation().pathname;
   //Categories load
   const displayedCategories = useCategoriesStore(
@@ -38,8 +39,8 @@ const Aside = ({ isAsideVisible }) => {
         handleNotification(intl, "error", `error${error.message}`);
       }
     };
-  
-    if (["/user", "/admin", "/profile"].includes(page)) {
+    token ? setIsLogged(true) : setIsLogged(false);
+    if (["/user", "/admin", "/profile"].includes(page) && isLogged) {
       getUserInfo();
     }
     fetchCategories();

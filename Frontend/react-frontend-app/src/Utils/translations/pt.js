@@ -1,4 +1,7 @@
 const pt = {
+   //ProtectedRoute
+   protectedRoute: "Para aceder a esta página por favor faça login",
+
   //Notifications
   //Errors
   noUsername: "Por favor, preencha o nome de utilizador.",

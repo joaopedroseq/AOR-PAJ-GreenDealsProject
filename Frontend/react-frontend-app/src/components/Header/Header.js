@@ -16,6 +16,7 @@ import { useIntl } from "react-intl";
 import handleLocaleChange from "../../Handles/handleLocaleChange";
 import handleNotification from "../../Handles/handleNotification";
 import useWebSocketNotifications from "../../Websockets/useWebSocketNotifications";
+import { FaPaperPlane } from "react-icons/fa";
 
 const Header = () => {
   //Acesso ao user store para operações que requerem autenticação
@@ -127,6 +128,9 @@ const Header = () => {
           
   {isAuthenticated ? (
     <>
+    <Link to={`/chat/`}>
+        <FaPaperPlane/>
+    </Link>
     <div className="headerDiv">
       <input
         type="button"

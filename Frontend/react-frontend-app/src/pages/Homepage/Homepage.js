@@ -8,9 +8,10 @@ import useProductStore from "../../Stores/useProductStore";
 import useLocaleStore from "../../Stores/useLocaleStore";
 import { FormattedMessage } from "react-intl";
 import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
-import UserCard from "../../Components/UserCard/UserCard";
+import UserCardHomepage from "../../Components/UserCardHomepage/UserCardHomepage";
 import handleGetAllUsers from "../../Handles/handleGetAllUsers";
 import { useIntl } from "react-intl";
+import UserSearchBar from '../../Components/UserSearchBar/UserSearchBar';
 
 
 //Homepage
@@ -21,6 +22,7 @@ const Homepage = () => {
 
   //Users
   const [allUsers, setAllUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState(allUsers);
 
   //Opções de língua
   //Internacionalização
@@ -36,9 +38,9 @@ const Homepage = () => {
     const gatherInformation = async() => {
       clearFilters();
       await fetchProducts(); // Fetch products on component mount
-      const users = await handleGetAllUsers(null, intl);
-      console.log(users);
+      const users = await handleGetAllUsers(null, null, intl);
       setAllUsers(users);
+      setFilteredUsers(users)
     };
     gatherInformation();    
   }, [clearFilters, fetchProducts, intl]);
@@ -72,18 +74,23 @@ const Homepage = () => {
         )}
       </div>
       <section className="homepage-user-section" id="homepage-user-section">
-        <div id="homepage-user-container" className="homepage-user-container">
-          {allUsers.length === 0 ? (
-            <p>{intl.formatMessage({ id: "noUsersToShow"})}</p>
-          ) : (
-            allUsers.map((user, index) => (
-              <UserCard
-                key={user.id || index}
-                user={user}
-              />
-            ))
-          )}
-        </div>
+          <UserSearchBar 
+            allUsers={allUsers} 
+            onSearch={setFilteredUsers}
+          />
+          
+          <div id="homepage-user-container" className="homepage-user-container">
+            {filteredUsers.length === 0 ? (
+              <p>{intl.formatMessage({ id: "noUsersToShow"})}</p>
+            ) : (
+              filteredUsers.map((user, index) => (
+                <UserCardHomepage
+                  key={user.id || index}
+                  user={user}
+                />
+              ))
+            )}
+          </div>
       </section>
       <div className="sustentabilityBannerSpan">
         <img

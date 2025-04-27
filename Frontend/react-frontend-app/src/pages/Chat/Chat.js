@@ -8,35 +8,63 @@ import useWebSocketChat from "../../Websockets/useWebSocketChat";
 import { sendMessageApi, readConversationApi } from "../../Api/messagesApi";
 import "./chat.css";
 import handleNotification from "../../Handles/handleNotification";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const Chat = () => {
+  const navigate = useNavigate();
   const webSocketChat = useWebSocketChat();
   const { sendMessage } = useWebSocketChat();
   const token = useUserStore((state) => state.token);
+  const userToChat = new URLSearchParams(useLocation().search).get("username");
   const [userUsername, setUsername ] = useState(null)
   const { conversations, selectedUser, setSelectedUser, fetchAllConversations, messages, fetchUserConversation, addLocalMessage, updateMessageStatus  } = useMessageStore();
   const [messageInput, setMessageInput] = useState("");
   const intl = useIntl();
 
   useEffect(() => {
-    const getUserInformation = async() =>{
-      fetchAllConversations(token);
+    const getUserInformation = async () => {
+      await fetchAllConversations(token);
       let userInformation = await getLoggedUserInformation(token, intl);
       setUsername(userInformation.username);
-    }
-    getUserInformation();      
-  }, [token]);
 
-  useEffect(() => {
-      if (selectedUser) {
-        readConversationApi(token, selectedUser.username);
-        fetchUserConversation(token, selectedUser.username);
+      if (userToChat) {
+        const updatedConversations = useMessageStore.getState().conversations;
+        const userFromURL = updatedConversations.find(u => u.username === userToChat);
+
+        if (!userFromURL) {
+          console.log(`Adding new user to conversation: ${userToChat}`);
+          useMessageStore.getState().addNewUserToConversation(userToChat);
+
+          setTimeout(() => { // Small delay to allow state to settle
+            const finalConversations = useMessageStore.getState().conversations;
+            const addedUser = finalConversations.find(u => u.username === userToChat);
+            
+            if (addedUser && (!selectedUser || selectedUser.username !== userToChat)) {
+              setSelectedUser(addedUser);
+            }
+          }, 50);
+        } else {
+          console.log(`Selecting existing user: ${userToChat}`);
+          if (!selectedUser || selectedUser.username !== userToChat) {
+            setSelectedUser(userFromURL);
+          }
+        }
       }
-  }, [selectedUser]);
+    };
+
+    getUserInformation();
+}, [token, userToChat]); 
+  
 
   useEffect(() => {
-    console.log(messages)
-}, [messages]);
+    if (selectedUser) {
+      navigate(`/chat?username=${selectedUser.username}`, { replace: true });
+      readConversationApi(token, selectedUser.username);
+      fetchUserConversation(token, selectedUser.username);
+    }
+  }, [selectedUser]);
+  
+
 
   const handleSendMessage = async () => {
       if (messageInput.trim() !== "") {

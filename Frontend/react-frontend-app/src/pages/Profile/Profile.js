@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import placeholder from "../../Assets/placeholder/item.png";
 import exclude from "../../Assets/icons/exclude.png";
 import deleteProducts from "../../Assets/icons/deleteProducts.png";
@@ -18,9 +18,12 @@ import handleChangeUserInformation from "../../Handles/handleChangeUserInformati
 import ProductCard from "../../Components/ProductCard/ProductCard";
 import { useIntl } from "react-intl";
 import handleNotification from "../../Handles/handleNotification.js";
-import { handleExcludingUser, handleDeletingUserProducts, handleDeletingUser } from '../../Handles/handleUserOperations';
-import useWebSocketProducts from '../../Websockets/useWebSocketProducts';
-
+import {
+  handleExcludingUser,
+  handleDeletingUserProducts,
+  handleDeletingUser,
+} from "../../Handles/handleUserOperations";
+import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
 
 export const Profile = () => {
   //Websocket
@@ -31,9 +34,9 @@ export const Profile = () => {
   const [userProfile, setUserProfile] = useState({});
   const [isOwner, setOwner] = useState(false);
   const [isAdmin, setAdmin] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
 
-
- //Opções de língua
+  //Opções de língua
   const intl = useIntl();
   const locale = useLocaleStore((state) => state.locale);
 
@@ -55,47 +58,50 @@ export const Profile = () => {
   } = useForm();
 
   //Get das informações do utilizador
-  const getProfileInformation = async () => {
-    let userInformation = await handleGetUserInformation(username, token, intl);
-    setUserProfile(userInformation);
+  const getProfileInformation = async (token) => {
+    let userInformation = await handleGetUserInformation(token, username, intl);
+    console.log(userInformation[0]);
+    setUserProfile(userInformation[0]);
   };
 
   useEffect(() => {
+    token ? setIsLogged(false) : setIsLogged(true);
     const checkIfAdminAndOwner = async () => {
       try {
         let userInformation = await getLoggedUserInformation(token, intl);
         if (userInformation.admin === true) {
-          console.log("isAdmin")
+          console.log("isAdmin");
           setAdmin(true);
         }
-        if(userInformation.username === username){
-          console.log("isOwner")
+        if (userInformation.username === username) {
+          console.log("isOwner");
           setOwner(true);
         }
       } catch (error) {
-        handleNotification(intl, "error", `error${error.message}`);  
+        handleNotification(intl, "error", `error${error.message}`);
         navigate("/");
       }
     };
-    checkIfAdminAndOwner();
-    getProfileInformation();
+    if (isLogged) {
+      checkIfAdminAndOwner();
+    }
+    token ? getProfileInformation(token) : getProfileInformation(null);
   }, []);
 
   //useEffect de refresh de todos os dados do utilizador (informações e produtos) caso este não seja admin
   useEffect(() => {
     try {
-    if (userProfile?.username) {
-      let seller = userProfile.username;
-      let excluded = isAdmin ? null : false;
-      let state = isAdmin || isOwner ? "DRAFT" : undefined;
-      setFilters({ seller, excluded, state });
-      fetchProducts(token);
-    }
-   } catch (error) {
+      if (userProfile?.username) {
+        let seller = userProfile.username;
+        let excluded = isAdmin ? null : false;
+        let state = isAdmin || isOwner ? "DRAFT" : undefined;
+        setFilters({ seller, excluded, state });
+        isLogged ? fetchProducts(token) : fetchProducts(null)
+      }
+    } catch (error) {
       handleNotification(intl, "error", `error${error.message}`);
     }
   }, [isAdmin, isOwner, userProfile]);
-  
 
   const onSubmit = async (newUserInformation) => {
     setModalConfig({
@@ -137,47 +143,78 @@ export const Profile = () => {
   };
 
   //Apagar produtos de utilizador
-    const handleDeleteUserProducts = (user) => {
-      setModalConfig({
-        title: intl.formatMessage({ id: "adminRemoveUserProductsTitle"}, { user: user.username }),
-        message1: intl.formatMessage({ id: "adminRemoveUserProductsMessage1" }, { username: user.username }),
-        message2: null,
-        onConfirm: async () => {
-          await handleDeletingUserProducts(token, user, setIsModalOpen, fetchProducts, intl);
-        },
-      });
-    
-      setIsModalOpen(true);
-    };
-  
-  
-    //Excluír utilizador
-    const handleExcludeUser = async(user) => {
-      setModalConfig({
-        title: intl.formatMessage({ id: "adminExcludeUserTitle"}),
-        message1: intl.formatMessage({ id: "adminExcludeUserMessage1"}, { username: user.username}),
-        message2: intl.formatMessage({ id: "adminExcludeUserMessage2"}),
-        onConfirm: async () => {
-          await handleExcludingUser(token, user, null, setIsModalOpen, fetchProducts, intl);
-        },
-      });
-    
-      setIsModalOpen(true);
-    };
-  
-    //Apagar utilizador
-    const handleDeleteUser = async(user) => {
-      setModalConfig({
-        title: intl.formatMessage({ id: "adminDeleteUserTitle"}),
-        message1: intl.formatMessage({ id: "adminDeleteUserMessage1"}, { username: user.username}),
-        message2: intl.formatMessage({ id: "adminDeleteUserMessage2"}),
-        onConfirm: async () => {
-          await handleDeletingUser(token, user, null, setIsModalOpen, navigate, fetchProducts, intl);
-        },
-      });
-      setIsModalOpen(true);
-    };
+  const handleDeleteUserProducts = (user) => {
+    setModalConfig({
+      title: intl.formatMessage(
+        { id: "adminRemoveUserProductsTitle" },
+        { user: user.username }
+      ),
+      message1: intl.formatMessage(
+        { id: "adminRemoveUserProductsMessage1" },
+        { username: user.username }
+      ),
+      message2: null,
+      onConfirm: async () => {
+        await handleDeletingUserProducts(
+          token,
+          user,
+          setIsModalOpen,
+          fetchProducts,
+          intl
+        );
+      },
+    });
 
+    setIsModalOpen(true);
+  };
+
+  //Excluír utilizador
+  const handleExcludeUser = async (user) => {
+    setModalConfig({
+      title: intl.formatMessage({ id: "adminExcludeUserTitle" }),
+      message1: intl.formatMessage(
+        { id: "adminExcludeUserMessage1" },
+        { username: user.username }
+      ),
+      message2: intl.formatMessage({ id: "adminExcludeUserMessage2" }),
+      onConfirm: async () => {
+        await handleExcludingUser(
+          token,
+          user,
+          null,
+          setIsModalOpen,
+          fetchProducts,
+          intl
+        );
+      },
+    });
+
+    setIsModalOpen(true);
+  };
+
+  //Apagar utilizador
+  const handleDeleteUser = async (user) => {
+    setModalConfig({
+      title: intl.formatMessage({ id: "adminDeleteUserTitle" }),
+      message1: intl.formatMessage(
+        { id: "adminDeleteUserMessage1" },
+        { username: user.username }
+      ),
+      message2: intl.formatMessage({ id: "adminDeleteUserMessage2" }),
+      onConfirm: async () => {
+        await handleDeletingUser(
+          token,
+          user,
+          null,
+          setIsModalOpen,
+          navigate,
+          fetchProducts,
+          intl
+        );
+      },
+    });
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="user-main-content">
@@ -207,7 +244,13 @@ export const Profile = () => {
                   </div>
                 </div>
               ) : (
-                products.map((product) => <ProductCard key={product.id} product={product} locale={locale} />)
+                products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    locale={locale}
+                  />
+                ))
               )}
             </div>
           </section>
@@ -324,40 +367,44 @@ export const Profile = () => {
                       })}
                     />
                   </div>
-                  {(isOwner || isAdmin) && 
-                  <input
-                    type="submit"
-                    id="guardarAlteracoesUser-btn"
-                    className="guardarAlteracoesUser-btn"
-                    value="Guardar Alterações"
-                  />
-                  }
-                  {isAdmin && (
-                  <div>
-                    <img
-                      src={deleteProducts}
-                      alt="exclude user"
-                      className="deleteProductsUserBtn"
-                      onClick={handleDeleteUserProducts}
-                    />
-                    <img
-                      src={exclude}
-                      alt="exclude user"
-                      className="excludeUserBtn"
-                      onClick={handleExcludeUser}
-                    />
-                    <img
-                      src={deleteUser}
-                      alt="delete user"
-                      className="deleteUserBtn"
-                      onClick={handleDeleteUser}
-                    />
-                  </div>
-                  )}
-                  {!isOwner && (
-                  <div>
-                    <FaPaperPlane />
-                  </div>
+                  {isLogged ? (
+                    <>
+                      {(isOwner || isAdmin) && (
+                        <input
+                          type="submit"
+                          id="guardarAlteracoesUser-btn"
+                          className="guardarAlteracoesUser-btn"
+                          value="Guardar Alterações"
+                        />
+                      )}
+                      {isAdmin && (
+                        <div>
+                          <img
+                            src={deleteProducts}
+                            alt="exclude user"
+                            className="deleteProductsUserBtn"
+                            onClick={handleDeleteUserProducts}
+                          />
+                          <img
+                            src={exclude}
+                            alt="exclude user"
+                            className="excludeUserBtn"
+                            onClick={handleExcludeUser}
+                          />
+                          <img
+                            src={deleteUser}
+                            alt="delete user"
+                            className="deleteUserBtn"
+                            onClick={handleDeleteUser}
+                          />
+                        </div>
+                      )}
+                    </>
+                  ) : <></>}
+                  {!isOwner && isLogged && (
+                    <div>
+                      <FaPaperPlane />
+                    </div>
                   )}
                 </form>
               </div>

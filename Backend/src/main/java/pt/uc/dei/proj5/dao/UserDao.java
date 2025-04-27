@@ -134,7 +134,7 @@ public class UserDao extends AbstractDao<UserEntity> {
 
     public boolean deleteUser(String username) {
         try{
-            if (em.createNamedQuery("Token.deleteToken").setParameter("username", username).executeUpdate() > 0) {
+            if (em.createNamedQuery("Token.deleteTokensByUser").setParameter("username", username).executeUpdate() > 0) {
                 if (em.createNamedQuery("User.deleteUser").setParameter("username", username).executeUpdate() > 0) {
                     return true;
                 }
@@ -167,23 +167,13 @@ public class UserDao extends AbstractDao<UserEntity> {
         }
     }
 
-    public List<UserEntity> getAllUsers() {
-        try{
-            return em.createNamedQuery("User.getAllUsers").getResultList();
-        }
-        catch(NoResultException e){
-            logger.error("Exception {} in UserDao.getAllUsers", e.getMessage());
-            return null;
-        }
-    }
-
-    public List<UserEntity> getAllActiveUsers() {
-        try{
-            return em.createNamedQuery("User.getAllActiveUsers").getResultList();
-        }
-        catch(NoResultException e){
-            logger.error("Exception {} in UserDao.getAllUsers", e.getMessage());
-            return null;
+    public int getNumberOfUsers() {
+        try {
+            Long count = (Long) em.createNamedQuery("User.getNumberOfUsers").getSingleResult();
+            return count.intValue(); // Convert Long to int
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the error
+            return 0; // Fallback value in case of failure
         }
     }
 }

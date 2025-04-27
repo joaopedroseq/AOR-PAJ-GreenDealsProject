@@ -8,6 +8,8 @@ import pt.uc.dei.proj5.dto.UserAccountState;
 import pt.uc.dei.proj5.entity.TokenEntity;
 import pt.uc.dei.proj5.entity.UserEntity;
 
+import java.time.LocalDateTime;
+
 /**
  * Classe para inicializar utilizadores
  * @author João Sequeira
@@ -38,6 +40,8 @@ public class UserInitializer {
             admin.setState(UserAccountState.ACTIVE);
             admin.setAdmin(true);
             admin.setUrl("https://icon-icons.com/icons2/508/PNG/512/macintosh_icon-icons.com_49902.png");
+            admin.setRegistrationDate(LocalDateTime.now());
+            admin.setActivationDate(LocalDateTime.now());
             userDao.persist(admin);
         }
         if (!userDao.findIfUserExists("anonymous")) {
@@ -53,6 +57,7 @@ public class UserInitializer {
             anonymous.setLastName("-");
             anonymous.setPhoneNumber("-1");
             anonymous.setUrl("https://b.thumbs.redditmedia.com/n40D3mkLHMt42LU5vbk23qPKpBT4TeWVcrdNxVoqIvA.png");
+            anonymous.setRegistrationDate(LocalDateTime.now());
             userDao.persist(anonymous);
         }
     }
