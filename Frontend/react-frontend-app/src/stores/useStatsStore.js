@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { getProductStatistics, getUserStatistics } from '../Api/statsApi';
 
-const useStatsStore = create((set) => ({
+const useStatsStore = create((set, get) => ({
   userStats: null,
   productStats: null,
 

@@ -1,16 +1,20 @@
 import { React, useEffect, useState } from "react";
 import { Box, Typography, Grid, Paper } from "@mui/material";
-import { Pie, Bar, Doughnut } from "react-chartjs-2";
+import { Pie, Bar, Doughnut, Line } from "react-chartjs-2";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    ArcElement,
+    TimeScale,
+    LineElement, // ✅ Required for line charts
+    PointElement, // ✅ This is needed to fix the error
+    Title,
+    Tooltip,
+    Legend,
+  } from "chart.js";  
+import "chartjs-adapter-date-fns";
 import "./dashboard.css";
 import useStatsStore from "../../Stores/useStatsStore";
 import useUserStore from "../../Stores/useUserStore";
@@ -19,24 +23,29 @@ import { getLoggedUserInformation } from "../../Handles/handleLogin";
 import { useIntl } from "react-intl";
 import handleNotification from "../../Handles/handleNotification";
 import useWebSocketProducts from "../../Websockets/useWebSocketProducts";
+import useWebSocketUsers from "../../Websockets/useWebSocketUsers";
 
 ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend
-);
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    ArcElement,
+    TimeScale,
+    LineElement,
+    PointElement,
+    Title,
+    Tooltip,
+    Legend
+  );
 
 const Dashboard = () => {
   const { userStats, fetchUserStats, fetchProductStats } = useStatsStore();
   const token = useUserStore((state) => state.token);
   const navigate = useNavigate();
   const intl = useIntl();
-
-  const { productStats } = useStatsStore(); // Access product stats from store
+  const { productStats } = useStatsStore();
+  const { websocketProducts } = useWebSocketProducts();
+  const { websocketUsers } = useWebSocketUsers();
 
   useEffect(() => {
     const checkIfAdminAndGetStats = async () => {
@@ -60,6 +69,7 @@ const Dashboard = () => {
   }, [token]);
 
   const productsData = {
+    totalProducts: productStats?.totalProducts || 0,
     states: {
       labels: Object.keys(productStats?.productsByState || {}),
       datasets: [
@@ -155,7 +165,21 @@ const Dashboard = () => {
     },
     avgTimeToActivate: `${userStats?.avgTimeToActivate || 0.0} minutes`,
     avgTimeToPublish: `${userStats?.avgTimeToFirstPublish || 0.0} minutes`,
-  };
+    userGrowthByDate: {
+        labels: Object.keys(userStats?.newUsersByDayOfYear || {}), // Ensure safe access
+        datasets: [
+          {
+            label: "New Users Per Day",
+            data: Object.values(userStats?.newUsersByDayOfYear || {}), // Prevent crashes
+            borderColor: "#4CAF50",
+            backgroundColor: "rgba(76, 175, 80, 0.2)",
+            tension: 0.3, // Smooth curve
+          },
+        ],
+      },
+  };      
+
+    
 
   const chartOptions = {
     responsive: true,
@@ -175,6 +199,16 @@ const Dashboard = () => {
       },
     },
   };
+
+  const lineChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { type: "time", time: { unit: "day" } }, // Format X-axis as date
+      y: { beginAtZero: true },
+    },
+  };
+  
 
   const MetricCard = ({ title, value, color }) => (
     <Paper className={`metric-card ${color}`}>
@@ -198,8 +232,18 @@ const Dashboard = () => {
         <Typography variant="h5" component="h2" className="section-title">
           Products Analytics
         </Typography>
-
         <Grid container spacing={3} className="grid-container">
+          {/* Total Products */}
+          <Grid item xs={12} sm={6} md={3} className="grid-item">
+            <Paper className="total-card">
+              <Typography variant="h6" className="card-title">
+                Total Products
+              </Typography>
+              <Typography variant="h2" className="total-value">
+                {productsData.totalProducts}
+              </Typography>
+            </Paper>
+          </Grid>
           {/* Products by State */}
           <Grid item xs={12} sm={6} md={4} className="grid-item">
             <Paper className="chart-card">
@@ -379,6 +423,19 @@ const Dashboard = () => {
               </Typography>
             </Paper>
           </Grid>
+          <Box className="dashboard-section">
+      <Typography variant="h5" className="section-title">User Growth Analytics</Typography>
+
+      <Grid item xs={12} md={6} className="grid-item">
+        <Paper className="chart-card">
+          <Typography variant="h6" className="card-title">Users by Date</Typography>
+          <div className="chart-container">
+            <Line data={usersData.userGrowthByDate} options={lineChartOptions} />
+          </div>
+        </Paper>
+      </Grid>
+    </Box>
+
         </Grid>
       </Box>
     </Box>

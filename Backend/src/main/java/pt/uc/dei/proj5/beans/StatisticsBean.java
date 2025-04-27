@@ -13,6 +13,7 @@ import pt.uc.dei.proj5.entity.UserEntity;
 
 import java.lang.reflect.Parameter;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
@@ -145,6 +146,7 @@ public class StatisticsBean {
         userStatistics.setAvgTimeToActivate(avgTimeActivate);
         double avgTimeToFirstPublish = calculateAvgTimeToFirstPublish(users);
         userStatistics.setAvgTimeToFirstPublish(avgTimeToFirstPublish);
+        userStatistics.setNewUsersByDayOfYear(newUserByDate(users));
         return userStatistics;
     }
 
@@ -220,4 +222,13 @@ public class StatisticsBean {
         }
         return (totalUsers > 0) ? totalTimeToFirstPublish / totalUsers : 0.0;
     }
+
+    private Map<LocalDate, Integer> newUserByDate(List<UserEntity> users) {
+        return users.stream()
+                .collect(Collectors.groupingBy(
+                        user -> user.getRegistrationDate().toLocalDate(), // Extract LocalDate from createdAt timestamp
+                        Collectors.summingInt(user -> 1) // Count occurrences
+                ));
+    }
+
 }

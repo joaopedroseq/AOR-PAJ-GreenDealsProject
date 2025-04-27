@@ -18,49 +18,25 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 @Singleton
 @ServerEndpoint("/websocket/users/")
 public class WsUsers {
     private static final Logger logger = LogManager.getLogger(WsUsers.class);
-    private HashMap<String, Set<Session>> sessions = new HashMap<>();
+    private Set<Session> sessions = new HashSet<>();
 
-    @Inject
-    TokenBean tokenBean;
+    @OnOpen
+    public void onOpen(Session session) {
+        sessions.add(session);
+        logger.info("New connection: session {}", session.getId());
+    }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        String username = WebSocketAuthentication.findUsernameBySession(sessions, session);
-
-        if (username != null) {
-            Set<Session> userSessions = sessions.get(username);
-            if (userSessions != null) {
-                userSessions.remove(session);
-                if (userSessions.isEmpty()) {
-                    sessions.remove(username);
-                }
-            }
-            logger.info("User {} disconnected from chat. Reason: {}", username, reason.getReasonPhrase());
-        } else {
-            logger.info("Unknown WebSocket session closed: {}", reason.getReasonPhrase());
-        }
-    }
-
-    @OnMessage
-    public void toDoOnMessage(Session session, String msg) throws IOException {
-        JsonReader jsonReader = Json.createReader(new StringReader(msg));
-        JsonObject jsonMessage = jsonReader.readObject();
-        String messageType = jsonMessage.getString("type");
-        switch (messageType) {
-            case "AUTHENTICATION": {
-                WebSocketAuthentication.authenticate(session, jsonMessage, tokenBean, sessions);
-                break;
-            }
-            default:
-                logger.info("Received unknown message type: " + messageType);
-                break;
-        }
+        sessions.remove(session);
+        logger.info("Session {} disconnected: {}", session.getId(), reason.getReasonPhrase());
     }
 
     public void broadcastUser(UserDto userDto, String type) {
@@ -68,19 +44,16 @@ public class WsUsers {
         if (userJson != null) {
             String userJsonString = userJson.toString(); // Convert once
             // Send product update to all active sessions
-            for (Set<Session> userSessions : sessions.values()) {
-                for (Session session : userSessions) {
-                    if (session.isOpen()) {
-                        try {
-                            session.getBasicRemote().sendText(userJsonString);
-                        } catch (IOException e) {
-                            logger.error("Failed to send user update to session {}", session.getId(), e);
-                        }
+            for (Session session : sessions) {
+                if (session.isOpen()) {
+                    try {
+                        session.getBasicRemote().sendText(userJsonString);
+                    } catch (IOException e) {
+                        logger.error("Failed to send user update to session {}", session.getId(), e);
                     }
                 }
             }
-        }
-        else {
+        } else {
             logger.info("No product to update");
         }
     }
@@ -92,16 +65,14 @@ public class WsUsers {
 
     @Schedule(second = "*/60", minute = "*", hour = "*")
     private void pingUsers() {
-        for (Set<Session> userSessions : sessions.values()) { // Iterate over session sets
-            for (Session session : userSessions) { // Iterate over individual sessions
-                if (session.isOpen()) {
-                    try {
-                        session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0])); // Send WebSocket PING frame
-                    } catch (IOException e) {
-                        logger.error("Failed to send WebSocket PING to session {}", session.getId(), e);
-                    }
+        for (Session session : sessions) {
+            if (session.isOpen()) {
+                try {
+                    session.getBasicRemote().sendPing(ByteBuffer.wrap(new byte[0]));
+                } catch (IOException e) {
+                    logger.error("Failed to send WebSocket PING to session {}", session.getId(), e);
                 }
             }
         }
     }
-    }
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import useProductStore from "../Stores/useProductStore"; 
+import useProductStore from "../Stores/useProductStore";
+import useStatsStore from "../Stores/useStatsStore";
 
 function useWebSocketProducts() {
   const WS_URL = "ws://localhost:8080/sequeira-proj5/websocket/products/";
@@ -37,14 +38,8 @@ function useWebSocketProducts() {
   
 
 
-  // Handle incoming WebSocket product
   const handleProduct = (product) => {
-    console.log("Received product update:", product); // Log incoming product
-  
     useProductStore.setState((state) => {
-      console.log("Current products in store:", state.products); // Log current store state
-  
-      // If the product does not match filters, remove it
       if (!matchesFilters(product)) {
         console.log(`Product ${product.id} does NOT match filters, removing it.`);
         return { products: state.products.filter((p) => p.id !== product.id) };
@@ -52,23 +47,46 @@ function useWebSocketProducts() {
   
       // Check if the product already exists
       const exists = state.products.some((p) => p.id === product.id);
-      console.log(`Does product ${product.id} already exist in store?`, exists);
   
       // If exists, replace it; if not, add it
       const updatedProducts = exists
         ? state.products.map((p) => {
             if (p.id === product.id) {
-              console.log(`Updating product ${product.id} in store.`);
               return product;
             }
             return p;
           })
         : [...state.products, product];
-  
       console.log("Updated products list:", updatedProducts); // Log final updated state
       return { products: updatedProducts };
     });
   };
+
+  const handleUpdateStats = (product) => {
+    console.log(product);
+    let productState = product.state;
+    useStatsStore.setState((state) => ({
+      productStats: {
+        ...state.productStats, // Preserve existing stats
+        totalProducts: state.productStats.totalProducts + 1,
+        productsByState: {
+          ...state.productStats.productsByState, // Keep existing states
+          [productState]: (state.productStats.productsByState[productState] || 0) + 1, // Increment count safely
+        },
+        productsByCategory: state.productStats.productsByCategory.map((cat) =>
+          cat.nome === product.category.nome
+            ? { ...cat, productCount: cat.productCount + 1 } // Increment productCount
+            : cat
+        ),
+        topLocations: {
+          ...state.productStats.topLocations, // Keep existing states
+          [product.location]: (state.productStats.topLocations[product.location] || 0) + 1, // Increment count safely
+        },
+      },
+    }));
+  };
+
+
 
   useEffect(() => {
     const ws = new WebSocket(WS_URL);
@@ -78,7 +96,8 @@ function useWebSocketProducts() {
       const data = JSON.parse(event.data);
       switch (data.type) {
         case "NEW":
-          handleProduct(data.product); // Call function instead of a hook
+          handleProduct(data.product); 
+          handleUpdateStats(data.product)
           break;
         case "UPDATE":
           handleProduct(data.product);
