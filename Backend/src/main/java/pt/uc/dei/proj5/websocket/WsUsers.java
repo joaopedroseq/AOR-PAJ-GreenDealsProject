@@ -36,9 +36,9 @@ public class WsUsers {
         if (username != null) {
             Set<Session> userSessions = sessions.get(username);
             if (userSessions != null) {
-                userSessions.remove(session); // Remove only this session
+                userSessions.remove(session);
                 if (userSessions.isEmpty()) {
-                    sessions.remove(username); // Remove user if no active sessions remain
+                    sessions.remove(username);
                 }
             }
             logger.info("User {} disconnected from chat. Reason: {}", username, reason.getReasonPhrase());
@@ -59,6 +59,7 @@ public class WsUsers {
             }
             default:
                 logger.info("Received unknown message type: " + messageType);
+                break;
         }
     }
 

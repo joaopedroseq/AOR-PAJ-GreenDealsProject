@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import placeholder from "../../Assets/placeholder/item.png";
 import exclude from "../../Assets/icons/exclude.png";
 import deleteProducts from "../../Assets/icons/deleteProducts.png";

@@ -8,6 +8,7 @@ import User from './Pages/User/User';
 import Admin from './Pages/Admin/Admin';
 import Profile from './Pages/Profile/Profile';
 import Chat from './Pages/Chat/Chat';
+import Dashboard from './Pages/Dashboard/Dashboard';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './Utils/ProtectedRoute';
 import RouteListener from './Utils/RouteListener';
@@ -52,6 +53,11 @@ function App() {
       }/>
       <Route path="/activate" element={
           <Activate />
+      }/>
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
       }/>
       </Routes>
       <Footer/>

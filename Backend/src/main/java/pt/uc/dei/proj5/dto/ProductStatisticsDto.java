@@ -1,16 +1,17 @@
 package pt.uc.dei.proj5.dto;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ProductStatisticsDto {
     private int totalProducts;
     private Map<ProductStateId, Integer> productsByState;
-    private Map<CategoryDto, Integer> productsByCategory;
+    private List<Map<String, Object>> productsByCategory;
     public double avgProductsPerUser;
     public double avgPriceOfProducts;
-    public Map<CategoryDto, Double> avgPricePerCategory;
+    public List<Map<String, Object>> avgPricePerCategory;
     public Map<String, Integer> topLocations;
 
     public ProductStatisticsDto() {
@@ -32,11 +33,11 @@ public class ProductStatisticsDto {
         this.productsByState = productsByState;
     }
 
-    public Map<CategoryDto, Integer> getProductsByCategory() {
+    public List<Map<String, Object>> getProductsByCategory() {
         return productsByCategory;
     }
 
-    public void setProductsByCategory(Map<CategoryDto, Integer> productsByCategory) {
+    public void setProductsByCategory(List<Map<String, Object>> productsByCategory) {
         this.productsByCategory = productsByCategory;
     }
 
@@ -56,11 +57,11 @@ public class ProductStatisticsDto {
         this.avgPriceOfProducts = avgPriceOfProducts;
     }
 
-    public Map<CategoryDto, Double> getAvgPricePerCategory() {
+    public List<Map<String, Object>> getAvgPricePerCategory() {
         return avgPricePerCategory;
     }
 
-    public void setAvgPricePerCategory(Map<CategoryDto, Double> avgPricePerCategory) {
+    public void setAvgPricePerCategory(List<Map<String, Object>> avgPricePerCategory) {
         this.avgPricePerCategory = avgPricePerCategory;
     }
 

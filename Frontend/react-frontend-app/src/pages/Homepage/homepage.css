@@ -95,8 +95,9 @@ body{
       minmax(300px, 1fr)
     ); /* Colunas flexíveis */
     gap: 20px; /* Espaçamento entre os itens */
-    padding: 20px; /* Espaçamento interno */
+    padding: 5%; /* Espaçamento interno */
     grid-auto-rows: 300px;
+    width: 100% - 5%;
   }
   
   .grid-item {

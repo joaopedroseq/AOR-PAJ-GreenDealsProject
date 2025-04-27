@@ -7,7 +7,8 @@ public class UserStatisticsDto {
     private int totalUsers;
     private Map<UserAccountState, Integer> usersByState;
     private Map<String, Integer> newUsersByPeriod;
-    public double avgTimeToFirstPublish;
+    private double avgTimeToActivate;
+    private double avgTimeToFirstPublish;
 
 
     public UserStatisticsDto() {
@@ -43,5 +44,13 @@ public class UserStatisticsDto {
 
     public void setAvgTimeToFirstPublish(double avgTimeToFirstPublish) {
         this.avgTimeToFirstPublish = avgTimeToFirstPublish;
+    }
+
+    public double getAvgTimeToActivate() {
+        return avgTimeToActivate;
+    }
+
+    public void setAvgTimeToActivate(double avgTimeToActivate) {
+        this.avgTimeToActivate = avgTimeToActivate;
     }
 }
