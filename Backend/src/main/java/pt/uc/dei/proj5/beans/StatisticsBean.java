@@ -1,20 +1,20 @@
 package pt.uc.dei.proj5.beans;
 
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dao.CategoryDao;
 import pt.uc.dei.proj5.dao.ProductDao;
 import pt.uc.dei.proj5.dao.UserDao;
-import pt.uc.dei.proj5.dto.CategoryDto;
-import pt.uc.dei.proj5.dto.ProductDto;
-import pt.uc.dei.proj5.dto.ProductStateId;
-import pt.uc.dei.proj5.dto.ProductStatisticsDto;
+import pt.uc.dei.proj5.dto.*;
 import pt.uc.dei.proj5.entity.ProductEntity;
 
+import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Stateless
 public class StatisticsBean {
     private static final Logger logger = LogManager.getLogger(StatisticsBean.class);
 
@@ -30,7 +30,15 @@ public class StatisticsBean {
     //For Product Statistics
     public ProductStatisticsDto getProductStatistics() {
         ProductStatisticsDto productStatistics = new ProductStatisticsDto();
-        List<ProductEntity> products = productDao.getFilteredProducts(null, null, null, ProductStateId.DRAFT, null, null, null, null, null);
+        List<ProductEntity> products = productDao.getFilteredProducts(null,
+                null,
+                null,
+                ProductStateId.DRAFT,
+                null,
+                null,
+                false,
+                ProductParameter.DATE,
+                Order.asc);
         productStatistics.setTotalProducts(products.size());
         productStatistics.setProductsByState(getTotalProductByState(products));
         productStatistics.setProductsByCategory(getTotalProductByCategory(products));
@@ -76,7 +84,7 @@ public class StatisticsBean {
         Map<CategoryDto, Double> totalPricesByCategory = new LinkedHashMap<>();
         Map<CategoryDto, Integer> countByCategory = new HashMap<>();
         for (ProductEntity productEntity : products) {
-            CategoryDto category = categoryBean.lazyConvertCategoryEntityToCategoryDto(productEntity.getCategory());;
+            CategoryDto category = categoryBean.lazyConvertCategoryEntityToCategoryDto(productEntity.getCategory());
             double price = productEntity.getPrice(); // Assuming `ProductEntity` has `getPrice()`
             // Accumulate total price for each category
             totalPricesByCategory.put(category, totalPricesByCategory.getOrDefault(category, 0.0) + price);

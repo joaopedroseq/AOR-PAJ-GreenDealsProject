@@ -46,6 +46,11 @@ public class CategoryDto implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return nome + " (" + nameEng + ")";
+    }
+
+    @Override
     public int hashCode() {
         return Objects.hash(nome, nameEng);
     }
