@@ -57,7 +57,7 @@ public class CategoryBean implements Serializable {
                 empty = createEmptyCategory();
             }
             else {
-                empty = categoryDao.findCategoryByName("sem categoria");
+                empty = categoryDao.findCategoryByName("semCategoria");
             }
             CategoryEntity categoryEntity = convertCategoryDtoToCategoryEntity(category);
             productDao.setAllProductsCategoryToEmpty(empty, categoryEntity);
@@ -92,7 +92,7 @@ public class CategoryBean implements Serializable {
     private CategoryEntity createEmptyCategory() {
         CategoryEntity empty;
         empty = new CategoryEntity();
-        empty.setNome("sem categoria");
+        empty.setNome("semCategoria");
         empty.setNameEng("empty");
         categoryDao.persist(empty);
         categoryDao.flush();

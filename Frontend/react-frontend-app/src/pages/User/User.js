@@ -42,6 +42,7 @@ export const User = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onSubmit = async (editedInformation) => {
+    console.log(editedInformation);
     setUpdatedUserInfo(editedInformation);
     setConfirmPasswordOpen(true);
   };
@@ -220,6 +221,12 @@ export const User = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={modalConfig.onConfirm}
+      />
+      <ConfirmPasswordModal
+        userInfo={userInfo}
+        updatedUserInfo={updatedUserInfo}
+        isOpen={isConfirmPasswordOpen}
+        onClose={() => setConfirmPasswordOpen(false)}
       />
       <ChangePasswordModal
         userInfo={userInfo}

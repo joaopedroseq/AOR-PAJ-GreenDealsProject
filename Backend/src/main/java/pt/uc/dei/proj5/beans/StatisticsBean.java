@@ -136,7 +136,7 @@ public class StatisticsBean {
         null,
         null,
         null,
-        null,
+        UserAccountState.INACTIVE,
         UserParameter.USERNAME,
         Order.asc);
         userStatistics.setTotalUsers(users.size());
@@ -153,6 +153,7 @@ public class StatisticsBean {
     private Map<UserAccountState, Integer> getUsersByState(List<UserEntity> users) {
         Map<UserAccountState, Integer> usersByState = new LinkedHashMap<>();
         for (UserEntity userEntity : users) {
+            System.out.println("User state: " + userEntity.getState());
             UserAccountState userAccountState = userEntity.getState();
             usersByState.put(userAccountState, usersByState.getOrDefault(userAccountState, 0) + 1);
         }

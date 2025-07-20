@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 @NamedQuery(
         name = "MessageEntity.getMessageNotifications",
-        query = "SELECT m.sender.username, COUNT(m), MAX(m.timestamp), u.url " +
+        query = "SELECT m.sender.username, COUNT(m), MAX(m.timestamp)" +
                 "FROM MessageEntity m " +
                 "JOIN UserEntity u ON m.sender.username = u.username " +
                 "WHERE m.recipient.username = :recipient_username AND m.isRead = false " +
-                "GROUP BY m.sender, u.url " +
+                "GROUP BY m.sender " +
                 "ORDER BY MAX(m.timestamp) DESC"
 )
 
@@ -35,7 +35,7 @@ import java.time.LocalDateTime;
 
 @NamedQuery(
         name = "MessageEntity.getAllChats",
-        query = "SELECT DISTINCT u.username, u.url " +
+        query = "SELECT DISTINCT u.username " +
                 "FROM MessageEntity m " +
                 "JOIN UserEntity u ON (u.username = m.sender.username OR u.username = m.recipient.username) " +
                 "WHERE (m.recipient.username = :user_username OR m.sender.username = :user_username) " +

@@ -2,8 +2,18 @@ import { create } from "zustand";
 import { getProductStatistics, getUserStatistics } from '../Api/statsApi';
 
 const useStatsStore = create((set, get) => ({
-  userStats: null,
-  productStats: null,
+  userStats: {
+    totalUsers: 0,
+    activeUsers: 0,
+    newRegistrations: 0,
+  },
+  productStats: {
+    totalProducts: 0,
+    productsByState: {},
+    productsByCategory: [],
+    topLocations: {},
+  },
+
 
   fetchUserStats: async (token) => {
     try {

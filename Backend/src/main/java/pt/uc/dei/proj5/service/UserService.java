@@ -1,5 +1,7 @@
 package pt.uc.dei.proj5.service;
 
+import jakarta.transaction.Transactional;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import pt.uc.dei.proj5.beans.*;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import pt.uc.dei.proj5.dto.*;
 
-import java.util.ArrayList;
 import java.util.Set;
 
 
@@ -157,7 +158,6 @@ public class UserService {
         }
     }
 
-
     /**
      * Deleta um usuário completamente do sistema.
      *
@@ -201,20 +201,39 @@ public class UserService {
     }
 
 
-    /**
-     * Obtém uma lista de usuários com base em parâmetros de pesquisa.
-     *
-     * @param authenticationToken Token do cliente.
-     * @param usernameToSearch    Nome do usuário a buscar.
-     * @param firstNameToSearch   Nome (primeiro) do usuário.
-     * @param lastNameToSearch    Sobrenome.
-     * @param emailToSearch       E-mail.
-     * @param phoneToSearch       Telefone.
-     * @param stateToSearch       Estado do usuário (ativo, excluído, etc.).
-     * @param parameterToOrder    Parâmetro para ordenação.
-     * @param orderBy             Ordem da ordenação (ascendente ou descendente).
-     * @return Lista dos usuários encontrados (ou erro, se aplicável).
-     */
+    @DELETE
+    @Path("/{username}/products/")
+    public Response deleteProductsOfUser(@HeaderParam("token") String authenticationToken, @PathParam("username") String usernameUserDeleteProducts) {
+        if (usernameUserDeleteProducts.trim().equals("")) {
+            logger.error("Invalid data - missing params - Deleting products of user");
+            return Response.status(400).entity("Invalid data").build();
+        }
+        UserDto user = new UserDto();
+        try {
+            user = authenticationService.validateAuthenticationToken(authenticationToken);
+        } catch (WebApplicationException e) {
+            return e.getResponse();  // Directly return HTTP response
+        }
+        if (!user.getAdmin()) {
+            logger.error("User {} tried to delete products of user {} without admin permissions", user.getUsername(), usernameUserDeleteProducts);
+            return Response.status(403).entity("User does not have admin permission to delete products of other users").build();
+        } else {
+            usernameUserDeleteProducts = usernameUserDeleteProducts.trim();
+            if (!userbean.checkIfUserExists(usernameUserDeleteProducts)) {
+                logger.error("User {} tried to delete products of user - {} - not found", user.getUsername(), usernameUserDeleteProducts);
+                return Response.status(404).entity("User " + usernameUserDeleteProducts + " to delete products not found").build();
+            } else {
+                if (userbean.deleteProductsOfUser(usernameUserDeleteProducts)) {
+                    logger.info("User {} deleted products of user {} successfully", user.getUsername(), usernameUserDeleteProducts);
+                    return Response.status(200).entity("Deleted products of user " + usernameUserDeleteProducts + " successfully").build();
+                } else {
+                    logger.error("Products of user {} not deleted due to exception", usernameUserDeleteProducts);
+                    return Response.status(500).entity("Products of user " + usernameUserDeleteProducts + " not deleted").build();
+                }
+            }
+        }
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getUserInformation(@HeaderParam("token") String authenticationToken,

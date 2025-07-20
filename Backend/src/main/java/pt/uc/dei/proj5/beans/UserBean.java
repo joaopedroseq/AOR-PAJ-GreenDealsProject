@@ -159,10 +159,6 @@ public class UserBean implements Serializable {
                     userToUpdate.setPhoneNumber(userDto.getPhoneNumber());
                     userToBroadcast.setPhoneNumber(userDto.getPhoneNumber());
                 }
-                if (userDto.getUrl() != null) {
-                    userToUpdate.setUrl(userDto.getUrl());
-                    userToBroadcast.setUrl(userDto.getUrl());
-                }
                 if (userDto.getProducts() != null) {
                     userToUpdate.setProducts(convertGroupProductDtoToGroupProductEntity(userDto.getProducts()));
                 }
@@ -189,7 +185,6 @@ public class UserBean implements Serializable {
                 anonymous.setFirstName("anonymous");
                 anonymous.setLastName("-");
                 anonymous.setPhoneNumber("-1");
-                anonymous.setUrl("-");
                 userDao.persist(anonymous);
             }
             productDao.setProductsOfUserToAnonymous(username);
@@ -257,7 +252,6 @@ public class UserBean implements Serializable {
         userEntity.setLastName(user.getLastName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPhoneNumber(user.getPhoneNumber());
-        userEntity.setUrl(user.getUrl());
         userEntity.setAdmin(user.getAdmin());
         userEntity.setState(user.getState());
         return userEntity;
@@ -271,7 +265,6 @@ public class UserBean implements Serializable {
         userDto.setLastName(user.getLastName());
         userDto.setEmail(user.getEmail());
         userDto.setPhoneNumber(user.getPhoneNumber());
-        userDto.setUrl(user.getUrl());
         userDto.setAdmin(user.getAdmin());
         userDto.setState(user.getState());
         userDto.setProducts(convertGroupProductEntityToGroupProductDto(user.getProducts()));

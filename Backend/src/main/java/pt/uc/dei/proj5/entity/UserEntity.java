@@ -5,10 +5,13 @@ import pt.uc.dei.proj5.dto.UserAccountState;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Set;
 
-//to find if username is avaiable
-@NamedQuery(name = "User.findUserByUsername", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.username = :username")
+/**
+ *
+ */
+@NamedQuery(name = "User.findUserByEmail", query = "SELECT DISTINCT u FROM UserEntity u WHERE u.email = :email")
 
 //to find if user exists
 @NamedQuery(
@@ -34,12 +37,7 @@ import java.util.Set;
 //For statistical purpose
 @NamedQuery(name="User.getNumberOfUsers", query = "SELECT COUNT(u) FROM UserEntity u")
 @Entity
-@Table(name = "userAccount", indexes = {
-        @Index(name = "idx_user_username", columnList = "username"),
-        @Index(name = "idx_user_email", columnList = "email"),
-        @Index(name = "idx_user_state", columnList = "state"),
-        @Index(name = "idx_user_phone", columnList = "phonenumber")
-})
+@Table(name = "userAccount")
 public class UserEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -69,9 +67,6 @@ public class UserEntity implements Serializable {
     @Column(name = "phonenumber", nullable = false, unique = false, updatable = true)
     private String phoneNumber;
 
-    //Photo url
-    @Column(name = "url", nullable = false, unique = false, updatable = true)
-    private String url;
 
     //Admin - Boolean - is it an Administrator?
     @Column(name = "admin", nullable = false, unique = false, updatable = true)
@@ -154,14 +149,6 @@ public class UserEntity implements Serializable {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-        System.out.println("URL" + url);
-    }
 
     public String getUsername() {
         return username;
@@ -236,13 +223,14 @@ public class UserEntity implements Serializable {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", url='" + url + '\'' +
                 ", admin=" + admin +
                 ", state=" + state +
+                ", registrationDate=" + registrationDate +
+                ", activationDate=" + activationDate +
                 ", products=" + products +
                 ", evaluationsWritten=" + evaluationsWritten +
                 ", evaluationsReceived=" + evaluationsReceived +
-                ", token=" + tokens +
+                ", tokens=" + tokens +
                 '}';
     }
 }

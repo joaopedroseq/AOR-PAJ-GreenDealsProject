@@ -71,7 +71,7 @@ public class ProductService {
             } else {
                 ProductDto product = productBean.findProductById(Long.parseLong(id));
                 if (product.getState() == ProductStateId.DRAFT) {
-                    if ((product.getSeller() != user.getUsername()) && !user.getAdmin()) {
+                    if (!(product.getSeller().equals(user.getUsername())) && !user.getAdmin()) {
                         logger.info("Forbidden getting a draft");
                         return Response.status(403).entity("Permission denied").build();
                     }
@@ -86,11 +86,11 @@ public class ProductService {
         parameter = resolveParameter(param);
         //se não houver utilizador logged (não existir token) não poderá pesquisar produtos por utilizador, por id,
         // apenas poderá procurar productos DISPONÍVEL, produtos não excluídos e não editados (edited == true)
-        if (user == null && (seller != null || edited)) {
+        if (user == null && edited) {
             logger.error("Invalid token - getting products");
             return Response.status(401).entity("Invalid token").build();
         } else if (user == null) {
-            Set<ProductDto> products = productBean.getProducts(null, id, name, null, false, category, false, parameter, order);
+            Set<ProductDto> products = productBean.getProducts(seller, id, name, null, false, category, false, parameter, order);
             if (products != null) {
                 logger.info("Getting all products for unlogged user");
                 return Response.status(200).entity(products).build();

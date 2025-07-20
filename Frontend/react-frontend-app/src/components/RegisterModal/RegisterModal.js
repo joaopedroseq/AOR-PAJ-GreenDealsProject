@@ -19,7 +19,15 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
   const [modalConfig, setModalConfig] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
   const intl = useIntl();
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileUpload = (event) => {
+    setSelectedFile(event.target.files[0]); // Store the selected file
+  };
+  
 
   //Submissão do formulário (admin é sempre falso)
   const onSubmit = async (registerData) => {
@@ -30,10 +38,30 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
       lastName: registerData.lastName,
       email: registerData.email,
       phoneNumber: registerData.phoneNumber,
-      url: registerData.urlPhoto,
+      url: registerData.username,
     };
 
     try {
+      const formData = new FormData();
+    formData.append("profileImage", selectedFile);
+    formData.append("username", registerData.username); // Send the username
+
+
+  try {
+    const response = await fetch("https://localhost:8443/sequeira-proj5/rest/auth/photo", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      console.log("Profile image uploaded successfully!");
+    } else {
+      console.error("Upload failed");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+
       const activationToken = await registerUser(newUser);
       const activationLink = `localhost:3000/activate?token=${activationToken}`;
       navigator.clipboard.writeText(activationLink);
@@ -135,7 +163,8 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                   {...register("lastName", {
                     required: "registerModalErrorlastName",
                     validate: (value) =>
-                      checkIfValidName(value) ||"registerModalErrorInvalidName",
+                      checkIfValidName(value) ||
+                      "registerModalErrorInvalidName",
                   })}
                 />
               </div>
@@ -154,7 +183,8 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                   {...register("username", {
                     required: "registerModalErrorusername",
                     validate: (value) =>
-                      checkIfValidUsername(value) || "registerModalErrorInvalidUsername",
+                      checkIfValidUsername(value) ||
+                      "registerModalErrorInvalidUsername",
                   })}
                 />
               </div>
@@ -174,7 +204,8 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                   {...register("password", {
                     required: "registerModalErrorpassword",
                     validate: (value) =>
-                      checkIfValidPassword(value) || "registerModalErrorInvalidPassword",
+                      checkIfValidPassword(value) ||
+                      "registerModalErrorInvalidPassword",
                   })}
                 />
               </div>
@@ -197,7 +228,8 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                     required: "registerModalErrorpasswordConfirm",
                     validate: {
                       isValid: (value) =>
-                        checkIfValidPassword(value) || "registerModalErrorInvalidPassword",
+                        checkIfValidPassword(value) ||
+                        "registerModalErrorInvalidPassword",
                       isConfirmed: (value) =>
                         value === watch("password") ||
                         "registerModalErrorPasswordMismatch",
@@ -220,8 +252,7 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                   {...register("email", {
                     required: "registerModalErroremail",
                     validate: (value) =>
-                      value.includes("@") ||"registerModalErrorInvalidEmail",
-              
+                      value.includes("@") || "registerModalErrorInvalidEmail",
                   })}
                 />
               </div>
@@ -241,7 +272,6 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                     required: "registerModalErrorphoneNumber",
                     validate: (value) =>
                       /^\d{9}$/.test(value) || "registerModalErrorInvalidPhone",
-            
                   })}
                 />
               </div>
@@ -250,16 +280,12 @@ const RegisterModal = ({ toggleModal, isModalVisible, locale }) => {
                   {intl.formatMessage({ id: "registerModalPhotoUrlLabel" })}
                 </label>
                 <input
-                  type="text"
-                  id="new-photo"
-                  name="new-photo"
-                  placeholder={intl.formatMessage({
-                    id: "registerModalPhotoUrlPlaceholder",
-                  })}
-                  {...register("urlPhoto", {
-                    required: "registerModalErrorurlPhoto",
-                  })}
-                />
+  type="file"
+  id="new-photo"
+  name="new-photo"
+  accept="image/*"
+  onChange={(e) => handleFileUpload(e)}
+/>
               </div>
               <input
                 type="submit"

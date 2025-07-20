@@ -4,5 +4,4 @@ public enum NotificationType {
     MESSAGE,
     PRODUCT_BOUGHT,
     PRODUCT_ALTERED
-
 }

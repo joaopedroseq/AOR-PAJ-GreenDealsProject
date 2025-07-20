@@ -39,7 +39,7 @@ public class UserInitializer {
             admin.setPhoneNumber("-1");
             admin.setState(UserAccountState.ACTIVE);
             admin.setAdmin(true);
-            admin.setUrl("https://icon-icons.com/icons2/508/PNG/512/macintosh_icon-icons.com_49902.png");
+
             admin.setRegistrationDate(LocalDateTime.now());
             admin.setActivationDate(LocalDateTime.now());
             userDao.persist(admin);
@@ -56,7 +56,6 @@ public class UserInitializer {
             anonymous.setFirstName("anonymous");
             anonymous.setLastName("-");
             anonymous.setPhoneNumber("-1");
-            anonymous.setUrl("https://b.thumbs.redditmedia.com/n40D3mkLHMt42LU5vbk23qPKpBT4TeWVcrdNxVoqIvA.png");
             anonymous.setRegistrationDate(LocalDateTime.now());
             userDao.persist(anonymous);
         }

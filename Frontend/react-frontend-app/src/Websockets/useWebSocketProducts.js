@@ -63,7 +63,7 @@ function useWebSocketProducts() {
   };
 
   const handleUpdateStats = (product) => {
-    console.log(product);
+    console.log(useStatsStore.productStats);
     let productState = product.state;
     useStatsStore.setState((state) => ({
       productStats: {

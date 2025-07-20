@@ -15,7 +15,7 @@ function useWebSocketChat() {
     currentChattingUser.user = selectedUser;
   }, [selectedUser]);
 
-  // Move sendMessage OUTSIDE useEffect
+  
   const sendMessage = (username, message) => {
     if (websocket && websocket.readyState === WebSocket.OPEN) {
       const messageJSON = JSON.stringify({
@@ -72,8 +72,7 @@ function useWebSocketChat() {
           }
           break;
         case "PING":
-          ws.send(JSON.stringify({ type: "PONG" })); // Respond to keep the connection alive
-          break;
+          ws.send(JSON.stringify({ type: "PONG" }));
         default:
           console.warn("Unknown message type:", data.type);
       }

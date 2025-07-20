@@ -1,5 +1,7 @@
 package pt.uc.dei.proj5.service;
 
+import jakarta.transaction.Transactional;
+import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import pt.uc.dei.proj5.beans.TokenBean;
 import pt.uc.dei.proj5.beans.UserBean;
 import jakarta.inject.Inject;
@@ -25,6 +27,7 @@ public class AuthenticationService {
     @Inject
     WsUsers wsUsers;
 
+
     //Regular user register
     @POST
     @Path("/register")
@@ -39,12 +42,15 @@ public class AuthenticationService {
         if(activationToken != null) {
             wsUsers.broadcastUser(userDto, "NEW");
             logger.info("Registered user: " + userDto);
+            EmailService emailService = new EmailService();
+            emailService.sendActivationEmail(userDto.getFirstName(), userDto.getEmail(), activationToken);
             return Response.status(200).entity(activationToken).build();
         } else {
             logger.error("Same username conflict - Registering user");
             return Response.status(409).entity("There is a user with the same username!").build();
         }
     }
+
 
     //Admin user register
     @POST
@@ -251,6 +257,8 @@ public class AuthenticationService {
             return Response.status(200).entity(user).build();
         }
     }
+
+
 
     public UserDto validateAuthenticationToken(String token) throws WebApplicationException {
         if (token == null || token.trim().isEmpty()) {

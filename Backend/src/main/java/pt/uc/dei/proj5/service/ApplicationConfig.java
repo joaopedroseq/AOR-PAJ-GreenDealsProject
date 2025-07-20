@@ -3,7 +3,6 @@ package pt.uc.dei.proj5.service;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 import pt.uc.dei.proj5.beans.ApplicationBean;
-import pt.uc.dei.proj5.beans.TokenBean;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,6 +22,8 @@ public class ApplicationConfig extends Application {
         resources.add(MessageService.class);
         resources.add(NotificationService.class);
         resources.add(StatisticsService.class);
+
+        System.out.println("Registered REST Resources: " + resources); // Debug logging
         return resources;
     }
 }

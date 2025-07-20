@@ -142,7 +142,6 @@ public class NotificationBean {
         notificationDto.setMessageCount(notificationEntity.getMessageCount());
         notificationDto.setRecipientUsername(notificationEntity.getRecipient().getUsername());
         notificationDto.setSenderUsername(notificationEntity.getSender().getUsername());
-        notificationDto.setSenderProfileUrl(notificationEntity.getSender().getUrl());
         return notificationDto;
     }
 }
